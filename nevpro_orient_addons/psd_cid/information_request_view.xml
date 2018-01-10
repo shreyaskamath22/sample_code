@@ -1,0 +1,206 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+<!--Information Request -->
+        <record model="ir.ui.view" id="view_info_request_form_crm">
+            <field name="name">Product Information Request</field>
+            <field name="model">product.information.request</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Product Information Request'>
+                    <newline/>
+                    <separator colspan="4"/>                    
+                    <field name="state" widget="statusbar" 
+                           statusbar_colors='{"new":"red","closed":"grey","cancel":"black"}'/>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <label string="" colspan="4"/>
+                    <group colspan="10" col="10">
+                        <field name="active" invisible="1"/>
+                        <field name="call_type" required="1" attrs="{'readonly':[('state','!=','new')]}"/>
+                        <field name="request_date" readonly="1"/>
+                        <field name="closed_date" invisible="1"/>
+                        <field name="created_by" readonly="1"/>
+                        <field name="customer_type" readonly="1"/>
+                        <field name="information_request_id" readonly="1"
+                               attrs="{'invisible':[('information_request_id','=',False)]}"/>
+                        <field name="request_type" invisible="1"/>
+                        <field name="location_branch" invisible="1"/>
+                        <newline/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string='Information Request'>
+                            <label string="" colspan="4"/>
+                            <newline/>
+                            <group colspan="5" col="5">
+                                    <field name="selected" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="name"  string="Customer / Company Name *" colspan="2" 
+                                           attrs="{'readonly':[('state','!=','new')]}" 
+                                           default_focus="1"/>
+        				            <button name="customer_search_pop_up" type="object" 
+                                            string="Search" icon="srh" colspan=".5" 
+                                            attrs="{'invisible':[('state','!=','new')]}"/>
+                                    <field name="customer_id" readonly="1" colspan="1" 
+                                           attrs="{'invisible':[('customer_id','=',False)]}"/>
+                                    <label string="" colspan="5 "/>
+                                    <newline/>
+                                    <field name="information_request_type_id"  attrs="{'readonly':[('state','!=','new')]}" colspan="3"/>
+                                    <field name="partner_id" invisible="1"/>
+                                    <label string="" colspan="1"/>
+                            </group>
+                            <newline/>                    
+                            <group col="4" colspan="2">
+                                    <separator string="Contact Information" colspan="4"/>
+                                    <newline/>
+                                    <field name="title" colspan="2"  attrs="{'readonly':[('state','!=','new')]}" />
+                                    <field name="contact_name" colspan="2"  attrs="{'readonly':[('state','!=','new')]}" />
+                                    <field name="customer_address"  colspan="4"  attrs="{'readonly':[('state','!=','new')]}" />
+                                    <field name="remarks" colspan="4"  attrs="{'readonly':[('state','!=','new')]}" />
+                                    <field name="branch_id" colspan="2"  attrs="{'readonly':['|',('state','!=','new'),('customer_type','=','existing')]}" />
+                                   <!-- domain="['|',('establishment_type','=','psd'),('id','=',company_id)]" -->
+                            </group>    
+                            <group colspan="2" col="3">
+                                    <separator string="Communication" colspan="4"/>
+                                    <newline/>                                    
+                                    <field name="phone_many2one" string="Phone Number" 
+                                           domain="[('partner_id.id', '=', partner_id)]" 
+                                           attrs="{'invisible':[('customer_type','!=','existing')],
+                                                   'readonly':[('state','!=','new')]}"/>
+                                    <button name="create_number" type="object" 
+                                            icon="add" colspan=".5" string="Create"
+                                            attrs="{'readonly':[('state','!=','new')],
+                                                    'invisible':[('customer_type','!=','existing')]}"/>
+                                    <newline/>
+                                    <field name="phone_many2one_new" 
+                                           domain="[('information_request_id','!=',False),('information_request_id', '=', id)]"
+                                           attrs="{'invisible':[('customer_type','!=','new')],
+                                                   'readonly':[('state','!=','new')]}"/>
+                                    <button name="create_number_psd" type="object" 
+                                            string="Create" icon="add" colspan=".5" 
+                                            attrs="{'invisible':[('customer_type','!=','new')],
+                                                   'readonly':[('state','!=','new')]}"/> 
+                                    <newline/>
+                                    <field name="email" widget="email" colspan="3"  attrs="{'readonly':[('state','!=','new')]}" />
+                                    <label colspan="1"/>
+                                    <field name="fax" colspan="3"  attrs="{'readonly':[('state','!=','new')]}" />                               
+                            </group>
+                           <separator colspan="8"/>
+
+                          <group col="5" colspan="3">
+                            <field name="resolution" colspan="2" 
+                                   attrs="{'invisible':[('state','not in',['progress','closed'])],
+                                           'readonly':[('state','=','closed')]}"/>
+                            <label string="" colspan="2"/> 
+                          </group>
+                        <group col='8' colspan='2' attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                                            ('cancel_request','=',True)]}">
+                            <field name="employee_id" colspan="4" 
+                                   attrs="{'invisible':[('state','in',['new','cancel'])],
+                                          'readonly':[('state','in',['progress','closed'])]}"/> 
+                            <button string="Assign Resource" name="assign_resource" type="object" colspan=".5" 
+                                    attrs="{'invisible':['|',('state','!=','open'), ('employee_id','=',False)]}"/>
+                            <label string="" colspan="8"/> 
+                        </group>
+                        <group col="5" colspan="4" 
+                             attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                      ('state','in',['new','progress','closed'])]}">
+                            <group colspan="1">
+                                 <field name="cancel_request" 
+                                        attrs="{'invisible':[('state','=','cancel')]}"/>
+                            </group>
+                            <field name="cancellation_reason" colspan="1.5"
+                                   attrs="{'invisible':[('cancel_request','=',False)],
+                                           'readonly':[('state','=','cancel')]}"/>  
+                            <label string="" colspan=".5"/>     
+                            <button string="Cancel Request" name="cancel_information_request" type="object"
+                                    attrs="{'invisible':['|',('cancel_request','=',False),('state','=','cancel')]}" 
+                                    colspan=".5"/> 
+                            <label string="" colspan="3"/> 
+                        </group>
+                            <group col="4" colspan="2">
+                              <group colspan="0.5" >
+                                <button name="process_information_request" type="object" 
+                                        string="Process" attrs="{'invisible':[('state','in',['open','closed','cancel'])]}"/>
+                              </group>
+                              <group colspan=".5">
+                                <button name="close_information_request" string="Close"
+                                        type="object" attrs="{'invisible':[('state','=','cancel')]}"/>  
+                              </group>
+                              <group colspan=".5">
+                                <button string="Cancel" name="product_information_request_cancel" 
+                                        colspan=".5" type="object" attrs="{'invisible':[('state','!=','new')]}" 
+                                        confirm="This Product Information request will be deleted!"/>  
+                              </group>
+                              
+                              <label string="" colspan="4"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                                <field name="notes_line" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+                                    <tree string="Comments">
+                                        <field name="user_id"/>
+                                        <field name="state" invisible="0"/>
+                                        <field name="comment_date"/>
+                                        <field name="comment"/>
+                                        <field name="information_request_ref" invisible="0"/>
+                                    </tree>
+                                </field>
+                                <newline/>
+                                <separator string="" colspan="4"/>
+                                <group col="8" colspan="8">
+                                        <field name="comment_remark" colspan="4"/>
+                                        <button string="Add Notes" name="new_post_comment" type="object" colspan="1"/>
+                                        <label string="" colspan="3"/>
+                                </group>
+                            </page>
+                    </notebook>
+                    <newline/>
+
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_info_request_tree_crm">
+            <field name="name">Product Information Request</field>
+            <field name="model">product.information.request</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string='Information Request'>
+                        <field name="active"/>
+                        <field name="information_request_id"/>
+                        <field name="call_type"/>
+                        <field name="name"/>
+                        <field name="customer_type"/>
+                        <field name="information_request_type_id"/>
+                        <field name="request_date"/>
+                        <field name="request_type"/>
+                        <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_info_request_crm">
+            <field name="name">Product Information Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.information.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_info_request_form_crm"/>
+            <field name="context">{
+                'hide_create_quotation':True,
+                'nodelete': 0,
+                'noselect': 0,
+                'noduplicate':1
+            }</field>
+        </record>
+
+       <menuitem id="ccc_info_req_psd_crm3" 
+                 name="Product Information Request" 
+                 action="action_info_request_crm" 
+                 parent="ccc_info_req_psd_crm2"
+                 sequence="3"
+                 />   
+    </data>
+</openerp>

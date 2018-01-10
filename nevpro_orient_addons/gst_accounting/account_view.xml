@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_tax_form_gst_inherit" model="ir.ui.view">
+            <field name="name">view.tax.form.gst.inherit</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="select_tax_type"]' position='replace'>
+                    <field name="select_tax_type" 
+                           attrs="{'required':[('description','=','gst')]}"/> 
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_account_form_gst_inherit" model="ir.ui.view">
+            <field name="name">view.account.form.gst.inherit</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="account_selection"]' position='after'>
+                    <field name="gst_applied"/>
+              </xpath>
+              <xpath expr='//field[@name="account_balance_sheet"]' position='after'>
+                    <field name="hsn_sac_code"/>
+                    <field name="rcm_rate"/>
+                    <field name="goods_applicable"/>
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_rate_master_form_gst" model="ir.ui.view">
+            <field name="name">GST Rate Master</field>
+            <field name="model">gst.rate.master</field>
+            <field name="arch" type="xml">
+              <field name="gst_rate_name"/>
+              <field name="rate"/>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_rate_master_gst_tree">
+          <field name="name">GST Rate Master</field>
+          <field name="model">gst.rate.master</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+          <tree string="Tax">
+            <field name="gst_rate_name"/>
+            <field name="rate"/>
+          </tree>
+          </field>
+       </record>
+  
+  <record id="action_rate_master_gst" model="ir.actions.act_window">
+        <field name="name">GST Rate Master</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">gst.rate.master</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree,form</field>
+  </record>
+
+
+        <menuitem id="action_menu_rate_master_gst" name="GST Rate Master" action="action_rate_master_gst" sequence="39" parent="base.menu_config"/>
+
+        <record model="ir.ui.view" id="gst_item_master_form" >
+          <field name="name">Item Master</field>
+          <field name="model">gst.item.master</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <form string="Item Master">
+              <field name="name"/>
+              <field name="scrap_product_category" on_change="onchange_product_category(scrap_product_category)"/>  
+              <field name="hsn_code"/>
+              <field name="description"/>
+              <field name="item_rate"/>
+              <field name="active"/>
+              <field name="effective_date_from"/>
+              <field name="new_tax_rate"/>
+            </form>
+          </field>
+        </record>
+        <record model="ir.ui.view" id="gst_item_master_tree" >
+          <field name="name">Item Master</field>
+          <field name="model">gst.item.master</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+            <tree string="Item Master">
+              <field name="name"/>
+              <field name="scrap_product_category"/>  
+              <field name="hsn_code"/>
+              <field name="description"/>
+              <field name="item_rate"/>
+              <field name="active"/>
+            </tree>   
+          </field>
+        </record>
+        <record model="ir.actions.act_window" id="gst_item_master_action">
+          <field name="name">Item Master</field>
+          <field name="res_model">gst.item.master</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form,tree</field>
+          <!-- <field name="create">False</field> -->
+          <field name="view_id" ref="gst_item_master_tree"/>
+        </record>
+
+        <menuitem id="menu_gst_item_master" name="Item Master" action="gst_item_master_action" parent="account_sales_branch.menu_invoice_master_id" groups="base.group_Administrator" sequence="90"/>
+
+
+      <record model="ir.ui.view" id="gst_uom_master_form" >
+          <field name="name">Unit Of Measure</field>
+          <field name="model">goods.uom</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <form string="Unit Of Measure">
+              <field name="name"/>
+              <field name="description"/>
+            </form>
+          </field>
+        </record>
+        <record model="ir.ui.view" id="gst_uom_master_tree" >
+          <field name="name">Unit Of Measure</field>
+          <field name="model">goods.uom</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+            <tree string="Item Master">
+              <field name="name"/>
+              <field name="description"/>
+            </tree>   
+          </field>
+        </record>
+        <record model="ir.actions.act_window" id="gst_uom_master_action">
+          <field name="name">Unit Of Measure</field>
+          <field name="res_model">goods.uom</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">form,tree</field>
+          <!-- <field name="create">False</field> -->
+          <field name="view_id" ref="gst_uom_master_tree"/>
+        </record>
+
+        <menuitem id="menu_gst_uom_master_action" name="Unit Of Measure" action="gst_uom_master_action" sequence="40" parent="base.menu_config"/>
+
+	</data>
+</openerp>

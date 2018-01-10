@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<openerp>
+	<data noupdate="0">
+
+    <record id="request_counter_settings" model="request.counter">
+        <field name="product_request_counter">999</field>
+        <field name="complaint_request_counter">999</field>
+        <field name="information_request_counter">999</field>
+    </record>
+
+    <record id="request_counter_form_view" model="ir.ui.view">
+        <field name="name">Request Counter</field>
+        <field name="model">request.counter</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string='Request Counter'>
+               <group col='10' colspan='5'>
+                    <field name="product_request_counter" required="1" readonly="0"/>
+                    <field name="complaint_request_counter" required="1" readonly="0"/>
+                    <field name="information_request_counter" required="1" readonly="0"/>
+                </group>   
+            </form>
+        </field>
+    </record>
+
+    <record id="request_counter_tree_view" model="ir.ui.view">
+        <field name="name">Request Counter</field>
+        <field name="model">request.counter</field>
+        <field name="arch" type="xml">
+            <tree string="Request Counter">
+                <field name="product_request_counter"/>
+                <field name="complaint_request_counter"/>
+                <field name="information_request_counter"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_request_counter">
+        <field name="name">Request Counter</field>
+        <field name="res_model">request.counter</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="request_counter_form_view"/>
+        <field name="target">current</field>  
+        <field name="context">{
+            'nodelete': 1,
+            'noselect': 1,
+            'nocreate': 1,
+            'noduplicate':1
+        }</field>
+    </record>
+
+    <menuitem id="menu_request_counter" 
+              name="Request Counter" 
+              action="action_request_counter" 
+              sequence="35"
+              parent="base.menu_config"/>
+
+
+    <record id="information_request_types_data" model="information.request.types">
+        <field name="name">Product Request</field>
+    </record>            
+
+    <record id="information_request_types_form_view" model="ir.ui.view">
+        <field name="name">Information Request Types</field>
+        <field name="model">information.request.types</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string='Information Request Types'>
+                 <group col="5" colspan="4">
+                    <field name="name" required="1" readonly="0" colspan="1"/>
+                    <label string="" colspan="2"/>
+                </group>   
+            </form>
+        </field>
+    </record>              
+
+    <record id="information_request_types_tree_view" model="ir.ui.view">
+        <field name="name">Information Request Types</field>
+        <field name="model">information.request.types</field>
+        <field name="arch" type="xml">
+            <tree string="Information Request Types">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_information_request_types">
+        <field name="name">Information Request Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">information.request.types</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="information_request_types_form_view"/>
+        <field name="context">{
+            'nodelete': 0,
+            'noselect': 0,
+            'noduplicate':1
+            }</field>
+    </record>
+
+    <menuitem id="menu_information_request_types" 
+              name="Information Request Types" 
+              action="action_information_request_types" 
+              sequence="34"
+              parent="base.menu_config"/>
+
+  </data>
+</openerp>

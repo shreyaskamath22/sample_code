@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="report_service_quotation" model="amc.quotation" name="report.amc.quotation" rml="psd_amc_quotation/report/service_quotation.rml" string="Product Service Quotation"
+                usage="default"/>
+       
+       <report auto="False" id="report_service_order" model="amc.sale.order" name="report.amc.order" rml="psd_amc_quotation/report/service_order.rml" string="Product Service Order"
+                usage="default"/>
+
+    </data>
+</openerp>

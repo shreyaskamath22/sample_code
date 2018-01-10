@@ -1,0 +1,823 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>            
+	<data>
+
+	<record model="ir.ui.view" id="psd_adhoc_job_form">
+      <field name="name">Adhoc_job</field>
+      <field name="model">adhoc.job</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="Adhoc job creation">
+        <field name="state" widget="statusbar" colspan="4"/>
+        <newline/>
+        <group col="8" colspan="8">
+          <group col="8" colspan="8" string="Customer Details">
+            <field name="adhoc_job_id" colspan="2" invisible="1"/>
+            <field name="cust_name_invisible1" invisible="1"/>
+            <field name="contract_frequency" invisible="1"/>
+            <field name="Sq_foot_area" invisible="1"/>
+            <field name="no_of_services" invisible="1"/>
+            <field name="no_of_inspection" invisible="1"/>
+            <field name="pms_invisible1" invisible="1"/>
+            <field name="cnt" invisible="1"/>
+            <newline/>
+            <group>
+              	<field name="job_category" required="1" attrs="{'readonly':[('state','in',('mid','final'))]}"/>
+              <newline/>
+             <field name="service_order_no" 
+          	 attrs="{'invisible':[('job_category','not in',['adhoc_service','adhoc_service_complaint'])],'readonly':[('state','in',('mid','final'))]}"
+          		 domain="[('state','not in',('new','pending')),('billing_address','=',location)]"
+                on_change="onchange_service_order_no(service_order_no)"/>
+             <field name="erp_order_no"  attrs="{'invisible':[('job_category','not in',['adhoc_product','product_complaint'])],'readonly':[('state','in',('mid','final'))]}"
+          		 domain="[('state','not in',('new','pending')),('billing_location_id','=',location)]"/>
+              <field name="contract_name"/>
+              <field name="adhoc_jobtype" readonly="1"/>
+              <newline/>
+              <field name="expired_contr_no"   domain ="[('partner_id','=',cust_name),('contract_end_date','&lt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" on_change="onchange_jobexpiry_details(expired_contr_no,adhoc_jobtype,location)" attrs="{'readonly':['|',('state','in',('mid','final')),('adhoc_jobtype','=','with_contract')]}"/>
+              <newline/>
+               <!-- <field name="service_order_no" invisible="1"/>
+               <field name="product_order_no" invisible="1"/>
+ -->
+              <field name="contract_strtdt"  attrs="{'readonly':['|','|',('pms_invisible1','=','True'),('state','in',('mid','final')),('adhoc_jobtype','=','without_contract')],
+                 'invisible':[('job_category','in',['adhoc_product','product_complaint'])]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)"/>
+              <newline/>
+             <!--  <field name="job_id" attrs="{'readonly':['|',('state','in',('mid','final')),('expired_contr_no','=','')]}"/>  
+              <newline/> -->
+              <!--<field name="branch_location" colspan="1"/>             -->
+            </group>
+            <group>
+              <field name="cust_name" on_change="onchange_phone_no1(cust_name)" attrs="{'readonly':[('state','in',('mid','final'))]}"/>  
+              <newline/>
+                <field name="delivery_order_no" attrs="{'invisible':[('job_category','not in',['adhoc_product','product_complaint'])],'readonly':[('state','in',('mid','final'))]}"/>
+            <!--   <field name="contract_no" attrs="{'readonly':['|','|',('pms_invisible1','=','True'),('state','in',('mid','final')),('adhoc_jobtype','=','without_contract')]}"  on_change="onchange_details1(cust_name,location,adhoc_jobtype,contract_no,expired_contr_no)"/> -->
+              <newline/>
+                            <newline/>
+              <field name="contact_location"  attrs="{'readonly':['|',('state','in',('mid','final'))]}" on_change="onchange_details1(cust_name,location,adhoc_jobtype,cnt)"/>
+            </group>
+            <group>
+              <field name="location" domain="[('partner_id','=',cust_name)]" required="1" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)" attrs="{'readonly':[('state','in',('mid','final'))]}"/>
+              <newline/>
+             <!--  <field name="service_area"  attrs="{'readonly':[('state','in',('mid','final'))]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)"/>
+              <field name="service_area_new"  attrs="{'readonly':[('state','in',('mid','final')),],'invisible':[('adhoc_jobtype','!=','with_contract')]}"  invisible="1"/>
+              <newline/> -->
+              <field name="cse"  attrs="{'readonly':['|',('state','in',('mid','final'))]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)" string="PSE"/>
+              <newline/>
+              <field name="mobile_no" readonly="1"/>
+              <newline/>
+              <field name="Contract_Period"  attrs="{'readonly':['|','|',('pms_invisible1','=','True'),('state','in',('mid','final')),('adhoc_jobtype','=','without_contract')],
+                'invisible':[('job_category','in',['adhoc_product','product_complaint'])]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)"/>
+                <newline/>
+              <field name="contract_enddt"  attrs="{'readonly':['|','|',('pms_invisible1','=','True'),('state','in',('mid','final')),('adhoc_jobtype','=','without_contract')],
+                'invisible':[('job_category','in',['adhoc_product','product_complaint'])]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)" />
+            </group>
+          </group>
+          <group col="8" colspan="8" string="Job Details" >
+            <group>
+              <field name="adhoc_jobid" readonly="1"/>
+              <newline/>
+              <field name="req_tentdt" required="1" attrs="{'readonly':[('state','in',('mid','final'))]}"/>
+            </group>
+            <group>
+              <field name="adhoc_compl_reqid" invisible="1"/>
+              <newline/>
+             <!--  <field name="Technician_assigned" readonly="1"/>
+              <newline/>
+              <newline/>
+              <field name="is_pim" attrs="{'readonly':[('state','in',('mid','final'))]}"/>  -->             
+            </group>
+            <group>
+             <!--  <field name="pms" attrs="{'readonly':['|',('expired_contr_no','!=',''),('state','in',('mid','final')),('expired_contr_no','=','')],'invisible':[('pms_invisible1','=',False)]}" on_change="onchange_details(cust_name,location,adhoc_jobtype,cnt)"/> -->
+             <field name="equipment_name" attrs="{'invisible':[('job_category','not in',['adhoc_service','adhoc_service_complaint'])],'readonly':[('state','in',('mid','final'))],'required':[('job_category','in',['adhoc_service','adhoc_service_complaint'])]}"/>
+      <!--       <field name="pms_new" attrs="{'readonly':['|',('pms_invisible1','=','True'),('state','in',('mid','final'))],'invisible':[('pms_invisible1','=',True)]}" on_change="onchange_product(pms_new,cust_name,location,adhoc_jobtype)"/> -->
+             <!--  <newline/>
+              <field name="squad_nm" readonly="1"/> -->
+              <newline/>
+              <field name="sale_contract" invisible="1"/>
+            </group>
+          </group>
+        </group>
+      
+      <group col="8" colspan="15">
+        <label string="" colspan="2"/>
+        <button name="psd_save" string="Save" type="object" icon="gtk-go-forward" colspan="1" attrs="{'invisible':[('state','in',('mid','final'))]}" confirm="Do you want to save?"/>
+        <button name="cancel" string="Cancel" type="object" colspan="1" attrs="{'invisible':[('state','in',('mid','final'))]}" confirm="Do you want to cancel?"/><label string="" colspan="2"/>
+      </group>
+      </form>
+      </field>
+    </record>
+
+
+
+		 <record model="ir.ui.view" id="psd_adhoc_job_tree" >
+      <field name="name">Adhoc_job</field>
+      <field name="model">adhoc.job</field>
+      <field name="type">tree</field>
+      <field name="arch" type="xml">                                       
+        <form string="Adhoc job creation">
+        <field name="adhoc_jobtype"/>
+        <field name="cust_name"/>
+        <field name="contract_name"/>
+        <field name="location"/>
+        <field name="service_area"/>
+        <field name="contract_no"/>
+        <field name="contact_location"/>
+        <field name="cse" string="PSE" />
+        <field name="mobile_no"/>
+        <field name="contract_strtdt"/>
+        <field name="contract_enddt"/>
+        <field name="Contract_Period"/>
+        <field name="adhoc_jobid" />
+        <field name="adhoc_compl_reqid"/>
+        <field name="pms"/>
+        <field name="job_category"/>
+        <field name="Technician_assigned"/>
+        <field name="squad_nm"/>
+        <field name="req_tentdt"/>
+        <field name="is_pim"/>
+        <field name="useservice_completeslip"/>
+      </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="psd_adhoc_search_form">
+      <field name="name">Adhoc_search</field>
+      <field name="model">adhoc.search</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="Search: Adhoc Job">
+      <group col="8" colspan="8">
+          <group col="8" colspan="8" string="">
+            <group>
+              <field name="custom_name" colspan="2" on_change="onchange_cust_name(custom_name)"/>
+            </group>
+           <!--  <group>
+              <field name="service_area"/> 
+            </group> -->
+            <group>
+              <field name="phone_no"/>
+            </group>
+            <group>
+              <field name="cse" string="PSE"/>
+            </group>
+           <!--  <group>
+              <field name="pms"/> 
+              <field name="adhoc_job_id" colspan="2" invisible="1"/>
+            </group> -->
+            <group>
+              <field name="adhoc_jobtp"/>
+            </group><newline/>
+            <group>
+              <field name="tent_date_frm"/>
+            </group>
+            <group>
+              <field name="tent_date_to"/>
+            </group>
+          </group>
+      </group>
+      <newline/>
+      <group col="8" colspan="8">
+          <group col="8" colspan="8" string="">
+          <button name="search" string="Search" type="object" colspan="1"/>
+          <!--button name="process" string="process" type="object"/-->
+          <button name="clear" string="Clear" type="object" colspan="1"/><label string="" colspan="6"/>
+          <separator colspan="8"/>
+          </group>
+      </group>
+      <newline/>
+      <group col="8" colspan="8">
+          <group col="8" colspan="8">
+          <button name="create_adhoc_search" string="Create" type="object" colspan="1" invisible="1"/>
+          <label string="" colspan="7"/>
+          <field name="cust_name_invisible" invisible="1"/>
+          </group>
+      </group>
+      <newline/>
+      <group col="8" colspan="8">
+          <group col="8" colspan="8" string="">
+          <field name="attached_contract" colspan="2" groups="base.bm_group"/>
+          <button name="save_contract" string="Save" type="object" colspan="1" confirm="Do you want to Save?"  groups="base.bm_group"/>
+          <label string="" colspan="2"/>  
+          </group>
+          
+      </group>
+      <newline/>
+      <group>
+      <field name="select_all" on_change="onchange_select_all(select_all,adhoc_search_one2many)"/>
+      </group>
+      <group col="8" colspan="8">
+          <group col="9" colspan="9" string="">
+          <field name="adhoc_search_one2many" widget="one2many_list"  context="{'nocreate':1,'nodelete':1}" nolabel="1">
+          <form string="">
+            <field name="check_customer" invisible="1"/>
+            <field name="adhoc_jobid"/>
+            <field name="cust_name"/>
+            <field name="service_area"/>
+            <field name="mobile_no"/>
+            <field name="cse" string="PSE"/> 
+           <!--  <field name="pms"/>  -->
+            <field name="contract_enddt"/>
+            <field name="adhoc_jobtype"/>
+            <field name="adhoc_status"/> 
+            <field name="contract_strtdt" invisible="1"/> 
+            <field name="job_category" invisible="1"/> 
+            <field name="Contract_Period" invisible="1"/> 
+            
+          </form>
+          <tree string="" editable="bottom">
+            <field name="check_customer"/>
+            <field name="adhoc_jobid" readonly="1"/>
+            <field name="cust_name" readonly="1"/>
+            <!-- <field name="service_area" readonly="1"/> -->
+            <field name="mobile_no" readonly="1"/>
+            <field name="cse" readonly="1" string="PSE"/> 
+         <!--    <field name="pms" readonly="1"/>  -->
+            <field name="adhoc_jobtype" readonly="1"/>
+            <field name="contract_enddt" readonly="1"/>
+            <field name="adhoc_status" readonly="1"/> 
+            <button name="adhoc_form" type="object" icon="gtk-go-forward" colspan="1"/>
+            <field name="contract_strtdt" invisible="1" readonly="1"/> 
+            <field name="job_category" invisible="1" readonly="1"/> 
+            <field name="Contract_Period" invisible="1" readonly="1"/>
+          </tree>
+          </field>
+          </group>
+      </group>
+      </form>
+      </field>
+    </record>
+
+    <!-- ############################################################################ -->
+   <!--    <record model="ir.actions.act_window" id="psd_action_detail">
+        <field name="name">Adhoc job</field>
+        <field name="res_model">adhoc.job</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+      </record> -->
+
+
+      <record id="psd_action_detail" model="ir.actions.act_window">
+            <field name="name">Adhoc job</field>
+            <field name="res_model">adhoc.job</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="psd_adhoc_job_form" />
+      </record>
+<!-- 
+      <record id="psd_action_operation_adhoc_job_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_adhoc_job_tree"/>
+            <field name="act_window_id" ref="psd_action_detail"/>
+        </record>
+
+        <record id="psd_action_operation_jadhoc_job_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_adhoc_job_form"/>
+            <field name="act_window_id" ref="psd_action_detail"/>
+        </record> -->
+<!-- ############################################################################ -->
+      <record model="ir.actions.act_window" id="psd_action_adhoc_search">
+        <field name="name">Search: Adhoc Job</field>
+        <field name="res_model">adhoc.search</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+        <field name="view_id" ref="psd_adhoc_search_form" />
+      </record>
+<!-- ############################################################################ -->
+
+<!--consumption search view-->
+    <record model="ir.ui.view" id="psd_consumption_res_view">
+      <field name="name">Consumption Report Search</field>
+      <field name="model">consumption.report.search</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="consumption">
+          <group >
+              <field name="name"/>
+            <!--   <field name="pms" domain="[('type','=','service')]"/> -->
+              <field name="from_date"/>
+              <field name="consumption_id" string="Delivery Document Id"/>
+              <field name="state"/>
+            </group>
+            <group>
+             <field name="to_date"/>
+              <field name="created_date"/>
+              <field name="tech_id"/>
+              <field name="squad_id"/>
+            </group>
+            <newline/>
+            <group>
+              <button name="psd_consumption_search" string="Search" type="object" icon="terp-stock_zoom"/>
+              <button name="psd_consumption_clear" string="Clear" type="object" icon="STOCK_CLEAR"/>
+              <button name="psd_create_consumption_report" string="Create" type="object" icon="add"/>
+              <label string="" colspan="2"/>
+          </group>
+          <newline/>
+          <separator string="Search Result" colspan="4"/>
+          <newline/>
+          <group colspan="4">
+            <field name="search_rel" nolabel="1" widget="one2many_list" context="{'nocreate':1,'nodelete':1}">
+              <tree  editable="top">
+                <field name="name" string="Delivery Document Id" readonly="1"/>
+                <field name="created_date" string="Created Date" readonly="1"/>
+              <!--   <field name="tech_squad_name" string="Technician/Squad Name" readonly="1"/> -->
+                <field name="state" string="State" readonly="1"/>
+                <button name="psd_open_consumption_report" string="" type="object" icon="gtk-go-forward"/>
+              </tree>
+            </field>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record model="ir.ui.view" id="psd_consumption_report_form">
+      <field name="name">consumption_report</field>
+      <field name="model">consumption.report</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form>
+            <field name="expense_bool" invisible="1"/>
+            <newline/>
+            <field name="state" widget="statusbar" statusbar_visible="initial,final" statusbar_colors='{"initial":"green","final":"#4C1700"}'/>
+            <group col="8" colspan = "8">
+              <group>
+                <field name="from_date" colspan="1" attrs="{'readonly':[('state','in','final')]}" /><newline/>
+                <field name="technician_name" colspan="1" attrs="{'readonly':[('state','in','final')]}"/>
+              </group>
+              <group>
+                <field name="to_date" colspan="1" attrs="{'readonly':[('state','in','final')]}"/><newline/>
+                <field name="squad_name" colspan="1" attrs="{'readonly':[('state','in','final')]}"/>
+              </group>
+              <group>
+               <!--  <field name="pms" colspan="1" attrs="{'readonly':[('state','in','final')]}"/><newline/> -->
+                <field name="cust_name" colspan="1" attrs="{'readonly':[('state','in','final')]}"/>
+              </group>
+              <group>
+                <field name="job_id" colspan="1" attrs="{'readonly':[('state','in','final')]}"/>
+              </group>
+               <group>
+                <field name="delivery_note_no" colspan="1" attrs="{'readonly':[('state','in','final')]}"/>
+              </group>
+              
+            </group>
+              <newline/>
+              <group col="6" colspan="6" string=""> 
+                <group>
+                  <button name="psd_search_record" string="Search" type="object" colspan="1" icon="srh"  attrs="{'invisible':[('state','in','final')]}" />
+                </group>
+                <group>
+                  <button name="psd_clear" string="Clear" type="object" colspan="1" icon="clear" attrs="{'invisible':[('state','in','final')]}" />
+                  <field name="user_name" colspan="2" invisible="1"/>                     <field name="date" invisible="1"/>  
+              
+                </group>
+                <group>
+                  <label string="" colspan="1"/>
+                </group>
+                <group>
+                  <label string="" colspan="1"/>
+                </group>
+
+              </group>
+            
+            <newline/>
+              <group col="8" colspan = "8">
+              <field name="consumption_one2many" widget="one2many_list" nolabel="1" context="{'nocreate':1}" attrs="{'readonly':[('state','not in','initial')]}">
+                      <form string="Delivry Details">
+                      <field name="job_id"/>
+                      <field name="cust_name"/>
+                   <!--    <field name="service_location_area"/>
+                      <field name="check" invisible="1"/> -->
+                      <field name="technician_name"/>
+                      <field name="squad_name"/>
+                       <field name="delivery_address"/>
+                       <field name="delivery_note_no"/>
+                        <field name="delivery_note_date"/>
+                      <field name="job_category"/>
+                      <!-- <field name="pms"/> -->
+                <button name="note_estimate" string="Note Estimate" type="object" icon='index'/>
+                </form>
+                      <tree string="Consumption Report" editable="top" colors="green:check==True;">
+                            <field name="job_id" readonly="1"/>
+                            <field name="cust_name" readonly="1"/>
+                            <!-- <field name="service_location_area" readonly="1"/> -->
+                            <field name="check" invisible="1"/>
+                            <field name="technician_name" readonly="1"/>
+                            <field name="squad_name" readonly="1"/>
+                             <field name="delivery_address" readonly="1"/>
+                             <field name="delivery_note_no" readonly="1"/>
+                        <field name="delivery_note_date" readonly="1"/>
+                      <field name="job_category" readonly="1"/>
+                           <!--  <field name="pms" readonly="1"/> -->
+                <button name="psd_note_estimate" string="Note Estimate" type="object" icon='index' />
+                </tree>
+                </field>            
+                </group>
+              <newline/>
+        <group col="4" colspan = "4">
+              <!-- <group>
+              <button name="view_consumption_report" string="View Consumption Report" type="object" colspan="1"/>
+              </group> -->
+
+              <group>             
+              <button name="psd_record_consumption" string="Completed" type="object" colspan="1" attrs="{'invisible':[('state','=','final')]}" confirm="Do you want to process?"/>
+              <!-- <button name="update_expense" string="Update Expense" type="object" colspan="1" attrs="{'invisible':['|',('state','=','initial'),('expense_bool','=',True)]}" confirm="Do you want to process?"/> -->
+
+              </group>
+              <group>
+                <label string="" colspan="1"/>
+              </group>
+              <group>
+                <label string="" colspan="1"/>
+              </group>
+
+        </group>
+          <group>
+            <field name="technician_squad_one2many" widget="one2many_list" colspan="4" nolabel="1" invisible="1">
+                <form string="">
+                  <field name="sr_no"/>
+                  <field name="technician"/>
+                  <field name="job_id"/>
+                  <field name="technician_chemical"/>
+                  <field name="qty_in_hand"/>
+                  <field name="qty_issue"/>
+                  <field name="batch_no"/>
+                  <field name="tag_id"/>
+                  <field name="uom"/>
+                  <field name="squad"/>
+                  <field name="squad_chemical"/>
+                  <field name="tech_chemical_one2many" widget="one2many_list" colspan="4" nolabel="1" invisible="1">
+                          <tree string="" editable="bottom">
+                                  <field name="technician_chemical"/>
+                                  <field name="qty_issue"/>
+                                  <field name="consumed_qty"/>
+                                  <field name="batch_no"/>
+                                  <field name="tag_id"/>
+                                  <field name="uom"/>
+                          </tree>
+                              </field>
+                </form>
+                <tree string="" editable="bottom">
+                  <field name="sr_no"/>
+                  <field name="technician"/>
+                  <field name="job_id"/>
+                  <field name="technician_chemical"/>
+                  <field name="qty_in_hand"/>
+                  <field name="qty_issue"/>
+                  <field name="consumed_qty"/>
+                  <field name="batch_no"/>
+                  <field name="tag_id"/>
+                  <field name="uom"/>
+                  <field name="squad"/>
+                  <field name="squad_chemical"/>
+                </tree>
+              </field>
+            </group>
+            <group>
+            <field name="technician_squad_one2many_final" widget="one2many_list" colspan="4" nolabel="1" invisible="1">
+                <tree string="" editable="bottom">
+                  <field name="sr_no"/>
+                  <field name="technician"/>
+                  <field name="job_id"/>
+                  <field name="technician_chemical"/>
+                  <field name="qty_issue"/>
+                  <field name="consumed_qty"/>
+                  <field name="batch_no"/>
+                  <field name="tag_id"/>
+                  <field name="uom"/>
+                </tree>
+              </field>
+            </group>
+    </form>   
+    </field>
+    </record>
+
+  
+
+
+    <!-- Assign Resource Views -->
+    <record model="ir.ui.view" id="psd_assign_res_view">
+      <field name="name">Confirm Product Job Orders</field>
+      <field name="model">assign.res.search</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="assign resource">
+            <group colspan="8" col="8">
+              <field name="tech_id"/>
+              <field name="from_date"/>
+              <field name="to_date"/>
+              <field name="created_date"/>
+
+              <newline/>
+              <field name="squad_id"/>
+              <field name="assign_id" string="Assigned Document ID"/>
+              <label string="" colspan="2"/>
+              <label string="" colspan="2"/>
+          </group>
+            <newline/>
+            <group col="8" colspan="4">
+              <button name="psd_assign_search" string="Search" type="object" icon="terp-stock_zoom"/>
+              <button name="psd_assign_clear" string="Clear" type="object" icon="STOCK_CLEAR"/>
+              <button name="psd_create_assign_resource" string="Create" type="object" icon="add"/>
+              <label string="" colspan="2"/>
+            </group>
+          <newline/>
+           <newline/>
+          <group col="6" colspan="6" string="">
+            <group>
+                <label string="" colspan="1"/>
+            <newline/>
+                <label string="" colspan="1"/>
+            </group>
+            
+          </group><newline/>
+          <separator string="Search Result" colspan="4"/>
+          <newline/>
+          <group colspan="4">
+            <field name="search_rel" nolabel="1" widget="one2many_list" context="{'nocreate':1,'nodelete':1}">
+              <tree editable="top">
+                <field name="name" string="Assigned Document ID" readonly="1"/>
+                <field name="created_date" string="Created Date" readonly="1"/>
+                 <!--  <field name="tech_squad_name" string="Technician/Squad Name" readonly="1"/> -->
+                <field name="state" string="State" readonly="1"/>
+                <button name="psd_open_assign_resource" string="" type="object" icon="gtk-go-forward"/>
+              </tree>
+            </field>
+          </group>
+        </form>
+      </field>
+    </record>
+    <!-- END -->
+
+
+
+
+
+
+
+
+
+    <!-- Wizard on Update delivery grid consumption_report_details-->
+ 
+
+    <record model="ir.ui.view" id="psd_product_consumption_report_detail_form">
+      <field name="name">consumption_report_detail</field>
+      <field name="model">consumption.report.detail</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form>
+        <field name="state" widget="statusbar" invisible="1"/>
+        <group col="10" colspan="8">
+          <newline/>
+          <group>
+            <field name="job_duration" widget="float_time" readonly="1"/><newline/>
+            <field name="job_start_date" readonly="1"/><newline/>
+            <field name="job_id" readonly="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <field name="cust_name" readonly="1"/><newline/>
+            <field name="job_end_date" attrs="{'readonly':[('state','in',('final','expense'))]}"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <field name="attached_completion_slip" attrs="{'readonly':[('state','in',('final','expense'))]}" string="Attatch File"/><newline/>
+         <!--    <field name="service_location_area" readonly="1"/> -->
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/>
+          </group>
+        </group>
+        <newline/>
+        <group col="10" colspan="10">
+          <group>
+            <button name="consumed_save" string="Save" type="object" confirm="Do you want to save?" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group>
+          <group>
+            <button name="consumed_cancel" string="Cancel" type="object" confirm="This Action will Delete Reord" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group>
+          <!-- <group>
+            <button name="update_manhrs" string="Update Man Hrs" type="object" confirm="This Action will calculate job start and end time" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group> -->
+          <group>
+            <label string="" colspan="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/>
+          </group>
+        </group>
+        <newline/>
+        <field name="consumption_report_id" invisible="1"/>
+        <notebook colspan="4">
+          <page string="General Details">
+            <field name="product_transfer_ids" nolabel="1" context="{'nocreate':1}">
+                <tree string="Product List">
+                <field name="product_code" invisible="1"/>
+                <field name="product_name"/>
+                <field name="generic_id"  widget="selection" on_change="onchange_product_generic(product_name)"/> 
+                <field name="product_category"/>
+                <field name="product_uom"/>
+                <field name="extended_warranty"/>
+                <field name="qty_indent" string="Qty"/>
+                <field name="godown" invisible="1"/>
+                <field name="batch" domain="[('batch_no','=',product_name.batch),('branch_name','=',godown)]"/>
+                <field name="quantity" string="Allocated Quantity"/>
+                <field name="rate" string="Rate"/>
+                <field name="local_rate" string="Rate" invisible="1"/>
+                <field name="tax_id" invisible="1"/>
+                <field name="tax_amount" readonly="1"/>
+                <field name="discounted_value" invisible="1"/>
+                <field name="discount" invisible="1"/>
+                <field name="discounted_price" invisible="1"/>
+                <field name="discounted_amount" readonly="1"/>
+                <field name="amount"/>
+              </tree>
+            </field>
+          </page>
+          <page string="Manpower Utilization">
+            <field name="manpower_one2many" widget="one2many_list"  colspan="2" nolabel="1">
+                        <tree string="Manpower Utilisation" editable="bottom">
+                <field name="empl"/>
+                <field name="designation" groups="base.group_hr_testing"/>
+                <field name="designation1" readonly="1"/>
+                <field name="no_of_manpower" groups="base.group_hr_testing"/>
+                <field name="no_of_hours"  widget="float_time"/>
+              <!--   <field name="manpower_cost" groups="base.group_hr_testing"/>
+                <field name="overtime_cost" groups="base.group_hr_testing"/>
+                <field name="emp_code" groups="base.group_hr_testing"/> -->
+                <field name="no_of_over_time_hours" widget="float_time"/>
+                <field name="no_hr_waste" invisible="1"/>
+                        </tree>
+              <form string="Manpower Utilisation">
+                <field name="empl"/>
+                <field name="designation" groups="base.group_hr_testing"/>
+                <field name="designation1" readonly="1"/>
+                <field name="no_of_manpower" groups="base.group_hr_testing"/>
+                <field name="no_of_hours" widget="float_time"/>
+               <!--  <field name="manpower_cost" groups="base.group_hr_testing"/>
+                <field name="overtime_cost" groups="base.group_hr_testing"/>
+                <field name="emp_code" groups="base.group_hr_testing"/> -->
+                <field name="no_of_over_time_hours" widget="float_time"/>
+                <field name="no_hr_waste" groups="base.group_hr_testing"/>
+                        </form>
+                    </field>
+          </page>
+          <page string="Notes">
+            <field name="res_comment_line" widget="one2many_list" colspan="2" nolabel="1">
+                  <tree string="Comments" editable="bottom">
+                    <field name="user_id" readonly="1"/>
+                    <!--field name="source"/-->
+                    <field name="comment_date" readonly="1"/>
+                    <field name="comment"/>
+                    <field name="sequence" invisible="1"/>
+                  </tree>
+            </field>
+        </page>
+         <page string="Remarks">
+           <field name="remark" required="1"/>
+          </page> 
+        </notebook>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="psd_bulk_resc_wizard">
+      <field name="name">consumption_repo_detail</field>
+      <field name="res_model">consumption.report.detail</field>
+      <field name="view_type">form</field>
+      <field name="view_id" ref="psd_product_consumption_report_detail_form"/>
+      <field name="view_mode">form,tree</field>
+    </record>
+
+    <record model="ir.ui.view" id="psd_service_consumption_report_detail_form">
+      <field name="name">consumption_report_detail</field>
+      <field name="model">consumption.report.detail</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="assign resource">
+         <field name="state" widget="statusbar" invisible="1"/>
+        <group col="10" colspan="8">
+          <newline/>
+          <group>
+            <field name="job_duration" widget="float_time" readonly="1"/><newline/>
+            <field name="job_start_date" readonly="1"/><newline/>
+            <field name="job_id" readonly="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <field name="cust_name" readonly="1"/><newline/>
+            <field name="job_end_date" attrs="{'readonly':[('state','in',('final','expense'))]}"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <field name="attached_completion_slip" attrs="{'readonly':[('state','in',('final','expense'))]}" string="Attatch File"/><newline/>
+         <!--    <field name="service_location_area" readonly="1"/> -->
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/><newline/>
+            <label string="" colspan="1"/>
+          </group>
+        </group>
+        <newline/>
+        <group col="10" colspan="10">
+          <group>
+            <button name="consumed_save" string="Save" type="object" confirm="Do you want to save?" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group>
+          <group>
+            <button name="consumed_cancel" string="Cancel" type="object" confirm="This Action will Delete Reord" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group>
+         <!--  <group>
+            <button name="update_manhrs" string="Update Man Hrs" type="object" confirm="This Action will calculate job start and end time" attrs="{'invisible':[('state','=','expense')]}"/>
+          </group> -->
+          <group>
+            <label string="" colspan="1"/>
+          </group>
+          <group>
+            <label string="" colspan="1"/>
+          </group>
+        </group>
+        <newline/>
+        <field name="consumption_report_id" invisible="1"/>
+        <notebook>
+            <page string="General Details">
+                <!--   <field name="cust_name" readonly="1"/> -->
+              <field name="service_order_no" readonly="1"/>
+              <field name="site_address" readonly="1"/>
+              <field name="job_category" readonly="1"/>
+              <field name="classification" readonly="1"/>
+              <field name="service_type" readonly="1"/>
+              <field name="order_period_from" readonly="1"/>
+              <field name="order_period_to" readonly="1"/>
+              <field name="equipment_name" readonly="1"/>
+          </page>
+            <page string="Manpower Utilization">
+                  <field name="manpower_one2many" widget="one2many_list"  colspan="2" nolabel="1">
+                        <tree string="Manpower Utilisation" editable="bottom">
+                <field name="empl"/>
+                <field name="designation" groups="base.group_hr_testing"/>
+                <field name="designation1" readonly="1"/>
+                <field name="no_of_manpower" groups="base.group_hr_testing"/>
+                <field name="no_of_hours"  widget="float_time"/>
+             <!--    <field name="manpower_cost" groups="base.group_hr_testing"/>
+                <field name="overtime_cost" groups="base.group_hr_testing"/>
+                <field name="emp_code" groups="base.group_hr_testing"/> -->
+                <field name="no_of_over_time_hours" widget="float_time"/>
+                <field name="no_hr_waste" invisible="1"/>
+                        </tree>
+              <form string="Manpower Utilisation">
+                <field name="empl"/>
+                <field name="designation" groups="base.group_hr_testing"/>
+                <field name="designation1" readonly="1"/>
+                <field name="no_of_manpower" groups="base.group_hr_testing"/>
+                <field name="no_of_hours" widget="float_time"/>
+              <!--   <field name="manpower_cost" groups="base.group_hr_testing"/>
+                <field name="overtime_cost" groups="base.group_hr_testing"/>
+                <field name="emp_code" groups="base.group_hr_testing"/> -->
+                <field name="no_of_over_time_hours" widget="float_time"/>
+                <field name="no_hr_waste" groups="base.group_hr_testing"/>
+                        </form>
+                    </field>
+          </page>
+         <page string="Notes">
+            <field name="res_comment_line" widget="one2many_list" colspan="2" nolabel="1">
+                  <tree string="Comments" editable="bottom">
+                    <field name="user_id" readonly="1"/>
+                    <!--field name="source"/-->
+                    <field name="comment_date" readonly="1"/>
+                    <field name="comment"/>
+                    <field name="sequence" invisible="1"/>
+                  </tree>
+            </field>
+        </page>
+         <page string="Remarks">
+           <field name="remark" required="1"/>
+          </page> 
+        </notebook>
+      </form>
+    </field>
+  </record>
+
+  <record model="ir.actions.act_window" id="psd_srvice_bulk_resc_wizard">
+      <field name="name">consumption_repo_detail</field>
+      <field name="res_model">consumption.report.detail</field>
+      <field name="view_type">form</field>
+      <field name="view_id" ref="psd_service_consumption_report_detail_form"/>
+      <field name="view_mode">form,tree</field>
+    </record>
+
+  	</data>
+</openerp>

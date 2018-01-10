@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="complaint_location_addition_form" model="ir.ui.view" >
+            <field name="name">complaint.location.addition.form</field>
+            <field name="model">complaint.location.addition</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='New Customer Location'>
+                    <group col="6" colspan="4">
+                        <group col="4" >
+                            <separator colspan="5" 
+                                string="Address Detail ( Fields mark with * are  
+                                mandatory fields)"/>
+                            <field name="title"/>
+                            <field name="first_name" required="1"/>
+                            <field name="middle_name"/>
+                            <field name="last_name" required="1"/>
+                            <field name="designation"/>
+                            <field name="premise_type" required="1"/>
+                            <field name="location_name"/>
+                            <field name="apartment" required="1"/>
+                            <field name="building" required="1"/>
+                            <field name="sub_area"/>
+                            <field name="street"/>
+                            <field name="landmark"/>
+                            <field name="city_id" on_change="onchange_city_id(city_id)"/>
+                            <field name="district"/>
+                            <field name="tehsil"/>
+                            <field name="state_id" required="1"/>
+                            <field name="zip"/>
+                        </group>
+                                        
+                        <group colspan="2" col="3">
+                            <separator string="Communication" colspan="6"/>
+                            <newline/>          
+                             <field name="complaint_id" invisible="1"/>                          
+                            <field name="phone" string="Phone Number"
+                                   domain='[("complaint_request_id", "=", complaint_id)]'/>
+                            <button name="create_number_psd" type="object" 
+                                    string="Create" icon="add" colspan=".5"/>
+                            <newline/>
+                            <field name="fax" colspan="3"/>
+                            <field name="email" widget="email" colspan="3"/>
+                            <newline/>
+                        <group>
+
+                        </group>
+                        <button string="Save" 
+                                name="save_new_customer_location" 
+                                type="object"/>     
+                        </group>    
+                    </group>
+                </form>  
+            </field>   
+        </record>       
+    </data>
+</openerp>

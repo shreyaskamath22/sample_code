@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+   	<!--
+  	<record model="ir.ui.view" id="psd_account_contra_form">
+		<field name="name">Contra Note Form</field>
+		<field name="model">contra.entry</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Credit Note">
+			 <group col="8" colspan="8">
+					<newline/>
+				  	<field name="contra_no" colspan="2" readonly="1"/>
+				  	<field name="psd_accounting" invisible="1"/>
+					<label string="" colspan="0.5"/>
+					<field name="contra_date" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					<label string="" colspan="3.5"/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				<group col="8" colspan="8" string=" ">
+				     <group col="8" colspan="8" >
+					<field name="contra_type" colspan="4" attrs="{'readonly':[('state','in',('done','cancel'))]}"  on_change="change_account_type(contra_type,type)"/>
+					<field name="account_id" colspan="3" attrs="{'readonly':[('state','in',('done','cancel'))]}" domain="[('type','!=','view')]" on_change="psd_change_account_type_new(contra_type,account_id)" />
+					<field name="type" colspan="0.5" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					<field name="voucher_type" invisible="1"/>
+					
+					<button name="psd_add_contra" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+					<newline/>
+					</group>
+				     <group col="8" colspan="8" >
+					<field name="contra_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}" attrs="{'readonly':[('state','in',('done','cancel'))]}">
+						<tree editable="bottom">
+							<field name="account_id" readonly="1"/>
+							<field name="contra_type" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+							<button name="psd_add" string="Add" type="object" icon="gtk-go-forward"/>
+						</tree>
+						<form string="Contra Entry">
+							<field name="account_id" readonly="1"/>
+							<field name="contra_type" required="1" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="debit_amount"/>
+							<field name="credit_amount"/>
+						</form>
+					</field>
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>					     
+					<label string="" colspan="2"/>
+					<field name="debit_amount" invisible="1"/>
+					<field name="credit_amount" invisible="1"/>
+				     </group>
+				     <group col="8" colspan="8">
+					     <button name="psd_process" string="Process" type="object" colspan="1" states="draft" icon="terp-camera_test" confirm="Do you want to Process?"/>
+					     <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					     <label string="" colspan="6"/>
+					    <field name="search_contra_type" invisible="1"/>
+					    <newline/>
+					     <field name="cancel_bool"  attrs="{'invisible':[('state','in',('draft'))],'readonly':[('state','in',('cancel'))]}" groups="base.group_Administrator" />
+					     <field name="cancel_reason" attrs="{'invisible':[('cancel_bool','=',False)],'required':[('cancel_bool','=',True)],'readonly':[('state','in',('cancel'))]}" colspan="4"/>
+					     <button name="cancellation" string="Cancel" type="object" colspan="1"  icon="gtk-cancel" confirm="Do you want to Cancel?" attrs="{'invisible':['|',('cancel_bool','=',False),('state','in',('cancel'))],'required':[('cancel_bool','=',True)]}"/>
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+  	<record model="ir.ui.view" id="psd_contra_iob_one_form">
+		<field name="name">Contra IOB A/C I Payment Form</field>
+		<field name="model">contra.entry.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+			          <button name="save_iob_one" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state1','=','done')]}"/>
+			          <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state1','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="4"/>
+			  </group><newline/>
+			  <group col="4" colspan="4" >
+					<field name="contra_iob_one_one2many" widget="one2many_list" nolabel="1" colspan="3.5" attrs="{'readonly':[('state1','=','done')]}">
+						<tree editable="bottom">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name" widget="selection"/>
+							<field name="bank_branch_name"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</tree>
+						<form string="Details">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name"/>
+							<field name="bank_branch_name"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</form>
+					</field>
+					<field name="state1" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+
+
+  	<record model="ir.ui.view" id="psd_contra_iob_two_form">
+		<field name="name">Contra IOB A/C II Payment Form</field>
+		<field name="model">contra.entry.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+				 <group col="8" colspan="8">
+					  <button name="save_iob_two" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state1','=','done')]}"/>
+					  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state1','=','done')]}" confirm="Do you want to cancel?"/>
+					  <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+				  </group>
+				     <group col="8" colspan="8" >
+					<field name="contra_iob_two_one2many" widget="one2many_list" nolabel="1" colspan="4" attrs="{'readonly':[('state1','=','done')]}">
+						<tree editable="bottom">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name_new" />
+							<field name="bank_branch_name"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name_new"/>
+							<field name="bank_branch_name"/>
+							<field name="bank_reco_date"/>
+						</form>
+
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state1" invisible="1"/>
+				     </group>
+			</form>
+		</field>
+	</record>
+
+
+ 	<record model="ir.ui.view" id="psd_account_contra_tree">
+		<field name="name">Contra </field>
+		<field name="model">contra.entry</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree colors="red:credit_amount==0" string="Credit Note">
+				<field name="contra_no"/>
+				<field name="contra_date"/>
+				<field name="search_contra_type" string="Particulars"/>
+				<field name="debit_amount" sum="Total"/>
+				<field name="credit_amount" sum="Total"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="psd_contra_search" model="ir.ui.view">
+		<field name="name">Contra Search View</field>
+		<field name="model">contra.entry</field>	
+		<field name="priority" eval="16"/>	
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Contra Entry">
+				<group colspan="8" col="8">
+					<field name="contra_no" colspan="2"/>
+					<field name="search_contra_type"/>
+					<field name="from_date" string="From Date" filter_domain="[('contra_date','&gt;=',self)]"/>
+					<field name="to_date" string="To Date" filter_domain="[('contra_date','&lt;=',self)]"/>
+					<field name="search_contra_type" invisible="1" string="Particulars"/>
+					<field name="state" colspan="2"/>
+				</group>
+			</search>
+		</field>	
+	</record>
+
+
+	<record id="psd_action_account_contra" model="ir.actions.act_window">
+            <field name="name">Contra  Entry</field>
+            <field name="res_model">contra.entry</field>
+            <field name="type">ir.actions.act_window</field>
+	    <field name="limit">10</field>
+	    <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+	    <field name="context">{'nodelete':1}</field>
+	    <field name="domain">[('contra_no','!=',False)]</field>
+        </record> 
+
+-->
+    </data>
+</openerp>

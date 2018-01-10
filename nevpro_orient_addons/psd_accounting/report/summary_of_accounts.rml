@@ -1,0 +1,1099 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,800.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+     <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#000000" start="0,0" stop="-1,-1"/>
+    </blockTableStyle>
+    
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="GRID" colorName="#000000" start="0,0" stop="-1,-1"/>
+     
+    </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,-1" stop="8,-1"/>
+      
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+       <lineStyle kind="LINEAFTER" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,-1" stop="8,-1"/>
+      
+    </blockTableStyle>
+        <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,-1" stop="8,-1"/>
+    </blockTableStyle>
+   
+    <blockTableStyle id="Table8">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+ 
+    <blockTableStyle id="Table9">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table10">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="13" alignment="CENTER"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P6" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="RIGHT"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="6.0" leading="10" alignment="RIGHT"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P11" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P12" fontName="Helvetica" fontSize="5.0" leading="9" alignment="CENTER"/>
+    <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="LEFT"/>
+    <paraStyle name="P14" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT"/>
+    <paraStyle name="P15" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P16" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P17" fontName="Helvetica" fontSize="2.0" leading="3" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P18" fontName="Helvetica" fontSize="2.0" leading="3" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P19" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="P20" fontName="Helvetica-Bold" fontSize="8.0" leading="13" alignment="CENTER"/>
+    <paraStyle name="P21" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P22" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P23" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P24" fontName="Helvetica-Bold" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P25" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P26" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P27" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P28" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P29" fontName="Helvetica" fontSize="6.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P30" fontName="Helvetica" fontSize="7.0" leading="9" alignment="CENTER"/>
+    <paraStyle name="P31" fontName="Helvetica-Bold" fontSize="2.0" leading="3" alignment="LEFT"/>
+    <paraStyle name="P32" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT"/>
+    <paraStyle name="P33" fontName="Helvetica-Bold" fontSize="115%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="P34" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P35" fontName="Helvetica" fontSize="6.5" leading="10" alignment="LEFT"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="12.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="13.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="6.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Heading 1" fontName="Helvetica-Bold" fontSize="115%" leading="NaN" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Footer" fontName="Helvetica"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="P15">[[repeatIn(objects,'o')]]</para>
+   
+  
+
+    <blockTable colWidths="175.0,200.0,175" style="Table1">
+    <tr>
+<td>
+
+</td>
+
+<td>
+          <para style="P2">PEST CONTROL (INDIA) PVT LTD</para>
+          <para style="P3">[[o.company_id.name]]</para>
+          <para style="P3">[[ get_branch_addr(o.company_id.id) ['branch_addr'] ]]</para> 
+         <para style="P12">
+            <font color="white"> </font>
+          </para>
+          <para style="P3">Summary Of Accounts </para>
+          <para style="P7">Form : SOA </para>
+          <para style="P7">For The Period : [[ formatLang(o.from_date,date=True) ]] - [[ formatLang(o.to_date,date=True) ]]</para>
+          <para style="P12">
+            <font color="white"> </font>
+          </para>
+         
+          
+</td>
+
+<td>
+ <blockTable colWidths="85,90" style="Table1">
+        <tr>
+          <td>
+          <para style="P12">
+                    <font color="white"> </font>
+                  </para>
+          </td>
+          <td>
+            <illustration height="50.0" width="50.0">
+              <image x="-21" y="7" height="45.0" width="50.0">[[o.company_id.logo]]</image>
+              </illustration>
+            
+          </td>
+        </tr>
+        </blockTable>
+
+</td>
+
+
+    </tr>
+
+</blockTable>
+<blockTable colWidths="490,94" style="Table1">
+  <tr>
+    <td>
+      <para style="P12">
+            <font color="white"> </font>
+          </para>
+    </td>
+    <td>
+       <para style="P3">[[ get_current_time() ]]</para>
+    </td>
+  </tr>
+</blockTable>
+
+<!--blockTable colWidths="262.0,40.0,70.0,71.0,71.0,70.0" style="Table2"-->
+    <blockTable colWidths="220.0,30.0,67.0,68.0,66.0,68.0,65" style="Table2">
+      <tr>
+        <td>
+          <para style="P3">Description</para>
+        </td>
+        <td>
+          <para style="P3">Form</para>
+        </td>
+        <td>
+          <para style="P3">Cash</para>
+        </td>
+        <td>
+          <para style="P3">[[ get_account_name(o.id,o.to_date) ['iob_one_1'] ]]</para>
+        </td>
+        <td>
+          <para style="P3">[[ get_account_name(o.id,o.to_date) ['iob_two'] ]]</para>
+        </td>
+        <td>
+          <para style="P3">[[ get_account_name(o.id,o.to_date) ['iob_one_2'] ]]</para>
+        </td>
+        <td>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="583.0" style="Table3">
+      <tr>
+        <td>
+          <!--blockTable colWidths="12.0,205.0,38.0,40.0,70.0,71.0,71.0,69.5" style="Table4"-->
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table4">
+            <tr>
+              <td>
+                <para style="P3">A</para>
+              </td>
+              <td>
+                <para style="P4">OPENING BALANCE B/F </para>
+              </td>
+              <td>
+                <para style="P4">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ closing_balance_calc(o.cash_opening) ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ closing_balance_calc(o.iob_one_opening) ]]</para>
+              </td> 
+              <td>
+                <para style="P8">[[ closing_balance_calc(o.iob_two_opening) ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ closing_balance_calc(o.iob_one_opening_second) ]]</para>
+              </td>  
+            </tr>
+          </blockTable>
+          
+          <blockTable colWidths="14.0,531.0" style="Table5">
+            <tr>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P34">ADD : RECEIPTS </para>
+              </td>
+            </tr>
+          </blockTable>
+         
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P7">I</para>
+              </td>
+              <td>
+                <para style="P34">Statement of Collections </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">SOC </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_sales_receipts_cash or '' ]] [[o.total_sales_receipts_cash and 'Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_sales_receipts_iob_one or '' ]] [[ o.total_sales_receipts_iob_one and 'Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+               <td>
+                <para style="P8">[[ o.total_sales_receipts_iob_one_second or '' ]] [[ o.total_sales_receipts_iob_one_second and 'Dr' or '' ]]</para>
+              </td>
+              
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">II</para>
+              </td>
+              <td>
+                <para style="P10">Cash Collected &amp; Deposited into Bank A/c </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.cash_collected_iob_one or '' ]][[ o.cash_collected_iob_one and ' Dr' or '' ]]</para>
+              </td>
+              <td>
+
+                
+                  <para style="P8">[[ o.cash_collected_iob_two or '' ]][[ o.cash_collected_iob_two and ' Dr' or '' ]]</para>
+               
+
+              </td>
+               <td>
+                <para style="P8">[[ o.cash_collected_iob_one_second or '' ]][[ o.cash_collected_iob_one_second and ' Dr' or '' ]]</para>
+              </td>
+               
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P7">I</para>
+              </td>
+              <td>
+               <para style="P10">Statement of Other Receipts </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SOR </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_other_receipts_cash or '' ]] [[ o.total_other_receipts_cash and 'Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_other_receipts_iob_one or '' ]] [[ o.total_other_receipts_iob_one and 'Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_other_receipts_iob_two or '' ]] [[ o.total_other_receipts_iob_two and 'Dr' or '' ]]
+</para>
+              </td>
+              <td>
+                <para style="P8">[[ o.total_other_receipts_iob_one_second or '' ]] [[ o.total_other_receipts_iob_one_second and 'Dr' or '' ]]</para>
+              </td>
+              
+              
+             </tr>
+          </blockTable>
+
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">IV</para>
+              </td>
+              <td>
+                <para style="P10">Statement of Funds Transferred from [[ get_account_name(o.id,o.to_date) ['iob_one_1'] ]] [[ get_account_name(o.id,o.to_date) ['iob_one_2'] != False and '/' or '' ]] [[ get_account_name(o.id,o.to_date) ['iob_one_3'] != False and '/' or '' ]]  to [[ get_account_name(o.id,o.to_date) ['iob_two'] ]] </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SFT </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.contra_iob_two or '' ]][[ o.contra_iob_two and ' Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">V</para>
+              </td>
+              <td>
+                <para style="P10">Cash withdrawn from [[ get_account_name(o.id,o.to_date) ['iob_two'] ]] </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SCW </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.cash_withdrawn or '' ]] [[ o.cash_withdrawn and 'Dr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+               <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+               
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">VI</para>
+              </td>
+              <td>
+                <para style="P10">Base Bank Collection Deposited in [[ get_account_name(o.id,o.to_date) ['iob_one'] ]] </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table7">
+            <tr>
+              <td>
+                <para style="P5">B</para>
+              </td>
+              <td>
+                <para style="P4">TOTAL RECEIPTS &lt; I to VI &gt; </para>
+              </td>
+              <td>
+                <para style="P6">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P6">[[closing_balance_calc(o.cash_total1)]]</para>
+              </td>
+              <td>
+                <para style="P6">[[closing_balance_calc(o.iob_one_total1)]]</para>
+              </td>
+              <td>
+                <para style="P6">[[closing_balance_calc(o.iob_two_total1)]]</para>
+              </td>
+              <td>
+                <para style="P6">[[closing_balance_calc(o.iob_one_total1_second)]]</para>
+              </td>
+
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table7">
+            <tr>
+              <td>
+                <para style="P5">C</para>
+              </td>
+              <td>
+                <para style="P4">SUB TOTAL ( A + B ) </para>
+              </td>
+              <td>
+                <para style="P6">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.sub_total_cash) ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.sub_total_iob_one )]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.sub_total_iob_two )]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.sub_total_iob_one_second)]]</para>
+              </td>
+             
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="17.0,528.0" style="Table8">
+            <tr>
+              <td>
+                <para style="P11">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P10">LESS : PAYMENTS / EXPENDITURE </para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">VII</para>
+              </td>
+              <td>
+                <para style="P10">Statement of Payments </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SOP </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.payment_cash_credit or '' ]] [[ o.payment_cash_credit and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">[[ o.payment_iob_one_cr or '' ]] [[ o.payment_iob_one_cr and 'Cr' or '' ]] </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.payment_iob_two_cr or '' ]] [[ o.payment_iob_two_cr and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">
+                  [[ o.payment_iob_one_two_cr or '' ]] [[ o.payment_iob_one_two_cr and 'Cr' or '' ]]
+                </para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">VII</para>
+              </td>
+              <td>
+                <para style="P10">Cash Deposited into Bank A/c </para>
+              </td>
+                            <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.cash_deposited or '' ]] [[ o.cash_deposited and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.cash_deposited_iob_two_cr or '' ]] [[ o.cash_deposited_iob_two_cr and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">IX</para>
+              </td>
+              <td>
+                <para style="P10">Statement of Funds Transferred from [[ get_account_name(o.id,o.to_date) ['iob_one_1'] ]] [[ get_account_name(o.id,o.to_date) ['iob_one_2'] [[ get_account_name(o.id,o.to_date) ['iob_one_3'] !=False and '/' or '' ]]   to [[ get_account_name(o.id,o.to_date) ['iob_two'] ]] </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SFT </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.contra_iob_one or '' ]][[ o.contra_iob_one and ' Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.contra_iob_one_second or '' ]][[ o.contra_iob_one_second and ' Cr' or '' ]]</para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">X</para>
+              </td>
+              <td>
+                <para style="P10">Cash withdrawn from [[ get_account_name(o.id,o.to_date) ['iob_two'] ]] </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SCW </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.cash_withdrawn_iob_two_cr or '' ]] [[ o.cash_withdrawn_iob_two_cr and 'Cr' or '' ]]</para>
+              </td>
+                <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+               
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">XI</para>
+              </td>
+              <td>
+                <para style="P10">Funds Remitted to Head Office / Branches </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SFR </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.ho_remittance or '' ]] [[ o.ho_remittance and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.ho_remittance_second or '' ]] [[ o.ho_remittance_second and 'Cr' or '' ]]</para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <!--para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="12.0,205.0,38.0,40.0,70.0,71.0,71.0,69.5" style="Table20">
+            <tr>
+              <td>
+                <para style="P9">XII</para>
+              </td>
+              <td>
+                <para style="P10">Funds Transferred to H.O. </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.funds_transfer_ho or '' ]] [[ o.funds_transfer_ho and 'Cr' or '' ]]</para>
+              </td>
+               <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+            </tr>
+          </blockTable-->
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">XII</para>
+              </td>
+              <td>
+                <para style="P10">Statement of Bank Charges </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P9">SBC </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.bank_charges_cash or '' ]] [[ o.bank_charges_cash and 'Cr' or '' ]] </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.bank_charges_iob_one or '' ]] [[ o.bank_charges_iob_one and 'Cr' or '' ]] </para>
+              </td>
+              <td>
+                <para style="P8">[[ o.bank_charges_iob or '' ]] [[ o.bank_charges_iob and 'Cr' or '' ]]</para>
+              </td>
+                <td>
+                <para style="P8">
+                   [[ o.bank_charges_iob_one_b2 or '' ]] [[ o.bank_charges_iob_one_b2 and 'Cr' or '' ]]
+                </para>
+              </td>
+               
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table6">
+            <tr>
+              <td>
+                <para style="P9">XIII</para>
+              </td>
+              <td>
+                <para style="P10">Base Bank Funds Transfers to [[ get_account_name(o.id,o.to_date) ['iob_one_1'] ]] [[ get_account_name(o.id,o.to_date) ['iob_one_2'] != False and '/' or '' ]] [[ get_account_name(o.id,o.to_date) ['iob_one_2'] ]]</para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table7">
+            <tr>
+              <td>
+                <para style="P5">D</para>
+              </td>
+              <td>
+                <para style="P4">TOTAL PAYMENTS &lt; VII to XIII &gt; </para>
+              </td>
+              <td>
+                <para style="P6">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P6">[[ o.cash_total2 or '' ]] [[ o.cash_total2 and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ o.iob_one_total2 or '' ]] [[ o.iob_one_total2 and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ o.iob_two_total2 or '' ]] [[ o.iob_two_total2 and 'Cr' or '' ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ o.iob_one_total2_second or '' ]] [[ o.iob_one_total2_second and 'Cr' or '' ]]</para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="10.0,190.0,15.0,30.0,67.0,67.0,67.0,67" style="Table7">
+            <tr>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P4">CLOSING BALANCE (C-D ) AS ON <font face="Helvetica">[[ formatLang(o.to_date,date=True) ]]</font></para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P14">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.cash_closing) ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.iob_one_closing) ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.iob_two_closing) ]]</para>
+              </td>
+              <td>
+                <para style="P6">[[ closing_balance_calc(o.iob_one_closing_second) ]]</para>
+              </td>
+              
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          
+          <blockTable colWidths="20.0,524.0" style="Table9">
+            <tr>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P35">This is to certify that Cash Balance of Rs. <font face="Helvetica">[[ o.cash_closing or '' ]]( In words : Rupees[[str(amount_to_text_in(o.cash_closing,''))]])</font></para>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <para style="P10">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P35">was physically verified and found correct. </para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="P13">
+            <font color="white"> </font>
+          </para>
+          <para style="P4">
+            <font color="white"> </font>
+          </para>
+          <para style="P4">
+            <font color="white"> </font>
+          </para>
+          <blockTable colWidths="21.0,75.0,165.0,97.0,73.0,111.0" style="Table10">
+            <tr>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">DATE</para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">ACCOUNTANT </para>
+              </td>
+              <td>
+                <para style="P8">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">BRANCH MANAGER</para>
+              </td>
+            </tr>
+          </blockTable>
+        
+        </td>
+      </tr>
+    </blockTable>
+  
+  </story>
+</document>

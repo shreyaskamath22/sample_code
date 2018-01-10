@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>     
+
+<!--       <record id="invoice_report_type_form" model="ir.ui.view">
+          <field name="name">invoice.report.type.form</field>
+          <field name="model">invoice.report.type</field>
+          <field eval="1" name="priority"/>
+          <field name="arch" type="xml">
+              <form string="Report Type">
+                <group col='10' colspan='5'>
+                  <field name="report_type" required="1" colspan="5"/>
+                  <field name="invoice_id" invisible="1"/>
+                  <label string="" colspan="1"/>
+                  <button name="get_invoice" type="object" string="OK" colspan="0.5" icon="gtk-apply"/>
+                  <label string="" colspan="1"/>
+                  <label string="" colspan="1"/>
+                  <label string="" colspan="1"/>
+                  <label string="" colspan="1"/>
+                  <label string="" colspan="1"/>
+                </group> 
+              </form>
+          </field>
+      </record> -->
+
+      <record id="invoice_adhoc_id_gst_inherit" model="ir.ui.view">
+        <field name="name">invoice.adhoc.id.gst.inherit</field>
+        <field name="model">invoice.adhoc.master</field>
+        <field eval="16" name="priority"/>
+        <field name="inherit_id" ref="account_sales_branch.invoice_adhoc_id"/>
+        <field name="arch" type="xml">        
+          <xpath expr='//button[@name="generate_invoice"]' position='replace'>     
+            <button name="generate_invoice" string="Generate Invoice" icon="gtk-ok" type="object" 
+                    attrs="{'invisible':[('invoice_number','!=',False)]}" colspan="1"/>
+          </xpath>
+          <xpath expr='/form/group/field[@name="invoice_period_from"]' position='replace'>
+               <field name="invoice_period_from" string="Invoice Period From" attrs="{'readonly':[('invoice_number','!=',False)]}" required="0"/>
+          </xpath>
+          <xpath expr='/form/group/field[@name="invoice_period_to"]' position='replace'>     
+            <field name="invoice_period_to" attrs="{'readonly':[('invoice_number','!=',False)]}" required="0"/>
+          </xpath>
+          <!-- <xpath expr='/form/group/field[@name="contract_no"]' position='replace'> 
+            <field name="contract_no" attrs="{'readonly':['|',('invoice_number','!=',False),('adhoc_invoice','=',False)]}" on_change="onchange_contract_no(contract_no)"/>
+          </xpath> -->
+          <xpath expr='/form/group/field[@name="location"]' position='after'>
+              <!-- <field name="inv_type" attrs="{'readonly':[('invoice_number','!=',False)],'required':[('invoice_number','=',False)]}"/> -->
+              <field name="gst_invoice" invisible="1"/>
+              <field name="gst_adhoc" invisible="1"/>
+          </xpath>
+          <xpath expr='/form/group/field[@name="invoice_narration"]' position='after'>
+              <field name="report_type" attrs="{'invisible':[('gst_invoice','=',False)]}"/>
+          </xpath>
+          <xpath expr='/form/group/field[@name="cancel_boolean"]' position='replace'>
+              <group col="8" colspan="8">
+                <field name="cancel_boolean" colspan="0.5" attrs="{'invisible':[('status','in',('printed','paid','writeoff','cancelled'))]}" groups="base.group_Administrator"/>
+                <field name="allow_narration" attrs="{'invisible':[('gst_invoice','=',False)]}"/>
+                <label string="" colspan="2"/>
+                <label string="" colspan="2"/>
+                <!-- <field name="advanced_arrears" attrs="{'invisible':[('gst_invoice','=',False)],'readonly':[('invoice_number','!=',False)]}"/>
+                <field name="visit_triggered" attrs="{'invisible':[('gst_invoice','=',False)],'readonly':[('invoice_number','!=',False)]}"/> -->
+              </group>
+              <newline/>
+          </xpath>
+<!--           <xpath expr='//field[@name="service_classification"]' position='attributes'>
+                <attribute name="required">0</attribute>
+                <attribute name="invisible">1</attribute>
+          </xpath> -->
+          <xpath expr='//field[@name="service_classification"]' position='after'>
+               <field name="service_classification_id" attrs="{'readonly':[('adhoc_invoice','!=',True)]}" 
+                      required="0" invisible="1"
+                      on_change="onchange_service_classification_id(service_classification_id)"/>
+          </xpath>
+          <xpath expr='/form/notebook/page[@string="Invoice"]' position='replace'>
+            <page string="Invoice" attrs="{'invisible':[('gst_invoice','=',True)]}">
+                <field colspan="2" name="invoice_line_adhoc" nolabel="1" widget="one2many_list" 
+                       attrs="{'readonly':['|',('invoice_number','!=',False),('adhoc_invoice','=',False)],'invisible':[('adhoc_invoice','=',False)]}" >
+                    <tree string="Invoice Line" editable="top">
+                      <field name="location_invoice" domain="[('partner_id','=',parent.partner_id)]"/>
+                      <field name="pms"/>
+                      <field name="pms_narration"/>
+                      <field name="rate" on_change="change_amount(rate,area)"/>
+                      <field name="unit"/>
+                      <field name="area" on_change="change_amount(rate,area)"/>
+                      <field name="amount"/>
+                    </tree>
+                </field>
+                <field colspan="2" name="invoice_line_adhoc_11" nolabel="1" widget="one2many_list" context="{'nocreate':1}"  
+                       attrs="{'readonly':['|',('import_flag','=',False),('status','in',('writeoff','paid'))],'invisible':[('adhoc_invoice','=',True)]}" >
+                    <tree string=" InvoiceLine" editable="top">
+                      <field name="location"/>
+                      <field name="credit_period"/>
+                      <field name="pms"/>
+                      <field name="rate" />
+                      <field name="unit" attrs="{'invisible':[('area','=','')]}"/>
+                      <field name="area" />
+                      <field name="amount"/>
+                    </tree>
+                </field>
+                <newline/>
+                <group>
+                   <group col="4">
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                   </group>      
+                   <group col="4" >
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="total_amount"/>
+                      <newline/>
+                      <label string="" colspan="2"/>
+                      <label string="" colspan="1"/>
+                      <field name="tax_one2many" colspan="1"  nolabel="1" widget="one2many_list"  
+                             context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':True}">
+                          <tree string="Tax"> 
+                             <field name="name" />
+                             <field name="amount"/>
+                          </tree>
+                      </field>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="grand_total_amount" invisible="0" readonly="1"/>
+                    </group> 
+                    <label string="" colspan="3"/>
+                </group>
+                <newline/>
+              </page>
+          </xpath>
+          <xpath expr='/form/notebook/page[@string="Invoice"]' position='after'>
+            <page string="Invoice" attrs="{'invisible':[('gst_invoice','=',False)]}">
+                <field name="invoice_line_adhoc_12" nolabel="1" widget="one2many_list" context="{'nocreate':1}"       
+                       attrs="{'readonly':['|',('import_flag','=', False),('status','in',('writeoff','paid'))],
+                               'invisible':[('adhoc_invoice','=',True)]}">
+                    <form string="Invoice Line Details">
+                      <group>
+                        <field name="location" string="Description of Goods/Services"/>
+                      </group>
+                      <newline/>
+                      <group col="4" colspan="4">
+                        <field name="hsn_code" string="HSN/SAC Code"/>
+                        <field name="qty"/>
+                        <!-- <field name="unit" attrs="{'invisible':[('area','=','')]}"/> -->
+                        <field name="unit"/>
+                        <field name="nature_id"/>
+                        <field name="rate" string="Rate(per item)"/>
+                        <field name="total"/>
+                        <field name="discount"/>
+                        <field name="amount" string="Taxable Value"/>
+                        <field name="area"/>
+                      </group>
+                      <group col="4" colspan="4">
+                        <field name="cgst_rate" string="CGST Rate"/>
+                        <field name="cgst_amt" string="CGST Amt"/>
+                        <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                        <field name="sgst_amt" string="SGST/UTGST Amt"/>
+                        <field name="igst_rate" string="IGST Rate"/>
+                        <field name="igst_amt" string="IGST Amt"/>
+                        <field name="cess_rate" string="CESS Rate"/>
+                        <field name="cess_amt" string="CESS Amt"/>
+                      </group>
+                    </form>
+                    <tree editable="top"> 
+                      <field name="location" invisible="1"/>
+                      <field name="services" string="Description of Goods/Services"/>
+                      <field name="hsn_code" string="HSN/SAC Code"/>
+                      <field name="qty"/>
+                      <!-- <field name="unit" attrs="{'invisible':[('area','=','')]}"/> -->
+                      <field name="unit"/>
+                      <field name="rate" string="Rate(per item)"/>
+                      <field name="total"/>
+                      <field name="discount"/>
+                      <field name="amount" sum="Total" readonly="1" string="Taxable Value"/>
+                      <field name="area" invisible="1"/>
+                      <field name="cgst_rate" string="CGST Rate"/>
+                      <field name="cgst_amt" sum="Total" string="CGST Amt"/>
+                      <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                      <field name="sgst_amt" sum="Total" string="SGST/UTGST Amt"/>
+                      <field name="igst_rate" string="IGST Rate"/>
+                      <field name="igst_amt" sum="Total" string="IGST Amt"/>
+                      <field name="cess_rate" string="CESS Rate"/>
+                      <field name="cess_amt" sum="Total" string="CESS Amt"/>
+                    </tree>
+              </field>
+              <field name="invoice_line_adhoc_gst" nolabel="1" widget="one2many_list"       
+                       attrs="{'readonly':['|',('invoice_number','!=',False),('status','in',('writeoff','paid'))],
+                               'invisible':['|',('adhoc_invoice','!=',True)]}">
+                               <!-- '|',('import_flag','=', False), -->
+                               <!-- 'invisible':['|',('adhoc_invoice','!=',True),('invoice_number','=',False)] -->
+                    <form string="Invoice Line Details">
+                      <group>
+                        <field name="location_invoice" string="Description of Goods/Services"/>
+                      </group>
+                      <newline/>
+                      <group col="4" colspan="4">
+                        <field name="hsn_code" string="HSN/SAC Code"/>
+                        <field name="qty"/>
+                        <field name="unit"/><!-- attrs="{'invisible':[('area','=','')]}" -->
+                        <field name="rate" string="Rate(per item)"/>
+                        <field name="total"/>
+                        <field name="discount"/>
+                        <field name="amount" string="Taxable Value"/>
+                        <field name="area"/>
+                      </group>
+                      <group col="4" colspan="4">
+                      <field name="cgst_rate" string="CGST Rate"/>
+                      <field name="cgst_amt" string="CGST Amt"/>
+                      <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                      <field name="sgst_amt" string="SGST/UTGST Amt"/>
+                      <field name="igst_rate" string="IGST Rate"/>
+                      <field name="igst_amt" string="IGST Amt"/>
+                      <field name="cess_rate" string="CESS Rate"/>
+                      <field name="cess_amt" string="CESS Amt"/>
+                      </group>
+                    </form>
+                    <tree editable="top"> 
+                      <field name="location_invoice" domain="[('partner_id','=',parent.partner_id)]" on_change="onchange_adhoc_location_invoice(location_invoice,pms)"/>
+                      <field name="pms" on_change="onchange_adhoc_pms(location_invoice,pms)"/>
+                      <field name="services" string="Description of Goods/Services" invisible="1"/>
+                      <field name="hsn_code" string="HSN/SAC Code"/>
+                      <field name="qty" on_change="onchange_adhoc_area(qty,rate,area)"/>
+                      <field name="unit"/><!-- attrs="{'invisible':[('area','=','')]}" -->
+                      <field name="rate" string="Rate(per item)" on_change="onchange_adhoc_area(qty,rate,area)"/>
+                      <field name="area" invisible="0" on_change="onchange_adhoc_area(qty,rate,area)"/>
+                      <field name="total"/>
+                      <field name="discount"/>
+                      <field name="amount" string="Taxable Value" sum="Total"/>
+                      <!-- <field name="area" invisible="1"/> -->
+                      <field name="cgst_rate" string="CGST Rate"/>
+                      <field name="cgst_amt" string="CGST Amt" sum="Total"/>
+                      <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                      <field name="sgst_amt" string="SGST/UTGST Amt" sum="Total"/>
+                      <field name="igst_rate" string="IGST Rate"/>
+                      <field name="igst_amt" string="IGST Amt" sum="Total"/>
+                      <field name="cess_rate" string="CESS Rate"/>
+                      <field name="cess_amt" string="CESS Amt" sum="Total"/>
+                    </tree>
+              </field>
+              <newline/>
+              <group>
+                  <group col="4">
+                    <newline/>
+                     <label string="" colspan="2"/>
+                    <newline/>
+                     <label string="" colspan="2"/>
+                    <newline/>
+                     <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                     <label string="" colspan="2"/>
+                    <newline/>
+                     <label string="" colspan="2"/>
+                    <newline/>
+                    <newline/>
+                    <newline/>
+                    <newline/>
+                    <newline/>
+                    <field name="advance_receipts" invisible="0" readonly="1" string="Ref.Receipt numbers"
+                           attrs="{'invisible':[('advance_receipts','=',False)]}"/>
+                  </group>
+                  <group col="4">
+                        <label string="" colspan="1"/>
+                        <label string="" colspan="1"/>
+                        <label string="" colspan="1"/>
+                        <label string="" colspan="1"/>
+                        <label string="" colspan="1"/>
+                  </group>   
+                  <group col="4" >
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="basic_amount" string="Sub Total" readonly="1"/>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="total_tax" readonly="1" string="Total Tax Amount"/>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="round_off_val" readonly="1" string="Round-off"/>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <!-- <field name="grand_total_amount" string="Gross Value(Incl. Tax)" readonly="1"/> -->
+                      <field name="gst_grand_total_amount" string="Gross Value(Incl. Tax)" readonly="1"/>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="adv_receipt_amount" readonly="1" string="Less- Advance Received"/>
+                      <newline/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <field name="net_amount_payable" readonly="1" string="Net Amount Payable"/> 
+                      <newline/>
+                  </group> 
+                  <label string="" colspan="3"/>
+                </group>
+              <newline/>
+            </page>
+          </xpath>
+        </field>
+    </record>
+
+  </data>
+</openerp>

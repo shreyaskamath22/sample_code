@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    
+    <record id="product_request_submit_form" model="ir.ui.view">
+            <field name="name">product.request.submit.form</field>
+            <field name="model">product.request.submit</field>
+            <field name="arch" type="xml">
+                <form string="Confirm Product Request">
+                    <label string="" colspan="4"/>
+                        <html>
+                            <h3 style="color:green">Product requests will be created and splitted according to locations.</h3>
+                        </html>
+                        <newline/>
+                        <group colspan="4" col="4">
+                        <button name="action_confirm" string="Confirm" type="object" colspan="0.5"/>
+                        <button name="action_cancel" string="Cancel" type="object" colspan="0.5"/>
+                        <label string="" colspan="2"/>
+                        <label string="" colspan="2"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+       <record id="action_view_product_global_search" model="ir.actions.act_window">
+             <field name="name">Comfirm Product Request</field>
+             <field name="res_model">product.request.submit</field>
+             <field name="src_model">product.request.submit</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="product_request_submit_form"/>
+             <field name="target">new</field>
+       </record>
+
+        
+    </data>
+</openerp>

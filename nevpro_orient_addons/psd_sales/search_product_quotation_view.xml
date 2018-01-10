@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="search_product_quotation_form">
+            <field name="name">search.product.quotation.form</field>
+            <field name="model">search.product.quotation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Quotation Search'>
+                    <group col="8" colspan="8">
+                        <newline/>
+                        <group col="8" >
+                            <field name="name"/>
+                            <field name="quotation_no"/>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="contact_number"/>
+                            <field name="request_id"/>
+                            <field name="status"/>
+                            <field name="address"/>
+                            <field name="sku_name_id"/>
+                            <field name="product_id" invisible="1"/>
+                            <field name="created_by"/>
+                            <field name="pse"/>
+                            <field name="quotation_value_from"/>
+                            <field name="quotation_value_to"/>
+                            <newline/>
+                            <button string="Search" icon="srh" name="search_product_quotation" 
+                                    type="object" colspan="0.5"/>
+                            <button string="Clear" icon="gtk-clear" name="clear_product_quotation"  type="object" colspan="0.5"/>
+                            <field name="not_found" invisible="1"/>
+                        </group>         
+                    </group>
+                    <group attrs="{'invisible':[('not_found','=',False)]}">
+                        <html>
+                            <h4 style="color:red"><center>Record Not Found!</center></h4>
+                        </html>
+                    </group>
+                    <newline/>
+                    <field name="search_product_quot_lines" nolabel="1" context="{'nocreate':1,'nodelete':1}">
+                        <tree editable="bottom" colors="red:state=='new'">
+                                <field name="quotation_no" readonly="1"/>
+                                <field name="parent_quotation_no" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="pse_id" readonly="1"/>
+                                <!-- <field name="created_date" readonly="1"/> -->
+                                <field name="state" readonly="1"/>
+                                <field name="quotation_grand_total" string="Quotation Value" readonly="1" sum="Total" />
+                                <field name="quotation_date" string="Created Date" readonly="1"/>
+                                <field name="user_id" string="Created By" readonly="1"/>
+                                <button name="reload_product_quotation" type="object" icon="gtk-go-forward"/>
+                        </tree>
+                    </field>                    
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_search_product_quotation">
+            <field name="name">Quotation Search</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">search.product.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="search_product_quotation_form"/>
+        </record>
+
+        <menuitem id="menu_search_product_quotation" 
+                  name="Search Product Quotation" 
+                  action="action_search_product_quotation" 
+                  sequence="1" 
+                  parent="menu_branch_sale_quotation_psd"/>
+
+</data>
+</openerp>

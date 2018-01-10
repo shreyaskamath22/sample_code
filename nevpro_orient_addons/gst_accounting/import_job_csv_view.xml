@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+	<record id="new_entry_res_scheduledjobs" model="ir.ui.view">
+	<field name="name">new.entry.res.scheduledjobs</field>
+	<field name="model">res.scheduledjobs</field>
+	<field name="inherit_id" ref="existing_customer.form_cust"/>
+	<field name="arch" type="xml">
+	<xpath expr='//field[@name="reschedule_job_bool1"]' position='after'>
+		<field name="new_entry" invisible="1"/>
+		</xpath>
+	</field>
+	</record>
+	<record model="ir.ui.view" id="import_job_csv_form">
+		<field name="name">import.job.csv.view</field>
+		<field name="model">import.job.csv</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Import Job CSV">
+				<group col="6" colspan="4">
+					<field name="name" invisible="1"/>
+                    <field name="file_upload" filename="datas_fname"/>
+                    <field name="datas_fname" invisible="1"/>
+                    <field name="file_url" invisible="1"/>
+                    <field name="file_name" invisible="1"/>
+                    <group>
+                      <button name="update_job_csv" string="Import Job CSV" type="object"/>
+                    </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_import_job_csv" model="ir.actions.act_window">
+		<field name="name">Import CSV</field>
+        <field name="type">ir.actions.act_window</field>
+		<field name="res_model">import.job.csv</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="import_job_csv_form"/>
+        <field name="target">new</field>
+	</record>
+
+	<menuitem id="menu_import_job_csv" 
+			  name="Import CSV" 
+			  action="action_import_job_csv" 
+			  sequence="95" 
+			  parent="sales_branch.menu_branch_sale_quotation_customer_management"/>
+	
+	</data>
+</openerp>
+	

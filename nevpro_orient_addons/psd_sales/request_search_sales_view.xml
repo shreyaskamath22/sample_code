@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+
+
+         <!--Product Request -->
+        <record model="ir.ui.view" id="request_search_sales_form">
+            <field name="name">request.search.sales.form</field>
+            <field name="model">request.search.sales</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Product Request'>             
+                    <group col="8" colspan='4'>
+                        <field name="company_id" invisible="1"/>
+                        <field name="name"/>
+                        <field name="product_request_id" domain='[("state", "=","assigned"),("product_quotation_id","=",False)]'/>
+                        <field name="partner_id" context="{'from_request_search':True}" 
+                               domain="[('company_id','=',company_id)]"/>
+                        <field name="contact_name_first"/>
+                        <field name="contact_name_last"/>
+                        <field name="phone"/>
+                        <field name="apartment"/>
+                        <field name="building"/>
+                        <field name="sub_area"/>
+                        <field name="street"/>
+                        <field name="city_id"/>
+                        <field name="pse" domain="[('role_selection','!=','executor')]"/>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <field name="psd_company_id" invisible="1"/>
+                        <field name="state" invisible="1"/>
+                        <label string="" colspan="2"/>
+                        <newline/>
+                        <button name="search_product_requests" string="Search" type="object" 
+                                colspan=".5" icon="gtk-find"/>
+                        <button name="clear_request_search_sales" string="Clear" type="object" 
+                                colspan=".5" icon="gtk-clear"/>
+                        <field name="pushed" invisible="1"/>
+                        <field name="not_found" invisible="1"/>
+                        <newline/>
+                        <group col="1" colspan="1">
+                            <field name="select_all" on_change="onchange_select_all_requests(select_all,product_request_ids)"
+                                   attrs="{'invisible':['|',('product_request_ids','=',False),('pushed','=',True)]}" colspan=".5"/>
+                            <label string="" colspan=".5"/>
+                        </group>
+                        <group attrs="{'invisible':[('not_found','=',False)]}">
+                        <html>
+                            <center>
+                            <h4 style="color:red"><center>Record Not Found!</center></h4>
+                        </center>
+                        </html>
+                        </group>
+                        <newline/>
+                        <field name="product_request_ids" nolabel="1" colspan="8" context="{'nocreate':1,'nodelete':1}">
+                                <tree editable="bottom" colors="red:state=='assigned'">
+                                    <field name="select_request" string=""/>
+<!--                                     <button name="select_product_request" type="object" icon="gtk-yes" 
+                                            attrs="{'invisible':[('select_request','=', True)]}"/>
+                                    <button name="deselect_product_request" type="object" icon="gtk-apply" 
+                                            attrs="{'invisible': [('select_request','=', False)]}"/> -->
+                                    <field name="product_request_id" readonly="1"/>        
+                                    <field name="name" readonly="1" string="Customer Name"/>
+                                    <!-- <field name="company_id" readonly="1" string="PSD Office"/>  -->
+                                    <field name="company_id" readonly="1" string="Origin"/> 
+                                    <field name="request_type" readonly="1"/>
+                                    <field name="products" readonly="1"/>
+                                    <field name="employee_id" string="PSE" readonly="1"/>
+                                    <field name="state" readonly="1"/>
+                                    <field name="request_date" readonly="1" string="Request Date"/>
+                                    <field name="created_by" readonly="1"/>
+                                    <button name="reload_product_request" type="object" 
+                                            icon="gtk-go-forward"/>
+                                </tree>
+                        </field> 
+                        <group colspan="4" col="4">   
+                        <button name="generate_sales_product_quotation" string="Push to Product Quotation" 
+                                colspan=".5" icon="gtk-undelete" type="object" 
+                                attrs="{'invisible':['|',('product_request_ids','=',False),('pushed','=',True)]}"/>   
+                        <button name="generate_sales_product_order" string="Push to Product Order"
+                                colspan=".5" icon="gtk-undelete" type="object" 
+                                attrs="{'invisible':['|',('product_request_ids','=',False),('pushed','=',True)]}"/>
+                        <!-- <button name="generate_service_quotation" string="Push to Product Service Quotation" colspan=".5" icon="gtk-undelete" type="object" 
+                                attrs="{'invisible':['|',('product_request_ids','=',False),('pushed','=',True)]}"/> -->
+                        <label string="" colspan="1"/>
+                        <label string="" colspan="2"/>
+                        </group>     
+                    </group>
+                    <group col="8" colspan="8" attrs="{'invisible':[('pushed','=',False)]}">
+                        <label string="" colspan="1"/>
+                            <html><h3 style="color:green">Selected requests were pushed to quotations.</h3></html>
+                        <label string="" colspan="1"/>  
+                    </group>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_request_search_sales">
+            <field name="name">Requests</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">request.search.sales</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="request_search_sales_form"/>
+        </record>
+
+       
+        <menuitem name="Requests" id="menu_request_search_sales" sequence="2" 
+                  action="action_request_search_sales" 
+                  parent="psd_sales.menu_amc_quotation"/>
+
+    </data>
+</openerp>
+                 

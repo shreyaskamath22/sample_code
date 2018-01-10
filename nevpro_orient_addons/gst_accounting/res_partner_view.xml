@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+      <record id="view_partner_ccc_form_inherit_gst" model="ir.ui.view">
+          <field name="name">view.partner.ccc.form.inherit.gst</field>
+          <field name="model">res.partner</field>
+          <field name="inherit_id" ref="CCC_branch.view_partner_ccc_form"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="new_customer_location_service_line"]/tree/field[@name="special_status"]' 
+                   position='attributes'>
+              <!-- <attribute name="on_change">onchange_special_status(special_status)</attribute> -->
+              <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr='//field[@name="new_customer_location_service_line"]/tree/          
+                         field[@name="principle_place_of_business_tag"]' 
+                   position='attributes'>
+              <attribute name="readonly">1</attribute>
+            </xpath>
+            <xpath expr='//field[@name="new_customer_location_service_line"]/tree/field[@name="location_id"]' 
+                   position='before'>
+                <field name="special_status_check" invisible="1"/>
+                <field name="gst_no" readonly="1"/>
+<!--                 attrs="{'invisible':[('special_status_check','=',False)],
+                        'required':[('special_status_check','=',True)]}" -->
+            </xpath>
+        </field>
+      </record>
+
+      <record id="add_location_place_inherit_gst" model="ir.ui.view">
+          <field name="name">add.location.place.inherit.gst</field>
+          <field name="model">res.partner.address</field>
+          <field name="inherit_id" ref="account.add_location_place"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="special_status"]' position='after'>
+              <field name="gst_type_customer" on_change="onchange_gst_type(gst_type_customer)"/>
+              <field name="gst_no" attrs="{'required':[('special_status','!=',False)]}"/>
+            </xpath>
+        </field>
+      </record>
+
+      <record id="add_location_place_inherit_gst2" model="ir.ui.view">
+          <field name="name">add.location.place.inherit.gst2</field>
+          <field name="model">res.partner.address</field>
+          <field name="inherit_id" ref="account.add_location_place2"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="special_status"]' position='after'>
+              <field name="gst_type_customer" on_change="onchange_gst_type(gst_type_customer)"/>
+              <field name="gst_no" attrs="{'required':[('special_status','!=',False)]}"/>
+            </xpath>
+        </field>
+      </record>
+
+      <record id="view_company_form_gst_inherit" model="ir.ui.view">
+          <field name="name">view.company.form.gst.inherit</field>
+          <field name="model">res.company</field>
+          <field name="inherit_id" ref="base.view_company_form"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="division"]' position='after'>
+              <field name="government_notification"/>
+            </xpath>
+        </field>
+      </record>
+
+	</data>
+</openerp>

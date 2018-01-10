@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="product_inv_seq" model="ir.sequence.type">
+            <field name="name">Product Invoice Number</field>
+            <field name="code">product.invoice.number</field>
+        </record>
+
+        <record id="sequence_product_inv_seq" model="ir.sequence">
+            <field name="name">Product Invoice Number</field>
+            <field name="code">product.invoice.number</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="service_inv_seq" model="ir.sequence.type">
+            <field name="name">Service Invoice Number</field>
+            <field name="code">service.invoice.number</field>
+        </record>
+
+        <record id="sequence_service_inv_seq" model="ir.sequence">
+            <field name="name">Service Invoice Number</field>
+            <field name="code">service.invoice.number</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="composite_inv_seq" model="ir.sequence.type">
+            <field name="name">Composite Invoice Number</field>
+            <field name="code">composite.invoice.number</field>
+        </record>
+
+        <record id="sequence_composite_inv_seq" model="ir.sequence">
+            <field name="name">Composite Invoice Number</field>
+            <field name="code">composite.invoice.number</field>
+            <field name="padding">6</field>
+        </record>
+
+    </data>
+</openerp>

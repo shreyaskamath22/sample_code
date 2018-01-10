@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- ### version no. 1.0.013 - Trail balance detailed report added-->
+<!--# Version 1.0.117 -  other receipt print Functionality added 29Feb mail-->
+
+<openerp>
+	<data>	
+
+		<report id="gst_report_invoice_print"
+			    string="INVOICE"
+		        model="invoice.adhoc.master"
+			    name="gst_invoice_print"
+			    rml="gst_accounting/report/gst_invoice_adhoc.rml"
+			    auto="False"
+			    menu="False" 
+			    header="False"/> 
+
+		<report id="gst_report_sales_id" 
+			    string="SALES RECEIPT"
+			    model="account.sales.receipts"
+			    name="gst.account.sales.receipts.print"
+			    rml="gst_accounting/report/gst_sales_receipts_print.rml"  
+			    auto="False"  
+			    header="False"  
+			    usage="default"/>
+
+		<report id="gst_report_credit_note"
+			    string="CREDIT NOTE"
+			    model="credit.note"
+			    name="gst_credit_note"
+			    rml="gst_accounting/report/gst_credit_note.rml"
+			    auto="False"
+			    header="False"/>
+
+	    <report id="report_gst_credit_note_st"
+	            string="CREDIT NOTE ST"
+	            model="credit.note.st"
+	            name="gst_credit_note_st"
+	            rml="gst_accounting/report/gst_credit_note_st.rml"
+	            auto="False"
+	            header="False"/>   
+
+         <report id="gst_report_debit_note_id"
+	             string="DEBIT NOTE"
+	             model="debit.note"
+	             name="gst_debit_note_report"
+	             rml="gst_accounting/report/gst_debit_note_report.rml"
+	             auto="False"
+	             header="False"/>  
+			
+		<report id="gst_report_stmt_of_collection_id"
+	             string="Statement Of Collection"
+	             model="monthly.report"
+	             name="gst_stmt_of_collection"
+	             rml="gst_accounting/report/gst_stmt_of_collection.rml"
+	             auto="False"
+	             header="False"/>  
+
+	    <report id="gst_report_stmt_of_collection_new_id"
+	             string="Statement Of Collection New"
+	             model="monthly.report"
+	             name="gst_stmt_of_collection_new"
+	             rml="gst_accounting/report/gst_stmt_of_collection_new.rml"
+	             auto="False"
+	             header="False"/>
+
+	    <report id="gst_report_statement_debtors_reconciliation_id"
+            string="Statement of Debtors Reconciliation List"
+            model="monthly.report"
+            name="gst_statement_debtors_reconciliation"
+            rml="gst_accounting/report/gst_stmt_debtors_reconciliation.rml"
+            auto="False"
+            header="False"/>  
+
+	</data>
+</openerp>

@@ -1,0 +1,1772 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--# Version 1.0.002 -  Added Demand Draft Payment Method For IOB I-->
+<!--# Version 1.0.013 -  Remove Widget selection from customer_name field I-->
+<!--# Version 1.0.017 -  add emp_code field I-->
+<!--# Version 1.0.031 -  new group for read only user-->
+<!--# Version 1.0.073 - ITDS import functionality  HHH 23nov15 -->
+<!--# Version 1.0.089 - Changes Made in ITDS import #HHH 28dec-->
+<!--# Version 1.0.117 -  other receipt print Functionality added HHH 29Feb mail-->
+<!-- # Version 1.0.123  -  security deposit through partial payment Functionality added 3Mar mail-->
+
+<openerp>
+   <data>
+   	
+  	<record model="ir.ui.view" id="psd_account_sales_receipts_form">
+		<field name="name">Sales Receipts</field>
+		<field name="model">account.sales.receipts</field>
+		<field name="type">form</field>
+		<field name="priority">20</field>
+		<field name="arch" type="xml">
+			<form string="Sales Receipts">	
+				 	<group col="10" colspan="4">
+				 		<field name="psd_accounting" invisible="1"/>
+					 	<field name="receipt_type1" required="1" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+					 	<field name="is_cfob_customer" attrs="{'invisible':[('receipt_type1','=','standard')],
+					 											'readonly':[('state','in',('done','finish','cancel'))]}"
+					 		   on_change="onchange_cfob_customer(is_cfob_customer)"/>
+					 		<field name="text_customer_name" invisible="1"/>
+							<field name="customer_name" 
+								   domain="[('company_id', '=', company_id),('is_transfered', '=', False)]" 
+								   attrs="{'required':[('receipt_type1','=','standard'),
+								 					   ('acc_status','in',('advance_against_ref','advance','against_ref'))],
+									       'readonly':['|',('chek_receipt','=',True),('state','in',('done','finish','cancel'))],
+									       'invisible':[('is_cfob_customer','=',True)]
+									       }"
+								   on_change="customer_name_change(customer_name)"/>   
+							<field name="customer_id"  
+								   attrs="{'readonly':[('state','in',('done','finish','cancel'))],
+								   		   'invisible':[('is_cfob_customer','=',True)]}" 
+								   readonly="1"/>
+							<field name="cfob_customer_name" 
+								   attrs="{'invisible':[('is_cfob_customer','=',False)],
+								  		   'required':[('is_cfob_customer','=',True)],
+								  		   'readonly':[('state','in',('done','finish','cancel'))]
+								  		   }" colspan="0.5"/> 
+							<field name="cfob_customer_id" 
+								   attrs="{'invisible':[('is_cfob_customer','=',False)],
+								           'required':[('is_cfob_customer','=',True)],
+								           'readonly':[('state','in',('done','finish','cancel'))]
+								           }" colspan="0.5"/> 
+					</group>		   
+					<group col="10" colspan="4">	
+						<newline/>
+						<field name="customer_id_invisible" invisible="1"/>
+						<field name="receipt_no" readonly="1"/>
+						<field name="receipt_date" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+						<!-- <label string="" colspan="0.5"/> -->
+						<field name="billing_location" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+						<field name="is_transfered" invisible="1"/>
+						<!-- <label string="" colspan="0.5"/> -->
+						<field name="voucher_type" invisible="1"/>
+						<field name="account_select_boolean" invisible="1"/>
+						<field name="new_cus_name" invisible="1"/>
+						<label string="" colspan="0.5"/>
+					</group>	
+					<newline/>
+				 <label string="" colspan="6"/>
+				 <newline/>
+				 <field name="company_id" invisible="1"/>
+				<group col="8" colspan="8" string=" ">
+				     <group col="8" colspan="8" >
+						<field name="acc_status" colspan="2" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+						<field name="account_id" colspan="2" domain="[('type','!=','view')]"
+							   attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"
+							   context="{'account_select_boolean':account_select_boolean,'default_form_id':id}"
+							   on_change="psd_onchange_account_type(account_id,account_select_boolean)"/>
+						<field name="payment_status" colspan="2" invisible="1"/>
+						<field name="type" colspan="1" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+						<button name="add_info_psd" string="Add" type="object" colspan="0.5"
+								 attrs="{'invisible':[('state','in',('done','finish','cancel'))]}"/>
+						<field name="chek_receipt" colspan="0.5" invisible="1"/>
+	
+						<newline/>
+				     </group>
+				     <group col="8" colspan="8" >
+					<field name="sales_receipts_one2many" widget="one2many_list" nolabel="1" colspan="8"
+						   context="{'nocreate':1}" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}">
+						<tree editable="bottom">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="acc_status" colspan="1" readonly="1"/>
+							<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" sum="Total Credit"
+								   attrs="{'readonly':['|',('type','=','debit'),('check_against_ref_status','=',True)]}"/>
+							<field name="check_against_ref_status" invisible="1"/>
+							<button name="psd_add" string="Add" type="object" icon="gtk-go-forward"/>
+						</tree>
+
+						<form string="Sales Receipts">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="acc_status" colspan="1" readonly="1"/>
+							<field name="debit_amount" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" attrs="{'readonly':[('type','=','debit')]}"/>
+						</form>
+					</field>
+					<field name="cheque_report_one2many" widget="one2many_list"
+						   nolabel="1" colspan="3.5" context="{'nodelete':1,'nocreate':1}" invisible="1">
+						<tree editable="bottom">
+							<field name="invoice_number" readonly="1" />
+							<field name="grand_total" string="Invoice Amount" readonly="1"/>
+						</tree>
+				        </field>
+				        <field name="iob_report_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+							   context="{'nodelete':1,'nocreate':1}" invisible="1">
+						<tree editable="bottom">
+							<field name="cheque_no" readonly="1"/>
+							<field name="cheque_date" readonly="1"/>
+							<field name="drawee_bank" readonly="1"/>
+						</tree>
+				        </field>
+				        <field name="neft_report_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+							   context="{'nodelete':1,'nocreate':1}" invisible="1">
+						<tree editable="bottom">
+							<field name="pay_ref_no" readonly="1"/>
+							<field name="neft_date" readonly="1"/>
+							<field name="beneficiary_bank_name" readonly="1"/>
+							<field name="branch_name" readonly="1"/>
+						</tree>
+				        </field>
+
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+					<label string="" colspan="2"/>
+					<field name="receipt_type" invisible="1"/>
+				     </group>
+				     <group col="8" colspan="8">
+						<field name="advance_pending" invisible="1"/>
+						<button name="process" string="Process" type="object" colspan="1" states="draft" icon="terp-camera_test"
+								 confirm="Do you want to Process?"/>
+						<button name="settle" string="Invoice Settlement" type="object" colspan="1" icon="terp-camera_test"
+								 attrs="{'invisible':['|','|','|','|',('settle2','=',True),('state','in',('draft','finish','cancel')),('new_ad','=',False),('advance_pending','=','0.0'),('cancel_boolean','=',True)]}"/>
+
+					<group>
+						<field name="cancel_boolean" colspan="4" string="Receipt Cancel" attrs="{'invisible':[('state','in',('draft','cancel'))]}" groups="base.group_Administrator"/>
+					</group>
+<!-- groups="base.group_Administrator" -->
+					<group>
+						<field name="cancel_reason"  colspan="1"
+					 attrs="{ 'readonly':[('state','in',('cancel'))],'required': [('cancel_boolean','=',True)] ,'invisible':[('cancel_boolean','=',False)]}"/>
+					</group>
+					<group> <button name="cancel_process" colspan="2" string="Receipt Cancel" type="object" icon="gtk-cancel" attrs="{'invisible':['|',('cancel_boolean','=',False),('state','in',('draft','cancel'))]}" confirm="Do you want to cancel?"/>	</group>
+					     <field name="invoice_number" invisible="1"/>
+					     <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					     <label string="" colspan="4"/>
+					     <field name="acc_status_new" invisible="1"/>
+					     
+					     <button name="generate_report" string="Print" type="object" colspan="1" attrs="{'invisible':[('state','not in',('done','finish'))]}" icon="gtk-print"/>
+					     <field name="check_settlement" invisible="1"/>
+					     <field name="settle2"  invisible="1"/>
+					     <field name="new_ad"  invisible="1"/>
+						 <field name="state"  widget="statusbar" nolabel="1" attrs="{'invisible':[('state','in',('done','finish','draft','cancel'))]}"/>
+						 <!--attrs="{'invisible':['|',('state','in',('done','finish','draft')),('cancel_boolean','=',False)]}"-->
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+<!-- IOB A/C I -->
+  	<record model="ir.ui.view" id="psd_account_iob_one_form">
+		<field name="name">IOB A/C I Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+			          <button name="save_iob_one_psd" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+				  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/>
+				  <field name="is_transfered" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group><newline/>
+			  <group col="4" colspan="4">
+				<field name="payment_method" colspan="2" attrs="{'readonly':[('state','=','done')]}" on_change="change_payment_method(payment_method)"/>
+				<button name="add_payment_method" string="Add" colspan="0.5" type="object" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="remove" string="Remove" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+				<field name="iob_one_check" invisible="1"/>
+				<field name="neft_check" invisible="1"/>
+				<field name="demand_draft_check" invisible="1"/>
+				<label string="" colspan="2"/>
+			  </group><newline/>
+			  <group col="4" colspan="4" >
+					<field name="iob_one_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'invisible':[('iob_one_check','=',False)],'readonly':[('state','=','done')]}" >
+						<tree editable="bottom">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name" widget="selection"/>
+							<field name="bank_branch_name"/>
+							<field name="check_drawn_name"/>
+							<field name="bank_reco_date" readonly="1"/>
+							<field name="selection_cts"/>
+						</tree>
+
+						<form string="Details">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name"/>
+							<field name="bank_branch_name"/>
+							<field name="bank_reco_date" readonly="1"/>
+							<field name="selection_cts"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+
+				<group col="4" colspan="4" >
+					<field name="demand_draft_one_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'invisible':[('demand_draft_check','=',False)],'readonly':[('state','=','done')]}" >
+						<tree editable="bottom">
+							<field name="dd_no" required="1"/>
+							<field name="dd_date"/>
+							<field name="dd_amount"/>
+							<field name="demand_draft_drawee_bank_name" widget="selection"/>
+							<field name="dd_bank_branch_name"/>
+							<field name="demand_draft_check_drawn_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="dd_no" required="1"/>
+							<field name="dd_date"/>
+							<field name="dd_amount"/>
+							<field name="demand_draft_drawee_bank_name" widget="selection"/>
+							<field name="dd_bank_branch_name"/>
+							<field name="demand_draft_check_drawn_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			  <group col="4" colspan="4" >
+					<field name="neft_one2many" widget="one2many_list" nolabel="1"
+						   colspan="3.5" attrs="{'invisible':[('neft_check','=',False)],'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="beneficiary_bank_name"/>
+							<field name="branch_name"/>
+							<field name="pay_ref_no"/>
+							<field name="neft_date"/>
+							<field name="neft_amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="beneficiary_bank_name"/>
+							<field name="branch_name"/>
+							<field name="pay_ref_no"/>
+							<field name="neft_date"/>
+							<field name="neft_amount"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+	
+<!-- Primary Cost(CSE) -->
+  	<record model="ir.ui.view" id="psd_account_primary_cost_other_form">
+		<field name="name">Primary Cost Payment Other Receipt Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+
+			  </group>
+				     <group col="8" colspan="8" >
+					<field name="primary_cost_other_one2many" widget="one2many_list" nolabel="1" colspan="4"
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="emp_code" readonly="1" />
+							<field name="emp_name" widget="selection" on_change="fetch_emp_code(emp_name)"/>
+							<field name="amount"/>
+							</tree>
+
+						<form string="Details">
+							<field name="emp_code" readonly="1" />
+							<field name="emp_name" widget="selection" />
+							<field name="amount"/>
+						</form>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+			</form>
+		</field>
+	</record>
+
+<!-- Against Reference -->
+  	<record model="ir.ui.view" id="psd_account_against_ref_form">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_against_ref_psd" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+					 attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object"
+					  colspan="0.5" attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/>
+				<field name="is_transfered" invisible="1"/>
+				<label string="" colspan="5"/>
+				<field name="visib" invisible="1"/>
+			  </group><newline/>
+			  <group col="8" colspan="8">
+			  		<!-- For History of Invoice-->
+			  		<field name="invoice_adhoc_history_one2many" widget="one2many_list" nolabel="1" colspan="5"
+						   context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','=','done')],'invisible':[('state','=','draft')]}">
+						<tree editable="bottom" string="Paid Invoices Details">
+							<field name="check_invoice" string=""/>
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification" />
+							<field name="tax_rate" readonly="1"/>
+							<field name="cse" string="PSE" readonly="1" />
+							<field name="invoice_paid_amount" />
+							<field name="invoice_paid_date" readonly="1"/>
+						</tree>
+					</field>
+			  
+					<field name="invoice_adhoc_one2many" widget="one2many_list" nolabel="1" colspan="5" context="{'nodelete':1,'nocreate':1}">
+						<tree editable="bottom" string="Outstanding Invoices Details">
+							<field name="check_invoice" string=""/>
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification"  readonly="1"/>
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice Amount"  readonly="1"/>
+							<!--field name="pending_invoice_amount" string="Invoice Amount" invisible="0" readonly="1"/-->
+							<field name="pending_amount" string="Pending Amount"  readonly="1"/>
+							<field name="cse" string="PSE" readonly="1" />
+							<field name="partial_payment_amount" string="Receipt Amount"/>
+							<field name="pending_status" invisible="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification" />
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+							<field name="partial_payment_amount" />
+							<field name="cse" string="PSE" readonly="1" />
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="2"/>
+			 <newline/>
+			                <newline/>
+			                <newline/>
+					<field name="debit_note_one2many" widget="one2many_list" nolabel="1"  context="{'nodelete':1,'nocreate':1}"
+						   colspan="5" attrs="{'invisible':[('visib','=',False)],'readonly':[('state','=','done')]}">
+						<tree string="Debit Note Details" editable="bottom">
+							
+							<field name="check_debit"/>
+							<field name="debit_note_no"/>
+							<field name="debit_note_date" readonly="1"/>
+							<field name="credit_amount_srch" string ="Amount"/>
+						</tree>
+						<form string="Details">
+							<field name="check_debit"/>
+							<field name="debit_note_no"/>
+							<field name="debit_note_date" readonly="1"/>
+							<field name="credit_amount_srch" string ="Amount"/>
+						</form>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="2"/>
+					</field>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+<!-- Against Reference fot revert itds abhi-->
+  	<record model="ir.ui.view" id="psd_itds_revert_against_ref_form">
+		<field name="name">ITDS revert form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="ITDS revert">
+			<group col="4" colspan="4">
+			          <button name="save_itds_reverts" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state','!=','draft')]}"/>
+					  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state','!=','draft')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/>
+				  <field name="is_transfered" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group><newline/>
+			  <field name="state" invisible="1"/>
+			  <group col="4" colspan="4">
+			  		
+					<field name="revert_itds_one2many" widget="one2many_list" nolabel="1" colspan="3.5" context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','!=','draft')]}" >
+						<tree editable="bottom" string="Revert ITDS ">
+						   <field name="check" string=" "/>
+						   <field name="cse" string="CSE" readonly="1" />
+						   <field name="receipt_no" readonly="1"/>
+						   <field name="receipt_date" readonly="1"/>
+						   <field name="customer_name" readonly="1"/>
+						   <field name="invoice_no" readonly="1"/>
+						   <field name="invoice_date" readonly="1"/>
+						   <field name="gross_amt" sum="Total" readonly="1"/>
+						   <field name="itds_amt" sum="Total" readonly="1"/>
+						   <field name="tan_no" invisible="1" />
+						   <field name="pending_amt" sum="Total" readonly="1"/>
+						   <field name="partial_revert" string="Partial revert amount"/>
+						   <field name="total_revert" string="Total revert amount" readonly="1" />
+						</tree>
+					</field>
+			  </group>
+			</form>
+		</field>
+	</record>
+<!-- abhi itds -->
+
+
+<!-- Against Reference for advance -->
+  	<record model="ir.ui.view" id="psd_advance_against_ref_form">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+				<button name="save_against_ref1" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="4"/>
+			  </group><newline/>
+			  <group col="4" colspan="4">
+					<field name="invoice_advance_against_ref" widget="one2many_list" nolabel="1" colspan="3.5"
+						   context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="check_advance_ref_invoice" string=""/>
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification" readonly="1"/>
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+							<field name="cse" readonly="1" />
+							<field name="check_advance_ref_invoice_process" invisible="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification" />
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+							<field name="cse" readonly="1" />
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+
+<!-- Security Deposit -->
+  	<record model="ir.ui.view" id="psd_account_security_deposit_form">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+			          <button name="save_security_deposit" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+			          <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+							  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/>
+				  <field name="is_transfered" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group>
+			  <group col="4" colspan="4" >
+					<field name="security_deposit_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="security_check_new_ref" invisible="1"/>
+							<field name="security_check_against" invisible="1"/>
+							<field name="cse" widget="selection" />
+							<field name="ref_no" string="Reference No"/>
+							<field name="ref_date"/>
+							<field name="ref_amount" on_change="onchange_pending_amount(ref_amount)"/><!--#HHH 14mar-->
+							<field name="pending_amount" invisible="1" />
+							<field name="security_check_process" invisible="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="cse" />
+							<field name="ref_no"/>
+							<field name="ref_date"/>
+							<field name="ref_amount"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+	
+<!-- Security Deposit for New Reference-->
+  	<record model="ir.ui.view" id="psd_account_security_deposit_form_new_reference">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+			          <button name="save_security_deposit" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+			          <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+							  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/>
+				  <field name="is_transfered" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group>
+			  <group col="4" colspan="4" >
+					<field name="security_new_ref_one2many" widget="one2many_list" nolabel="1"
+						   colspan="3.5" attrs="{'invisible':[('state','=','done')] ,'readonly':[('state','=','done')]}"
+						   context="{'nocreate':1,'nodelete':1}">
+						<tree editable="bottom">
+						        <field name="security_check_new_ref" />
+						        <field name="security_check_against" invisible="1"/>
+							<field name="cse" widget="selection" readonly="1" />
+							<field name="ref_no" string="Reference No" readonly="1"/>
+							<field name="ref_date" readonly="1"/>
+							<field name="ref_amount" readonly="1"  />
+							<field name="pending_amount" string="Pending Amount" readonly="1" />
+							<field name="partial_payment_amount" />
+							<field name="security_check_process" invisible="1"/>
+						</tree>
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			  
+			<group col="4" colspan="4" >
+				  <field name="security_deposit_history_line_one2many" widget="one2many_list" nolabel="1"
+						 colspan="3.5"  context="{'nocreate':1,'nodelete':1}"
+						 attrs="{'invisible':[('state','!=','done')] ,'readonly':[('state','=','done')]}">
+					  <tree editable="bottom">
+						  <field name="ref_no" string="Reference No" readonly="1"/>
+						  <field name="ref_date" readonly="1"/>
+						  <field name="ref_amount" readonly="1"  />
+						  <field name="partial_payment_amount" readonly="1" />
+						  <field name="pending_amount" string="Pending Amount" readonly="1" />
+					  </tree>
+				  </field>
+			</group>
+			</form>
+		</field>
+	</record>
+	
+<!-- Sundry Deposit -->
+  	<record model="ir.ui.view" id="psd_account_sundry_deposit_id">
+		<field name="name">Sundry Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+				<button name="save_sundry_deposit" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/>
+				<field name="is_transfered" invisible="1"/>
+				<label string="" colspan="4"/>
+			  </group>
+			  <group col="4" colspan="4" >
+					<field name="sundry_deposit_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'readonly':[('state','=','done')]}" context="{'nocreate':1,'nodelete':1}">
+						<tree editable="bottom">
+							<field name="sundry_check" nolabel="1"/>
+							<field name="sundry_check_process" invisible="1"/>
+							<field name="cse" widget="selection" readonly="1" />
+							<field name="payment_no" readonly="1"/>
+							<field name="payment_date" readonly="1"/>
+							<field name="payment_amount" readonly="1"/>
+						</tree>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+
+<!-- Advance -->
+  	<record model="ir.ui.view" id="psd_account_advance_payment_form">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_advance_payment" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','in',('done','finish'))]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','in',('done','finish'))]}" confirm="Do you want to cancel?"/>
+				
+				<button name="save_invoice_number" attrs="{'invisible':[('state','in',('draft','finish'))]}"
+					string="Save" type="object" colspan="0.5" icon="gtk-redo" />
+				<field name="wizard_id" colspan="1" invisible="1"/>
+				<field name="is_transfered" invisible="1"/>
+				<label string="" colspan="7.5"/>
+				<field name="customer_name" invisible="1"/>
+			  </group>
+			  <group col="8" colspan="8" >
+					<field name="advance_one2many" widget="one2many_list" nolabel="1" colspan="6" attrs="{'readonly':[('state','in',('done','finish'))]}">
+						<tree editable="bottom">
+							<field name="cse" />
+							<field name="ref_no"/>
+							<field name="ref_date"/>
+							<field name="service_classification"/>
+							<field name="ref_amount"/>
+							<field name="partner_id" invisible="1"/>
+						</tree>
+
+					</field>
+				<label string="" colspan="2"/>
+			  </group>
+			<group col="8" colspan="8">
+
+				<field name="invoice_number" colspan="3" attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}"
+					   domain="[('invoice_number','!=',False),('partner_id','=',customer_name),('status','in',('open','printed')),('pending_status','in',('open','pending'))]"
+					   context="{'test':True,'id':id}"/>
+				<field name="payment_status" attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}"/>
+				<button name="add_invoices" string="Add Invoice" type="object" colspan="0.5" attrs="{'invisible':[('state','in',('draft','finish'))]}"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1" />
+				<label string="" colspan="5"/>
+			  </group>
+
+			<group col="8" colspan="8">
+				<field name="advance_invoice_one2many" widget="one2many_list" nolabel="1" colspan="8"
+					   attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}">
+					<tree string="Invoice Details"  editable="bottom">
+
+						<field name="flag" readonly="1"/>
+						<field name="invoice_number" readonly="1"/>
+						<field name="paid_date" readonly="1"/>
+						<field name="invoice_date" readonly="1"/>
+						<field name="tax_rate" readonly="1"/>
+						<field name="invoice_amount" readonly="1"/>
+						<field name="cse" readonly="1" invisible="0" />
+						<field name="cse_char" invisible="1" />
+						<field name="payment_method_adv" invisible="1" />
+						<field name="partial_payment_amount" attrs="{'readonly':['|',('flag','=',True),('payment_method_adv','=','full_payment')]}"/>
+						
+					</tree>
+					<form string="Invoice Details">
+
+						<field name="flag" readonly="1"/>
+						<field name="invoice_number"/>
+						<field name="invoice_date"/>
+						<field name="tax_rate"/>
+						<field name="invoice_amount"/>
+						<field name="partial_payment_amount" attrs="{'readonly':[('flag','=',True)]}"/>
+						<field name="cse_char" />
+						<field name="cse" invisible="1" />
+					</form>
+				</field>
+			</group>
+			</form>
+		</field>
+	</record>
+
+<!-- COFB(Others====>> Branch) -->
+  	<record model="ir.ui.view" id="psd_account_cofb_form">
+		<field name="name">Security Deposit Payment Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_cofb" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/>
+				<field name="is_transfered" invisible="1"/>
+				<label string="" colspan="7.5"/>
+			  </group><newline/>
+			  <group col="4" colspan="4">
+					<field name="cofb_one2many" widget="one2many_list" nolabel="1" colspan="3.5" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="branch_name" widget="selection"/>
+							<field name="ref_no" string="REFERENCE NO."/>
+							<field name="ref_date"/>
+							<field name="ref_amount" string="Amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="branch_name"/>
+							<field name="ref_no" string="Reference No.(Receipt No.)"/>
+							<field name="ref_date"/>
+							<field name="ref_amount"/>
+						</form>
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+	
+	
+<!-- COFB(Other status====>> 12.36) -->
+  	<record model="ir.ui.view" id="psd_account_cofb_other_form_id">
+		<field name="name">CFOB Form</field>
+		<field name="model">account.sales.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+			          <button name="save_other_cofb_psd" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+					  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+							  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/>
+				  <field name="is_transfered" invisible="1"/>
+				  <label string="" colspan="7.5"/>
+				  <field name="receipt_id" invisible="1"/>
+			  </group><newline/>
+			  <group col="4" colspan="4">
+					<field name="sales_other_cfob_one2many" widget="one2many_list" nolabel="1" colspan="3.5" attrs="{'readonly':[('state','=','done')]}" context="{'sales_receipt_id':receipt_id}">
+						<tree editable="bottom">
+							<field name="customer_cfob" readonly="1"/>
+							<field name="cust_cfob_id" readonly="1"/>
+							<field name="branch_name"/>
+							<field name="ref_no" string="REFERENCE NO."/>
+							<field name="ref_date"/>
+							<field name="cfob_service_classification"/>
+							<field name="tax_rate"/>
+							<field name="ref_amount" string="Amount"/>
+							<field name="check_cfob_sales_process" invisible="1"/>
+						</tree>
+						<form string="Details">
+						    <field name="customer_cfob"/>
+						    <field name="cust_cfob_id"/>
+							<field name="branch_name"/>
+							<field name="ref_no" string="Reference No.(Receipt No.)"/>
+							<field name="ref_date"/>
+							<field name="cfob_service_classification"/>
+							<field name="tax_rate"/>
+							<field name="ref_amount"/>
+						</form>
+					</field>
+					<newline/>
+					 </group>
+					 <group col="7" colspan="4" attrs="{'invisible':[('customer_name','=',False)]}">
+					<field name="customer_name" invisible="1"/> 	
+					<field name="partner_id" 
+						   domain="[('is_transfered', '=', False),('id', '=', customer_name)]" on_change="change_partner_id(partner_id)" attrs="{'readonly':[('state','=','done')]}" />
+					<field name="ou_id" readonly="1" attrs="{'readonly':[('state','=','done')]}" />
+					<field name="cfob_billing_location"/>
+					<button name="search_invoices" string="Search" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+					</group>
+					
+					   <group col="4" colspan="4" attrs="{'invisible':[('customer_name','=',False)]}">
+					   <field name="invoice_cfob_one2many" widget="one2many_list" nolabel="1" colspan="8"
+							  attrs="{'readonly':[('state','=','done')]}" context="{'nodelete':1,'nocreate':1}">
+		                          <tree editable="bottom">
+							<field name="cfob_chk_invoice"/>
+							<field name="cfob_chk_invoice_process" invisible="1"/>
+							<field name="invoice_number" readonly="1"/>
+							<field name="invoice_date" readonly="1"/>
+							<field name="service_classification" readonly="1"/>
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice amount" readonly="1"/> 
+							<field name="pending_amount" string="Pending amount" readonly="1"/> 
+							<field name="cse" readonly="1"/>
+		                         </tree>
+
+		                          <form string="Details">
+							<field name="cfob_chk_invoice"/>
+							<field name="cfob_chk_invoice_process" invisible="1"/>
+							<field name="invoice_number"/>
+							<field name="invoice_date"/>
+							<field name="service_classification" />
+							<field name="tax_rate" readonly="1"/>
+							<field name="grand_total_amount" string="Invoice amount"/> 
+							<field name="pending_amount" string="Pending amount" readonly="1"/> 
+							<field name="cse" />
+		                         </form>
+		                </field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+
+ 	<record model="ir.ui.view" id="psd_account_sales_receipts_tree">
+		<field name="name">Sales Receipts</field>
+		<field name="model">account.sales.receipts</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="sales Receipts">
+				<field name="receipt_no"/>
+				<field name="receipt_date"/>
+				<field name="customer_name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="psd_action_account_sales_receipts" model="ir.actions.act_window">
+            <field name="name">Sales Receipts</field>
+            <field name="res_model">account.sales.receipts</field>
+            <field name="type">ir.actions.act_window</field>
+	    <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="psd_account_sales_receipts_form"/>
+        </record> 
+
+ <!-- ITDS Adjustment -->
+
+
+        <!-- <record model="ir.ui.view" id="psd_account_itds_adj_search_form">
+		<field name="name">ITDS Adjustment Search</field>
+		<field name="model">itds.adjustment.search</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="ITDS Adjustment">
+			 	<group col="8" colspan="8">
+					<newline/>
+					<field name="state" colspan="2"/>
+				  	<field name="receipt_no" colspan="2"/>
+				  	<field name="customer_name" colspan="2" domain="[('customer','=','True')]"/>
+				  	<field name="customer_id" colspan="2"/>
+
+				  	<newline/>
+				  	<field name="invoice_no" colspan="2"/>
+				  	<field name="certificate_no" colspan="2"/>
+				  	<field name="from_date" colspan="2"/>
+				  	<field name="to_date" colspan="2"/>
+					<field name="cse" colspan="2"/>
+					<field name="select_all" on_change="onchange_select_all(select_all,itds_adjust_search_one2many)" />
+					<field name="allow_logo"  />
+					<newline/>
+					<group col="8" colspan="8">	
+					        <button name="search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+					        <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+				     	        <label string="" colspan="5"/>
+				     	</group>
+					<newline/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				<group col="8" colspan="8">
+					<field name="itds_adjust_search_one2many" widget="one2many_list" nolabel="1" colspan="8"
+						   context="{'nodelete':1,'nocreate':1}"  attrs="{'invisible':[('attrs1','=',False)]}">
+						
+
+						<tree string="ITDS Adjustment" editable="bottom">
+								<field name="check" string=" "/>
+								<field name="itds_cse" string="CSE" readonly="1"/>
+								<field name="receipt_no" readonly="1"/>
+								<field name="receipt_date" readonly="1"/>
+								<field name="customer_name" readonly="1"/>
+		 						<field name="customer_name_char" readonly="1"/>
+								<field name="invoice_no" readonly="1"/>
+								<field name="invoice_date" readonly="1"/>
+								<field name="gross_amt" sum="Total" readonly="1"/>
+								<field name="itds_amt" sum="Total" readonly="1"/>
+								<field name="certificate_no" readonly="1"/>
+								<field name="certificate_date" invisible="1"/>
+								<field name="tan_no" invisible="1" />
+								<field name="certificate_date_str" readonly="1"/>
+								<field name="certificate_recd"  sum="Total" readonly="1"/>
+								<field name="pending_amt" sum="Total" readonly="1"/>
+								<button name="adjustment_record" type="object" icon="gtk-go-forward" />
+					        </tree>
+					        
+					</field>
+				     </group>
+			        <group col="8" colspan="8">
+				        <label colspan="5" string=""/>
+				        <field name="xls_source" colspan="1" invisible="1"/>
+				        <button name="generate_itds_xls" string="Generate XLS" type="object" colspan="1" attrs="{'invisible': [('attrs1','=',False)]}"/>
+				        <field name="xls_data" nolabel="1" readonly="1" width="100" filename="xls_source" colspan="1"
+							   attrs="{'invisible': [('attrs1','=',False)]}"/>
+				        <field name="visible_boolean" colspan="1" invisible="1"/>
+				        <button name="submit" type="object" string="Reminder Letter" icon="gtk-print" colspan="1"
+								attrs="{'invisible': ['|','|',('visible_boolean','=',False),('state','=','done'),('attrs1','=',False)]}"/>
+		                </group>
+		                				  	<field name="attrs1" invisible="1"/>
+		                <group col="8" colspan="8">
+					<field name="itds_adjustment_main_one2many" widget="one2many_list" nolabel="1" colspan="8" invisible='1' >
+						<tree string="ITDS Adjustment" editable="bottom">
+							<field name="customer_name" readonly="1"/>
+							<field name="customer_id" readonly="1"/>
+							<field name="total_amount" readonly="1"/>
+							<field name="itds_adjustment_main_one2many" widget="one2many_list" nolabel="1" colspan="8"  >
+							<tree string="Itds Adjustment" editable="bottom">
+								<field name="sr_no" readonly="1"/>
+								<field name="receipt_no" readonly="1"/>
+								<field name="receipt_date" readonly="1"/>
+								<field name="invoice_no" readonly="1"/>
+								<field name="invoice_date" readonly="1"/>
+								<field name="gross_amt" sum="Total" readonly="1"/>
+								<field name="itds_amt" sum="Total" readonly="1"/>
+								<field name="certificate_no" readonly="1"/>
+								<field name="certificate_date_str" readonly="1"/>
+								<field name="certificate_recd"  sum="Total" readonly="1"/>
+								<field name="pending_amt" sum="Total" readonly="1"/>
+							</tree>
+						</field>
+				</tree>
+					</field>
+				     </group>
+			</form>
+		</field>
+	</record> -->
+
+	<!-- <record id="psd_itds_adjust_search_main_action" model="ir.actions.act_window">
+		<field name="name">ITDS Adjustment Search</field>
+		<field name="res_model">itds.adjustment.search</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+	</record>  -->
+
+	<record id="psd_itds_adjustment_form" model="ir.ui.view">
+		<field name="name">itds.adjustment.form</field>
+		<field name="model">itds.adjustment</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form>
+				<group col="8" colspan="8">
+					<field name="import_flag" invisible="1"/>
+					<field name="no_of_certificate" invisible="1"  attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="receipt_date" required="1"  attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="itds_cse" on_change="change_ou_id(0,itds_cse)"
+						   attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="cse" invisible="1" />
+					<field name="customer_name"  on_change="change_ou_id(customer_name,0)" required="1"
+						   attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="customer_name_char" invisible="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="ou_id"  attrs="{'readonly':[('state','=','done')],'invisible':['|',('import_flag','!=',True)]}" />
+<!--					readonly="1"  ,('state','=','done')-->
+					<field name="tan_no" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="receipt_no" required="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="invoice_no" required="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="invoice_date" required="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}"  />
+					<field name="gross_amt" required="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="itds_amt" required="1" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="certificate_recd" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" />
+					<field name="pending_amt" attrs="{'readonly':[('state','=','done')],'invisible':['|',('import_flag','!=',True),('state','=','done')]}" />
+					
+					<field name="state"  string ="State" attrs="{'readonly':[('state','=','done')],'invisible':[('import_flag','!=',True)]}" invisible="1"/>
+					
+					<newline/>
+					<field name="certificate_one2many" widget="one2many_list" nolabel="1" colspan="4"
+						   attrs="{'readonly':[('state','in',('done','fully_reversed'))],'invisible':[('state','=','not_completed')]}">
+						<tree editable="bottom">
+							<field name="certi_done" invisible="1"/>
+							<field name="certificate_id" invisible="1"/>
+							<field name="certificate_no" attrs="{'readonly':[('certi_done','=',True)]}"/>
+							<field name="certificate_date" attrs="{'readonly':[('certi_done','=',True)]}"/>
+							<field name="certificate_recd"  attrs="{'readonly':[('certi_done','=',True)]}"/>
+							<field name="pending_amt" invisible="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="certificate_id" invisible="1"/>
+							<field name="certificate_no"/>
+							<field name="certificate_date"/>
+							<field name="certificate_recd" />
+							<field name="pending_amt" invisible="1"/>
+							
+						</form>
+					</field>
+				</group>
+				<newline/>
+
+				<group col="8" colspan="8">	
+					<newline/>
+					<field name="excess_itds_one2many" widget="one2many_list" string="Excess ITDS Amount" colspan="4"
+						   context="{'nodelete':1,'nocreate':1}" attrs="{'invisible':[('excess_bool','!=',True)]}" nolabel="1">
+						<tree string="Excess ITDS Amount" editable="bottom">
+							<field name="unknown_itds" readonly="1"/>
+							<field name="amount" readonly="1"/>
+							<field name="branch_name" />
+						</tree>
+						<form string="Details">
+							<field name="unknown_itds"/>
+							<field name="amount"/>
+							<field name="branch_name" />
+						</form>
+					</field>
+				</group>
+				<newline/>
+
+				<group col="8" colspan="8">
+					<field name="pending_amt" invisible="1"/>
+					<button name="process" string="Process" icon="terp-camera_test" type="object" colspan="1"
+							attrs="{'invisible':[('state','in',('done','not_completed','fully_reversed'))]}" confirm="Do you want to Process?"/>
+					<button name="save_info" string="Save Info" icon="terp-camera_test" type="object" colspan="1"
+							attrs="{'invisible':['|',('state','!=','not_completed'),('import_flag','!=',True)]}"/>
+					
+					<label string="" colspan="7"/>
+					<button name="save_record" string="Save Record" icon="terp-camera_test" type="object" colspan="1"
+							attrs="{'invisible':['|',('excess_bool','!=',True),('excess_bool_process','=',True)]}" confirm="Do you want to Process?"/>
+					<label string="" colspan="7"/>
+					<field name="excess_bool" invisible="1"/>
+					<field name="excess_bool_process" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+  	<record model="ir.ui.view" id="psd_account_sales_receipts_main_form">
+		<field name="name">Sales Receipts</field>
+		<field name="model">sales.receipts.search</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Sales Receipts">
+			 	<group col="8" colspan="8">
+					<newline/>
+				  	<field name="receipt_no" colspan="2"/>
+				  	<!-- <field name="customer_name" colspan="2" domain="[('customer','=','True')]"/> -->
+				  	<field name="customer_name_text"/>
+					<field name="customer_id"/>
+<!-- 					<field name="cfob_customer_name" colspan="2"/>
+					<field name="cfob_customer_id"/> -->
+					<field name="cse" colspan="2" />
+					<newline/>
+				  	<field name="invoice_no" colspan="2"/>
+				  	<field name="cheque_no" />
+				  	<field name="receipt_type" invisible="1"/>
+				  	<field name="date_from" colspan="2"/>
+				  	<field name="date_to" colspan="2"/>
+				  	<newline/>
+					<field name="acc_status_new" colspan="2" />
+					<field name="paymode" />
+					<field name="state" invisible="1"/>
+					<field name="cheque_cash"  attrs="{'invisible':[('acc_status_new','!=','against_ref')]}"/>
+					<newline/>
+					<group col="8" colspan="8">	
+						<button name="psd_open_new" string="Create" type="object" colspan="1"
+							    groups="base.group_accounting_authorised,base.group_accounting_user,base.group_accounting_hidden"/>
+						<button name="psd_search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+						<button name="psd_clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+						<label string="" colspan="5"/>
+					</group>
+					<newline/>
+                </group>
+				<label string="" colspan="6"/>
+				<newline/>
+				<notebook colspan="4">
+					 <page string="">
+					 <group col="4">
+					
+					 </group><newline/>
+				
+				<group col="8" colspan="8">
+					<field name="search_sales_receipt_line" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}" >
+						<form string="Sales Receipts">
+							<field name="multiple_check" />
+							<field name="receipt_no" readonly="1"/>
+							<field name="receipt_date" readonly="1"/>
+							<field name="new_cus_name" invisible="1"/>
+							<field name="customer_name_text"  readonly="1"/>
+							<field name="credit_amount" sum="Total" string="Receipt Amount" />
+							<field name="srch_date" invisible="1"/>
+						</form>
+
+						<tree colors="red:credit_amount==0" string="Sales Receipts" editable="top">
+							<field name="multiple_check" />
+							<field name="receipt_no" readonly="1"/>
+							<field name="receipt_date" readonly="1"/>
+							<!-- <field name="new_cus_name" readonly="1"/> -->
+							<field name="customer_name_text" readonly="1"/>
+							<field name="credit_amount"  sum="Total" string="Receipt Amount" readonly="1"/>
+							<button name="psd_show_new" string="Show" type="object" icon="gtk-go-forward"/>
+							<field name="srch_date" invisible="1"/>
+						</tree>
+					</field>
+					</group>
+					 </page>
+				  </notebook>
+				  <group col="8" colspan="8">
+				  	<label string="" colspan="7"/>
+					<button name="print_multiple" string="Process" type="object" icon="gtk-undelete" colspan="1"
+							attrs="{'invisible':[('acc_status_new','==','advance')]}"/>
+				</group>
+
+				<group col="8" colspan="8">
+					<field name="sales_receipts_report_main_one2many" widget="one2many_list" nolabel="1"
+						   colspan="8" context="{'nocreate':1}" invisible="1">
+						<form string="Sales Receipts">
+
+							<field name="receipt_no" />
+							<field name="cse" />
+							<field name="invoice_no" />
+							<field name="sales_receipt_search_many2one" />
+							<field name="search_sales_receipt_line_many2one" />
+							<field name="account_sales_receipts_many2one"  />
+							<field name="account_sales_receipts_line_many2one" />
+							<field name="sales_receipts_search_id"  />
+						</form>
+						<tree string="Sales Receipts">
+							<field name="receipt_no" />
+							<field name="cse" />
+							<field name="invoice_no" />
+							<field name="sales_receipt_search_many2one" />
+							<field name="search_sales_receipt_line_many2one" />
+							<field name="account_sales_receipts_many2one"  />
+							<field name="account_sales_receipts_line_many2one" />
+							<field name="sales_receipts_search_id"  />
+						</tree>
+					</field>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="psd_sales_receipts_main_action" model="ir.actions.act_window">
+		<field name="name">Sales Receipts</field>
+		<field name="res_model">sales.receipts.search</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+	</record>
+	 <record id="psd_sales_receipts_main_action_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_account_sales_receipts_main_form"/>
+            <field name="act_window_id" ref="psd_sales_receipts_main_action"/>
+    </record>
+
+    <!-- Inherited the Sales Receipts from the Accounting Module -->
+    <record id="sales_receipts_main_action" model="ir.actions.act_window">
+		<field name="name">Sales Receipts</field>
+		<field name="res_model">sales.receipts.search</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+	</record>
+
+	<record id="sales_receipts_main_action_form" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_sales_branch.account_sales_receipts_main_form"/>
+        <field name="act_window_id" ref="account_sales_branch.sales_receipts_main_action"/>
+    </record>
+
+
+
+<!-- primary_cost_services  others-->	<!--28JAN-->
+
+        <record model="ir.ui.view" id="psd_account_primary_cost_service_form1"><!--25JAN-->
+		<field name="name">Primary cost services Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string=" ">
+			 <group col="4" colspan="4">
+			          <button name="save_primary_services" string="Save" type="object" colspan="0.5"
+							  icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+			          <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+							  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <label string="" colspan="3"/>
+			  </group>
+			  <group col="4" colspan="4" >
+					<field name="primary_cost_others_one2many" widget="one2many_list" nolabel="1"
+						   colspan="3.5" context="{'nodelete':1}" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="service_type"/>
+							<field name="amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="service_type"/>
+							<field name="amount"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+<!-- Advance others --><!--28JAN-->
+  	<record model="ir.ui.view" id="psd_account_advance_payment_others_form">
+		<field name="name">Advance Payment Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+			          <button name="save_advance_others_payment" string="Save" type="object" colspan="0.5"
+							  icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+			  <group col="8" colspan="8" >
+					<field name="advance_others_one2many" widget="one2many_list" nolabel="1" colspan="6"
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="ref_no"/>
+							<field name="ref_date"/>
+							<field name="ref_amount" string="Ref Amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="ref_no"/>
+							<field name="ref_date"/>
+							<field name="ref_amount"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="2"/>
+			  </group>
+
+			</form>
+		</field>
+	</record>
+	
+<!-- IOB A/C I others--><!--28JAN-->
+  	<record model="ir.ui.view" id="psd_account_iob_one_others_form">
+		<field name="name">IOB A/C I Payment Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+				<button name="save_iob_others_one" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="4"/>
+			  </group><newline/>
+			  <group col="4" colspan="4">
+				<field name="payment_method" colspan="2" attrs="{'readonly':[('state','=','done')]}" on_change="change_payment_method(payment_method)"/>
+				<button name="add_payment_others_method" string="Add" colspan="0.5" type="object" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="remove" string="Remove" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+				<field name="iob_one_check" invisible="1"/>
+				<field name="neft_check" invisible="1"/>
+				<field name="demand_draft_check" invisible="1"/>
+				<label string="" colspan="2"/>
+			  </group><newline/>
+			  <group col="4" colspan="4" >
+					<field name="iob_one_others_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'invisible':[('iob_one_check','=',False)],'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="cheque_no" required="1" />
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name" widget="selection"/>
+							<field name="bank_branch_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" />
+						</tree>
+
+						<form string="Details">
+							<field name="cheque_no" required="1" />
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name"/>
+							<field name="bank_branch_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" />
+						</form>
+
+					</field>
+					<label string="" colspan="0.5"/>
+			  </group>
+			  
+			  <group col="4" colspan="4" >
+					<field name="demand_draft_other_one_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'invisible':[('demand_draft_check','=',False)],'readonly':[('state','=','done')]}" >
+						<tree editable="bottom">
+							<field name="dd_no" required="1"/>
+							<field name="dd_date"/>
+							<field name="dd_amount"/>
+							<field name="demand_draft_drawee_bank_name" widget="selection"/>
+							<field name="dd_bank_branch_name"/>
+							<field name="demand_draft_check_drawn_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</tree>
+
+						<form string="Details">
+							<field name="dd_no" required="1"/>
+							<field name="dd_date"/>
+							<field name="dd_amount"/>
+							<field name="demand_draft_drawee_bank_name" widget="selection"/>
+							<field name="dd_bank_branch_name"/>
+							<field name="demand_draft_check_drawn_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" readonly="1"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			  <!--abhidd-->
+
+			  <group col="4" colspan="4" >
+					<field name="neft_others_one2many" widget="one2many_list" nolabel="1" colspan="3.5"
+						   attrs="{'invisible':[('neft_check','=',False)],'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="beneficiary_bank_name"/>
+							<field name="branch_name"/>
+							<field name="pay_ref_no"/>
+							<field name="neft_date"/>
+							<field name="neft_amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="beneficiary_bank_name"/>
+							<field name="branch_name"/>
+							<field name="pay_ref_no"/>
+							<field name="neft_date"/>
+							<field name="neft_amount"/>
+						</form>
+
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+	
+	
+<!-- IOB A/C II -->
+
+  	<record model="ir.ui.view" id="psd_account_others_iob_two_id">
+		<field name="name">IOB A/C II Others Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+			          <button name="save_iob_two" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+				  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+
+				     <group col="8" colspan="8" >
+					<field name="iob_two_others_one2many" widget="one2many_list" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name_new" />
+							<field name="bank_branch_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" />
+						</tree>
+
+						<form string="Details">
+							<field name="cheque_no" required="1"/>
+							<field name="cheque_date"/>
+							<field name="cheque_amount"/>
+							<field name="drawee_bank_name_new"/>
+							<field name="bank_branch_name"/>
+							<field name="selection_cts"/>
+							<field name="bank_reco_date" />
+						</form>
+
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+
+			</form>
+		</field>
+	</record>	
+	
+<!--Sundry Deposit-->
+
+  	<record model="ir.ui.view" id="psd_account_others_sundry_deposit_form">
+		<field name="name">Sundry Deposit Payment Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+			          <button name="save_sundry_deposit" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+							  attrs="{'invisible':[('state','=','done')]}"/>
+				  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+			   <label string="" colspan="7.5"/>
+			  </group>
+
+			  <group col="8" colspan="8" >
+					<field name="sundry_deposit_other_one2many" widget="one2many_list" nolabel="1" colspan="4"
+						 context="{'nocreate':1,'nodelete':1}"  attrs="{'invisible':[('state','!=','draft')]}">
+						<tree editable="bottom">
+							<field name="sundry_other"/>
+							<field name="cse" readonly="1"/>
+							<field name="payment_no" readonly="1"/>
+							<field name="payment_date" readonly="1"/>
+							<field name="pending_amount" readonly="1"/>
+							<field name="partial_amount"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="sundry_other_history_one2many" widget="one2many_list" nolabel="1" colspan="4"
+						   readonly="1" attrs="{'invisible':[('state','=','draft')]}">
+						<tree editable="bottom">
+							<field name="payment_no"/>
+							<field name="cse" />
+							<field name="pending_amount"/>
+							<field name="settle_date"/>
+							<field name="partial_payment_amount"/>
+						</tree>
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+			</form>
+		</field>
+	</record>
+	
+		
+<!-- Primary Cost(CSE) -->
+  	<record model="ir.ui.view" id="psd_account_primary_cost_other_form">
+		<field name="name">Primary Cost Payment Other Receipt Form</field>
+		<field name="model">account.others.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+					attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+
+			  </group>
+				     <group col="8" colspan="8" >
+					<field name="primary_cost_other_receipt_one2many" widget="one2many_list" nolabel="1"
+						   colspan="4" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="emp_code" readonly="1"/>
+							<field name="emp_name" widget="selection" on_change="fetch_emp_code(emp_name)"/>
+							<field name="amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="emp_code" readonly="1"/>
+							<field name="emp_name" widget="selection"/>
+							<field name="amount"/>
+						</form>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+			</form>
+		</field>
+	</record>
+
+<!-- All Receipt => Others Receipt -->
+ 
+ 	<record model="ir.ui.view" id="psd_account_others_receipts_form">
+		<field name="name">Others Receipts</field>
+		<field name="model">account.others.receipts</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+
+			<form string="Others Receipts">
+				 <group col="8" colspan="8">
+					<field name="customer_name" string="Customer/Supplier Name" colspan="2.5"
+						   on_change="customer_name_change(customer_name)"
+						   domain="['|',('customer','=','True'),('supplier','=','True')]" invisible="1"/>
+					
+					<field name="customer_id"  attrs="{'readonly':[('state','in',('done','finish','cancel'))]}" readonly="1" invisible="1"/>
+					<field name="customer_id_invisible" invisible="1"/>
+					<label string="" />
+				  	<field name="receipt_no" colspan="2" readonly="1"/>
+					<field name="psd_accounting" invisible="1"/>	
+					<field name="receipt_date" colspan="2" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+					<label string="" colspan="0.5"/>
+					<field name="voucher_type" invisible="1"/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				<group col="8" colspan="8" string=" ">
+				     <group col="8" colspan="8" >
+						<field name="account_id" colspan="4" domain="[('type','!=','view'),('account_selection','=','iob_one')]"
+							   attrs="{'readonly':[('state','in',('done','cancel'))]}" on_change="psd_account_type(account_id)"/>
+						<field name="type" colspan="1" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<button name="add_others_info_psd" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','in',('done','cancel'))]}"/>
+						<label string="" colspan="2.5"/>
+						<newline/>
+	
+						<field name="others_receipt_one2many" widget="one2many_list" nolabel="1" colspan="8"
+							   context="{'nocreate':1}" attrs="{'readonly':[('state','in',('done','cancel'))]}">
+							<tree editable="bottom">
+								<field name="account_id" readonly="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+								<button name="psd_add_others" string="Add" type="object" icon="gtk-go-forward"/>
+							</tree>
+	
+							<form string="Details">
+								<field name="account_id" readonly="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+							</form>
+	
+						</field>
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					<label string="" colspan="1"/>
+
+					 <button name="process" string="Process" type="object" colspan="1" states="draft"
+								 icon="terp-camera_test" confirm="Do you want to Process?"/>
+			     </group>
+					  <group>
+						<field name="cancel_boolean" colspan="2" string="Receipt Cancel"
+								attrs="{'invisible':[('state','in',('draft','cancel'))]}" groups="base.group_Administrator" />
+					  </group>
+					<group>
+						<field name="cancel_reason"  colspan="1"
+					attrs="{ 'readonly':[('state','in',('cancel'))],'required': [('cancel_boolean','=',True)] ,'invisible':[('cancel_boolean','=',False)]}"/>
+					</group>
+					<group>
+							<button name="cancel_process" colspan="2" string="Receipt Cancel"
+						type="object" icon="gtk-cancel" attrs="{'invisible':['|',('cancel_boolean','=',False),('state','in',('draft','cancel'))]}" 
+						confirm="Do you want to cancel?"/>
+					</group>
+				     <group col="8" colspan="8">
+					   
+						 <button name="generate_report_other" string="Print" type="object" colspan="1"
+								 attrs="{'invisible':[('state','not in',('done','finish'))]}" icon="gtk-print"/>
+						    <field name="state"  widget="statusbar" nolabel="1" attrs="{'invisible':[('state','in',('done','draft','cancel'))]}"/>
+					  <!--   <field name="state" colspan="1" widget="statusbar" invisible="1"/>-->
+					     <label string="" colspan="6"/>
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+
+
+
+
+<record model="ir.ui.view" id="psd_account_others_receipts_tree">
+		<field name="name">Others Receipts Entry</field>
+		<field name="model">account.others.receipts</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree  colors="red:receipt_amount==0" string="Others Receipts">
+				<field name="receipt_no"/>
+				<field name="receipt_date"/>
+				<field name="particulars"/>
+				<field name="receipt_amount" sum="Total"/>
+			</tree>
+		</field>
+	</record>
+
+
+<record id="psd_others_receipts_search" model="ir.ui.view">
+		<field name="name">Others Receipts Search View</field>
+		<field name="model">account.others.receipts</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Others Receipts">
+				<group colspan="8" col="8">
+					<field name="receipt_no" colspan="2"/>
+					<field name="particulars" string ="Particulars"/>
+					<field name="from_date" string="From Date" filter_domain="[('receipt_date','&gt;=',self)]" colspan="2"/>
+					<field name="to_date" string="To Date" filter_domain="[('receipt_date','&lt;=',self)]" colspan="2"/>
+					<field name="state"/>
+				</group>
+			</search>
+		</field>
+	</record>
+ 
+ 	<record id="account_sales_branch.action_account_others_receipts" model="ir.actions.act_window">
+		<field name="name">Others Receipts</field>
+		<field name="res_model">account.others.receipts</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="limit">10</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_type">tree</field>
+		<field name="context">{'nodelete':1}</field>
+		<field name="view_type">form</field>
+		<field name="domain">[('receipt_no','!=',False),('psd_accounting','=',False)]</field>
+	</record>
+
+	<record id="psd_action_account_others_receipts" model="ir.actions.act_window">
+		<field name="name">Others Receipts</field>
+		<field name="res_model">account.others.receipts</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="limit">10</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_type">form</field>
+		<field name="context">{'nodelete':1,'psd_accounting':True}</field>
+		<field name="view_type">form</field>
+		<field name="domain">[('receipt_no','!=',False),('psd_accounting','=',True)]</field>
+	</record>
+
+    <record id="psd_action_account_others_receipts_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_account_others_receipts_tree"/>
+            <field name="act_window_id" ref="psd_action_account_others_receipts"/>
+    </record>
+
+    <record id="psd_action_account_others_receipts_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_account_others_receipts_form"/>
+            <field name="act_window_id" ref="psd_action_account_others_receipts"/>
+    </record>
+
+    <!-- Inherited Action from the Accounting Module -->
+    <record id="action_account_others_receipts" model="ir.actions.act_window">
+		<field name="name">Others Receipts</field>
+		<field name="res_model">account.others.receipts</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="limit">10</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_type">form</field>
+		<field name="context">{'nodelete':1}</field>
+		<field name="view_type">form</field>
+		<field name="domain">[('receipt_no','!=',False)]</field>
+	</record>
+
+	<record id="action_account_others_receipts_tree" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="account_sales_branch.account_others_receipts_tree"/>
+       	<field name="act_window_id" ref="account_sales_branch.action_account_others_receipts"/>
+    </record>
+
+    <record id="action_account_others_receipts_form" model="ir.actions.act_window.view">
+        <field eval="1" name="sequence"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_sales_branch.account_others_receipts_form"/>
+        <field name="act_window_id" ref="account_sales_branch.action_account_others_receipts"/>
+    </record>
+	
+<!-- Bank Names (Import) -->
+
+	<record model="ir.ui.view" id="psd_bank_name_form">
+		<field name="name">Bank Names</field>
+		<field name="model">bank.name</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Bank Names">
+				<group col="8" colspan="8">
+					<field name="name" colspan="2"/><label string="" colspan="6"/>
+                </group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="psd_bank_name_form">
+		<field name="name">Bank Names</field>
+		<field name="model">bank.name</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Bank Names">
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+ 
+
+	<record id="psd_action_bank_name" model="ir.actions.act_window">
+		<field name="name">Bank Name</field>
+		<field name="res_model">bank.name</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">tree,form</field>
+		<field name="view_type">form</field>
+	</record> 
+
+<!-- ITDS (Import) -->
+
+	<record model="ir.ui.view" id="psd_Itds_search">
+		<field name="name">ITDS</field>
+		<field name="model">itds.adjustment</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="ITDS">
+				<field name="itds_adjustment_search_id" colspan="2"  invisible='1'/>
+					<field name="receipt_date" colspan="2"/>
+					<field name="customer_name" colspan="2"/>
+					<field name="tan_no" colspan="2"/>
+					<field name="receipt_no" colspan="2"/>
+					<field name="invoice_no" colspan="2"/>
+					<field name="gross_amt" colspan="2"/>
+					<field name="itds_amt" colspan="2"/>
+					<field name="certificate_recd" colspan="2"/>
+					<field name="pending_amt" colspan="2"/>
+			</search>
+		</field>
+	</record>
+	
+
+
+	<record model="ir.ui.view" id="psd_Itds_form">
+		<field name="name">ITDS</field>
+		<field name="model">itds.adjustment</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="ITDS">
+				<field name="itds_adjustment_search_id" colspan="2"  invisible='1'/>
+					<field name="receipt_date" colspan="2"/>
+					<field name="customer_name" colspan="2"/>
+					<field name="tan_no" colspan="2"/>
+					<field name="receipt_no" colspan="2"/>
+					<field name="invoice_no" colspan="2"/>
+					<field name="gross_amt" colspan="2"/>
+					<field name="itds_amt" colspan="2"/>
+					<field name="certificate_recd" colspan="2"/>
+					<field name="pending_amt" colspan="2"/>
+			</tree>
+		</field>
+	</record>
+	
+   </data>   
+</openerp>

@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/repos/pro/!svn/ver/12555/pcil/warehouse/addons/sk/sync
+END
+serial_no_sync.py
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/repos/pro/!svn/ver/10098/pcil/warehouse/addons/sk/sync/serial_no_sync.py
+END
+indent_sync.py
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/repos/pro/!svn/ver/12555/pcil/warehouse/addons/sk/sync/indent_sync.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/repos/pro/!svn/ver/7968/pcil/warehouse/addons/sk/sync/__init__.py
+END
+offline_indent_sync.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/repos/pro/!svn/ver/12465/pcil/warehouse/addons/sk/sync/offline_indent_sync.py
+END

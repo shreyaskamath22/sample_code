@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="product_location_customer_search_form" model="ir.ui.view" >
+            <field name="name">product.location.customer.search.form</field>
+            <field name="model">product.location.customer.search</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Customer Location'>
+                    <group col="6" colspan="4">
+                        <group col="4" >
+                            <separator colspan="5" string="Address Detail ( Fields mark with * are  mandatory fields)"/>
+                            <field name="title"/>
+                            <field name="first_name"/>
+                            <field name="middle_name"/>
+                            <field name="last_name"/>
+                            <field name="designation"/>
+                            <field name="premise_type"/>
+                            <field name="location_name"/>
+                            <field name="apartment"/>
+                            <field name="building"/>
+                            <field name="sub_area"/>
+                            <field name="street"/>
+                            <field name="landmark"/>
+                            <field name="city_id" on_change="onchange_city_id(city_id)"/>
+                            <field name="district"/>
+                            <field name="tehsil"/>
+                            <field name="state_id"/>
+                            <field name="zip"/>
+                            <field name="segment"/>
+                        </group>
+                                        
+                        <group colspan="2" col="3">
+                            <separator string="Communication" colspan="6"/>
+                            <newline/>     
+                            <field name="product_request_id" invisible="1"/>       
+                            <field name="partner_id" invisible="1"/>     
+                            <label string="" colspan="4"/>
+                            <field name="phone" string="Phone Number" colspan=".5"
+                                   domain="[('partner_id','=',partner_id)]" 
+                                   attrs="{'invisible': [('partner_id','=',False)]}"/> 
+                            <field name="phone_new" string="Phone Number" colspan=".5"
+                                   domain="[('phone_product_request_id','=',product_request_id)]"
+                                   attrs="{'invisible': [('partner_id','!=',False)]}"/>
+                            <button name="product_location_phone_create" type="object" 
+                                    string="Create" icon="add"/>
+                            <newline/>
+                            <field name="fax" colspan="3"/>
+                            <field name="email" widget="email" colspan="3"/>
+                            <field name="location_attribute" invisible="1"/>
+                            <field name="original_address" invisible="1"/>
+                            <field name="exempted"/>
+                            <field name="exempted_classification" 
+                                   attrs="{'invisible': [('exempted','=',False)],'required':[('exempted','=',True)]}"/>
+                            <field name="certificate_no" 
+                                   attrs="{'invisible': [('exempted','=',False)],'required':[('exempted','=',True)]}"/>
+                            <field name="exem_attachment" attrs="{'invisible': [('exempted','=',False)]}"/>
+                            <field name="adhoc_job"/>
+                            <newline/>
+                        <group>
+
+                        </group>
+                        <button string="Save" 
+                                name="modify_existing_address" 
+                                type="object"
+                                attrs="{'invisible': [('location_attribute','=', 'add')]}"/>
+                        <button string="Save" 
+                                name="create_new_address" 
+                                type="object"
+                                attrs="{'invisible': [('location_attribute','=', 'edit')]}"/>        
+                        </group>    
+                    </group>
+                </form>  
+            </field>   
+        </record>       
+    </data>
+</openerp>

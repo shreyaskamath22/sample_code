@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+   <data>
+   	<record model="ir.ui.view" id="psd_credit_note_invoice_pop_up_form">
+		<field name="name">Credit Note Invoice</field>
+		<field name="model">credit.note.invoice.pop.up</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Credit Note">
+			 <group col="8" colspan="8">
+			 	<field name="credit_note_inv_ids" widget="one2many_list" nolabel="1" 
+               colspan="3.5" context="{'nocreate':1,'nodelete':1}">
+              <tree editable="bottom" string="Invoice Lines">   
+                <field name="product_id" readonly="1"/>
+                <field name="ordered_quantity" readonly="1"/>
+                <field name="product_uom" readonly="1"/>  
+                <field name="batch_id" readonly="1"/>
+                <field name="rate" readonly="1"/>
+                <field name="discount_amount" readonly="1"/> 
+                <field name="tax_amount" readonly="1"/>
+                <field name="total_amount" readonly="1"/>
+                <field name="refund_quantity"/>   
+                <field name="refund_amount"/>
+                <field name="credit_invoice_popup_id" invisible="1"/>      
+              </tree>  
+            </field>
+			</group>
+      <group colspan="2" col="2">
+          <button name="action_confirm_write_off" string="OK" type="object" colspan="0.5" icon="terp-camera_test"/>
+          <label string="" colspan="2"/>
+      </group>
+			</form> 
+		</field>
+	</record>
+   </data>
+</openerp>

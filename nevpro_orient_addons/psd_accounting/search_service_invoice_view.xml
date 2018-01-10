@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="search_service_invoice_psd_form">
+            <field name="name">search.service.invoice.form</field>
+            <field name="model">search.service.invoice</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Service Invoice Search'>
+                    <group col="6" colspan="8">
+                        <newline/>
+                        <group col="8" >
+                            <field name="invoice_number"/>
+                            <field name="name"/>
+                            <field name="customer_id"/>
+                            <!-- <field name="delivery_note_date"/> -->
+                            <field name="state"/>
+                            <field name="from_date"/>
+                            <field name="to_date"/>
+                            <field name="pse"/>
+                            <field name="product_id"/>
+                            <field name="erp_order_no" string="Service Order No."/>
+                            <field name="erp_order_date" string="Service Order Date"/>
+                            <field name="service_type"/>
+                            <field name="classification"/>
+                            <!-- <field name="product_type"/> -->
+                            <!-- <field name="landline"/> -->
+                            <newline/>
+                            <newline/>                            
+                            <button string="Search" icon="srh" name="search_service_invoice_psd" 
+                                    type="object" colspan="0.5"/>                            
+                            <button string="Clear" icon="gtk-clear" name="clear_service_invoice_search"  type="object" colspan="0.5"/>
+                            <label string="" colspan="1"/>                            
+                            <field name="not_found" invisible="1"/>
+                        </group>         
+                    </group>
+                    <group attrs="{'invisible':[('not_found','=',False)]}">
+                        <html>
+                            <h4 style="color:red"><center>Record Not Found!</center></h4>
+                        </html>
+                    </group>
+                    <newline/>
+                    <field name="search_amc_invoice_lines" nolabel="1" context="{'nocreate':1,'nodelete':1}">
+                        <tree editable="bottom" colors="red:status=='open'">
+                                <field name="invoice_number" readonly="1"/>
+                                <field name="invoice_date" readonly="1"/>
+                                <field name="erp_order_no" string="Service Order No" readonly="1"/>
+                                <field name="cust_name" readonly="1"/>
+                                <field name="pse" readonly="1"/>
+                                <field name="service_order_grand_total" readonly="1" sum="Total"/>
+                                <field name="status" readonly="1"/>
+                                <button name="open_service_invoice" type="object" icon="gtk-go-forward"/>
+                        </tree>
+                    </field>                    
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_search_service_invoice_psd">
+            <field name="name">Service Invoice Search</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">search.service.invoice</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="search_service_invoice_psd_form"/>
+        </record>
+
+       <!-- <menuitem id="menu_search_service_invoice_id" sequence="2" name="Service Invoice Search" action="action_search_service_invoice_psd" parent="menu_invoice_psd_search_id"/> -->
+        <!-- <menuitem id="menu_search_service_invoice_id" sequence="2" name="Service Invoice Search" action="action_search_service_invoice_psd" parent="account_sales_branch.menu_invoice_child_id"/> -->
+
+       <record model="ir.ui.view" id="psd_composite_invoice_adhoc_search_id">
+        <field name="name">Search Composite Invoices</field>
+        <field name="model">invoice.search.master</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Composite Invoice">
+                <group col="8" colspan="4">
+                    <field name="invoice_number"/>
+                    <field name="cust_name" />
+                    <field name="customer_id" />
+                    <field name="order_no" />
+                    <field name="web_order_no"/>
+                    <field name="delivery_order_no"/>
+                    <field name="delivery_note_date"/>
+                    <field name="state"/>
+                    <field name="date_from" />
+                    <field name="date_to" />
+					<field name="product_id" string="SKU Name"/>
+                    <field name="not_found" invisible="1"/>
+                    <newline/>
+                    <button name="search_product_composite_invoice" string="Search" colspan="0.5" type="object" icon="gtk-find"/>
+                    <button name="clear_invoice" string="Clear" colspan="0.5" type="object" icon="gtk-undelete"/>
+                </group>
+                <newline/>
+                <group attrs="{'invisible':[('not_found','=',False)]}">
+                        <html>
+                            <h4 style="color:red"><center>Record Not Found!</center></h4>
+                        </html>
+                </group>
+                <notebook colspan="4">
+                <page string="">
+                <group col="4">
+                    <field name="select_all" on_change="onchange_select_all(select_all,search_invoice_line)"/>
+                </group><newline/>
+                <field name="search_invoice_line" nolabel="1" widget="one2many_list" readonly="0" context="{'nocreate':1,'nodelete':1}">
+                    <form string="" >
+                        <!-- <field name="multiple_check"/> -->
+                        <field name="invoice_number"/>
+                        <field name="invoice_date"/>
+                        <field name="contract_no"/>
+                        <field name="cust_name"/>
+                        <field name="customer_id" invisible="1"/>
+                        <field name="pse" />
+                        <field name="cce"/>
+                        <!--field name="total_amount1" string="Invoice Value" />
+                        <field name="contract_value" string="Adhoc Invoice Value"/-->
+                        <field name="product_order_grand_total" sum="Total"/>
+                        <field name="status"/>
+                        <button name="psd_view_invoice_new" type="object" icon="gtk-go-forward"/>
+                    </form>
+                    
+                    <tree string="" editable="bottom">
+                        <field name="multiple_check"/>
+                        <field name="invoice_number" readonly="1"/>
+                        <field name="invoice_date" readonly="1"/>
+                        <field name="contract_no" readonly="1"/>
+                        <field name="cust_name" readonly="1"/>
+                        <field name="pse"  readonly="1"/>
+                        <field name="delivery_note_no"  readonly="1"/>
+                        <field name="web_order_no"  readonly="1"/>
+                        <field name="customer_id" invisible="1"/>
+                        <!-- <field name="cse_char" readonly="1"/>
+                        <field name="cce"/> -->
+                        <!--field name="total_amount1" string="Invoice Value" />
+                        <field name="contract_value" string="Adhoc Invoice Value"/-->
+                        <field name="product_order_grand_total" sum="Total" />
+                        <field name="status" readonly="1"/>
+                        <button name="psd_view_invoice" type="object" icon="gtk-go-forward"/>
+                    </tree>
+                </field><newline/>
+                </page>
+                </notebook>
+                 <!-- <button name="print_multiple" string="Print Multiple" type="object" colspan="1" icon="STOCK_PRINT"
+                        /> -->
+                         <!-- attrs="{'invisible':[('invoice_type','=',False)]}" -->
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_search_composite_invoice_psd">
+        <field name="name">Composite Invoice Search</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">invoice.search.master</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="psd_composite_invoice_adhoc_search_id"/>
+    </record>
+
+       <menuitem id="menu_search_composite_invoice_id" sequence="3" name="Composite Invoice Search" action="action_search_composite_invoice_psd" parent="menu_invoice_psd_search_id"/>
+
+</data>
+</openerp>

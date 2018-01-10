@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp> 
+  <data noupdate="1">
+    
+      <record model="ir.ui.view" id="view_nature_nature_form">
+        <field name="name">view.nature.nature.form</field>
+        <field name="model">nature.nature</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Nature">
+            <field name="name" required="1"/>
+            <field name="hsn_code" required="1"/>
+          </form>
+        </field>
+      </record>
+
+
+      <record model="ir.ui.view" id="view_nature_nature_tree">
+        <field name="name">view.nature.nature.tree</field>
+        <field name="model">nature.nature</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+          <tree string="Nature">
+            <field name="name"/>
+            <field name="hsn_code"/>
+          </tree>
+        </field>
+      </record>
+
+    
+    <record id="action_nature_nature" model="ir.actions.act_window">
+          <field name="name">action.nature.nature</field>
+          <field name="type">ir.actions.act_window</field>
+          <field name="res_model">nature.nature</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <menuitem id="action_nature_nature_menu" 
+              name="Nature" 
+              action="action_nature_nature" 
+              sequence="40" 
+              parent="base.menu_config"/>
+
+
+    <record model="nature.nature" id="nature_nature_data_settings">
+        <field name="name">Sub-Contracting Charges</field>
+        <field name="hsn_code">998531</field>
+    </record>
+
+
+  </data>
+</openerp>

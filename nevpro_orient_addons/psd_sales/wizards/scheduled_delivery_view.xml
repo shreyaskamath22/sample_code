@@ -1,0 +1,54 @@
+<openerp>
+    <data>
+        <record id="view_delivery_scheduled_form" model="ir.ui.view">
+            <field name="name">scheduled.product.list.form</field>
+            <field name="model">scheduled.product.list</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Products List">
+                    <group>
+                        <field name="select_all_orders" on_change="onchange_select_all_orders(select_all_orders,scheduled_product_list_ids)" readonly="1" string="Select All"/>
+                        <label string="" colspan="1"/>                            
+                        <label string="" colspan="1"/>
+                    </group>
+                    <field name="scheduled_product_list_ids" nolabel="1" 
+                context="{'nocreate':1}" colspan="8">
+                    	<tree string="" editable="bottom">
+                            <field name="check_order" readonly="1"/>
+                            <field name="sale_order_id" invisible="1"/>
+                            <field name="sale_order_line_id" invisible="1"/>
+                            <field name="product_code" readonly="1"/>
+                    		<field name="product_name_id" readonly="1"/>
+                    		<!-- <field name="sku_name_id" readonly="1"/> -->
+                            <field name="product_uom_id" readonly="1"/>
+                    		<field name="ordered_quantity" invisible="1"/>
+                    		<field name="allocated_quantity" readonly="1"/>
+                            <field name="godown" invisible="1" domain="[('godown_check','=',True)]"/>
+                            <field name="mrp_date" invisible="1"/>
+                            <field name="extended_warranty" invisible="1"/>
+                    		<field name="product_mrp" invisible="1"/>
+                    		<!-- <field name="batch_no" readonly="1"/> -->
+                            <field name="tax_id" invisible="1"/>
+                            <field name="tax_amount" invisible="1"/>
+                            <field name="discounted_value" invisible="1"/>
+                            <field name="discount" invisible="1"/>
+                            <field name="discounted_price" invisible="1"/>
+                            <field name="discounted_amount" invisible="1"/>
+                    		<field name="total_amount" invisible="1"/>
+                            <field name="specification" invisible="1"/>
+                    	</tree>
+                	</field>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <group>
+                        <field name="godown" required="1" domain="[('godown_check','=',True)]"/>
+                        <button name="submit" string="Create Delivery Schedule" type="object"/>
+                        <label string="" colspan="1"/>                            
+                        <!-- <label string="" colspan="1"/> -->
+                    </group>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

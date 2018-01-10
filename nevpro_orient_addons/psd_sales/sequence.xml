@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="sales_product_quotation_seq" model="ir.sequence.type">
+            <field name="name">Product Quotation Number</field>
+            <field name="code">psd.sales.product.quotation</field>
+        </record>
+
+        <record id="sequence_sales_product_quotation_seq" model="ir.sequence">
+            <field name="name">Product Quotation Number</field>
+            <field name="code">psd.sales.product.quotation</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="sales_product_order_seq" model="ir.sequence.type">
+            <field name="name">Product Order Number</field>
+            <field name="code">psd.sales.product.order</field>
+        </record>
+
+        <record id="sequence_sales_product_order_seq" model="ir.sequence">
+            <field name="name">Product Order Number</field>
+            <field name="code">psd.sales.product.order</field>
+            <field name="padding">6</field>
+        </record>
+
+    </data>
+</openerp>

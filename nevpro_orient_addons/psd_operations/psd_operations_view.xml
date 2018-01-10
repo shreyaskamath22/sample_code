@@ -1,0 +1,1767 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<openerp>            
+	<data>
+  
+    
+    <record model="ir.ui.view" id="psd_assign_resource_id" >
+      <field name="name">assign_resource</field>
+      <field name="model">assign.resource</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form string="Assign Resource">
+          <field name="state" widget="statusbar"
+          statusbar_visible="initial,stock_updated" statusbar_colors='{"initial":"#000099","stock_updated":"green"}'/>
+          <group col="8" colspan="8" string=""> 
+            <group>
+              <field name="from_date" colspan="1" attrs="{'readonly':[('state','=','stock_updated')],}"/>
+            </group>
+            <group>
+              <field name="to_date" attrs="{'readonly':[('state','=','stock_updated')],}"/>
+              
+            </group>
+            <group>
+              <field name="name_contact" attrs="{'readonly':[('state','=','stock_updated')],}"/>
+              
+            </group>
+            <group>
+              <field name="technician_name" attrs="{'readonly':[('state','=','stock_updated')]}"/>
+            </group>
+            <group>
+              <field name="squad_name" attrs="{'readonly':[('state','=','stock_updated')]}"/>
+            </group>
+           <!--  <group>
+              <field name="include_confirmed_jobs" colspan="1" attrs="{'readonly':[('state','=','stock_updated')]}"/><newline/>
+              <field name="include_extended_jobs" colspan="1" attrs="{'readonly':[('state','=','stock_updated')]}"/>
+            </group> -->
+
+          </group><newline/>
+          <group col="6" colspan="6" string=""> 
+            <group>
+              <button name="psd_assign_resource_search" string="Search" type="object" colspan="1" icon="srh" attrs="{'invisible':[('state','=','stock_updated')]}"/>
+            </group>
+            <group>
+              <button name="psd_assign_resource_clear" string="Clear" type="object" colspan="1" icon="clear" attrs="{'invisible':[('state','=','stock_updated')]}"/>
+              <field name="user_name" invisible="1"/>
+              <field name="date" invisible="1"/>  
+
+            </group>
+            <group>
+              <label string="" colspan="1"/>
+            </group>
+            <group>
+              <label string="" colspan="1"/>
+            </group>
+                        
+          </group>
+          <newline/>
+          <group col="8" colspan="8" string="">
+            <group>
+                  <field name="assign_resource_technician_one2many" widget="one2many_list" colspan="4" nolabel="1" context="{'nocreate':1}" attrs="{'readonly':[('state','not in','initial')]}">
+                <form string="">
+                  <field name="tech_name" readonly="1"/>
+                  <field name="material_details" readonly="1"/>
+                  <field name="name_contact" readonly="1"/>
+                  <!-- <field name="assign_resource_id"/> -->
+                  <!-- <field name="chemical_name_qty"/> -->
+                  <field name="extend_tech_name" invisible="1"/>
+                 <!--  <button name="assign_resource_form1" string="Add Chem/Eq" type="object" colspan="1"  icon="images1"/> -->
+                </form>
+                <tree string="" editable="bottom">
+                  <field name="tech_name" readonly="1"/>
+                  <field name="material_details" readonly="1"/>
+                  <field name="name_contact" readonly="1"/>
+                  <!-- <field name="chemical_name_qty"/> -->
+                  <field name="extend_tech_name" invisible="1"/>
+                 <!--  <button name="assign_resource_form1" string="Add Chem/Eq" type="object" icon="images1" /> -->
+                </tree>
+              </field>
+            </group>
+            <group>
+              <field name="assign_resource_squad_one2many" widget="one2many_list" colspan="4" nolabel="1" context="{'nocreate':1}" attrs="{'readonly':[('state','not in','initial')]}">
+                <form string="">
+                  <field name="squad_name" readonly="1"/>
+                   <field name="material_details" readonly="1"/>
+                  <field name="name_contact" readonly="1"/>
+                  <!-- <field name="chemical_name_qty"/> -->
+                  <!-- <button name="assign_resource_form2" string="Add Chemical/Equipment" type="object" colspan="1" icon="images1" /> -->
+                </form>
+                <tree string="" editable="bottom">
+                  <field name="squad_name" readonly="1"/>
+                   <field name="material_details" readonly="1"/>
+                  <field name="name_contact" readonly="1"/>
+                  <!-- <field name="chemical_name_qty"/> -->
+                <!--   <button name="assign_resource_form2" string="Add Chem/Eq" type="object" icon="images1" /> -->
+                   
+                </tree>
+
+              </field>
+            </group>
+          </group>
+
+
+          <group>
+            <field name="tech_one2many" widget="one2many_list" colspan="4" nolabel="1" invisible="1">
+                <form string="">
+                  <field name="sr_no"/>
+                  <field name="technician"/>
+                  <field name="technician_chemical"/>
+                  <field name="qty_in_hand"/>
+                  <field name="qty_issue"/>
+                  <field name="batch_no"/>
+                  <field name="tag_id"/>
+                  <field name="uom"/>
+                  <field name="squad"/>
+                  <field name="squad_chemical"/>
+                </form>
+                <tree string="" editable="bottom">
+                  <field name="sr_no"/>
+                  <field name="technician"/>
+                  <field name="technician_chemical"/>
+                  <field name="qty_in_hand"/>
+                  <field name="qty_issue"/>
+                  <field name="batch_no"/>
+                  <field name="tag_id"/>
+                  <field name="uom"/>
+                  <field name="squad"/>
+                  <field name="squad_chemical"/>
+                </tree>
+              </field>
+            </group>
+
+
+          <newline/>
+          <group col="6" colspan="6" string="">
+            <group>
+                <label string="" colspan="1"/>
+            <newline/>
+                <label string="" colspan="1"/>
+            </group>
+            
+          </group><newline/>
+
+          <group col="6" colspan="6" string="">
+            <group>
+              <button name="psd_update_report" string="Confirm" type="object" colspan="1" attrs="{'invisible':[('state','=','stock_updated')]}" confirm="Do you want to Confirm?"/>
+            </group>
+            <group>
+              <!-- <button name="psd_assign_report" string="Assign Report" type="object" colspan="1"/> -->
+              <!--button name="update_report1" string="Confirm" type="object" colspan="1" attrs="{'invisible':[('state','=','initial')]}"/-->
+              <!-- <button name="print_service_slip" string="Print Service Completion Slip" type="object" colspan="1" invisible="1"/> -->
+              <!-- <button name="technician_sheet" string="Print Technician Job Sheet" type="object" colspan="1" /> -->
+              <field name="assign_material_date" invisible="1"/>
+            </group>
+            <group>
+              <label string="" colspan="1"/>
+            </group>
+            <group>
+              <label string="" colspan="1"/>
+            </group>
+          </group>
+              <group col="8" colspan="8" string="">
+<field name="service_slip_one2many" colspan="4" nolabel="1" widget="one2many_list" invisible="1">
+                  <tree editable="top">
+                <field name="job_id" invisible="1"/>
+                <field name="job_id1"/>
+                <field name="pms"/>
+                <field name="customer_id"/>
+                <field name="cust_name"/>
+                <field name="address" invisible="1"/>
+                <field name="address_assignres"/>
+                <field name="service_area"/>
+                <field name="technician_name"/>
+                <field name="start_date"/>
+                <field name="start_day"/>
+                <field name="start_month"/>
+                <field name="start_year"/>
+                <field name="start_time"/>
+                <field name="end_date"/>
+                <field name="service_slip_no"/>
+                <field name="renewal"/>
+                <field name="renewal_day"/>
+                <field name="renewal_month"/>
+                <field name="renewal_year"/>
+                <field name="start_time_am_or_pm"/>
+                <field name="last_job"/>
+                <field name="request_date_time"/>     
+                <field name="next_service_day"/>
+                <field name="next_service_month"/>
+                <field name="next_service_year"/>
+                <field name="cin_no"/>
+
+                  </tree>     
+                  <form>
+                <field name="job_id" invisible="1"/>
+                <field name="job_id1"/>
+                <field name="cust_name"/>
+                <field name="address" invisible="1"/>
+                <field name="address_assignres"/>
+                <field name="service_area"/>
+                <field name="technician_name"/>
+                <field name="start_date"/>
+                <field name="start_day"/>
+                <field name="start_month"/>
+                <field name="start_year"/>
+                <field name="start_time"/>
+                <field name="end_date"/>
+                <field name="service_slip_no"/>
+                <field name="renewal"/>
+                <field name="renewal_day"/>
+                <field name="renewal_month"/>
+                <field name="renewal_year"/>
+                <field name="start_time_am_or_pm"/>
+                <field name="last_job"/>
+                <field name="request_date_time"/>
+                    <field name="next_service_day"/>
+                <field name="next_service_month"/>
+                <field name="next_service_year"/>
+                <field name="cin_no"/>
+
+                  </form>
+        </field>
+              </group><newline/>
+
+              <field name="assigned_technician_line_one2many" widget="one2many_list" colspan="8" nolabel="1"  context="{'nocreate':1}" invisible="1">
+                <tree string="Assigned Technician">
+                        <field name="assigned_technician"/>
+                  <field name="assigned_squad"/>
+                  <field name="technician_in_squad"/>
+                  <field name="created_date"/>
+                  <field name="created_time"/>
+                  <field name="assign_material_id1"/>
+                  <field name="created_date1"/>
+                  
+                </tree>
+                <form string="Assigned Technician">
+                        <field name="technician_assigned_job_details_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" >
+                                <tree string="Assigned Technician Job Details">
+                                        <field name="job_id"/>
+                      <field name="pms"/>
+                                        <field name="cust_name"/>
+                                        <field name="cust_address"/>
+                      <!--field name="material_equipment"/>
+                                        <field name="uom"/-->
+                      <field name="job_start_time"/>
+                      <field name="job_end_time"/>
+                      <field name="job_start_date"/>
+
+                      <field name="batch" invisible="1"/>
+
+                                        
+                                      
+                                </tree>
+                    <form string="Assigned Technician Job Details">
+                                    
+                           <field name="technicain_assigned_material_one2many" widget="one2many_list" colspan="8" nolabel="1"  context="{'nocreate':1}">
+                                                <tree string="Assigned Technician Material Details">
+                                                    <field name="material_equipment"/>
+                                                   <field name="uom"/>
+                                                  <!--field name="batch" invisible="1"/-->
+                                                  <field name="batch"/>
+                                                  <field name="tag_id"/>
+                                                  <field name="qty_issue"/>
+                                                                                
+                                                      
+                                                </tree>
+                                                <form string="Assigned Technician Material Details">
+                                                        <field name="material_equipment"/>
+                                                        <field name="uom"/>
+                          <field name="batch"/>
+                          <field name="tag_id"/>
+                          <field name="qty_issue"/>
+                                                       
+                                        </form>
+                                              
+                          </field>
+                    </form>
+                    </field>
+                    
+                    <field name="technician_assigned_final_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" >
+                                <tree string="Assigned Technician Job Details">
+                                        <field name="job_id"/>
+                      <field name="pms"/>
+                                        <field name="cust_name"/>
+                                        <field name="cust_address"/>
+                      
+                      <field name="job_start_time"/>
+                      <field name="job_end_time"/>
+
+                      
+
+                                        <field name="material_equipment"/>
+                                        <field name="uom"/>
+                      <field name="batch"/>
+                      <field name="tag_id"/>
+                      <field name="qty_issue"/>
+                      <field name="job_start_date"/>
+                            <!--field name="batch" invisible="1"/-->
+
+                                                        
+                                                      
+                                </tree>
+                                               
+                          </field>
+                    <field name="technician_material_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" >
+                                <tree string="Assigned Technician material">
+                      
+
+                      
+
+                                        <field name="material_equipment"/>
+                                        <field name="uom"/>
+                      <field name="batch"/>
+                      <field name="tag_id"/>
+                      <field name="qty_issue"/>
+                            <!--field name="batch" invisible="1"/-->
+
+                                                        
+                                                      
+                                  </tree>
+                                                 
+                            </field>
+                      
+                      
+                                        
+                                  
+                        
+                  </form>
+              
+                </field>
+    
+           
+          </form>
+        </field>
+          
+          
+      </record>
+     <record model="ir.ui.view" id="psd_ops_offline_sync_form">
+        <field name="name">Offline Sync</field>
+        <field name="model">ops.offline.sync</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Offline Sync">
+           
+            <group colspan="4" col="6">
+          
+            <group colspan="6" col="6">
+              <field name="res_active"/>
+              <field name="created_date" />
+              <field name="sync_sequence" />
+              <field name="src_model"/>
+              <field name="dest_model"/>
+              <field name="sync_company_id"/>
+              <field name="srch_condn"/>
+              <field name="remove_fields_key"/>
+              <field name="error_log"/>
+              <field name="form_id" />
+              <field name="sync_data"/>
+            </group>
+            <newline />
+            <button name="sch_ops_offline_sync" string="Offline Sync" type="object"/>
+          </group>
+          </form>
+        </field>
+      </record>
+      <record model="ir.ui.view" id="psd_account_cash_payment_operation_form">
+        <field name="name">Cash Payment Form</field>
+        <field name="model">cash.payment.operation</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+          <form string="Cash Payment">
+           <group col="8" colspan="8">
+              <newline/>
+              <label string="" colspan="0.5"/>
+              <field name="customer_name" colspan="2" attrs="{'readonly':[('state','=','done')]}" widget="selection" on_change="customer_name_change(customer_name)" domain="[('customer','=','True')]"/>
+              <field name="customer_id"  attrs="{'readonly':[('state','=','done')]}" readonly="1"/>
+              <field name="customer_id_invisible" invisible="1"/>
+              
+              <label string="" colspan="0.5"/>
+                <field name="payment_no" colspan="2" readonly="1" />
+              <field name="payment_date" colspan="2" readonly="1"/>
+              <field name="account_type" colspan="1" readonly="1"/>
+                 </group>
+                 <label string="" colspan="6"/>
+                 <newline/>
+
+
+            <group col="8" colspan="8" string=" ">
+                 <group col="8" colspan="8" >
+              <field name="account_id" colspan="3" attrs="{'readonly':[('state','=','done')]}" domain="[('type','!=','view')]"/>
+              <field name="type" colspan="1" attrs="{'readonly':[('state','=','done')]}"/>
+              <label string="" colspan="0.5" attrs="{'readonly':[('state','=','done')]}"/>
+              <button name="add_cash_info" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+              <label string="" colspan="3"/>
+              <newline/>
+                 </group>
+                 <group col="8" colspan="8" >
+              <field name="cash_payment_operation_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}" attrs="{'readonly':[('state','=','done')]}">
+                <tree editable="bottom">
+                  <field name="account_id" readonly="1"/>
+                  <field name="type" colspan="1" invisible="1"/>
+                  <field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+                  <field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+                  <button name="add" string="Add" type="object" icon="gtk-go-forward"/>
+                </tree>
+
+                <form string="Cash Payment">
+                  <field name="account_id" readonly="1"/>
+                  <field name="type" colspan="1" invisible="1"/>
+                  <field name="debit_amount"/>
+                  <field name="credit_amount"/>
+                </form>
+              </field>
+
+                 </group>
+                 <group col="8" colspan="8">
+              <field name="narration" colspan="6" attrs="{'readonly':[('state','=','done')]}"/>              
+              <field name="particulars" invisible="1"/>
+              <label string="" colspan="2"/>
+                 </group>
+                 <group col="8" colspan="8">
+                   <field name="debit_amount_srch" invisible="1"/>
+
+                   <button name="process" string="Process" type="object" colspan="1" states="draft" icon="terp-camera_test"/>
+                   <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+                   <label string="" colspan="6"/>
+              
+                 </group>
+            </group>
+          </form>
+        </field>
+    </record>
+
+    <record id="psd_view_employee_form" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Manpower">
+                    <group colspan="4" col="7">
+                        <group colspan="6" col="6" string="General">
+      <field name="creation_type" required="1" string="Employee Creation *"/>
+      <separator  colspan="6"/>
+      <field name="name" string="First Name *"/>
+      <field name="middle_name"/>
+      <field name="last_name" required="1" string="Last Name *"/>
+      <field name="emp_code" required="1" string="Employee Code *"/>
+                        <field name="concate_name" colspan="4"/>
+      <separator  colspan="6"/>
+
+      <field name="executive_type"  string="Category *"/>
+      <field name="rank" groups="base.group_hr_hidden" />
+    <!--  <field name="grade" required="1" string="Grade *"/> -->
+       <field name="staff_type"  string="Cadre"/>
+      <field name="birthday"/>
+      <field name="date_of_joining" on_change="date_onchange(date_of_joining,date_confirm)" required="1" string="Date Of Joining *"/>
+      <field name="date_of_confirmation" attrs="{'invisible':['|',('executive_type','=','labour_contract'),('status','in',('probation','trainee'))]}"  />
+      <field name="gender" required="1" string="Gender *"/>
+      <separator colspan="6"/>
+      <field name="branch" widget="selection" string="Posting Location *" required="1"/>
+      <field name="establishment" widget="selection" string="Joining Location *" required="1" on_change="onchange_establishment(establishment)"/>
+      <!--field name="department_id" on_change="onchange_department(department_id)" widget="selection" /-->
+      <field name="cost_center" required="1" string="Cost Centre *"/>
+      <field name="grade"  string="Grade"  attrs="{'invisible':[('executive_type','=','labour_contract')]}"  />
+
+      <field name="parent_location" required="1" string="Parent Location *"/>
+      <field name="status" required="1" string="Status *"/>
+      <field name="separation_date"/>
+      <field name="uan"/>
+      <separator colspan="6"/>
+
+      <field name="pan_no" required="1" string="Pan No *"/>
+      <field name="pf_no"/>
+      <field name="pf_nominee" domain="[('employee_code','=',emp_code)]" context="{'family_id':id,'employee_code':emp_code}"/>
+      <field name="marital" required="1" string="Marital Status *"/>
+      <field name="date_of_marriage"/>
+      <field name="country_id"/>
+      <field name="religion" required="1" string="Religion *"/>
+      
+      <field name="role_selection" required="1" on_change="onchange_role_selection(role_selection)"  string="Functional  Role *" />
+      <field name="cce_designation" attrs="{'invisible':[('role_selection','not in',('crm_func_cce'))]}"/>
+
+      <field name="cse_designation" attrs="{'invisible':[('role_selection','not in',('cse'))]}"/>
+
+      <field name="oe_designation" attrs="{'invisible':[('role_selection','!=','operations_func_oe')]}"/>
+
+      <field name="role" on_change="onchange_role(role)" string="System Designation" attrs="{'invisible':[('role_selection','!=','management')]}" />
+      <field name="executor_type" attrs="{'invisible':[('role_selection','!=','executor')]}" />
+      <field name="acc_designation" attrs="{'invisible':[('role_selection','not in',('account_func_am'))]}" />
+      <field name="hr_admin_designation" attrs="{'invisible':[('role_selection','not in',('hr_func_admin'))]}" />
+      <field name="sale_bo_designation" attrs="{'invisible':[('role_selection','not in',('sales_func_bo'))]}" />
+      <field name="stock_designation" attrs="{'invisible':[('role_selection','not in',('stock_mgm_func_sk'))]}" />
+
+      <separator colspan="6"/>
+      <field name="emp_role" string="PCI Designation"  />
+      <field name="function_areas" colspan="4" string="Function/Area *" groups="base.group_hr_hidden" />
+      <field name="wef_date"/>
+      <field name="parent_id" required="1" string="Manager *"/>
+      <field name="reporting_to" attrs="{'required':[('role','in',('customer_sales_executive','product_sales_executive','branch_manager'))]}" required="1" string="Functional Reporting *"/>
+      <field name="user_id" string="User"/>
+      <field name="admin_reporting" attrs="{'required':[('role','in',('customer_sales_executive','product_sales_executive','branch_manager'))]}" required="1" string="Reporting To (Admin) *"/>
+
+      <field name="res_active" />
+      <field name="minimum_working_hrs"  string="Minimum working Hours for Comp Off"/>
+      <separator  colspan="6"/>
+        
+      <field name="card_no"/>
+      <field name="attendance_enrolment_number"/>
+      <field name="encash_privilege_leave"/>
+      <field name="contract_status" colspan="4" attrs="{'required':[('executive_type','=','labour_contract')]}" string="Contract Agency *"/>
+      <field name="encash_sick_leave"/>
+              
+
+      <field name="business_division" invisible="1"/>
+      <field name="division_other" attrs="{'invisible':[('business_division','&lt;&gt;','other_division')],'required':[('business_division','=','other_division')]}"/>
+      
+      <field name="department_temp" invisible="1"/>
+      <field name="department_other" attrs="{'invisible':[('department_temp','!=','Other')],'required':[('department_temp','=','Other')]}"/>
+  
+  
+      <field name="date_confirm" invisible="1"/>
+      
+      
+      <field name="rel_cl" groups="base.group_hr_testing"/>
+      <field name="rel_pl" groups="base.group_hr_testing"/>
+      <field name="rel_sl" groups="base.group_hr_testing"/>
+
+      <field name="photo" widget='image' nolabel="1" invisible="1"/>
+          </group>      </group>          
+                        <!--field name="company_id" widget="selection" groups="base.group_multi_company,base.group_extended" on_change="onchange_company(company_id)"/-->
+                        <!--field name="active" groups="base.group_extended"/-->
+                        <!--field name="department_id" on_change="onchange_department_id(department_id)" /-->
+                        <!--field name="parent_id" 
+            <field name="separation_date" attrs="{'invisible':[('status','not in',('resign','transfer'))],'required':[('status','in',('resign','transfer'))]}"/>
+        <field name="resign_date" attrs="{'invisible':[('status','not in','resign')],'required':[('status','in','resign')]}"/>
+        <field name="transfer_date" attrs="{'invisible':[('status','not in','transfer')],'required':[('status','in','transfer')]}"/>
+        <field name="transfer_to" attrs="{'invisible':[('status','not in','transfer')],'required':[('status','in','transfer')]}"/>
+        <field name="branch_id"/-->
+      <field name="decision" groups="base.group_hr_testing" />
+      <field name="chk_cl" groups="base.group_hr_testing" invisible="1" />
+                        <field name="chk_sl" groups="base.group_hr_testing" invisible="1" />
+                        <field name="chk_pl" groups="base.group_hr_testing" invisible="1"/>
+                       <field name="date_cl" groups="base.group_hr_testing" />
+                        <field name="date_sl" groups="base.group_hr_testing" />
+                        <field name="date_pl" groups="base.group_hr_testing" />
+      <field name="c_date" groups="base.group_hr_testing" />
+            
+                        <!--/group>
+        <group col="4" colspan="7" string="Designations">
+        <field name="role" on_change="onchange_role(role)"/>
+        <field name="rank"/>
+        <field name="function_areas"/>
+        </group-->  
+
+      <group col="4" colspan="7" string="Leaves" groups="base.group_hr_hidden">
+        <button name="cycle_july" string="JULY CYCLE" type="object" groups="base.group_hr_hidden" />
+        <button name="get_cl" string="EARN CL" type="object" groups="base.group_hr_hidden" />
+        <!--button name="allocate_cl" string="ALLOCATE CL" type="object"/-->
+        <button name="cycle_jan" string="JAN CYCLE" type="object" groups="base.group_hr_hidden" />
+        <button name="get_sl" string="EARN SL" type="object" groups="base.group_hr_hidden" />
+        <button name="daily_attendance" type="object" string="Attendance" groups="base.group_hr_hidden"  />
+        <button name="create_months" type="object" string="Create Months" groups="base.group_hr_hidden" />
+        <button name="employee_creation_type" type="object" string="Appoint Employee Sync" groups="base.group_hr_hidden" />
+        <!--button name="allocate_sl" string="ALLOCATE SL" type="object"/-->
+      </group>
+
+            <!---group col="4" colspan="7" string="Leaves">
+        <field name="causal_leaves"/>
+        <field name="privilege_leaves"/>
+        <field name="sick_leaves"/> 
+        <field name="earned_leaves"/>
+        <field name="p_leaves"/>
+        <field name="sj_leaves"/>
+        <field name="c_leaves"/>
+        <field name="s_leaves"/>
+        <button name="leave_cal_function" string="Test" type="object" invisible="1"/>
+        
+        </group>-->
+                   
+                    <notebook colspan="6">
+                        <page string="Personal">
+                            <group col="6" colspan="6" groups="base.group_hr_user">
+                                <!--separator colspan="2" string="Social IDs"/-->
+                                <field name="blood_group" colspan="2"/>
+        <label string="" colspan="4" />
+                                <!--field name="sinid" groups="base.group_extended"/>
+                                <field name="identification_id" groups="base.group_extended"/>
+                                <field name="passport_id"/>
+                                <field name="otherid"/-->
+                            </group>
+        <separator colspan="6"/>
+                            <group  colspan="6" groups="base.group_hr_user">
+      
+        <field name="address_o2m" nolabel="1" />
+                                <!--separator string="Status" colspan="2"/>
+                                <field name="marital"/>
+                                <field name="country_id"/>
+                                <field name="birthday"/-->
+                            </group>
+                            <group col="2" colspan="2" groups="base.group_hr_hidden" >
+                                <separator string="Contact Information" colspan="2"/>
+                                <field name="address_home_id" colspan="2"/>
+
+
+
+        <field name="permanent_address" colspan="2" invisible="1" />
+                                <field name="partner_id" invisible="1" />
+                                <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]" groups="base.group_hr_hidden" />
+                                <!--field name="work_phone"/>
+                                <field name="mobile_phone"/>
+                                <field name="work_email" widget="email" />
+                                <field name="work_location"/-->
+                            </group>
+                            <group col="2" colspan="2">
+                                <!--separator string="Job Information" colspan="2"/-->
+                                <field name="job_id" domain="[('state','!=','old')]" invisible="1" />
+                                <field name="coach_id" invisible="1"/>
+                            </group>
+                        </page>
+                        <page string="Contacts" groups="base.group_hr_hidden" >
+       <group col="4" colspan="4" string="Current Address">
+                            <field name="current_address" nolabel="1"/>
+      </group>
+      <field name="same_as_above" on_change="onchange_boolean(current_address,same_as_above)" />
+      <group col="4" colspan="4" string="Permanent Address">
+          <field name="permanent_address" nolabel="1"/>
+      </group>
+                        </page>
+      <page string="Official">
+         <field name="official_line" nolabel="1"/>
+         <field name="bank_name" groups="base.group_hr_hidden" />
+         <field name="bank_acc_no" groups="base.group_hr_hidden" />
+        <group colspan="4" col="4">
+         <field name="assets_line" nolabel="1" groups="base.group_hr_hidden" />
+        </group>
+      </page>
+      <page string="Family Details">
+         <field name="family_line" nolabel="1"/>
+      </page>
+      <page string="Language Details">
+         <field name="language_line" nolabel="1"/>
+      </page>
+                        <page string="Functions">
+        <field name="function_o2m" nolabel="1"/>        
+                        </page>
+    
+      <page string="PAT">
+        <field name="pat_o2m" nolabel="1"/>
+      </page>
+      <page string="Targets" groups="base.group_hr_hidden" >
+           <field name="sale_target"/>
+                 <field name="collection_target"/>
+                        </page>
+      <page string="Performance">
+         <field name="performance_line" nolabel="1"/>
+                        </page>
+                  <page string="Shift Timing">
+        <field name="shift_timing" nolabel="1">
+          <tree string="Shift Timing Details" editable="bottom">
+              <field name="shift_id" groups="base.group_hr_testing"/>
+              <field name="employee_code" groups="base.group_hr_testing"/>
+              <field name="sync_sequence" groups="base.group_hr_testing"/>
+              <field name="shift_start" groups="base.group_hr_testing"/>
+              <field name="shift_end" groups="base.group_hr_testing"/>
+              <field name="shift_start_date" required="1"/>
+              <field name="shift_end_date" required="1"/>
+              <field name="shift_start_time" widget="float_time" required="1"  on_change="lunch_time(shift_start_time)" />
+              <field name="shift_end_time" widget="float_time" required="1"/>
+            <field name="lunch_time" widget="float_time" />
+            <field name="rest_time" widget="float_time"/>
+              <!--button name="save_record" string="Save" type="object" groups="base.group_hr_testing"/-->
+          </tree>
+        </field>
+      
+      </page>
+      <page string="Transition History">
+        <field name="trans_hist_o2m" nolabel="1"/>
+      </page>
+      <page string="Qualification Details">
+        <field name="qualification_o2m" nolabel="1" />
+      </page>
+      <page string="Pre. Experience Details">
+        <field name="experience_o2m" nolabel="1" />
+      </page>           
+        <page string="Others" groups="base.group_hr_hidden" >
+                        </page>             
+      <page string="Others" groups="base.group_hr_hidden" >
+                        </page>
+
+      <page string="PL_CL" groups="base.group_hr_testing" >
+
+      <field name="cal_add_cl" groups="base.group_hr_testing" />
+      <field name="cal_add_pl" groups="base.group_hr_testing" />
+      <field name="cal_add_sl" groups="base.group_hr_testing" />
+      <field name="cal_add_comp_off" groups="base.group_hr_testing" />
+      <field name="cal_add_paternity" groups="base.group_hr_testing" />
+      <field name="cal_add_lwp" groups="base.group_hr_testing" />
+      <field name="cal_add_optional_holiday" groups="base.group_hr_testing" />
+<newline />
+      <field name="cal_remove_cl" groups="base.group_hr_testing" />
+      <field name="cal_remove_pl" groups="base.group_hr_testing" />
+      <field name="cal_remove_sl" groups="base.group_hr_testing" />
+      <field name="cal_remove_comp_off" groups="base.group_hr_testing" />
+      <field name="cal_remove_paternity" groups="base.group_hr_testing" />
+      <field name="cal_remove_optional_holiday" groups="base.group_hr_testing" />
+      <field name="cal_remove_lwp" groups="base.group_hr_testing" />
+<newline />
+      <field name="cal_cancel_cl" groups="base.group_hr_testing" />
+      <field name="cal_cancel_pl" groups="base.group_hr_testing" />
+      <field name="cal_cancel_sl" groups="base.group_hr_testing" />
+      <field name="cal_cancel_comp_off" groups="base.group_hr_testing" />
+      <field name="cal_cancel_paternity" groups="base.group_hr_testing" />
+      <field name="cal_cancel_optional_holiday" groups="base.group_hr_testing" />
+      <field name="cal_cancel_lwp" groups="base.group_hr_testing" />
+<newline />
+      <field name="cal_add_nos_cl" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_pl" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_sl" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_comp_off" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_paternity" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_optional_holiday" groups="base.group_hr_testing" />
+      <field name="cal_add_nos_lwp" groups="base.group_hr_testing" />
+<newline />
+      <field name="cal_remove_nos_cl" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_pl" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_sl" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_comp_off" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_paternity" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_optional_holiday" groups="base.group_hr_testing" />
+      <field name="cal_remove_nos_lwp" groups="base.group_hr_testing" />
+      <field name="encash_privilege_value" groups="base.group_hr_testing" />
+      <field name="encash_sick_value" groups="base.group_hr_testing" />
+      </page>
+      <page string="Testing Fields" groups="base.group_hr_testing" >
+        <field name="parent_emp_code" />
+        <field name="reporting_to_emp_code" />
+        <field name="admin_reporting_emp_code" />
+      </page>
+                    </notebook>
+        
+              </form>
+          </field>
+      </record>
+     <record model="ir.ui.view" id="psd_operation_journal_voucher_form">
+      <field name="name">Journal Voucher</field>
+      <field name="model">operation.journal.voucher</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="Journal Voucher">
+                    <group col="8" colspan="8">
+                        <field name="customer_name" colspan="2" widget="selection" attrs="{'readonly':[('state','=','done')]}" on_change="customer_name_change(customer_name)" domain="[('customer','=','True')]" invisible="1"/>
+
+                        <field name="customer_id" attrs="{'readonly':[('state','=','done')]}" colspan="2" readonly="1" invisible="1"/>
+
+                        <field name="jv_number" colspan="2" readonly="1"/>
+                        <field name="date" colspan="2" readonly="1"/>
+                        <label string="" colspan="1"/>
+                      </group> 
+                  <label string="" colspan="6"/>
+                <newline/>
+                <group col="8" colspan="8" string=" "> 
+                   <group col="8" colspan="8">      
+                      <field name="employee_name" invisible="1"/>
+                              
+                      <field name="account_id" colspan="3" domain="[('type','!=','view')]" attrs="{'readonly':[('state','=','done')]}" invisible="1"/>
+                     <field name="account_hr_id" colspan="3"/>
+                              
+                    <field name="type" colspan="2" attrs="{'readonly':[('state','=','done')]}"/>
+                    <button name="add_info" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+                    <label string="" colspan="2"/>
+                    <newline/>
+                    <field name="journal_voucher_one2many" widget="one2many_list" nolabel="1" colspan="8" attrs="{'readonly':[('state','=','done')]}" context="{'nocreate':1}">
+                    <tree editable="bottom">
+                      <field name="account_id" readonly="1"/>
+                      <field name="customer_name" invisible="1"/>
+                      <field name="type" colspan="1" invisible="1"/>
+                      <field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+                      <field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+                      <button name="add_others" string="Add" type="object" icon="gtk-go-forward"/>
+                    </tree>
+
+                    <form string="Details">
+                      <field name="account_id" readonly="1"/>
+                      <field name="customer_name" readonly="1"/>
+                      <field name="type" colspan="1" invisible="1"/>
+                      <field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+                      <field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+                      <field name="chk_emd_report" invisible="1"/>
+                    </form>
+                      </field>
+                          
+                  </group>
+              
+                  <group col="8" colspan="8">
+                        <field name="narration" colspan="6" attrs="{'readonly':[('state','=','done')]}"/>
+                        <label string="" colspan="2"/>
+                  
+                  </group>
+              <group col="8" colspan="8">
+             
+               <button name="process" string="Process" type="object" colspan="2" attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to confirm?"/>
+               <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+               <label string="" colspan="6"/>
+             </group>
+            </group>
+         </form>
+
+      </field>
+    </record>
+    <record id="psd_mrp_define_squad" model="ir.ui.view">
+        <field name="name">res.squad.form</field>
+        <field name="model">res.define.squad</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+    <form string="Squad Management">
+      <field name="state1" widget="statusbar" invisible="1"/>
+      <group>
+          <field name="total_tech" invisible="1"/>
+          <field name="record_id" invisible="1"/>
+                  <field name="squad_name" attrs="{'readonly':[('state1','==','final')]}"/></group><newline/>
+          <field name="squad_name1" invisible="1"/>
+            <field name="technician_name1" invisible="1" />
+            <field name="technician_name" invisible="1" />
+      <button name="show_list" colspan="2" type="object" string="Show Technician List" icon="gtk-apply" attrs="{'invisible':[('state1','==','final')]}"/>
+      <newline/>
+        <separator string="" colspan="5"/>
+      
+                        <field name="check_squad"/>
+      <newline/>
+                        <field name="scheduledjobs_id"/>
+      <!--label string=""  colspan="1"/-->
+      <!--button name="clear_list" type="object" colspan="1" string="Clear List" icon="gtk-cancel"/-->
+      <!--separator string="Squad Name" colspan="4" col="4"/-->
+      <group colspan="2" attrs="{'invisible':[('state','=','booked')]}">
+        <field colspan="2" name="tech1" nolabel="1" widget="one2many_list" mode="tree" height="275" context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':[('state1','==','final')]}">
+<!--          <form string="List of Technician  (SC-64-01)"> -->
+<!--                            <field name="ck_box"/> -->
+<!--                            <field name="name" required="1"/> -->
+<!--            <field name="mobile"/> -->
+<!--            field name="status_of_technician"/ -->
+<!--                                  </form>  #Basavraj--> 
+          
+             <tree string="List of Technician" editable="top">
+                <field name="ck_box"/>
+                                <!--field name="name"/-->
+                <field name="technician_id" required="1"/>
+                <field name="mobile"/> 
+            <!--field name="status_of_technician"/-->            
+             </tree>
+          
+        </field>
+      </group>
+
+       <field colspan="2" name="tech2" nolabel="1" widget="one2many_list" mode="tree" height="275" context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':[('state1','==','final')]}">
+<!--          <form string="Squad list  (SC-64-02)"> -->
+<!--                            <field name="ck_box"/> -->
+<!--                            field name="name"/ -->
+<!--            <field name="mobile"/> -->
+
+<!--                                  </form>  #Basavraj-->
+      
+                
+          <tree string="Squad list" editable="top">
+            <field name="ck_box"/>
+                            <!--field name="name"/-->
+            <field name="technician_id"/>
+            <field name="mobile"/>   
+            <field name="emp_code" invisible="1"/>          
+          </tree>
+          </field>
+          <newline/>        
+          <field name="state" widget="statusbar"/>
+          <newline/>        <separator string="" colspan="5"/>
+          <button name="add_list" type="object"  colspan="2" string="Add Technician To Squad" icon="gtk-go-forward" attrs="{'invisible':[('state1','==','final')]}"/>
+          <button name="return_list" type="object"  colspan="2" string="Remove Technician From Squad" icon="gtk-go-back" attrs="{'invisible':[('state1','==','final')]}"/>
+          <!--button name="save"  type="object" string="Save" icon="gtk-apply"/-->
+      <!--button name="save111"  type="object" string="Save" icon="gtk-apply" attrs="{'invisible':[('state1','==','final')]}"/-->
+      <!--button name="cancel"   special="cancel" string="Cancel" icon="gtk-cancel"/-->
+       </form>
+        </field>
+     </record>
+   
+    <record model="ir.ui.view" id="psd_form_bulk_rechedule_jobs">
+      <field name="name">Bulk Schedule</field>
+      <field name="model">bulk.schedule.jobs</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="Bulk Schedule">
+        <field name="state" widget="statusbar" statusbar_visible="schedule,final" statusbar_colors='{"final":"#000099","schedule":"black"}'/>
+        <newline/>
+        <group col="8" colspan="8">
+          <group>
+          <field name="from_date"  colspan="2" attrs="{'readonly':[('state','not in','schedule')]}"/>
+          </group>
+          <group>
+          <field name="to_date" attrs="{'readonly':[('state','not in','schedule')]}" />
+          </group>
+          <group>
+          <field name="name_contact" attrs="{'readonly':[('state','not in','schedule')]}" domain="[('is_transfered', '=', False)]"/>
+          </group>
+          <group>
+          <field name="status" attrs="{'readonly':[('state','not in','schedule')]}"/>
+          </group>
+          <group>
+          <!-- <field name="pms" domain="[('type','=','service')]" attrs="{'readonly':[('state','not in','schedule')]}"/> -->
+          <field name="job_category"/>
+          </group> <newline/>
+          <!--<group>
+           <field name="service_area" attrs="{'readonly':[('state','not in','schedule')]}"/> 
+          </group> -->
+         <!--  <group>
+          <field name="job_type" attrs="{'readonly':[('state','not in','schedule')]}"/>
+          </group>
+          <group>
+          <field name="is_customer_specified" string="Customer Preferred" attrs="{'readonly':[('state','not in','schedule')]}"/> 
+          </group>  -->
+          </group>
+          <newline/>
+          <group col="8" colspan="8">
+          <label string="" colspan="4"/>
+          <field name="check_technician" attrs="{'readonly':[('state','not in','schedule')]}"/>
+          <button name="check" string="Check" type="object"  attrs="{'invisible':[('state','not in','schedule')]}"/>
+          </group>
+          <newline/>
+          <group col="4" colspan="4">
+            <button name="search_record" string="Search" type="object" icon='srh' attrs="{'invisible':[('state','not in','schedule')]}"  />
+            <field name="record_bool" invisible="1"/>
+            <button name="search_clear" string="Clear" type="object" icon='clear'  attrs="{'invisible':[('state','not in','schedule')]}" />
+            <label string="" colspan="2"/>
+          </group>
+          <newline/>
+          <group>
+            <field name="service_slip_bool" invisible="1"/>
+            <!--field name="service_slip_bool" on_change="onchange_select_all(service_slip_bool,bulk_one2many)" attrs="{'invisible':[('state','not in',('final'))]}"/-->
+          </group>
+
+                          <field name="bulk_one2many" colspan="4" nolabel="1" widget="one2many_list" context="{'nocreate':1}" attrs="{'readonly':[('state','not in','schedule')]}">
+                                    <form>
+                <button name="job_info" string="abc" type="object" icon="gtk-go-back"/>
+                <field name="is_customer_specified" string="Cust.Pref."/>
+                <field name="check_visible" invisible="1"/>
+                <field name="job_id" readonly="1"/>
+                <field name="tentative_date" readonly="1"/>
+                <field name="cust_name" readonly="1"/>
+                <field name="address" readonly="1" invisible="1"/>
+                <field name="address_on_fly" readonly="1"/>
+                <field name="flat_nos" readonly="1" invisible="1"/>
+                <field name="location_id2" readonly="1" invisible="1"/>
+                <field name="service_area" readonly="1" invisible="1"/>
+                <field name="service_area1" readonly="1"/>
+                <field name="mobile_no" readonly="1"/>
+                <field name="job_type" readonly="1"/>
+                <field name="pms" readonly="1"/>
+                <field name="technician_name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="status" readonly="1"/>
+                <field name="temp_cal" invisible="1"/>
+                  </form>
+                  <tree editable="top">
+                <button name="job_info" string="abc" type="object" icon="gtk-go-back"/>
+                <field name="is_customer_specified" string="Cust.Pref."/>
+                <field name="check_service_slip" attrs="{'invisible':[('check_visible','=',False)]}"/>
+                <field name="check_visible" invisible="1"/>
+                <field name="job_id" readonly="1"/>
+                <field name="tentative_date" readonly="1"/>
+                <field name="cust_name" readonly="1"/>
+                <field name="address" readonly="1" invisible="1"/>
+                <field name="address_on_fly" readonly="1"/>
+                <field name="flat_nos" readonly="1" invisible="1"/>
+                <field name="location_id2" readonly="1" invisible="1"/>
+                <field name="mobile_no" readonly="1"/>
+                <field name="job_type" readonly="1"/>
+                <field name="service_area" readonly="1" invisible="1"/>
+               <!--  <field name="service_area1" readonly="1"/>
+                <field name="pms" readonly="1"/> -->
+                <field name="technician_name" domain="[('active1','=',True)]"  />
+                <field name="start_date" on_change="onchange_start_time(start_date)"/>
+                <field name="end_date" on_change="onchange_end_time(end_date)"/>
+                <field name="check_technician" invisible="1"/>
+
+                <field name="status" readonly="1"/>
+                <field name="temp_cal" invisible="1"/>
+                <!--xpath expr="//field[@name='job_id']" position="after">  
+                    <field name="service_slip_no"/>
+                </xpath-->
+                <field name="service_slip_no" invisible="1"/>
+                <button name="check_date" icon="cal" string="Select Date" type="object"/>
+                  </tree>     
+
+        </field><newline/>
+        <group col="4" colspan="6"> 
+        <button name="schedule" string="Schedule" colspan="0.5"  type="object" icon="gtk-go-forward"  attrs="{'invisible':['|',('state','not in','schedule'),('record_bool','=',True)]}" confirm="Do you want to schedule?"/>
+        <!--button name="confirm" string="Confirm" colspan="0.5"  type="object" icon="gtk-apply" attrs="{'invisible':[('state','in',('schedule','final'))]}"/-->
+        <button name="confirm" string="Confirm" colspan="0.5"  type="object" icon="gtk-apply" invisible="1"/>
+        <!--button name="print_service_slip" string="Print Service Slip" colspan="0.5"  type="object"/-->
+
+        <label string="" colspan="3" />
+        </group>
+        
+                                      <field name="service_report_bulk_one2many" colspan="4" nolabel="1" widget="one2many_list" invisible = "1">
+                  <tree editable="top">
+                <field name="job_id"/>
+                <field name="cust_name"/>
+                <field name="address"/>
+                <field name="service_area"/>
+                <field name="technician_name"/>
+                <field name="start_date"/>
+                <field name="start_day"/>
+                <field name="start_month"/>
+                <field name="start_year"/>
+                <field name="start_time"/>
+                <field name="end_date"/>
+                <field name="service_slip_no"/>
+                <field name="renewal"/>
+                <field name="renewal_day"/>
+                <field name="renewal_month"/>
+                <field name="renewal_year"/>
+                <field name="start_time_am_or_pm"/>
+                  </tree>     
+                  <form>
+                <field name="job_id"/>
+                <field name="cust_name"/>
+                <field name="address" />
+                <field name="service_area"/>
+                <field name="technician_name"/>
+                <field name="start_date"/>
+                <field name="start_day"/>
+                <field name="start_month"/>
+                <field name="start_year"/>
+                <field name="start_time"/>
+                <field name="end_date"/>
+                <field name="service_slip_no"/>
+                <field name="renewal"/>
+                <field name="renewal_day"/>
+                <field name="renewal_month"/>
+                <field name="renewal_year"/>
+                <field name="start_time_am_or_pm"/>
+
+                  </form>
+        </field>
+          
+      </form>
+      </field>
+    </record>
+    
+    
+    <record model="ir.ui.view" id="psd_bulk_schedule_id1">
+           <field name="name">Bulk Schedule Tree View</field>
+             <field name="model">bulk.schedule.jobs</field>
+  
+             <field name="type">tree</field>
+             <field name="arch" type="xml">
+
+             <tree string="" colors="#000099:state=='final';black:state=='schedule';">
+                <field name="bulk_schedule_id"/>
+                <field name="created_date"/>
+              <field name="state"/>
+                                     
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="psd_bulk_reschedule_form_view">
+                   <field name="name">Technician/Squad Re-assign</field>
+                   <field name="model">bulk.reschedule</field>
+                   <field name="type">form</field>
+                   <field name="arch" type="xml">
+                     <form string="Technician/Squad Re-assign">
+          <group colspan="12" col="12">
+                   <field name="tech_name"/>
+                   <field name="squad_name"/>
+                   <field name="from_date"/>
+                   <field name="to_date"/>
+                  <button string="Clear" name="psd_clear_jobs" type="object" icon="gtk-yes"/>
+                   <button string="Search" name="psd_search_jobs" type="object" icon="gtk-yes"/>
+              <newline/>
+              <field name="reassign_tech"/>
+              <button string="Assign" name="psd_assigntech" type="object" icon="gtk-yes"/>
+              <newline/>
+              <field name='select_all1' on_change="psd_onchange_select_all1(select_all1,reschedule_ids)"/>
+          </group>
+          <separator string="" colspan="8"/>
+          <field name="reschedule_ids" nolabel="1" context="{'nocreate':1,'nodelete':1}"> 
+           <tree string="Technician/Squad Re-assign" editable="bottom">
+              <field name='select_any'/>
+                     <field name="name" readonly="1"/>
+                <field name="scheduled_job_id"/>
+                                             <field name="job_id" readonly="1"/>
+                                 <field name="job_start_time" string="Job Start Date"/>
+                                 <field name="job_end_time"  string="Job End Date"/>
+              <field name="service_area"/>
+                                             <field name="state" readonly="1"/>
+                                             <field name="req_date_time" readonly="1"/>
+               <field name="assigned_technician" readonly="1"/>
+               <field name="assigned_squad" readonly="1"/>
+               <field name="technician_reassign"  domain="[('active1','=',True)]" />
+               <button name="reassign_technician" string="Reassign" type="object" icon="gtk-ok" />   
+            </tree>
+        <form string="Technician/Squad Re-assign">
+            <field name='select_any'/>  
+            <field name="name" readonly="1"/>
+                       <field name="job_id" readonly="1"/>
+                   <field name="job_start_time" string="Job Start Date"/>
+                   <field name="job_end_time" string="Job End Date"/>
+                       <field name="state" readonly="1"/>
+                        <field name="req_date_time" readonly="1"/>
+             <field name="assigned_technician" />
+             <field name="technician_reassign" required="1"/>
+                    <button string="Reassign" name="reassign_technician" type="object" icon="gtk-ok" confirm="Do you want to reassign?" />        
+            
+            </form>
+          
+         </field>
+            </form>
+            
+        </field>
+     </record>
+
+       <record model="ir.ui.view" id="psd_bulk_reschedule_tree">
+                   <field name="name">Technician/Squad Re-assign</field>
+                   <field name="model">bulk.reschedule</field>
+                   <field name="type">tree</field>
+                   <field name="arch" type="xml">
+                     <tree string="Technician/Squad Re-assign">
+            <field name="tech_name"/>
+            <field name="from_date"/>
+            <field name="to_date"/>
+                     </tree>
+                   </field>
+               </record>
+    <record model="ir.ui.view" id="psd_job_newdd" >
+      <field name="name">job.report.new</field>
+      <field name="model">job.report.new</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+          <group col="6" colspan="6" string="">
+              <field name="name" />
+              <field name="service_area" />
+              <field name="tech" />
+              <field name="squad" />
+              <field name="job_date_from" />
+              <field name="job_date_to" />
+              <field name="state" />
+              <field name="tentative_date_from" />
+              <field name="tentative_date_to" />
+              <field name="job_category" />
+              <field name="pms" />
+              <field name="contract_no" />
+              <field name="job_id" />
+              <field name="is_customer_specified" string="Customer Preferred"/>
+          </group><newline/>
+          <group>
+          <button name="report_print" string="Jobs Search" colspan="0.5"  type="object" icon="gtk-apply"/>
+          <button name="clear_jobs" string="Clear" colspan="0.5"  type="object" icon="clear"/>
+          <label string="" colspan="1"/>
+          <label string="" colspan="1"/>
+          <label string="" colspan="1"/>
+          </group><newline/>
+          <separator string="" colspan="8"/><newline/>
+             <group col="1" colspan="6" string="">
+            <field name="report_line123"  widget = "one2many_list" readonly="1">
+                    <tree string = "Job Analysis">
+                      <field name="is_customer_specified" string="Cust.Pref."/>
+                      <field name="job_id" />
+                      <field name="req_date" />
+                      <field name="name" />
+                      <field name="contract_no" />
+                      <field name="pms" />
+                      <field name="mobile"/>
+                      <field name="job_category"/>
+                      <field name="tech_squad"/>
+                      <field name="service_area" />
+                      <field name="job_start_time" />
+                      <field name="job_end_time" />
+                      <field name="scheduled_age" />
+                      <field name="state" />
+                    </tree>
+
+                    <form string = "Job Analysis">
+                      <field name="is_customer_specified" string="Cust.Pref."/>
+                      <field name="job_id" />
+                      <field name="req_date" />
+                      <field name="name" />
+                      <field name="contract_no" />
+                      <field name="pms" />
+                      <field name="mobile"/>
+                      <field name="job_category"/>
+                      <field name="tech_squad"/>
+                      <field name="service_area" />
+                      <field name="job_start_time" />
+                      <field name="job_end_time" />
+                      <field name="scheduled_age" />
+                      <field name="state" />
+                    </form>
+            </field>
+            </group>
+          <newline/>
+        <group>
+        <button name="print_jobs" string="Print" colspan="0.5"  type="object" icon="gtk-print"/>
+        <label string="" colspan= "1"/>
+        <label string="" colspan= "1"/>
+        <label string="" colspan= "1"/>
+        </group>
+        </form>
+      </field>
+    </record>
+      <record model="ir.ui.view" id="psd_consumption_report_id1">
+         <field name="name">Consumption Resource Tree View</field>
+         <field name="model">consumption.report</field>
+         <field name="type">tree</field>
+         <field name="arch" type="xml">
+          <tree string="A" colors="green:state=='initial';#4C1700:state=='final'">
+            <field name="consumption_material_id"/>
+            <field name="created_date"/>
+            <field name="state"/>
+          </tree>
+         </field>
+       </record>
+      <record model="ir.ui.view" id="psd_receive_resource_id1">
+         <field name="name">Receive Resource Tree View</field>
+         <field name="model">receive.resource</field>
+         <field name="type">tree</field>
+         <field name="arch" type="xml">
+          <tree string="">
+            <field name="receive_material_id"/>
+            <field name="created_date"/>                
+          </tree>
+         </field>
+       </record>
+        <record model="ir.ui.view" id="psd_assign_resource_id2">
+          <field name="name">Assign Resource Tree View</field>
+           <field name="model">assign.resource</field>
+           <field name="domain">[('assign_material_id','!=',False)]</field>
+           <field name="type">tree</field>
+           <field name="arch" type="xml">
+           <tree string='AAA' colors="#000099:state=='initial';green:state=='stock_updated'"><!--colors="orange:state=='initial';green:state=='stock_updated'"-->
+              <field name="assign_material_id"/>
+              <field name="created_date"/>
+              <field name="state" />                   
+          </tree>
+          </field>
+       </record>  
+      <record model="ir.ui.view" id="psd_ops_offline_sync_tree">
+          <field name="name">Offline Sync</field>
+          <field name="model">ops.offline.sync</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+            <tree string="Offline Sync">
+              <field name="sync_sequence" />
+              <field name="form_id" />
+              <field name="src_model"/>
+              <field name="dest_model"/>
+              <field name="sync_company_id"/>
+              <field name="srch_condn"/>
+              <field name="error_log"/>
+              <field name="sync_data"/>
+            </tree>
+          </field>
+      </record>     
+      <record model="ir.ui.view" id="psd_account_cash_payment_operation_tree">
+        <field name="name">Cash Payment Entry</field>
+        <field name="model">cash.payment.operation</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+        <tree string="Cash Payment">
+          <field name="payment_no"/>
+          <field name="payment_date"/>
+          <field name="particulars"/>
+          <field name="debit_amount_srch"/>
+        </tree>
+      </field>
+    </record>
+       <record id="psd_hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
+            <field name="name">hr.employee.leave.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Assign Leaves">
+                  <field name="name"/>
+                  <field name="emp_code"/>
+                  <field name="branch"/>
+                  <field name="establishment"/>
+                  <field name="reporting_to"/>
+                  <field name="cost_center"/>
+                  <field name="res_active"/>
+                  <field name="status"/>
+                </tree>
+            </field>
+        </record>
+      <record model="ir.ui.view" id="psd_operation_journal_voucher_tree">
+        <field name="name">journal voucher tree View</field>
+        <field name="model">operation.journal.voucher</field>
+        <field name="type">tree</field>
+        <field name="arch" type="xml">
+          <tree string="Journal voucher">
+            <field name="jv_number" string="Journal voucher No"/>
+            <field name="date"/>
+            <field name="debit_amount" sum="Total"/>
+            <field name="credit_amount" sum="Total"/>
+
+          </tree>
+        </field>
+      </record>
+     <record model="ir.ui.view" id="psd_res_treesquad">
+                   <field name="name">Squad Management</field>
+                   <field name="model">res.define.squad</field>
+                  <field name="domain">[('record_id','!=',False)]</field>
+                   <field name="type">tree</field>
+                   <field name="arch" type="xml">
+                  <tree string="Squad Management">
+                    <field name="squad_name"/>
+                    <field name="technician_name1" invisible="1"/>
+                   <field name="record_id" invisible="1"/>
+                   <field name="technician_name"/>
+                       <!--field name="id2"/-->
+                  </tree>
+                   </field>
+    </record>
+
+
+    <record id="psd_res_define_squad_search" model="ir.ui.view">
+            <field name="name">res.define.squad.search</field>
+            <field name="model">res.define.squad</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Squad">
+                        <field name="squad_name" select="1"/>
+
+                </search>
+            </field>
+        </record>
+    <record model="ir.ui.view" id="psd_sms_status_check_tree">
+       <field name="name">SMS Status Check</field>
+       <field name="model">sms.status.check</field>
+       <field name="type">tree</field>
+       <field name="arch" type="xml">
+         <tree string="SMS Status Check">
+            <field name="scheduled_job_id"/>
+            <field name="name"/>
+            <field name="mobile"/>
+            <field name="pms"/>
+            <field name="job_start_time"/>
+            <field name="sq_name_new11"/>
+            <field name="status" string="Delivery Status"/>
+            <field name="state"/>
+         </tree>
+       </field>
+   </record>
+    <record model ="ir.ui.view" id = "psd_view_sms">
+      <field name="name">SMS Job Schedule</field>
+      <field name="model">sms.job</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <form>
+         <group col="2" colspan="8" attrs="{'invisible':[('sent_status','!=',True)]}">    
+                  <label string="" colspan="0"/>  
+                  <html><h4 style="color:red">SMS has been processed for selected customer. Please check SMS Status</h4></html>
+                 <label string="" colspan="0.5"/> 
+                  
+        </group>
+         <group col="10" colspan = "10">
+         <field name="job_start_date"/>
+         <field name="job_end_date"/>
+         <field name="pms"/>
+         <field name="sent_status" invisible="1"/>
+           <field name="state"/>
+          <field name="sms_type"/>
+           <button name="search" string ="Search" type="object"/>
+           <!--button name="%(existing_customer.report_sms)d" string ="Print Job Schedule" type="action" icon="gtk-print"/-->
+           <button name="search_jobs" string ="SMS Job Schedule" type="object"/>
+           <newline/>
+         <!--field name="message_template" colspan="4"/-->
+          <field name="select_all" on_change="onchange_select_all(select_all,sms_job)"/>
+          <newline/>
+           <group col="10" colspan = "10">
+        <field name="sms_job" widget="one2many_list" nolabel="1">
+            <tree editable="top">
+          <field name="check_job" string="" nolabel = "1"/>
+                <field name="scheduled_job_id"/>
+                          <field name="name" domain="[('is_transfered', '=', False)]"/>
+              <field name="job_id" string="Contract No"/>
+              <field name="contact_name"/>
+              <field name="mobile" string="Mobile No" invisible = "1"/>
+          <field name="mobile" />
+          <field name="pms" string="PMS" readonly="1"/>
+                          <field name="service_area"/>
+                          <field name="job_start_time" select="1" string="Job Start Time"/>
+                <field name="assigned_technician"/>
+          <field name="assigned_squad" readonly="1"/>
+          <field name="sq_name_new11" readonly="1" invisible="1"/>
+          <field name="status" string="Delivery Status" readonly="1"/>
+          <field name="state" string="Status"/>
+            </tree>
+        </field>
+           </group> 
+
+
+           </group>
+          </form>
+      </field>
+    </record>
+
+
+
+        <record id="psd_view_update_service_area_main" model="ir.ui.view">
+            <field name="name">Update Service Area Form</field>
+            <field name="model">update.service.area.main</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Branch">
+      <group col='4' colspan='4' >
+            <group col='8' colspan='4'>
+          
+          <field name="customer_id"/>
+                <field name="partner_name_cust"/>
+          <field name="contract_number" />
+                <!--field name="contact_name_cust"/><field name="mobile_cust"/>
+          <field name="req_id"/>
+                            <field name="phone_cust"/>
+          <field name="customer_category_id"/>
+                <field name="service_area_cust"/>
+          <field name="building"/>
+                <field name="subarea"/>
+                <field name="landmark"/>
+                <field name="city_id"/>
+                <field name="pincode"/>
+                <field name="branch_id" />
+                <field name="due_date_from_cust"/>
+                <field name="due_date_to_cust"/>
+                            <field name="user_id_cust" invisible="1"/>
+          <field name="job_id"  /-->
+          <newline/>
+            <button name="search_request_4service_area" string="Search" type="object" icon="srh"/>
+          <button name="clear_request_4service_area" string="Clear" type="object" icon="clear"/>
+          
+      </group>
+      </group>
+      <!--field name="check" invisible="1"/>
+      <group col='6' colspan='6' attrs="{'invisible':[('check','!=',True)]}">
+      <label string="" colspan="2"/>
+        <html><h3 style="color:red">Record Not Found</h3></html>
+      <label string="" colspan="2"/>
+      </group-->
+
+      <notebook colspan="4">
+        <page string="">
+         <field name="update_service_area_line" nolabel="1" >
+          <tree string="" editable="top" >
+              <field name="location_id"/>
+              <field name="address_id" />
+              <field name="service_area"/>
+            </tree>
+        </field>
+        </page>
+      </notebook>
+        <group col='6' colspan='6'>
+                    <button name="process_request_4service_area" string="Process" type="object" icon="gtk-go-forward" colspan="1"/>
+        <label string="" colspan="5"/>
+        </group>
+    </form></field>
+  </record>
+
+       
+      
+      
+
+  <!-- ############################################################################# -->
+      <record model="ir.actions.act_window" id="psd_technician_define_squad">
+        <field name="name">Squad Management</field>
+        <field name="res_model">res.define.squad</field>
+        <field name="view_type">form</field>
+        <field name="view_id" eval="cust_id1"  ref="psd_res_treesquad"/>
+        <field name="search_view_id" ref="psd_res_define_squad_search"/>
+        <field name="domain">[('record_id','!=',False)]</field>
+        <field name="context">{'nodelete': 0}</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+
+       <record id="psd_technician_define_squad_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_res_treesquad"/>
+            <field name="act_window_id" ref="psd_technician_define_squad"/>
+        </record>
+
+        <record id="psd_technician_define_squad_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_mrp_define_squad"/>
+            <field name="act_window_id" ref="psd_technician_define_squad"/>
+        </record>
+
+        <record model="ir.actions.act_window" id="psd_bulk_reschedule_form">
+                <field name="name">Technician/Squad Re-assign</field>
+                <field eval="1" name="sequence"/>
+                <field name="res_model">bulk.reschedule</field>
+                <field name="view_type">form</field>
+                <field name="view_id" ref="psd_bulk_reschedule_form_view"/>
+                <field name="view_mode">form</field>
+        </record>
+
+<!-- ############################################################################ -->
+      <record id="psd_action_bulk_schedule_jobs" model="ir.actions.act_window">
+        <field name="name">Bulk Schedule</field>
+        <field name="res_model">bulk.schedule.jobs</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="psd_bulk_schedule_id1"/>
+        <field name="context">{'nodelete': 1}</field>
+        <field name="domain">[('bulk_schedule_id','!=',False)]</field>
+      </record>
+
+        <record id="psd_action_bulk_schedule_jobs_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_bulk_schedule_id1"/>
+            <field name="act_window_id" ref="psd_action_bulk_schedule_jobs"/>
+    </record>
+
+    <record id="psd_action_bulk_schedule_jobs_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_form_bulk_rechedule_jobs"/>
+            <field name="act_window_id" ref="psd_action_bulk_schedule_jobs"/>
+    </record>
+
+      <record model="ir.actions.act_window" id="psd_action_update_service_area_main">
+        <field name="name">Update Service Area</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">update.service.area.main</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+      </record>
+<!-- ############################################################################ -->
+     <!--  <record id="psd_action_sms" model="ir.actions.act_window">
+            <field name="name">SMS Job Schedule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sms.job</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{}</field>
+      </record>
+
+
+      <record id="psd_action_sms_status_check" model="ir.actions.act_window">
+            <field name="name">SMS Status Check</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sms.status.check</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="psd_sms_status_check_search"/>
+            <field name="context">{'nocreate':1,'nodelete':1}</field>
+      </record> -->
+  <!-- ############################################################################ -->
+      <record id="psd_action_cash_payment_operation_search" model="ir.actions.act_window">
+            <field name="name">Cash Payment Entry</field>
+            <field name="res_model">cash.payment.operation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="psd_account_cash_payment_operation_tree"/>
+            <field name="context">{'nodelete':1}</field>
+            <field name="domain">[('payment_no','!=',False)]</field>
+      </record> 
+
+      <record id="psd_action_cash_payment_operation_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_account_cash_payment_operation_tree"/>
+            <field name="act_window_id" ref="psd_action_cash_payment_operation_search"/>
+        </record>
+
+        <record id="psd_action_cash_payment_operation_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_account_cash_payment_operation_form"/>
+            <field name="act_window_id" ref="psd_action_cash_payment_operation_search"/>
+        </record>
+ <!-- ############################################################################ -->
+      <record id="psd_action_operation_journal_voucher1" model="ir.actions.act_window">
+            <field name="name">Journal Voucher</field>
+            <field name="res_model">operation.journal.voucher</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="limit">10</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="psd_operation_journal_voucher_tree" />
+            <field name="context">{'nodelete':1}</field>
+            <field name="domain">[('jv_number','!=',False)]</field>
+      </record>
+
+      <record id="psd_action_operation_journal_voucher1_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_operation_journal_voucher_tree"/>
+            <field name="act_window_id" ref="psd_action_operation_journal_voucher1"/>
+        </record>
+
+        <record id="psd_action_operation_journal_voucher1_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_operation_journal_voucher_form"/>
+            <field name="act_window_id" ref="psd_action_operation_journal_voucher1"/>
+        </record>
+
+  <!-- ############################################################################ -->
+    <record id="psd_employee_details_search" model="ir.ui.view">
+          <field name="name">employee details Search View</field>
+          <field name="model">hr.employee</field>   
+          <field name="type">search</field>
+          <field name="arch" type="xml">
+            <search string="Employee Details">
+              <group colspan="8" col="8">
+                <field name="name" string="Employee Name" colspan="5"/>
+                <field name="emp_code" string="Employee Code" colspan="5"/>
+                <field name="debit" string="Amount" colspan="5"/>
+              </group>
+            </search>
+          </field>  
+        </record>
+        <record model="ir.ui.view" id="psd_sms_status_check_search">
+          <field name="name">SMS Status Check</field>
+          <field name="model">sms.status.check</field>
+          <field name="type">search</field>
+          <field name="arch" type="xml">
+          <search>
+            <field name="job_start_time" string="Date From" filter_domain="[('job_start_time','&gt;=',self)]"/>
+            <field name="job_start_time" string="Date To" filter_domain="[('job_start_time','&lt;=',self)]"/>
+            <field name="pms"/>
+            <field name="status" string="Delivery Status"/>
+            <field name="state"/>
+          </search>
+          </field>
+        </record>
+
+      <record id="psd_action_operation_emp_details" model="ir.actions.act_window">
+            <field name="name">Employee Details</field>
+            <field name="res_model">hr.employee</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="limit">10</field>
+            <field name="context">{'nocreate':1,'nodelete':1}</field>
+            <field name="view_id" ref="psd_hr_holidays_leaves_assign_tree_view" />
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="psd_employee_details_search"/>
+    </record>
+
+     <record id="psd_action_operation_journal_voucher1_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_hr_holidays_leaves_assign_tree_view"/>
+            <field name="act_window_id" ref="psd_action_operation_emp_details"/>
+        </record>
+
+        <record id="psd_action_operation_journal_voucher1_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_view_employee_form"/>
+            <field name="act_window_id" ref="psd_action_operation_emp_details"/>
+        </record>
+ <!-- ############################################################################ -->
+      <record model="ir.actions.act_window" id="psd_action_ops_offline_sync_id">
+        <field name="name">Offline Sync</field>
+        <field name="res_model">ops.offline.sync</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+      </record>
+ <!-- ############################################################################ -->
+      <record model="ir.actions.act_window" id="psd_assign_resource_action_detail">
+        <field name="name">Assign Resource</field>
+        <field name="res_model">assign.resource</field>
+        <field name="view_type">form</field>
+        <field name="context">{'nodelete':1}</field>
+        <field name="domain">[('assign_material_id','!=',False)]</field>
+        <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="psd_assign_res_view"/>
+      </record>
+  <!-- ############################################################################ -->
+      <record model="ir.actions.act_window" id="psd_update_delivery_action">
+        <field name="name">Delivered Product Job Orders Search</field>
+        <field name="res_model">consumption.report.search</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="psd_consumption_res_view"/>
+      </record>
+   <!-- ############################################################################ -->
+       <record model="ir.actions.act_window" id ="psd_assign_resource_action_search">
+        <field name="name">Confirm Product Job Orders</field>
+        <field name="res_model">assign.res.search</field>
+         <field name="view_id" ref="psd_assign_res_view"/>
+        <field name="view_type">form</field>
+        <field name="view_mode">form,tree</field>
+      </record>
+   <!-- ############################################################################ --> 
+      <!-- <record model="ir.actions.act_window" id="psd_receive_resource_action_detail">
+        <field name="name">Receive Resource</field>
+        <field name="res_model">receive.resource</field>
+        <field name="view_type">form</field>
+        <field name="context">{'nodelete':1}</field>
+        <field name="domain">[('receive_material_id','!=',False)]</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="psd_receive_resource_id"/>
+      </record> -->
+      <!-- ############################################################################ -->
+    <!--   <record model="ir.actions.act_window" id="psd_consumption_action_detail">
+        <field name="name">Consumption Report</field>
+        <field name="res_model">consumption.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+         <field name="view_id" ref="psd_consumption_report_form"/>
+        <field name="context">{'nodelete':1}</field>
+        <field name="domain">[('consumption_material_id','!=',False)]</field>
+        <field name="view_mode">tree,form</field>
+      </record> -->
+      <!-- ############################################################################ -->
+    <!--   <record model="ir.actions.act_window" id="psd_cust_job_repoll">
+        <field name="name">Job Report</field>
+        <field name="res_model">job.report.new</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+      </record> -->
+      <!-- ############################################################################ -->
+
+      <menuitem name="Operations" 
+                id="technician_details.menu_operations_new"
+                web_icon="images/customer.jpg" 
+                web_icon_hover="images/customer.jpg" 
+                sequence="11" 
+                groups="psd_cid_base.group_ssd"/>
+
+ <!--      <menuitem name="Psd Operations" id="psd_menu_operations_new"               
+                web_icon="images/customer.jpg" web_icon_hover="images/customer.jpg" 
+                sequence="11" groups="psd_cid_base.group_psd"/>  -->
+
+     <menuitem name="Psd Operations" id="psd_menu_operations_new"               
+                web_icon="images/customer.jpg" web_icon_hover="images/customer.jpg" 
+                sequence="11" groups="hide_menu.hide_menu_group"/> 
+
+      <menuitem name="Job Management" id="psd_menu_spec" parent="psd_menu_operations_new" sequence="1" groups="base.bm_group,base.audit_group" />
+      <menuitem name="Job Search" id="psd_menu_for_unscheduledjobs1" parent="psd_menu_spec" action="psd_new_cust_id1" sequence="1" groups="base.bm_group,base.audit_group"/>
+      <menuitem name="View Schedule" id="psd_sched" parent="psd_menu_spec" action="psd_cal_check_tech_availability1" sequence="3" groups="base.bm_group,base.audit_group"/>
+      <menuitem name="Technician/Squad Reassign" id="psd_new_bulk_reschedule" parent="psd_menu_spec" action="psd_bulk_reschedule_form"/>
+      <menuitem name="Squad Management" id="psd_mnu_manpower_squad" parent="psd_menu_operations_new" sequence="3"/>   
+      <menuitem name="Squad Management" id="psd_new_squad_management" parent="psd_mnu_manpower_squad" action="psd_technician_define_squad" sequence="2"/>
+      <menuitem name="Bulk Schedule" id="psd_bulk_rechedule_jobs" parent="psd_menu_spec" groups="base.bm_group"/> 
+      <menuitem name="Create" id="psd_bulk_rechedule_jobs_create" parent="psd_bulk_rechedule_jobs" action="psd_action_bulk_schedule_jobs" />
+      <menuitem name="Adhoc Job" id="psd_menu_operations_adhocjob" parent="psd_menu_spec"/>
+      <menuitem name="Create" id="psd_menu_operations_adhocjob_create" parent="psd_menu_operations_adhocjob" action="psd_action_detail"/>
+      <menuitem name="Search" id="psd_menu_operations_adhocjob_search" parent="psd_menu_operations_adhocjob" action="psd_action_adhoc_search"/>
+      <!-- <menuitem id="psd_menu_service_area_update" name="Update Service Area" sequence="1" parent="psd_menu_operations_new" action="psd_action_update_service_area_main" groups="base.bm_group"/>
+      <menuitem name="SMS Job Schedule" id="psd_menu_spec1" parent="psd_menu_operations_new" sequence="2"/>
+      <menuitem name="SMS Job Schedule" id="psd_sms1" parent="psd_menu_spec1" action="psd_action_sms"/>
+      <menuitem name="SMS Status Check" id="sms2" parent="psd_menu_spec1" action="psd_action_sms_status_check"/> -->
+     <!--  <menuitem name="Cash Register" id="psd_menu_cash_payment_operation" parent="psd_menu_operations_new" />
+      <menuitem name="Cash Payment" id="psd_menu_operations_cashpayment_search" parent="psd_menu_cash_payment_operation" action="psd_action_cash_payment_operation_search" groups="base.group_hr_testing,base.audit_group"/>
+      <menuitem name="Journal Voucher" id="psd_menu_operations_journal_voucher_search1" parent="psd_menu_cash_payment_operation" sequence="1" action="psd_action_operation_journal_voucher1"/>
+      <menuitem name="Employee Account Details" id="psd_menu_operations_emp_details" parent="psd_menu_cash_payment_operation" sequence="2" action="psd_action_operation_emp_details" groups="base.bm_group,base.audit_group"/>
+      <menuitem name="Sync Menu" id="psd_ops_sync_config" parent="psd_menu_operations_new" groups="base.group_hr_testing"/>
+      <menuitem name="Ops Offline Sync" id="psd_ops_offline_sync" parent="psd_ops_sync_config" action="psd_action_ops_offline_sync_id" groups="base.group_hr_testing"/> -->
+      <menuitem name="Materials Management" id="psd_menu_operations_resources_id" parent="psd_menu_operations_new" />
+      <menuitem name="Confirm Delivery Jobs" id="psd_menu_operations_resources_id_assign_resource_id" parent="psd_menu_operations_resources_id" action="psd_assign_resource_action_search" groups="base.group_hr_testing" sequence="1"/>
+      <menuitem name="Update Delivery Details" id="psd_menu_operations_resources_update_delivery" parent="psd_menu_operations_resources_id" action="psd_update_delivery_action" groups="base.group_hr_testing" sequence="2"/>
+    <!-- <menuitem name="Receive Resource" id="psd_menu_operations_resources_id_receive_resource_id" parent="psd_menu_operations_resources_id" groups="base.group_hr_testing" action="psd_receive_resource_action_detail" sequence="2" />
+    <menuitem name="Consumption" id="psd_consumption_id" parent="psd_menu_operations_resources_id" action="psd_consumption_action_detail" groups="base.group_hr_testing" sequence="3"/>
+    <menuitem name="Job Report" id="psd_menu_rep_111" parent="psd_menu_operations_new" action="psd_cust_job_repoll" /> -->
+  </data>
+</openerp>

@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# Version 1.0.013 -  Remove widget selection from customer fields -->
+<!--# Version 1.0.017 -  add emp_code fields -->
+<!--# Version 1.0.031 -  read only user group -->
+<!--# Version 1.0.039 Added functionality for CBOB advance -->
+<openerp>
+   <data>
+   	       <record model="ir.ui.view" id="psd_journal_voucher_tree">
+		<field name="name">journal voucher tree View</field>
+		<field name="model">account.journal.voucher</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Journal voucher">
+				<field name="jv_number" string="Journal voucher No"/>
+				<field name="date"/>
+				<field name="customer_name" invisible="1"/>
+				<field name="cus_new"/>
+				<field name="employee_name"/>
+			
+				<field name="debit_amount" sum="Total"/>
+				<field name="credit_amount" sum="Total"/>
+
+			</tree>
+		</field>
+	</record>
+        
+        <record id="psd_journal_voucher_search" model="ir.ui.view">
+		<field name="name">journal voucher Search View</field>
+		<field name="model">account.journal.voucher</field>		
+		<field name="priority" eval="16"/>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Journal Voucher">
+				<group colspan="8" col="8">
+					<field name="jv_number" string="JV Number" colspan="2"/>
+					<field name="customer_name" colspan="2"/>
+					<field name="cus_new" invisible="1" colspan="2"/>				
+					<field name="customer_id" colspan="2" invisible="1" />
+					<field name="from_date" string="From Date" filter_domain="[('date','&gt;=',self)]"/>
+					<field name="to_date" string="To Date" filter_domain="[('date','&lt;=',self)]"/>
+					<field name="employee_name" invisible="1"/>
+					<field name="status"/>
+				</group>
+			</search>
+		</field>	
+	</record>
+        <record model="ir.ui.view" id="psd_account_journal_voucher_form">
+		<field name="name">Journal Voucher</field>
+		<field name="model">account.journal.voucher</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Journal Voucher">
+				<field name="cus_new" invisible="1"/>
+				<group col="8" colspan="8">
+						<field name="jv_type" required="1"/>
+						<field name="date" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<newline/>
+						<field name="customer_name" colspan="2" 
+							   attrs="{'readonly':[('state','in',('done','cancel'))]}"
+							   on_change="customer_name_change(customer_name)" 
+							   domain="[('is_transfered', '=', False),('customer', '=', True)]"/>
+							   <!-- 'invisible':[('jv_type','=','cfob') -->
+						<field name="customer_name_text" readonly="1" invisible="1"/>
+							   <!-- attrs="{'invisible':[('jv_type','=','cbob')]}" -->
+						<field name="psd_accounting" invisible="1"/>	   
+						<field name="customer_id" attrs="{'readonly':[('state','in',('done','cancel'))]}" colspan="2" readonly="1"/>
+						<field name="customer_id_invisible" invisible="1" attrs="{'readonly':[('state','in',('done','cancel'))]}" colspan="2" readonly="1"/>
+						<field name="jv_number" string="JV Number" colspan="2" readonly="1"/>
+						<label string="" colspan="1"/>
+						<field name="voucher_type" invisible="1"/>
+				</group> 
+				<label string="" colspan="6"/>
+				<newline/>
+				<group col="8" colspan="8" string=" "> 
+					<group col="8" colspan="8">      
+						<field name="employee_name" invisible="1"/>
+						<field name="account_id" colspan="3" domain="[('type','!=','view')]"
+							   attrs="{'readonly':[('state','in',('done','cancel'))]}" on_change="account_type(account_id)"/>
+						
+						<field name="type" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<button name="psd_add_info" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+						<label string="" colspan="2"/>
+						<newline/>
+						<field name="journal_voucher_one2many" widget="one2many_list" nolabel="1"
+							   colspan="8" attrs="{'readonly':[('state','in',('done','cancel'))]}" context="{'nocreate':1}">
+                            <tree editable="bottom">
+								<field name="account_id" readonly="1"/>
+								<field name="customer_name" invisible="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+								<button name="psd_add_others" string="Add" type="object" icon="gtk-go-forward"/>
+							</tree>
+
+							<form string="Details">
+								<field name="account_id" readonly="1"/>
+								<field name="customer_name" readonly="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+								<field name="chk_emd_report" invisible="1"/>
+							</form>
+							</field>
+					</group>
+
+					<group col="8" colspan="8">
+						<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<field name="is_transfered" invisible="1"/>
+						<button string="Print" name="print_report" colspan="1" type="object" />
+						<label string="" colspan="1"/>
+					</group>
+					<group col="8" colspan="8">
+						<button name="psd_process" string="Process" type="object" colspan="2"
+								attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to Process?"/>
+						<label string="" colspan="2"/>
+						<label string="" colspan="2"/>
+						<label string="" colspan="2"/>
+						<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+						<label string="" colspan="6"/>
+						<newline/>
+					     <field name="cancel_bool" groups="base.group_Administrator" 
+							attrs="{'invisible':[('state','in',('draft'))],'readonly':[('state','in',('cancel'))]}" />
+					     <field name="cancel_reason" colspan="4"
+							attrs="{'invisible':[('cancel_bool','=',False)],'required':[('cancel_bool','=',True)],'readonly':[('state','in',('cancel'))]}" />
+					     <button name="cancellation" string="Cancel" type="object" colspan="1"  icon="gtk-cancel" confirm="Do you want to Cancel?"
+							attrs="{'invisible':['|',('cancel_bool','=',False),('state','in',('cancel'))],'required':[('cancel_bool','=',True)]}"/>
+					</group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="psd_account_journal_voucher_form_search_id">
+		<field name="name">Journal Voucher</field>
+		<field name="model">journal.voucher.search</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Journal Voucher">
+			 	<group col="8" colspan="8">
+					<newline/>
+				  	<field name="jv_number" string="JV Number" colspan="2"/>
+				  	<field name="customer_name" colspan="2" domain="[('customer','=','True')]"/>
+					<field name="customer_id" invisible="1"/>
+					
+				  	<field name="employee_name" invisible="1"/>
+				  	<!--field name="receipt_type" colspan="2" invisible="1"/-->
+					<newline/>
+				  	<field name="from_date" string="From Date" colspan="2"/>
+				  	<field name="to_date" string="To Date" colspan="2"/>
+				  	<field name="state" colspan="2" string="Status"/>
+					<field name="cfob_sync_flag" invisible="1"/>
+					<newline/>
+					<group col="8" colspan="8">	
+						<!--<button name="open_new" string="Create" type="object" colspan="1" groups="base.group_accounting_user"/>-->
+						<button name="psd_open_new" string="Create" type="object" colspan="1"
+							groups="base.group_accounting_authorised,base.group_accounting_user,base.group_accounting_hidden"/>
+						<button name="psd_search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+						
+						<button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+						   <label string="" colspan="5"/>
+				     	</group>
+					<newline/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				<group col="8" colspan="8">
+					<field name="search_journal_voucher_line_one2many" widget="one2many_list" nolabel="1" colspan="8" readonly="1" >
+						<form string="Journal Voucher">
+							<field name="jv_number" readonly="1"/>
+							<field name="date" />
+							<!--field name="receipt_date" readonly="1"/-->
+
+							<field name="customer_name" readonly="1" />
+							<field name="employee_name" readonly="1"/>
+							<field name="debit_amount" />
+							<field name="credit_amount" sum="Total" string="Receipt Amount" readonly="1"/>
+							<!--field name="srch_date" invisible="1"/-->
+						</form>
+
+						<tree colors="red:credit_amount==0" string="Journal Voucher">
+							<field name="jv_number" />
+							<field name="date" />
+							<!--field name="receipt_date" /-->
+							<!--field name="new_cus_name" readonly="1"/-->
+							<field name="customer_name" />
+							<field name="employee_name" readonly="1"/>
+							<field name="debit_amount" string="Debit(DR.)"/>
+							<field name="credit_amount"  sum="Total" string="CREDIT(CR.)"/>
+							<button name="psd_show" string="Show" type="object" icon="gtk-go-forward"/>
+						</tree>
+					</field>
+				     </group>
+						<group col="8" colspan="8">
+							<label string="" colspan="7"/>
+							<!--button string="Print" name="print_report1" colspan="0.5" type="object" /-->
+						</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="psd_journal_voucher_search_action_new" model="ir.actions.act_window">
+		<field name="name">Journal Voucher</field>
+		<field name="res_model">journal.voucher.search</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="psd_account_journal_voucher_form_search_id"/>
+	</record>
+
+	<record id="journal_voucher_search_action_new" model="ir.actions.act_window">
+		<field name="name">Journal Voucher</field>
+		<field name="res_model">journal.voucher.search</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="account_sales_branch.account_journal_voucher_form_search_id"/>
+	</record>
+
+</data>
+</openerp>

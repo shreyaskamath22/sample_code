@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="account_credit_note_form_st_gst_inherit" model="ir.ui.view">
+            <field name="name">account.credit.note.st.form.gst.inherit</field>
+            <field name="model">credit.note.st</field>
+            <field name="inherit_id" ref="account_sales_branch.account_credit_note_form_st"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="customer_name"]' position='replace'>
+                  <field name="customer_name" colspan="2"  attrs="{'readonly':[('state','in',('done','cancel'))]}"
+               on_change="customer_name_change(customer_name)" domain="[('customer','=','True')]" required="0"/>
+              </xpath>
+              <xpath expr='//field[@name="credit_note_date"]' position='after'>
+                  <field name="gst_credit_note_st" invisible="1"/>
+              </xpath>
+              <xpath expr='//field[@name="cancel_bool"]' position='after'>
+                  <field name="reason" required="0" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+              </xpath>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="gst_account_credit_against_ref_form_st">
+          <field name="name">Credit Note Form</field>
+          <field name="model">credit.note.line.st</field>
+          <field name="type">form</field>
+          <field name="arch" type="xml">
+            <form string="Payment">
+             <group col="4" colspan="4">
+                      <button name="save_outstanding_invoice" string="Save" type="object" colspan="0.5"
+                      icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+                <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+                    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+                <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="4"/>
+              </group><newline/>
+              <group col="4" colspan="4" >
+                <field name="credit_st_outstanding_invoice" widget="one2many_list" nolabel="1" colspan="3.5"
+                     attrs="{'invisible':[('state','=','done')]}" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="check_credit_note_st" string = ""/>
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1"/>
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="pms" readonly="1"/>
+                    <field name="pending_amount" readonly="1"/>
+                    <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+                    <field name="check_process_credit_note_st" invisible="1"/>
+                    <field name="writeoff_amount"/>
+                     <field name="total_writeoff"  readonly="1"  />
+                     <field name="total_writeoff_paid"  readonly="1"  />
+                  </tree>
+                  <form string="Details">
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1" />
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="pms" readonly="1"/>
+                    <field name="pending_amount" readonly="1"/>
+                    <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+
+                  </form>
+                </field>
+
+                <label string="" />
+                <label string="" />
+                <label string="Paid Invoice" attrs="{'invisible':[('state','=','done')]}"/>
+                <field name="credit_st_paid_invoice" widget="one2many_list" nolabel="1" colspan="3.5"
+                     attrs="{'readonly':[('state','=','done')],'invisible':[('state','!=','draft')]}" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="check_credit_note_st_paid" string = ""/>
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1"/>
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="pms" readonly="1"/>
+                    <field name="pending_amount" readonly="1" invisible="1"/>
+                    <field name="paid_amount" readonly="1"/>
+                    <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+                    <field name="check_process_credit_note_st" invisible="1"/>
+                    <field name="writeoff_amount_paid"/>
+                     <field name="total_writeoff"  readonly="1"  />
+                     <field name="total_writeoff_paid"  readonly="1"  /><!--total_writeoff_paid-->
+                  </tree>
+                  <form string="Details">
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1" />
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="pms" readonly="1"/>
+                    <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+                  </form>
+                </field>
+                <newline/>
+                <field name="credit_st_id_history_one2many" widget="one2many_list" nolabel="1" colspan="4"
+                     attrs="{'readonly':[('state','=','done')],'invisible':[('state','=','draft')]}" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="check_invoice" string = ""  readonly="1"/>
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1"/>
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="invoice_writeoff_amount" readonly="1" />
+                    <field name="invoice_writeoff_date" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+
+                  </tree>
+                  <form string="Details">
+                    <field name="check_invoice" string = ""  readonly="1"/>
+                    <field name="invoice_number" readonly="1"/>
+                    <field name="invoice_date" readonly="1"/>
+                    <field name="service_classification" readonly="1"/>
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="invoice_writeoff_amount" readonly="1" />
+                    <field name="invoice_writeoff_date" readonly="1"/>
+                    <field name="cse" readonly="1" domain="[('role_selection','=','cse')]"/>
+                  </form>
+                </field>
+                <field name="debit_note_cnst_one2many" widget="one2many_list" nolabel="1" attrs="{'invisible':[('state','=','done')]}" context="{'nodelete':1,'nocreate':1}">
+                      <tree string="Debit Note Details" editable="bottom">
+                        
+                        <field name="check_cn_debit"/>
+                        <field name="debit_note_no" readonly="1"/>
+                        <field name="debit_note_date" readonly="1"/>
+                        <field name="credit_amount_srch" string="Debit Note Amount" readonly="1"/>
+                        <field name="paid_amount" readonly="1"/>
+                        <field name="pending_amount" readonly="1"/>
+                        <field name="receipt_amount" string="Amount"/>
+                      </tree>
+                      <form string="Details">
+                        <field name="check_cn_debit"/>
+                        <field name="debit_note_no" readonly="1"/>
+                        <field name="debit_note_date" readonly="1"/>
+                        <field name="credit_amount_srch" string="Debit Note Amount" readonly="1"/>
+                        <field name="paid_amount" readonly="1"/>
+                        <field name="pending_amount" readonly="1"/>
+                        <field name="receipt_amount" string="Amount"/>
+                      </form>
+                   
+                  </field>
+                  <field name="debit_note_cnst_history_one2many" widget="one2many_list" nolabel="1" colspan="3.5" attrs="{'invisible':[('state','in',('draft'))]}" context="{'nodelete':1,'nocreate':1}">
+                  <tree editable="bottom" string="Paid Debit Note Details">
+                    <field name="check_dn" string="" readonly="1"/>
+                    <field name="invoice_number" readonly="1" string="Debit Note No"/>
+                    <field name="invoice_date" readonly="1" string="Debit Note Date"/>
+                    <field name="service_classification" readonly="1"/>
+                    <field name="tax_rate" readonly="1"/>
+                    <field name="cse_char" readonly="1" />
+                    <field name="invoice_paid_amount" readonly="1" string="Paid Amount" />
+                    <field name="invoice_paid_date" readonly="1" string="Paid Date"/>
+                  
+                     </tree>
+                    </field>
+
+                <field name="state" widget="statusbar" invisible="1"/>
+              </group>
+            </form>
+          </field>
+        </record>
+
+        <record id="view_reason_for_issue_of_documents_gst" model="ir.ui.view">
+            <field name="name">Reason For issue of Documents</field>
+            <field name="model">reason.for.issue.of.doc</field>
+            <field name="arch" type="xml">
+            <form string="Reason For issue of Documents">
+              <field name="name"/>
+            </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_reason_for_issue_of_documents_tree">
+          <field name="name">Reason For issue of Documents</field>
+          <field name="model">reason.for.issue.of.doc</field>
+          <field name="type">tree</field>
+          <field name="arch" type="xml">
+          <tree string="Reason For issue of Documents">
+            <field name="name"/>
+          </tree>
+          </field>
+       </record>
+  
+      <record id="action_reason_for_issue_of_documents" model="ir.actions.act_window">
+            <field name="name">Reason For issue of Documents</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reason.for.issue.of.doc</field>
+            <field name="view_type">tree</field>
+            <field name="view_mode">form,tree</field>
+      </record>
+
+
+        <menuitem id="action_menu_reason_for_issue_of_documents" name="Reason For issue of Documents" action="action_reason_for_issue_of_documents" sequence="46" parent="base.menu_config"/>
+
+	</data>
+</openerp>

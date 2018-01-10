@@ -1,0 +1,1332 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(590.0,790.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="10.0" width="481" height="740"/>
+    </pageTemplate>
+    <pageTemplate id="second">
+      <frame id="first" x1="57" y1="-15.0" width="481" height="728"/>
+        <header>
+          <pageGraphics>
+            <setFont name="Helvetica" size="10.0"/>
+            <drawCentredString x="27cm" y="0.5cm"> Page: <pageNumber/></drawCentredString>   
+            <place x="8.2" y="17cm" width="820.0" height="115.0"></place>
+          </pageGraphics>
+        </header>
+    </pageTemplate>
+  </template>
+
+  <stylesheet>
+
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+   <blockTableStyle id="Table25">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="5,0" stop="5,-1"/>
+
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="MIDDLE"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="14,0" stop="14,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="15,0" stop="15,0"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="8,0" stop="8,-1"/>
+    </blockTableStyle> 
+
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="1,0" stop="1,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="BOTTOM"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="9,0" stop="9,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="11,0" stop="11,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="13,0" stop="13,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="15,0" stop="15,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="14,0" stop="14,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="15,0" stop="15,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="17,0" stop="17,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="16,0" stop="16,0"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="16,0" stop="16,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="19,0" stop="19,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="17,0" stop="17,0"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="17,0" stop="17,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table8">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="9,0" stop="9,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="10,0" stop="10,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="11,0" stop="11,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="12,0" stop="12,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="13,0" stop="13,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="14,0" stop="14,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="14,0" stop="14,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="15,0" stop="15,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="15,0" stop="15,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="16,0" stop="16,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="16,0" stop="16,0"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="16,0" stop="16,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table9">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+    </blockTableStyle> 
+
+    <blockTableStyle id="Table15">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="3,0" stop="3,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table16">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table17">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table18">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,1" stop="0,1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="1,0" stop="1,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table23">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="8,0" stop="8,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="8,-1" stop="8,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="9,0" stop="9,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="9,-1" stop="9,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="10,0" stop="10,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="10,-1" stop="10,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="11,0" stop="11,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="11,-1" stop="11,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="12,0" stop="12,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="12,-1" stop="12,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="13,0" stop="13,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="13,-1" stop="13,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="14,0" stop="14,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="14,0" stop="14,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="14,-1" stop="14,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="15,0" stop="15,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="15,0" stop="15,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="15,-1" stop="15,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="16,0" stop="16,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="16,0" stop="16,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="16,-1" stop="16,-1"/>
+<!--       <lineStyle kind="LINEBEFORE" colorName="#000000" start="16,0" stop="15,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="15,0" stop="15,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="15,-1" stop="15,-1"/> -->
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="16,-1" stop="16,0"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table33">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_total">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_gross">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_less">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_ref">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_net">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_freight_above">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/> -->
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_freight">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/> -->
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_freight_below">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="2,0" stop="2,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="3,0" stop="3,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="4,0" stop="4,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="5,0" stop="5,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="6,0" stop="6,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="7,0" stop="7,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="7,0" stop="7,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="7,-1" stop="7,-1"/>
+    </blockTableStyle>
+
+    <blockTableStyle id="Table_words">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="0,0" stop="0,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/> -->
+      <!-- <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/> -->
+      <lineStyle kind="LINEBEFORE" colorName="#000000" start="1,0" stop="1,-1"/>
+      <!-- <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/> -->
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#000000" start="2,0" stop="2,-1"/>
+    </blockTableStyle>
+
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+
+    <paraStyle name="P1" fontName="Helvetica" fontSize="6.5" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_small" fontName="Helvetica" fontSize="6.2" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_disc" fontName="Helvetica" fontSize="6" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_desc" fontName="Helvetica" fontSize="6.7" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_goods" fontName="Helvetica" fontSize="6.7" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_per" fontName="Helvetica" fontSize="6.5" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_hsn" fontName="Helvetica" fontSize="6.1" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/> 
+    <paraStyle name="P1_sac" fontName="Helvetica" fontSize="6.1" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_letter" fontName="Helvetica" fontSize="5.3" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P_freight" fontName="Helvetica" fontSize="6" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P_letter_small" fontName="Helvetica" fontSize="5.8" leading="7" alignment="CENTER" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1s_letter" fontName="Helvetica" fontSize="5.8" leading="7" alignment="RIGHT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1s_advance_rec" fontName="Helvetica" fontSize="5.8" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P_words" fontName="Helvetica" fontSize="5.8" leading="7" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P1_letter_main" fontName="Helvetica" fontSize="6" leading="7" alignment="LEFT"/>
+    <paraStyle name="P111" fontName="Helvetica" fontSize="6.5" leading="7" alignment="LEFT" spaceBefore="0.4" spaceAfter="0.4"/>  
+    <paraStyle name="P2" fontName="Helvetica" fontSize="7" leading="8" alignment="LEFT" spaceBefore="0.3" spaceAfter="0.3"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="9.0" leading="7" alignment="CENTER"/>
+    <paraStyle name="P444" fontSize="6.5" leading="8" alignment="LEFT"/>
+    <paraStyle name="Pless" fontSize="5.7" leading="8" alignment="LEFT"/>
+    <paraStyle name="P_contract" fontSize="6" leading="8" alignment="LEFT"/>
+    <paraStyle name="P_electronic" fontSize="6.5" leading="8" alignment="LEFT"/>
+    <paraStyle name="P_signature" fontSize="7" leading="8" alignment="LEFT"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="7.5" leading="8"/>
+    <paraStyle name="P9_new" fontName="Helvetica" fontSize="7.5" leading="8"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="7.5" leading="8" alignment="RIGHT"/>
+    <paraStyle name="P14" fontName="Helvetica" fontSize="7.5" leading="8"/>
+    <paraStyle name="PNEW" fontName="Helvetica" fontSize="7" leading="15" alignment="RIGHT" spaceBefore="2"/>
+    <paraStyle name="P19" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="7.5" leading="8" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P31" rightIndent="32.0" leftIndent="0.0" fontName="Helvetica" fontSize="7.5" leading="8" alignment="LEFT"/>
+    <paraStyle name="P36" fontName="Helvetica" fontSize="7.5" leading="9" alignment="LEFT"/>
+    <paraStyle name="P42" fontName="Helvetica" fontSize="7.5" leading="9" alignment="CENTER"/>
+    <paraStyle name="P48" rightIndent="32.0" leftIndent="0.0" fontName="Helvetica" fontSize="7.5" leading="8" alignment="RIGHT"/>
+    <paraStyle name="P49" rightIndent="32.0" leftIndent="0.0" fontName="Helvetica" fontSize="7.5" leading="8" alignment="LEFT"/>
+    <paraStyle name="P62" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="7.5" leading="8" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" rightIndent="0.0" leftIndent="0.0" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    
+    <images/>
+  </stylesheet>
+
+  <story>
+  <setNextTemplate name="second"/> 
+    <para style="P19">[[ repeatIn(objects,'o') ]]</para>
+
+  <para style="P3">[[ get_report_type(o.id) ['report_title'] ]]</para>
+   <para style="P2"><font color="white"> </font></para>
+            
+    <blockTable colWidths="300,50,200" style="Table2">
+      <tr>
+          <td>
+
+              <para style="P2">
+                <font face="Helvetica-Bold">Details of Seller</font>
+              </para>
+              <para style="P111">
+                  <font face="Helvetica">Name : PCI Pest Control Pvt. Ltd.</font>
+              </para>
+              <para style="P111">
+                  <font face="Helvetica">Address : [[ get_branch_addr(o.branch_id.id) ['branch_addr'] ]]</font>
+              </para>
+              <para style="P111">
+                <font face="Helvetica">Telephone : </font> [[ (o.branch_id.phone) or '' ]] [[ (o.branch_id.mobile) or '' ]]
+                <font face="Helvetica">Fax :</font> [[ (o.branch_id.fax) or '' ]]  
+              </para>
+              <para style="P111">
+                <font face="Helvetica">Email : </font> [[ (o.branch_id.email) or '' ]]
+              </para>
+              <para style="P111">
+                <font face="Helvetica">GSTIN/Unique ID : [[o.branch_id.gst_no]]</font>
+              </para>
+              <para style="P111">
+                <font face="Helvetica">PAN No : [[o.branch_id.pan_no]]</font>
+              </para>
+              <para style="P111">
+                <font face="Helvetica">CIN No : [[o.branch_id.cin_no]]</font>
+              </para>
+          </td>
+          <td></td>
+          <td>
+              <para style="P2">
+                <font face="Helvetica-Bold">[[ get_report_type(o.id) ['report_type'] ]]</font>
+              </para>
+              <para style="P111"><font face="Helvetica">Date :[[formatLang(o.invoice_date,date=True)]]</font></para>
+              <para style="P111"><font face="Helvetica">Inv Serial No :[[o.invoice_number]]</font></para>   
+              <para style="P111">
+                <font face="Helvetica">Contract No &amp; Dt :[[o.contract_no.contract_number]]</font>
+                <font face="Helvetica">[[formatLang(o.contract_no.contract_date,date=True)]]</font>
+              </para>    
+              <para style="P111">
+                <font face="Helvetica">Contract Period :[[formatLang(o.contract_no.contract_start_date,date=True)]]</font>
+                <font face="Helvetica">- [[formatLang(o.contract_no.contract_end_date,date=True)]]</font>
+              </para> 
+              <para style="P111">
+                <font face="Helvetica">Invoice Period :[[formatLang(o.invoice_period_from,date=True)]]</font>
+                <font face="Helvetica">- [[formatLang(o.invoice_period_to,date=True)]]</font>
+              </para> 
+              <para style="P111"><font face="Helvetica">Book No :[[o.contract_no.contract_book_no]]</font></para>  
+              <para style="P111"><font face="Helvetica">Physical No:[[o.contract_no.phy_contract_no]]</font></para> 
+              <para style="P111"><font face="Helvetica">PO Ref :[[o.contract_no.purchase_order_no]]</font></para>       
+              <para style="P111">[[ ((o.bool_custom_payterm == False) or removeParentNode('para')) and '' ]]
+                <font face="Helvetica">Payment Term  :[[ get_payment(o.id) ['pay_term'] ]]</font>
+              </para>
+             <para style="P111">[[ ((o.bool_custom_payterm != False) or removeParentNode('para')) and '' ]]
+                <font face="Helvetica">Payment Term :[[ o.add_custom_payterm ]]</font>
+              </para>
+          </td>
+      </tr>
+    </blockTable>
+
+    <blockTable colWidths="300,50,200" style="Table2">
+      <tr>
+        <td>
+            <para style="P2">
+              <font face="Helvetica-Bold">Details of Recipient(Billed To)</font>
+            </para>
+            <para style="P111"> 
+              <font face="Helvetica">Name : </font>
+              <font face="Helvetica-Bold">[[o.cust_name]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Address : [[ get_primary_address(o.partner_id.id,o.id) ['primary_address'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Telephone No : [[ get_primary_address(o.partner_id.id,o.id) ['primary_telephone'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Mobile : [[ get_primary_address(o.partner_id.id,o.id) ['primary_mobile'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Email ID : [[ get_primary_address(o.partner_id.id,o.id) ['primary_email'] ]]</font>
+            </para>
+            <!-- <para style="P111">
+              <font face="Helvetica">PAN No : [[ o.partner_id.pan_no ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">TAN No : [[ o.partner_id.tan_no ]]</font>
+            </para> -->
+            <para style="P111">
+              <font face="Helvetica">State : [[ get_primary_address(o.partner_id.id,o.id)['primary_state'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">State Code : [[ get_primary_address(o.partner_id.id,o.id)['primary_state_code'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">GSTIN/Unique ID : [[ get_primary_address(o.partner_id.id,o.id)['gst_no'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Place of supply : [[ get_primary_address(o.partner_id.id,o.id)['primary_state'] ]]</font>
+            </para>
+        </td>
+        <td></td>
+        <td>
+            <para style="P2"><font face="Helvetica-Bold">Details of Consignee(Service Delivered to)</font></para>
+            <para style="P111"> 
+              <font face="Helvetica">Name : </font>
+              <font face="Helvetica-Bold">[[o.cust_name]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Address : [[ get_first_address(o.id) ['first_address'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Telephone No : [[ get_first_address(o.id) ['first_telephone'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Mobile : [[ get_first_address(o.id) ['first_mobile'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">Email ID : [[ get_first_address(o.id) ['first_email'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">State : [[ get_first_address(o.id) ['first_state'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">State Code : [[ get_first_address(o.id)['first_state_code'] ]]</font>
+            </para>
+            <para style="P111">
+              <font face="Helvetica">GSTIN/Unique ID : [[ get_first_address(o.id)['gst_no'] ]]</font>
+            </para>
+<!--             <para style="P111">
+              <font face="Helvetica">Place of supply : [[ get_first_address(o.id) ['first_state'] ]]</font>
+            </para> -->
+        </td>
+      </tr>
+  </blockTable>
+
+  <!-- <para style="PNEW"><b>[[ get_service_classification(o.id) ['service_name'] ]]</b></para> -->
+     <para style="P2"><font color="white"> </font></para>
+
+
+  <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table7">
+    <tr>
+      <td><para style="P1"><b>Sr.</b></para></td>
+      <td><para style="P1_desc"><b>Description of</b></para></td>
+      <td><para style="P1_hsn"><b>HSN /SAC</b></para></td>
+      <td></td>
+      <td></td>
+      <td><para style="P1"><b>Rate</b></para></td>
+      <td></td>
+      <td></td>
+      <td><para style="P1_small"><b>Taxable</b></para></td>
+      <td><para style="P1" leftIndent="30"><b>CGST</b></para></td>
+      <td><para style="P1"></para></td>
+      <td><para style="P1" leftIndent="30"><b>SGST/UTGST</b></para></td>
+      <td><para style="P1"></para></td>
+      <td><para style="P1" leftIndent="30"><b>IGST</b></para></td>
+      <td><para style="P1"></para></td>
+      <td><para style="P1" leftIndent="30"><b>CESS</b></para></td>
+     <td><para style="P1"></para></td>
+    </tr>
+  </blockTable>
+
+   
+    <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table8">
+        <tr>
+          <td><para style="P1" leftIndent="1"><b>No.</b></para></td>
+          <td><para style="P1_goods"><b>Goods / Services</b></para></td>
+          <td><para style="P1_sac"><b>Code</b></para></td>
+          <td><para style="P1"><b>Qty.</b></para></td>
+          <td><para style="P1"><b>Unit</b></para></td>
+          <td><para style="P1_per"><b>(per item)</b></para></td>
+          <td><para style="P1"><b>Total</b></para></td>
+          <td><para style="P1_disc"><b>Discount</b></para></td>
+          <td><para style="P1"><b>Value</b></para></td>
+          <td><para style="P1"><b>Rate</b></para></td>
+          <td><para style="P1"><b>Amt</b></para></td>
+          <td><para style="P1"><b>Rate</b></para></td>
+          <td><para style="P1"><b>Amt</b></para></td>
+          <td><para style="P1"><b>Rate</b></para></td>
+          <td><para style="P1"><b>Amt</b></para></td>
+          <td><para style="P1"><b>Rate</b></para></td>
+          <td><para style="P1"><b>Amt</b></para></td>
+        </tr>
+    </blockTable>
+
+    <section>
+      <para style="terp_default_1">[[repeatIn(o.invoice_line_adhoc_gst,'t')]]</para>
+      <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table23">
+        [[ ((o.contract_no.pms_detail == False) or removeParentNode('para')) and '' ]]
+        <tr>
+          <td>
+            <para style="P1_letter" bulletIndent="0"><bullet><seq id="L2"/></bullet>
+            </para>
+          </td>
+          <td>
+              <para style="P1_letter_main"><b>[[ get_service_title(t.id) ['service_title'] ]]</b></para>
+              <para style="P1_letter_main">[[ get_service_address(t.services) ['service_address'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.pms.hsn_sac_code or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[get_ipm_address(t.id) ['area'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.unit or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.rate ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.total or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.discount or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.sgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.sgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.igst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.igst_amt or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cess_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cess_amt or '0.00' ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+
+    <section>
+      <para style="terp_default_1">[[repeatIn(o.invoice_line_adhoc_12,'t')]]</para>
+      <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table23">
+        [[ ((o.contract_no.pms_detail == False) or removeParentNode('para')) and '' ]]
+        <tr>
+          <td>
+            <para style="P1_letter" bulletIndent="0"><bullet><seq id="L2"/></bullet>
+            </para>
+          </td>
+          <td>
+              <para style="P1_letter_main"><b>[[ get_service_title(t.id) ['service_title'] ]]</b></para>
+              <para style="P1_letter_main">[[ get_service_address(t.services) ['service_address'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.pms.hsn_sac_code or '-' ]]</para>
+          </td>
+          <td>
+            <!-- <para style="P1_letter">[[get_ipm_address(t.id) ['area'] ]]</para> -->
+            <para style="P1_letter">[[ t.area or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.unit or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.rate ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.total or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.discount or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.sgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.sgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.igst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.igst_amt or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cess_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cess_amt or '0.00' ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+
+    <!-- IPM starts -->
+    <section>
+      <!-- <para style="terp_default_1">[[repeatIn(o.invoice_line_adhoc_12,'t')]]</para> -->
+      <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table23">
+        [[ ((o.contract_no.pms_detail != False) or removeParentNode('para')) and '' ]]
+        <tr>
+          <td>
+            <para style="P1_letter" bulletIndent="0"><bullet><seq id="L2"/></bullet>
+            </para>
+          </td>
+          <td>
+              <para style="P1_letter_main"><b>[[ get_service_title(o.contract_no.pms_ipm) ['service_title'] ]]</b></para>
+              <para style="P1_letter_main">[[ get_service_address(t.services) ['service_address'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ o.contract_no.pms_ipm.hsn_sac_code or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[get_ipm_address(t.id) ['area'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.unit or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.rate ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ o.basic_amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.discount or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ o.basic_amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['cgst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.sgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['sgst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.igst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['igst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cess_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['cess_tax_total'] ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+<!--     <section>
+      <para style="terp_default_1">[[repeatIn(o.invoice_line_adhoc_12,'t')]]</para>
+      <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table23">
+        [[ ((o.contract_no.pms_detail != False) or removeParentNode('para')) and '' ]]
+        <tr>
+          <td>
+            <para style="P1_letter" bulletIndent="0"><bullet><seq id="L2"/></bullet>
+            </para>
+          </td>
+          <td>
+              <para style="P1_letter_main"><b>[[ get_service_title(t.pms) ['service_title'] ]]</b></para>
+              <para style="P1_letter_main">[[ get_service_address(t.services) ['service_address'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.pms.hsn_sac_code or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter"><font color="white"> </font></para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.unit or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.rate ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ o.basic_amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.discount or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ o.basic_amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['cgst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.sgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['sgst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.igst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['igst_tax_total'] ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cess_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_tax_total(o.id) ['cess_tax_total'] ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section> -->
+    <!-- IPM ends -->
+    <section>
+      <para style="terp_default_1">[[repeatIn(o.invoice_line_scrap_sale,'t')]]</para>
+      <blockTable colWidths="15,90,30,20,25,30,30,30,30,30,30,30,30,30,30,30,30" style="Table23">
+        <tr>
+          <td>
+            <para style="P1_letter" bulletIndent="0"><bullet><seq id="L2"/></bullet>
+            </para>
+          </td>
+          <td>
+              <para style="P1_letter_main"><b>[[ t.description ]]</b></para>
+              <para style="P1_letter_main">[[ t.item_master.name ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.hsn_code or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.qty or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.scrap_unit or '-' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.rate ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.total or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.discount or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.amount or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.sgst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.sgst_amt ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.igst_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.igst_amt or '0.00' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ get_format_digits(t.cess_rate) or '0.00%' ]]</para>
+          </td>
+          <td>
+            <para style="P1_letter">[[ t.cess_amt or '0.00' ]]</para>
+          </td>
+        </tr>
+      </blockTable>
+    </section>
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_less">
+      <tr>
+        <td><para style="Pless"></para></td>
+        <td><para style="Pless"><b>Sub-Total</b></para></td>
+        <td><para style="P1s_letter"><b>[[o.total_amount]]</b></para></td>
+        <td><para style="P1s_letter"><b>[[ get_tax_total(o.id) ['cgst_tax_total'] ]]</b></para></td>
+        <td><para style="P1s_letter"><b>[[ get_tax_total(o.id) ['sgst_tax_total'] ]]</b></para></td>
+        <td><para style="P1s_letter"><b>[[ get_tax_total(o.id) ['igst_tax_total'] ]]</b></para></td>
+        <td><para style="P1s_letter"><b>[[ get_tax_total(o.id) ['cess_tax_total'] ]]</b></para></td>
+      </tr>
+    </blockTable>
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_total">
+      <tr>
+        <td><para style="Pless"></para></td>
+        <td>
+          <para style="Pless"><b>Total Tax</b></para>
+        </td>
+        <td>
+          <para style="P1s_letter"><b>[[ get_tax_total(o.id) ['gst_tax_total'] ]]</b></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+      </tr>
+    </blockTable>
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_total">
+      <tr>
+        <td><para style="Pless"></para></td>
+        <td>
+          <para style="Pless"><b>Round-off Value</b></para>
+        </td>
+        <td>
+          <para style="P1s_letter"><b>[[ get_tax_total(o.id) ['round_off']!='0.00' and get_tax_total(o.id) ['round_off'] or removeParentNode("blockTable")]]</b></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+        <td>
+          <para style="P1s_letter"></para>
+        </td>
+      </tr>
+    </blockTable>
+
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_gross">
+      <tr>
+        <td><para style="Pless"></para></td>
+        <td><para style="Pless"><b>Gross Value (Incl. Tax)</b></para></td>
+        <td><para style="P1s_letter"><b>[[o.grand_total_amount]]</b></para></td>
+        <td><para style="P1s_letter"></para></td>
+        <td><para style="P1s_letter"></para></td>
+        <td><para style="P1s_letter"></para></td>
+        <td><para style="P1s_letter"></para></td>
+      </tr>
+    </blockTable>
+
+<!--     <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_less">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless"><b>Less: Advance Received</b></para></td>
+          <td><para style="P1s_letter">-[[o.adv_receipt_amount]]</para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+        </tr>
+    </blockTable>
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_ref">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless">Ref.Receipt Numbers</para></td>
+          <td><para style="P1s_advance_rec">[[o.advance_receipts or '-']]</para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+        </tr>
+    </blockTable>   
+
+    <blockTable colWidths="15,90,195,60,60,60,60" repeatRows="1" style="Table_net">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless"><b>Net Amount Payable</b></para></td>
+          <td><para style="P1s_letter"><b>[[o.net_amount_payable or '0.00']]</b></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+          <td><para style="P1s_letter"></para></td>
+        </tr>
+    </blockTable> -->
+
+
+<!--     <blockTable colWidths="15,196,30,30,29,240" repeatRows="1" style="Table_freight_above">
+        <tr>
+          <td><para style="P_freight"></para></td>
+          <td><para style="P_freight">Freight</para></td>
+          <td><para style="P_letter_small">0</para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+        </tr>
+    </blockTable>
+    <blockTable colWidths="15,196,30,30,29,240" repeatRows="1" style="Table_freight">
+        <tr>
+          <td><para style="P_freight"></para></td>
+          <td><para style="P_freight">Insurance</para></td>
+          <td><para style="P_letter_small">0</para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+        </tr>
+    </blockTable>
+    <blockTable colWidths="15,196,30,30,29,240" repeatRows="1" style="Table_freight_below">
+        <tr>
+          <td><para style="P_freight"></para></td>
+          <td><para style="P_freight">Packing and Forwarding Charges</para></td>
+          <td><para style="P_letter_small">0</para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+          <td><para style="P_letter_small"></para></td>
+        </tr>
+    </blockTable> -->
+
+    <blockTable colWidths="15,285,240" repeatRows="1" style="Table_words">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless"><b>Total Invoice Value (In figure)</b></para></td>
+          <td><para style="P_words" leftIndent="2"><b>[[o.gst_grand_total_amount or '0.00']]</b></para></td>
+        </tr>
+    </blockTable>
+    <blockTable colWidths="15,285,240" repeatRows="1" style="Table_words">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless"><b>Total Invoice Value (In Words)</b></para></td>
+          <td>
+             <para style="P_words"><b>[[ str(amount_to_text_in(o.gst_grand_total_amount,'Rupees')) or 'Zero']]</b></para>
+          </td>
+        </tr>
+    </blockTable>
+    <blockTable colWidths="15,285,240" repeatRows="1" style="Table_words">
+        <tr>
+          <td><para style="Pless"></para></td>
+          <td><para style="Pless"><b>Amount of Tax subject to Reverse Charges</b></para></td>
+          <td><para style="P_words" leftIndent="2">Not Appplicable</para></td>
+        </tr>
+    </blockTable>
+
+
+    <blockTable colWidths="540.0" style="Table16">
+      <tr>
+        <td>
+          <para style="P_contract"><b>Contract Value : [[ get_contract_val(o.id) ['cotract_val'] ]]</b></para>
+          <!-- <para style="P_contract">,  Previous Invoice Details:(Invoice No &amp; Date &amp; Amount)</para> -->
+        </td>
+      </tr>
+    </blockTable>
+
+<!--     <blockTable colWidths="540.0" style="Table16">[[((o.check_previous_history != False ) or removeParentNode('blockTable')) and '' ]]
+      <tr>
+        <td>
+    <para style="P_contract">[[((o.check_previous_history != False ) or removeParentNode('para')) and '' ]]<b>Previous Invoice Details :</b></para>
+    <blockTable colWidths="179.0,52.0,86.0,103.0,120.0" style="Table2">[[((o.check_previous_history != False ) or removeParentNode('blockTable')) and '' ]]
+              <tr>
+                <td>
+                  <para style="P_freight"><b>Invoice Number</b></para>
+                </td>
+                <td>
+                  <para style="P_freight" leftIndent="3"><b> Date</b></para>
+                </td>
+                <td>
+                  <para style="P_freight"><b>Amount</b></para>
+                </td>
+                <td>
+                  <para style="P36">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P36">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+              </tr>
+    </blockTable>
+          <section>[[((o.check_previous_history != False ) or removeParentNode('section')) and '' ]]
+            <para style="terp_default_1">[[ repeatIn(o.history_invoice_report_one2many,'line')]]</para>
+            <blockTable colWidths="179.0,52.0,86.0,103.0,120.0" style="Table2">[[((o.check_previous_history != False ) or removeParentNode('blockTable')) and '' ]]
+              <tr>
+                <td>
+                  <para style="P_freight">[[ line.invoice_num ]]</para>
+                </td>
+                <td>
+                  <para style="P_freight"> [[formatLang(line.invoice_date ,date=True)]]</para>
+                </td>
+                <td>
+                  <para style="P_freight">
+                    <font face="Helvetica">[[ line.status ]]</font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P36">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+                <td>
+                  <para style="P36">
+                    <font color="white"> </font>
+                  </para>
+                </td>
+              </tr>
+            </blockTable>
+          </section>  
+        </td>
+      </tr>
+    </blockTable>   -->
+    <blockTable colWidths="300,240" style="Table18">
+      <tr>
+        <td>
+          <para style="P_contract">1. This Bill is Due on :  [[formatLang(o.invoice_due_date ,date=True)]]</para>
+          <para style="P_contract">2. 18% p.a. Interest will be charged if the bill is not paid within the Due Date.</para>
+          <para style="P2"><font color="white"> </font></para>
+         <!-- <para style="P_contract">[[ get_service_classification(o.id) ['service_desc'] ]]</para> -->
+       </td>
+        <td>
+          <para style="P_contract">Payment through NEFT : [[o.branch_id.bank_name]]</para>
+          <para style="P_contract">Address :- [[o.branch_id.bank_address]]</para>
+          <para style="P_contract">Account Name :- [[o.branch_id.account_name]].</para>
+          <para style="P_contract">Account Number :- [[o.branch_id.account_number]]</para>
+          <para style="P_contract">IFSC CODE :- [[o.branch_id.ifsc]]</para>
+        </td>
+      </tr>   
+    </blockTable>  
+
+    <!-- <blockTable colWidths="300,240" style="Table6">
+      <tr>
+        <td></td>
+        <td> <para style="P_contract">Account Number :- [[o.branch_id.account_number]]</para></td>
+      </tr>
+      <tr>
+        <td><para style="P_contract">[[ get_service_classification(o.id) ['service_desc'] ]]</para></td>
+        <td><para style="P_contract">IFSC CODE :- [[o.branch_id.ifsc]]</para></td>
+      </tr>
+    </blockTable> -->  
+
+    <blockTable colWidths="355,10,40,135" style="Table15">
+       <tr>
+          <td>
+              <para style="P_electronic">Electronic Reference Number</para>
+              <para style="P_electronic">Jurisdiction:[[ o.branch_id.jurisdiction_name ]]</para>             
+              <para style="P_electronic">[[ print_narration(o.invoice_narration,o.allow_narration) ['narration'] ]]</para>
+          </td>
+          <td>
+            <para style="P_electronic">
+              <font color="white"> </font>
+            </para>
+          </td>
+          <td></td>
+          <td><para style="P2"><b>For PCI Pest Control Pvt Ltd</b></para></td>
+      </tr>
+      <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td>
+            <para style="P_signature" rightIndent="30"><i>Signature</i></para>
+            <para style="P_electronic">Authorized Signatory</para>
+          </td>
+      </tr>
+    </blockTable>
+
+    <blockTable colWidths="540.0" style="Table16">
+      <tr>
+        <td>
+           <para style="P_contract"><b> [[ get_government_notification(o.id) ['govt_notification'] or removeParentNode('para') and '']]</b></para>
+          <para style="P2"><font color="white"> </font></para>
+          <para style="P_contract">CORPORATE OFFICE: [[ get_corporate_address() ['get_corporate_addr_dict'] ]].</para>
+          <para style="P_contract">
+            <font face="Helvetica">Tel : [[ get_corporate_address()['get_corporate_phone_dict'] ]], E-mail:- [[ get_corporate_address()['get_email_addr_dict'] ]], Website:[[ get_corporate_address()['get_website_addr_dict'] ]] </font>
+          </para>
+          <para style="P_contract">REGD. OFFICE: [[ get_registered_office_address() ['get_registered_office_addr_dict'] ]]. </para>
+        </td>
+      </tr>
+    </blockTable>
+
+    <para>
+      <seqReset id="L2"/>
+    </para>
+
+  <setNextTemplate name="first"/>
+  </story>
+</document>

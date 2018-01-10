@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--# Version 1.0.013 -  Remove widget selection from customer fields -->
+<!--# Version 1.0.017 -  add emp_code fields -->
+<!--# Version 1.0.031 -  read only user group -->
+<!--# Version 1.0.071 -  Changes related to view ( Debit to Credit ) 18 nov -->
+
+<openerp>
+   <data>
+
+  	<record model="ir.ui.view" id="psd_account_debit_note_form">
+		<field name="name">Debit Note Form</field>
+		<field name="model">debit.note</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Debit Note">
+			 <group col="8" colspan="8">
+					<newline/>
+					<field name="customer_name" colspan="2" required="1" attrs="{'readonly':[('state','in',('done','cancel'))]}"
+						   on_change="customer_name_change(customer_name)" domain="[('customer','=','True'), ('is_transfered', '=', False)]"/>
+					<field name="psd_accounting" invisible="1"/>		   
+					<field name="customer_id" colspan="2" readonly="1"/>
+				  	<field name="debit_note_no" colspan="2" readonly="1" string="Debit Note No"/>
+					<field name="debit_note_date" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}" on_change="onchange_debit_note_date(debit_note_date)"/>
+					<field name="voucher_type" invisible="1"/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+
+				<group col="8" colspan="8" string=" ">
+					<group col="8" colspan="8" >
+					   <field name="account_id" colspan="3" attrs="{'readonly':[('state','in',('done','cancel'))]}"
+							  domain="[('type','!=','view')]" on_change="account_type(account_id)"/>
+					   <field name="type" colspan="0.5" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					   <button name="add_debit_note" string="Add" type="object" colspan="0.5"
+							   attrs="{'invisible':[('state','in',('done','cancel'))]}"/>
+					   <label string="" colspan="3"/>
+					   <newline/>
+					</group>
+				     <group col="8" colspan="8" >
+					<field name="debit_note_one2many" widget="one2many_list" nolabel="1" colspan="8"
+						   context="{'nocreate':1}" attrs="{'readonly':[('state','in',('done','cancel'))]}">
+						<tree editable="bottom">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="status" invisible="1" readonly="1"/>
+							<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+							<button name="add" string="Add" type="object" icon="gtk-go-forward"/>
+						</tree>
+						<form string="Debit Note Entry">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="status" readonly="1"/>
+							<field name="debit_amount"/>
+							<field name="credit_amount"/>
+						</form>
+					</field>
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					<field name="is_transfered" invisible="1"/>
+					<field name="credit_amount_srch" invisible="1"/>
+					<field name="debit_amount_srch" invisible="1"/>
+					<label string="" colspan="2"/>
+				     </group>
+				     <group col="8" colspan="8">
+					     <button name="psd_debit_note_process" string="Process" type="object" colspan="1" states="draft"
+								 icon="terp-camera_test"  confirm="Do you want to Process?"/>
+					     <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					     <label string="" colspan="6"/>
+				     </group>
+				      <group col="8" colspan="8">
+				     <field name="cancel_bool" colspan="1" string="Cancel" groups="base.group_Administrator"
+							attrs="{'invisible':[('state','in',('draft'))],'readonly':[('state','in',('cancel'))]}" />
+				     <field name="cancel_reason" colspan="4" attrs="{'invisible':[('cancel_bool','=',False)],'required':[('cancel_bool','=',True)],'readonly':[('state','in',('cancel'))]}" />
+				     
+				     <button name="cancellation" string="Cancel" type="object" colspan="1" icon="gtk-cancel"
+							 attrs="{'invisible':['|',('cancel_bool','=',False),('state','in',('cancel'))],'required':[('cancel_bool','=',True)]}"/>
+					  <!--<button name="gen_report" string="Print " type="object" colspan="1" icon="gtk-print" />-->
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+	
+
+<!-- Primary Cost(CSE)  -->
+  	<record model="ir.ui.view" id="psd_account_debit_primary_cost_form">
+		<field name="name">debit note Primary Cost Form</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+						attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						attrs="{'invisible':[('state','=','done')]}" />
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						attrs="{'invisible':[('state','=','done')]}" />
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+			  <group col="8" colspan="8" >
+				<field name="debit_primary_cost_one2many" widget="one2many_list" nolabel="1" colspan="4" attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="emp_code" readonly="1"/>
+						<field name="emp_name" widget="selection" on_change="fetch_emp_code(emp_name)"/>
+						<field name="amount"/>
+					</tree>
+
+					<form string="Details">
+						<field name="emp_code" readonly="1"/>
+						<field name="emp_name" widget="selection" />
+						<field name="amount"/>
+					</form>
+
+				</field>
+				<label string="" colspan="4"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+
+<!-- Primary Cost(Vehicle) -->
+  	<record model="ir.ui.view" id="psd_account_debit_primary_cost_vehicle_form">
+		<field name="name">Debit Note Primary Cost Vehicle Form</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+			          <button name="save_primary_cost_vehicle" string="Save" type="object" colspan="0.5"
+							  icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+						  attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				  <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+			  <group col="8" colspan="8" >
+				<field name="debit_primary_vehicle_line" widget="one2many_list" nolabel="1" colspan="4"
+					   attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="vehicle_no"/>
+						<field name="emp_code" readonly="1"/>
+						<field name="emp_name" widget="selection" on_change="fetch_emp_code(emp_name)"/>
+						<field name="amount"/>
+					</tree>
+
+					<form string="Details">
+						<field name="vehicle_no"/>
+						<field name="emp_code" readonly="1"/>
+						<field name="emp_name" widget="selection"/>
+						<field name="amount"/>
+					</form>
+
+				</field>
+				<label string="" colspan="4"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+			  </group>
+			</form>
+		</field>
+	</record>	
+
+
+<!-- Primary Cost(Office) -->
+  	<record model="ir.ui.view" id="psd_account_debit_primary_cost_office_form">
+		<field name="name">Debit Primary Cost Office Form</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost_office" string="Save" type="object" colspan="0.5"
+						icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" />
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" />
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+			  <group col="8" colspan="8" >
+				<field name="debit_primary_office_line" widget="one2many_list" nolabel="1" colspan="4"
+					   attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="office_name"/>
+						<field name="amount"/>
+					</tree>
+
+					<form string="Details">
+						<field name="office_name"/>
+						<field name="amount"/>
+					</form>
+
+				</field>
+				<label string="" colspan="4"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+
+<!-- Primary Cost(Phone/Mobile No.)  -->
+  	<record model="ir.ui.view" id="psd_account_debit_primary_cost_phone_form">
+		<field name="name">Debit Primary Cost Vehicle Form</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost_phone" string="Save" type="object" colspan="0.5"
+						icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+			  <group col="8" colspan="8" >
+				<field name="debit_primary_phone_line" widget="one2many_list" nolabel="1" colspan="4"
+					   attrs="{'readonly':[('state','=','done')]}">
+					<tree editable="bottom">
+						<field name="phone_mobile_no"/>
+						<field name="emp_name" widget="selection"/>
+						<field name="amount"/>
+					</tree>
+
+					<form string="Details">
+						<field name="phone_mobile_no"/>
+						<field name="emp_name" widget="selection"/>
+						<field name="amount"/>
+					</form>
+
+				</field>
+				<label string="" colspan="4"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+<!-- Primary Cost(Service) -->
+  	<record model="ir.ui.view" id="psd_account_primary_cost_debit_service_form">
+		<field name="name">Debit Primary Cost Service Form</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost_service" string="Save" type="object" colspan="0.5"
+						icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+
+			  </group>
+				     <group col="8" colspan="8" >
+					<field name="primary_debit_cost_service_one2many" widget="one2many_list" nolabel="1"
+						   colspan="4" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="service_type"/>
+							<field name="amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="service_type"/>
+							<field name="amount"/>
+						</form>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+			</form>
+		</field>
+	</record>
+
+<!-- Primary Cost(CSE Office) -->
+  	<record model="ir.ui.view" id="psd_account_debit_primary_cost_cse_office_form">
+		<field name="name">Primary Cost Payment Form</field>
+		<field name="model">dbit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="8" colspan="8">
+				<button name="save_primary_cost_cse_office" string="Save" type="object"
+						colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+			  </group>
+				     <group col="8" colspan="8" >
+					<field name="debit_primary_cse_office_one2many" widget="one2many_list" nolabel="1"
+						   colspan="4" attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="office_name"/>
+							<field name="emp_code" readonly="1" />
+							<field name="emp_name" widget="selection" on_change="fetch_emp_code(emp_name)"/>
+							<field name="amount"/>
+						</tree>
+
+						<form string="Details">
+							<field name="office_name"/>
+							<field name="emp_code" readonly="1"/>
+							<field name="emp_name" widget="selection" />
+							<field name="amount"/>
+						</form>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+<!-- Outstanding Invoice Grid -->
+  	<record model="ir.ui.view" id="psd_account_debit_against_ref_form">
+		<field name="name">Debit Note Form Line</field>
+		<field name="model">debit.note.line</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 <group col="4" colspan="4">
+				<button name="save_outstanding_invoice" string="Save" type="object" colspan="0.5"
+						icon="gtk-redo" attrs="{'invisible':[('state','=','done')]}"/>
+				<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+					attrs="{'invisible':[('state','=','done')]}"  confirm="Do you want to cancel?"/>
+				<field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="4"/>
+			  </group><newline/>
+			  <group col="4" colspan="4" >
+					<field name="debit_paid_receipt_one2many" widget="one2many_list" nolabel="1"
+						   colspan="3.5" attrs="{'readonly':[('state','=','done')]}" context="{'nocreate':1,'nodelete':1}">
+						<tree editable="bottom" string="Paid receipts details">
+							<field name="check_invoice" string=""/>
+							<field name="invoice_number"/>
+							<field name="invoice_paid_date"/>
+							<field name="invoice_paid_amount" string="Paid Amount"/>
+							<field name="service_classification" />
+							<field name="tax_rate" readonly="1"/>
+							<field name="cse" domain="[('role_selection','=','cse')]"/>
+						</tree>
+
+						<form string="Details">
+							<field name="check_invoice" string=""/>
+							<field name="invoice_number"/>
+							<field name="invoice_date"/>
+							<field name="service_classification" />
+							<field name="tax_rate"/>
+							<field name="invoice_paid_amount" string="Invoice Amount"/>
+							<field name="cse" domain="[('role_selection','=','cse')]"/>
+						</form>
+					</field>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+					<label string="" colspan="0.5"/>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+ 	<record model="ir.ui.view" id="psd_account_debit_note_tree">
+		<field name="name">Debit Note</field>
+		<field name="model">debit.note</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Debit Note" colors="red:debit_amount_srch==0">
+				<field name="debit_note_no"/>
+				<field name="debit_note_date"/>
+				<field name="customer_name"/>
+				<field name="debit_amount_srch" sum="Total"/>
+				<field name="credit_amount_srch" sum="Total"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record model="ir.ui.view" id="psd_account_debit_note_search">
+		<field name="name">Debit Note</field>
+		<field name="model">debit.note</field>
+		<field name="priority" eval="16"/>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Debit Note">
+				<field name="debit_note_no" string="Debit Note No
+"/>
+				<field name="customer_name"/>
+				<field name="customer_id"/>
+				<field name="from_date" string="From Date" filter_domain="[('debit_note_date','&gt;=',self)]"/>
+				<field name="to_date" string="To Date" filter_domain="[('debit_note_date','&lt;=',self)]"/>
+
+				<field name="state" string="Status"/>
+			</search>
+		</field>
+	</record>
+
+ 	
+    </data>
+</openerp>

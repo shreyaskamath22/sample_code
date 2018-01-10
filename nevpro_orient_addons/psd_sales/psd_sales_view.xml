@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_psd_product_quotation_branch">
+            <field name="name">Product quotation</field>
+            <field name="model">psd.sales.product.quotation</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Product Quotation'>
+                    <newline/>                   
+                    <field name="state" widget="statusbar" statusbar_colors='{"new":"red"}'/>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <group colspan="4" col="12">
+                    <group col="6">
+                        <field name="name" colspan="6" readonly="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="delivery_location_id" colspan="6" readonly="1"/>
+                        <field name="request_id" colspan="6" readonly="1"/>
+                        <field name="quotation_validity" colspan="6" 
+                            attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                        <!-- <field name="tax_type" colspan="3" on_change="onchange_tax_type(tax_type)"
+                            attrs="{'readonly':[('state','not in','new')]}"/>
+                        <field name="no_of_service" colspan="3" attrs="{'invisible':[('tax_type','!=','composite')],'readonly':[('state','not in','new')]}"/>
+                        <field name="product_request_id"/> -->
+                        <newline/>
+                        <newline/>
+                        <label string=""/>
+                        <!-- <field name="hospital" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                        <field name="industry" attrs="{'readonly':[('state','not in',['new','pending'])]}"/> -->
+                    </group>
+                    <group col="4">
+                        <field name="quotation_no" colspan="2" readonly="1"/>
+                        <field name="quotation_date" colspan="2" readonly="1"/>
+                        <field name="parent_quotation_no" colspan="2" readonly="1"/>
+                        <field name="parent_quotation_date" colspan="2" readonly="1"/>
+                        <field name="contact_person" readonly="1"
+                            attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                        <field name="user_id" string="Created By" colspan="2" readonly="1"/>
+                        <field name="billing_location_id" required="1" colspan="4"
+                            domain="[('partner_id','=',partner_id)]"
+                            attrs="{'readonly':[('state','not in',['new','pending'])]}" on_change="onchange_billing_location_id(billing_location_id)"/>
+                        <field name="pse_id" colspan="3" 
+                            attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                        <field name="order_created" invisible="1"/>
+                        <field name="quotation_revised" invisible="1"/>
+                        <field name="products" invisible="1"/>
+                        <field name="skus" invisible="1"/>
+                        <field name="territry_manager" invisible="1"/>
+                        <field name="email" invisible="1"/>
+                        <field name="mobile" invisible="1"/>
+                        <field name="designation" invisible="1"/>
+                    </group>
+                	</group>
+                     <notebook colspan="8">
+                        <page string='Product Quotation'>
+                        <field name="psd_sales_ids" nolabel="1" colspan="8" 
+                            context="{'nocreate':1,'nodelete':1}"
+                            attrs="{'readonly':[('state','not in',['new','pending'])]}">
+                            <tree editable="bottom" string="Locations &amp; Products" >
+                                <field name="exempted" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="product_name_id" width="10" required="1" domain="[('psd_sale','=',True)]"/>
+                                <field name="hsn_code"/>
+                  <!--               <field name="sku_name_id" required="1"
+                                       on_change="onchange_sku_name_id(product_name_id,sku_name_id)" domain="[('generic_name','=',product_name_id),('other_type','=','sale')]"/> -->
+                                <field name="track_equipment" invisible="1"/>
+                                <!-- <field name="specification"/> -->
+                                <field name="extended_warranty" invisible="1"
+                                       attrs="{'readonly':[('track_equipment','=',False)]}"/>
+                                <field name="quantity" required="1"/>
+                                <field name="product_uom_id" readonly="1"/>
+                                <!-- <field name="product_mrp"/> -->
+                                <field name="product_basic_rate"/>
+                                <field name="discount" string="Additional Amount" invisible="1"/>
+                                <field name="discounted_amount" readonly="1" string="Total Basic"/>
+<!--                                 <field name="discounted_value" invisible="1"/>
+                                <field name="discounted_price" invisible="1"/> -->
+                                <!-- <field name="vat_id" string="TAX"/> -->
+                                <field name="quotation_no_ref" invisible="1"/>
+                                <field name="batch_number" invisible="1"/>
+                                <field name="manufacturing_date" invisible="1"/>
+                                <field name="cgst_rate"/>
+                                <field name="cgst_amount" invisible="1"/>
+                                <field name="sgst_rate"/>
+                                <field name="sgst_amount" invisible="1"/>
+                                <field name="igst_rate"/>
+                                <field name="igst_amount" invisible="1"/>
+                                <field name="vat_amount" string="Tax Amt" readonly="1"/>
+                                <field name="total_amount" readonly="1"/>
+                            </tree>
+                        </field>
+                        <group>
+                                     <group col="4">
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                     </group>      
+                                    <group col="4">
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="quotation_total_amount" readonly="1"/><newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <field name="tax_one2many" nolabel="1" widget="one2many_list"  context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':True}">
+                                           <tree string="Tax" editable="top">   
+                                               <field name="name" />
+                                               <field name="account_tax_id" invisible="1"/>
+                                               <field name="amount"/>
+                                           </tree>
+                                        </field>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <!-- <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="service_tax_14" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="sb_cess_0_50" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="kk_cess_0_50" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/> -->
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <separator colspan="2"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="subtotal" readonly="1" invisible="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="product_discount" invisible="1" attrs="{'readonly':[('state','in',('quoted','revised','lost','ordered'))]}"/><newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="product_discount_amount" readonly="1" invisible="1"/>
+                                        <newline/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="quotation_grand_total" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                    </group>
+                                    <newline/>
+                                    
+                                </group>
+                        <newline/>
+                                                
+                        </page>
+                        <page string='Commercial Terms'>
+                            <group col="4" colspan="4" attrs="{'readonly':[('state','not in',['new','pending'])]}">
+                                <field name="payment_terms" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                                <field name="transportation" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                                <newline/>
+                                <field name="bank_charges" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                                <field name="despatch_schedule" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>      
+                                <field name="warranty" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                                <field name="installation" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                                <newline/>
+                                <field name="octroi" attrs="{'readonly':[('state','not in',['new','pending'])]}"/>
+                            </group>
+                        </page> 
+
+                         <page string='Quotation History'>
+                            <field name="quotation_history_id" widget="one2many_list" nolabel="1" context="{'nocreate':1,'nodelete':1}" readonly="1">
+                                <tree editable="bottom">
+                                    <field name="quotation_date"/>
+                                    <field name="quotation_number" string="Previous Quotation Number"/>
+                                    <field name="quotation_amount"/>
+                                    <field name="previous_quotation_number" invisible="1"/>
+                                    <field name="quotation_history_lines_id" invisible="1"/>
+                                </tree>
+                                <form>
+                                    <field name="quotation_date"/>
+                                    <field name="quotation_number" string="Previous Quotation Number"/>
+                                    <field name="quotation_amount"/>
+                                    <field name="previous_quotation_number" invisible="1"/>
+                                    <field name="quotation_history_lines_id" invisible="1"/>
+                                </form>
+                            </field>
+                        </page>
+                        <page string='Notes'>
+                            <field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="8" readonly="1">
+                           <tree string="Remarks">
+                                <field name="user_name"/>
+                                <field name="date"/>
+                                <field name="source"/>
+                                <field name="name"/>
+                            </tree>
+                            <form>
+                                    <group col="4" colspan="6">
+                                        <group>
+                                        <field name="user_name" />
+                                        </group>
+                                        <group>
+                                        <field name="source"/>
+                                        </group>
+                                        <group>
+                                        <field name="date"/>
+                                        </group>
+                                        </group>
+                                        <field name="name"/>
+                            </form>
+                        </field>
+                            <group col="8" colspan="8"> 
+                            <field name="notes" colspan="4"/>
+                            <button name="psd_post_notes" string="Add Notes"  type="object"  colspan="1" /> 
+                            <label string="" colspan="3"/>
+                            </group>
+                        </page>                      
+                    </notebook> 
+                    <group colspan="2" col="2">
+                        <group colspan="1">
+                        <field name="quotation_lost" attrs="{'readonly':[('state','=','lost')],'invisible':[('state','not in',('quoted','lost'))]}" colspan="1"/>
+                        <newline/>
+                        <field name="reason_for_lost" colspan="2" attrs="{'invisible':[('quotation_lost','=',False)],'required':[('quotation_lost','=',True)],'readonly':[('state','=','lost')]}"/>
+                        </group>
+                         <label string="" colspan="1"/>
+                        <button name="lost" type="object" string="Quotation Lost" icon="add" attrs="{'invisible':['|',('quotation_lost','=',False),('state','=','lost')]}" colspan=".5"/>
+                        <button name="calculate_sales_quotation" type="object" string="Calculate" attrs="{'invisible':[('state','not in',['new','pending'])]}" colspan=".5"/>
+                        <button name="cancel_quotation" type="object" string="Cancel" attrs="{'invisible':[('state','!=','new')]}" confirm="This Quotation will be deleted" colspan=".5"/>
+                        <button name="generate_quotation" type="object" string="Generate Quotation" attrs="{'invisible':[('state','!=','pending')]}" colspan=".5" confirm="Are you sure you want to generate Product Quotation?"/>
+                        <field name="allow_logo" attrs="{'invisible':[('state','in',('new','pending'))]}"/>
+                        <label string="" colspan="4"/>
+                        <label string="" colspan="4"/> 
+                        <label string="" colspan="4"/>
+                        <label string="" colspan="4"/>                        
+                        <button name="print_quotation" type="object" string="Print Quotation" 
+                                attrs="{'invisible':[('state','in',('new','pending'))]}" colspan=".5"/>
+                        <button name="revise_quotation" type="object" string="Revise Quotation" attrs="{'invisible':['|',('state','!=','quoted'),'|',('quotation_revised','=',True),('order_created','=',True)]}" colspan=".5"/>
+                        <button name="generate_sales_product_order" type="object" string="Create Order" attrs="{'invisible':['|',('state','!=','quoted'),'|',('quotation_revised','=',True),('order_created','=',True)]}" colspan=".5" confirm="Are you sure you want to generate Product Order?"/>
+                </group>
+                   
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="action_psd_product_quotation_branch">
+            <field name="name">Product Quotation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">psd.sales.product.quotation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_psd_product_quotation_branch"/>
+        </record>
+
+        <record id="sale_customer_form_psd" model="ir.ui.view">
+            <field name="name">sale.customer.form.psd</field>
+            <field name="model">sale.customer.master</field>
+            <field name="inherit_id" ref="sales_branch.sale_customer_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="cse"]' position='attributes'>
+                 <attribute name="string">CSE/PSE</attribute>
+              </xpath>
+              <xpath expr='//field[@name="pms"]' position='attributes'>
+                 <attribute name="string">PMS/SKU Name</attribute>
+              </xpath>
+              <xpath expr='//field[@name="contract_no"]' position='attributes'>
+                 <attribute name="string">Order No</attribute>
+              </xpath>
+              <xpath expr='//field[@name="main_cse"]' position='attributes'>
+                 <attribute name="string">CSE/PSE</attribute>
+              </xpath>
+            </field>
+        </record>
+
+</data>
+</openerp>

@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+        <record id="complaint_request_form_psd" model="ir.ui.view">
+            <field name="name">complaint.request.form</field>
+            <field name="model">product.complaint.request</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Product Complaint Request">
+                  <group>
+                      <newline/>
+                      <separator colspan="4"/> 
+                      <field name="state" widget="statusbar" 
+                             statusbar_colors='{
+                              "new":"red",
+                              "opened":"blue",
+                              "resource_assigned":"blue",
+                              "closed":"grey"}'/>
+                      <newline/>                      <separator colspan="4"/>
+                      <label string="" colspan="4"/>
+                      <group col='10' colspan='5'>
+                        <field name="active" invisible="1"/>
+                        <field name="parent_request" invisible="1"/>
+                        <field name="call_type" attrs="{'readonly':[('state','!=','new')]}"/>
+                        <field name="requested_date" readonly="1" string="Request Date"/>
+                         <field name="closed_date" invisible="1"/>
+                        <field name="created_by" readonly="1"/>
+                        <field name="customer_type" readonly="1"/>
+                        <field name="complaint_request_id" readonly="1" 
+                               attrs="{'invisible':[('complaint_request_id','=',False)]}"/>
+                        <field name="request_type" invisible="1"/>
+                        <field name="location_branch" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                      </group>
+                    <group col='6' colspan='3'>
+                      <notebook>
+                        <page string="Product Complaint Request">
+                          <group col='8' colspan='4'>
+                            <field name="customer" colspan="4" 
+                                   attrs="{'readonly':[('state','!=','new')]}"/>
+                            <button name="customer_search_pop_up" type="object" 
+                                    string="Search" icon="srh" colspan="0.1"
+                                    attrs="{'invisible':[('state','!=','new')]}"/>
+                            <label string="" colspan="2"/>
+                            <field name="customer_id" colspan="2" readonly="1" 
+                                   attrs="{'invisible':[('customer_type','=', 'new')]}"/>
+                            <field name="partner_id" invisible="1"/>
+                          </group>
+                          <group col='10' colspan='5' attrs="{'invisible':[('customer_type','=', 'existing')]}">
+                            <newline/>
+                            <button string="Add locations" name="add_new_complaint_locations" type="object" 
+                                    colspan=".5" icon="batch_add"
+                                    attrs="{'invisible':[('state','!=', 'new')]}"/>
+                            <label string="" colspan="9"/>
+                            <newline/>
+                          </group>
+                          <group col='8' colspan='4'>
+                            <label string="" colspan="8"/>
+                            <newline/>
+                            <field name="complaint_line_ids" nolabel="1"
+                                   attrs="{'readonly':[('state','!=','new')]}">
+                              <tree editable="top" string="Locations &amp; Products">
+                                <field name="company_id" invisible="1"/>
+                                <field name="customer_type" invisible="1"/>
+                                <field name="location_id" domain="[('complaint_id','!=',False),('complaint_id','=',parent.id)]" 
+                                       on_change="onchange_location_id(location_id)" required="1"/>
+                                <field name="product_id" required="1" domain="[('other_type','=','sale'),('product_state','=','in_use'),('psd_sale','=',True)]"/>
+                                <field name="batch_no" domain="[('name','=',product_id)]" on_change="onchange_batch(batch_no)"/>
+                                <field name="mfg_date"/>
+                                <field name="contact_person"/>
+                                <field name="phone_number"/>
+                                <field name="loc_contact_id" domain='[("complaint_id", "=", parent.id)]' invisible="1"/>
+                                <field name="loc_phone_id" invisible="1"
+                                       domain='[("complaint_request_id","!=",False),("complaint_request_id", "=", parent.id)]'/>
+                                <field name="pci_office" required="1" attrs="{'readonly':[('customer_type','=', 'existing')]}"/>
+                                       <!-- domain="['|',('establishment_type','=','psd'),('id','=',company_id)]" -->
+                                <field name="remark"/>
+                                <field name="complaint_request_ref" invisible="1"/>
+                              </tree>
+                            </field>
+                          </group>
+                          <group col='8' colspan='2' attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                                              ('cancel_request','=',True)]}">
+                              <field name="employee_id" colspan="4" 
+                                     attrs="{'invisible':[('state','in',['new','cancel'])],
+                                            'readonly':[('state','in',['resource_assigned','closed'])]}"/> 
+                              <button string="Assign Resource" name="assign_resource" type="object" colspan=".5" 
+                                      attrs="{'invisible':['|',('state','!=','opened'), ('employee_id','=',False)]}"/>
+                              <label string="" colspan="8"/> 
+                          </group>
+                            <group col="5" colspan="4" 
+                                 attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                          ('state','in',['new','resource_assigned','closed',
+                                                                         'quotation','order'])]}">
+                                <group colspan="1">
+                                     <field name="cancel_request" 
+                                            attrs="{'invisible':[('state','=','cancel')]}"/>
+                                </group>
+                                <field name="cancellation_reason" colspan="1.5"
+                                       attrs="{'invisible':[('cancel_request','=',False)],
+                                               'readonly':[('state','=','cancel')]}"/>  
+                                <label string="" colspan=".5"/>     
+                                <button string="Cancel Request" name="cancel_complaint_request" type="object"
+                                        attrs="{'invisible':['|',('cancel_request','=',False),('state','=','cancel')]}" 
+                                        colspan=".5"/> 
+                                <label string="" colspan="3"/> 
+                            </group>
+                            <group col="5" colspan="3">
+                              <field name="resolution" colspan="2" 
+                                     attrs="{'invisible':[('state','not in',['resource_assigned','closed'])],
+                                             'readonly':[('state','=','closed')]}"/>
+                              <label string="" colspan="2"/> 
+                            </group> 
+                            <group col="4" colspan="2">
+                              <group colspan="0.5" >
+                                <button name="process_complaint_request" type="object" 
+                                        string="Process" attrs="{'invisible':[('state','in',['opened','closed','cancel'])]}"/>
+                              </group>
+                              <group colspan=".5">
+                                <button name="close_complaint_request" string="Close"
+                                        type="object" attrs="{'invisible':[('state','=','cancel')]}"/>  
+                              </group>
+                              <group colspan=".5">
+                                <button name="product_complaint_request_cancel" string="Cancel"
+                                        confirm="This Product Complaint request will be deleted!"
+                                        type="object" attrs="{'invisible':[('state','!=','new')]}"/>  
+                              </group>
+                              <label string="" colspan="4"/>
+                             </group>          
+                        </page>
+                        <page string="Notes">
+                                <field name="notes_line" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+                                    <tree string="Comments">
+                                        <field name="user_id"/>
+                                        <field name="state" invisible="0"/>
+                                        <field name="comment_date"/>
+                                        <field name="comment"/>
+                                        <field name="complaint_request_ref" invisible="0"/>
+                                    </tree>
+                                </field>
+                                <newline/>
+                                <separator string="" colspan="4"/>
+                                <group col="8" colspan="8">
+                                        <field name="comment_remark" colspan="4"/>
+                                        <button string="Add Notes" name="new_post_comment" type="object" colspan="1"/>
+                                        <label string="" colspan="3"/>
+                                </group>
+                            </page>
+                      </notebook>
+                    </group>
+                  </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="complaint_request_tree_psd" model="ir.ui.view">
+            <field name="name">complaint.request.tree.psd</field>
+            <field name="model">product.complaint.request</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Complaint Request">
+                    <field name="active"/>
+                    <field name="complaint_request_id"/>
+                    <field name="customer"/>
+                    <field name="requested_date"/>
+                    <field name="customer_id"/>
+                    <field name="customer_type"/>
+                    <field name="created_by"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+		   <record model="ir.actions.act_window" id="search_complaint_request_psd">
+                  <field name="name">Product Complaint Request</field>
+                  <field name="res_model">product.complaint.request</field>
+                  <field name="view_type">form</field>
+                  <field name="view_mode">form,tree</field>
+                  <field name="view_id" ref="complaint_request_form_psd"/>
+                  <field name="context">{
+                      'hide_create_quotation':True,
+                      'nodelete': 0,
+                      'noselect': 0,
+                      'noduplicate':1
+                  }</field>
+        </record>
+
+       <menuitem id="ccc_branch_info_req_cid_psd" 
+                 name="Product Complaint Request" 
+                 action="search_complaint_request_psd" 
+                 parent="ccc_info_req_psd_crm2"
+                 sequence="2"
+                 />
+
+    </data>
+</openerp>

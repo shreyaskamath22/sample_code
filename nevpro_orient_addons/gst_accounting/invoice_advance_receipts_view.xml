@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="invoice_advance_receipts_form" model="ir.ui.view">
+            <field name="name">invoice.advance.receipts.form</field>
+            <field name="model">invoice.advance.receipts</field>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Advance Receipts">
+                    <field name="invoice_id" invisible="1"/>
+                    <group col='10' colspan='5'>
+                        <field name="adv_receipt_line_ids" nolabel="1" colspan="8" 
+                               context="{'nocreate':0,'nodelete':1}">
+                          <tree editable="top">
+                                <field name="in_adv_rep_id" invisible="1"/> 
+                                <field name="select_receipt_bool"/>
+                                <field name="receipt_id" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="receipt_date" readonly="1"/>
+                                <field name="cse" readonly="1"/>
+                                <field name="advance_pending" sum="Total" readonly="1"/>
+                                <field name="invoice_adjustment_amount" sum="Total"/> 
+                          </tree>
+                        </field>
+                  	</group>
+                    <group col="4">
+                          <button name="save_advance_receipt_details" type="object" 
+                                string="Process" colspan="0.5" icon="gtk-apply"/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                    </group>  
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

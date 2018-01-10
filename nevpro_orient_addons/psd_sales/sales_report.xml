@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="report_psd_product_quotation" model="psd.sales.product.quotation" name="Sales Quotation" rml="psd_sales/report/product_quotation.rml" string="Product Quotation"
+                usage="default"/>
+
+    </data>
+</openerp>

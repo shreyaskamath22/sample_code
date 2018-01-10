@@ -1,0 +1,712 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+		<record id="stock_transfer_order_form_inherit" model="ir.ui.view">
+			<field name="name">Stock Transfer</field>
+			<field name="model">stock.transfer</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="sk.stock_transfer_order_form"/>
+			<field name="arch" type="xml">
+				<field name="state" widget="statusbar" statusbar_colors='{"done":"grey","assigned":"green","confirmed":"purple","draft":"red","progress":"orange","cancel":"black"}' position="replace">
+					<field name="state" widget="statusbar" statusbar_visible="draft,assigned,confirmed,progress,cancel,done" statusbar_colors='{"done":"grey","assigned":"green","confirmed":"purple","draft":"red","progress":"orange","cancel":"black"}'/>
+				</field>
+			</field>
+		</record>
+
+
+
+
+        <record id="stock_transfer_order_management_tree" model="ir.ui.view">
+			<field name="name">Delivery Order</field>
+			<field name="model">stock.transfer</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+			  <tree string="Warehouse side" colors="red:state=='draft';green:state=='assigned';purple:state=='confirmed';grey:state=='invoiced';orange:state=='delivered';black:state=='cancel';">
+			  		<field name="stock_transfer_no" string="Delivery Order Number"/>
+			  		<field name="stock_transfer_date_new" string="Delivery Order Date"/>
+			  		<field name="customer_name" string="Customer Name"/>
+			  		<field name="sale_order_no" string="Product Order No."/>
+			  		<field name="expected_delivery_date" string="Expected Delivery Date"/>
+			  		<field name="delivery_challan_no" string="Delivery Note No"/>
+					<field name="delivery_challan_date" string="Delivery Note Date"/>
+			  		<field name="pse" string="PSE Name"/>
+			  		<field name="origin" invisible="1"/>
+					<!--<field name="invoice_no"/>-->
+					<field name="stock_transfer_note_no" invisible="1"/>
+			  		<!-- <field name="date"/> -->
+			  		<field name="delivery_type" invisible="1"/>
+			  		<field name="total_amount"/>
+			  		<field name="state"/>
+			  		<field name="msg_check" invisible="1"/>
+			  		<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check','=',False)]}"/>
+			  </tree>
+			</field>
+		</record> 
+
+
+	<record id="stock_transfer_order_management_search" model="ir.ui.view">
+			<field name="name">Stock Transfer Search</field>
+			<field name="model">stock.transfer</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+			  <search string="Stock Transfer">
+                <field name="stock_transfer_no" string="Delivery Order No"/>
+				<field name="delivery_date" widget="date_time" string="Date From" filter_domain="[('stock_date','&gt;=',self)]"/>
+				<field name="delivery_date" widget="date_time" string="Date To" filter_domain="[('stock_date','&lt;=',self)]"/>
+				<field name="customer_name" string="Customer Name"/>
+				<field name="delivery_challan_no" string="Delivery Note No"/>
+		
+				<field name="road_permit_no" string="Way Bill No"/>
+				<field name="web_order_number" string="Web Order No"/>
+				<field name="expected_delivery_date" widget="date_time" string="Ex. Delivery Date From" filter_domain="[('expected_delivery_date','&gt;=',self)]"/>
+				<field name="expected_delivery_date" widget="date_time" string="Ex. Delivery Date To" filter_domain="[('expected_delivery_date','&lt;=',self)]"/><newline/>
+				<!-- <field name="delivery_location"/> -->
+				<!--<field name="invoice_no"/>-->
+				<!-- <field name="stock_transfer_note_no"/> -->
+				<newline/>
+				<field name="pse"/>
+				<field name="sale_order_no" string="Product Order No"/>
+				<!-- <field name="delivery_type" string="Stock Transfer Type"/> -->
+				<field name="state" string="Status"/>
+				<field name="branch_name" string="Godown"/>
+				<!-- <field name="psd_indent_number" string="Indent No."/> -->
+              </search>
+			</field>
+		</record>
+	<!--  Delivery Type, STN No., Delivery Challan No, Invoice No.  -->
+
+	<record id="stock_transfer_order_management_form" model="ir.ui.view">
+			<field name="name">Stock Transfer Order</field>
+			<field name="model">stock.transfer</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			  <form string="Stock Transfer">
+			  	<newline/>
+			  	<group col='6' colspan='6' attrs="{'invisible':['|',('invisible_create_indent','!=',True),('state','!=','draft')]}">
+	                <html>
+                        <center><h3 style="color:green">"Indent has been Created for this consignment".</h3></center>
+                    </html> 
+          		</group>
+          		<newline/>
+          		<group attrs="{'invisible':[('state','!=','invoiced')]}">
+                            <html>
+                               <center><h3 style="color:green">"Invoice Preview has been created for this Delivery Order under Accounting Module".</h3></center>
+                            </html> 
+                </group>
+                <newline/>
+				<field name="state" widget="statusbar" statusbar_visible="draft,assigned,confirmed,invoiced,delivered,cancel" statusbar_colors='{"invoiced":"grey","assigned":"green","confirmed":"purple","draft":"red","delivered":"orange","cancel":"black"}'/>
+				<newline/>
+				<group colspan="4" col="8">
+                <group col="4">
+                    <field name="create_bool" invisible="1"/>
+                    <field name="origin" invisible="1"/>
+                    <!-- <field name="date" readonly="1"/>  -->
+
+                    <field name="customer_name" attrs="{'invisible':[('delivery_type','in',('direct_sales','internal_delivery','free_sample_delivery','calibration'))]}" readonly="1" colspan="4"/>
+
+                    <field name="psd_contact_person"  readonly="1" colspan="2"/>
+                    <field name="contact_no" readonly="1" colspan="2"/>
+
+                    <field name="contact_person" on_change="onchange_partner(contact_person)" colspan="3" invisible="1"/>
+                    <field name="delivered_by"  invisible="1"/>
+
+                    <field name="branch_name" on_change="onchange_branch_name(branch_name)" required="1" domain="[('godown_check','=',True)]" colspan="4" attrs="{'readonly':[('state','!=','draft')]}"/>
+
+                    <field name="pse" colspan="2" attrs="{'readonly':[('state','not in',('draft','assigned'))]}" required="1"/>
+                    <field name="bird_pro" colspan="2" readonly="1" attrs="{'invisible':[('bird_pro','=',False)]}"/>
+                    <field name="against_form"  readonly="1" colspan="2" invisible="1"/>
+                    <field name="against_free_replacement" readonly="1" colspan="2" invisible="1"/>
+                    <field name="is_received" attrs="{'invisible':[('against_form','=',False)]}" colspan="2"/>
+                    <field name="reference_id" attrs="{'required':[('is_received','=',True)],'invisible':[('is_received','=',False)]}" colspan="2"/>
+
+                    <field name="delivery_address" readonly="1" string="Delivery Location" colspan="3"/>
+                    <field name="delivery_mechanism" invisible="1"/>
+                    <field name="supplier_challan_no" attrs="{'invisible':[('delivery_mechanism','!=','supplier_delivery')],'required':[('delivery_mechanism','=','supplier_delivery')]}"/>
+                    <field name="supplier" attrs="{'invisible':[('delivery_mechanism','!=','courier')]}" colspan="2" on_change="onchange_supplier(supplier)"/>
+                    <field name="docket_no" attrs="{'invisible':[('delivery_mechanism','!=','courier')]}" colspan="2"/>
+                    <field name="supplier_address" attrs="{'invisible':[('delivery_mechanism','!=','courier')]}"  colspan="4"/>
+                   
+                   
+                    
+                    <label string="" colspan="1"/>
+
+                    <field name="dispatcher_address" invisible="1"/>
+                    <field name="packlist_no1" attrs="{'invisible':[('state','!=','assigned')]}" readonly="1" invisible="1"/>
+                    <field name="packlist_date1" attrs="{'invisible':[('state','!=','assigned')]}" readonly="1" invisible="1"/>
+                    <field name="delivery_type" invisible="1" />
+                    <field name="delivery_location" string="Requester" invisible="1" />
+                    <field name="delivery_loc_state" invisible="1" />
+                    <!-- attrs="{'invisible':[('delivery_type','not
+in',('direct_sales'))]}" -->
+                    <!--<field name="customer"
+attrs="{'invisible':['|',('delivery_type','in',('direct_sales','internal_delivery')),('create_bool','!=',True)]}"
+readonly="1"/>-->
+                    <field name="psd_order_management" invisible="1"/>
+                    <field name="permit_box" invisible="1"/>
+                    <field name="source" on_change="nsd_source_change(source)" invisible="1"/>
+                    <field name="company_address" invisible="1"/>
+                    <field name="delivery_type_char" invisible="1"/>
+                    <field name="customer_vat_tin" invisible="1"/>
+                    <field name="customer_cst_no" invisible="1"/>
+                    <field name="invisible_create_indent" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="stock_id" invisible="1"/>
+                    <field name="msg_check_fields" invisible="1"/>
+                    <field name="batch_edit" invisible="1"/>
+                    <field name="is_track_equipment" invisible="1"/>
+                    <field name="is_nsd_bhiwandi" invisible="1"/>
+                </group>
+                <group col="4">
+
+                    <field name="stock_transfer_no" string="Delivery Order Number" colspan="2" readonly="1"/>
+                    <field name="stock_transfer_date_new" string="Delivery Order Date" readonly="1" colspan="2"/>
+
+                    <field name="sale_order_no" readonly="1" colspan="2" string="Product Order No"/>
+                    <field name="sale_order_date" readonly="1" colspan="2" string="Product Order Date"/>
+
+                    <field name="delivered_ref_id" readonly="1" colspan="2" invisible="1"/>
+                    <field name="delivered_ref_date" readonly="1" colspan="2" invisible="1"/>
+
+                    <field name="psd_indent_number" readonly="1" colspan="2" invisible="1"/>
+                    <field name="psd_indent_date" readonly="1" colspan="2" invisible="1"/>
+
+                    <field name="po_no" readonly="1" colspan="2"/>
+                    <field name="po_date"  readonly="1" colspan="2"/>
+
+                    <field name="web_order_number" readonly="1" colspan="2"/>
+                    <field name="web_order_date" readonly="1" colspan="2"/>
+
+                    <!-- <field name="billing_location" readonly="1" colspan="2"/> -->
+                    <field name="expected_delivery_date"  readonly="1" colspan="2"/>
+                    <field name="billing_location_id" domain="[('partner_id','=',partner_id)]" readonly="1" invisible="1"/>
+
+
+                </group>
+            </group>
+				<newline/>
+				<notebook colspan="8">
+					<page string="General Information">
+						<field name="stock_transfer_product" widget="one2many_list" nolabel="1"  on_change="onchange_stock_transfer_line(stock_transfer_product)" context="{'nodelete':1,'branch_name': branch_name,'active_id':active_id}" >
+							<form string="Product List">
+								<notebook>
+									<page string="Product List">
+									  <group colspan="4">
+									  	<field name="act_id" invisible="1"/>
+										<field name="product_name" required="1" domain="[('check_batch','=',True),('quantity_available','>',0),('product_state','!=','unusable')]" on_change="onchange_prod_name1(product_name,act_id)"/> 
+										<field name="is_track_equipment" invisible="1"/>
+										<field name="specification" readonly="1"/>
+										<field name="godown"  domain="[('godown_check','=',True)]" 
+											 readonly="1"/>
+										<field name="generic_id"  widget="selection" on_change="onchange_product_generic(product_name)"/> 
+										<field name="product_category" on_change="onchange_product_category(product_name,product_category,product_category_invisible)"/>
+										<field name="quantity_old" invisible="1"/>
+										<field name="batch_old" invisible="1"/>
+										<field name="product_code" on_change="onchange_product_code(product_name,product_code,product_code_invisible)"/>
+										<field name="product_uom" on_change="onchange_product_uom(product_name,product_uom,product_uom_invisible)"/>
+										<field name="batch" on_change="onchange_batch1(batch,batch_char,batch_invisible,quantity_old,batch_old)" required="1" domain="[('name','=',product_name),('branch_name','=',godown)]"/>
+										<field name="batch_ok" invisible="1"/>
+										<field name="available_quantity" on_change="onchange_available_quantity(available_quantity,available_quantity_invisible)"/>
+										<field name="category_check" invisible="1"/>
+										<field name="rate" on_change="onchange_st_rate(rate,quantity,rate_invisible,product_name)" string="Rate" readonly="1"/>
+										<field name="local_rate" on_change="onchange_rate(local_rate,quantity)" invisible="1"/>
+										<field name="batch_char" invisible="1"/>
+										<field name="mfg_date" invisible="1"/>
+										<field name="rate_invisible" invisible="1"/>
+										<field name="quantity" on_change="psd_onchange_quantity(product_name,batch,quantity,available_quantity,rate,discount,tax_id)"/>
+										<field name="qty_indent"/>
+										<field name="batch_invisible" invisible="1"/>
+										<field name="product_code_invisible" invisible="1"/>
+										<field name="product_category_invisible" invisible="1"/>
+										<field name="product_uom_invisible" invisible="1"/>
+										<field name="available_quantity_invisible" invisible="1"/>
+										<field name="amount" invisible="1"/>
+										<field name="serial_check_visible" invisible="1"/>
+										<field name="cost_price" invisible="1"/>
+										<field name="mrp" invisible="1"/>
+										<field name="dist_price" invisible="1"/>
+										<field name="export_price" invisible="1"/>
+										<field name="pmdc_price" invisible="1"/>
+										<field name="st_price" invisible="1"/>
+										<field name="discount" invisible="1"/>
+										<field name="tax_id" invisible="1"/>
+										<field name="tax_amount" invisible="1"/>
+										<field name="discounted_amount" invisible="1"/>
+										<field name="state" invisible="1"/>
+									  </group>
+									   <group colspan="8" col="8">
+									   	<field name="serial_number" readonly="1"/>
+									 	<!-- <field name="serial_number" attrs="{'invisible':[('is_track_equipment','!=',True)]}"/> -->
+									 </group><newline/>
+
+									<separator string="Pakaging Details" colspan="4"/>
+									<group colspan="4" col="8">
+										<newline/>
+										<field name="pakaging_details_manual" colspan="0.5" />
+										<field name="carton_no" attrs="{'readonly':[('pakaging_details_manual','=',False)]}"/>
+										<field name="carton_type" attrs="{'readonly':[('pakaging_details_manual','=',False)]}"/>
+										<field name="contained" attrs="{'readonly':[('pakaging_details_manual','=',False)]}"/>
+										<field name="order_by_group" attrs="{'readonly':[('pakaging_details_manual','=',False)]}" />
+									 </group>
+								<!-- 	<separator string="Attach Serial" colspan="4" attrs="{'invisible':[('is_track_equipment','!=',True)]}"/> 
+									  <group colspan="4">
+										<field name="serial_line" nolabel="1" attrs="{'invisible':[('is_track_equipment','!=',True)]}">
+											<tree string="Serial Line" editable="bottom">
+												<field name="serial_no" required="1" on_change="onchange_serial(serial_no)" domain="[('product_name','=',parent.product_name),('quantity','=',1)]"/>
+											</tree>
+										</field>
+									  </group> -->
+                                      <separator string="" colspan="4"/>
+  									  <group colspan="4" col="4" >
+												<field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="3">
+														<tree string="Comments">
+															<field name="user_id"/>
+															<field name="source"/>
+															<field name="comment_date"/>
+															<field name="comment"/>
+														</tree>
+														<form string="Comments">
+															<field name="user_id" invisible="1"/>
+															<field name="source" invisible="1"/>
+															<field name="comment_date" invisible="1"/>
+															<field name="comment"/>
+														</form>
+												</field>
+											</group>
+											<newline/>
+									</page>
+								</notebook>
+							</form>
+							<tree string="Product List">
+								<field name="product_code" invisible="1"/>
+								<field name="product_name"/>
+								<field name="generic_id"  widget="selection" on_change="onchange_product_generic(product_name)"/> 
+								<field name="product_category"/>
+								<!-- <field name="specification" readonly="1"/> -->
+								<field name="product_uom"/>
+								<field name="extended_warranty" invisible="1"/>								
+								<field name="godown" invisible="1"/>
+								<field name="batch" domain="[('batch_no','=',product_name.batch),('branch_name','=',godown)]"/>
+								<field name="mfg_date"/>
+								<!-- <field name="available_quantity"/> -->
+								<!-- <field name="quantity" string="Allocated Quantity"/> -->
+								<field name="qty_indent" string="Qty"/>
+								<field name="rate" string="Rate"/>
+								<field name="additional_amt" string="Additional amount"/>
+								<field name="amount" readonly="1"/>
+								<!-- <field name="local_rate" string="Rate" invisible="1"/> -->
+<!-- 								<field name="tax_id" invisible="1"/>
+                                <field name="tax_amount" readonly="1"/>
+                                <field name="discounted_value" invisible="1"/>
+                                <field name="discount" invisible="1"/>
+                                <field name="discounted_price" invisible="1"/>
+								<field name="amount" string="Total Amount"/>
+								<field name="carton_no" sum="Total"/>
+								<field name="carton_type"/> -->
+                               	<field name="sgst_rate"/>
+                               	<field name="cgst_rate"/>
+                               	<field name="igst_rate"/>
+                               	<field name="sgst_amount" invisible="1"/>
+                               	<field name="cgst_amount" invisible="1"/>
+                               	<field name="igst_amount" invisible="1"/>
+                               	<field name="gst_amount"/>
+                               	<field name="tot_amount"/>
+								<field name="state"/>
+								<field name="contained"  invisible="1"/>
+								<field name="order_by_group" invisible="1"/>
+								<!-- <field name="origin" invisible="1"/> -->
+								<!-- <field name="state"/> -->
+								<field name="cancel_box" invisible="1"/>
+								<field name="prepare_cancel" invisible="1"/>
+								<button icon='gtk-cancel' name="cancel_order" type="object" confirm="Are You sure to Cancel the request for selected Item ?" readonly="1" attrs="{'invisible':['|',('cancel_box','=',True),('prepare_cancel','=',True)]}"/>
+								<field name="msg_check_read" invisible="1"/>
+								<field name="msg_check_unread" invisible="1"/>
+								<button icon='create' name="show_notes" type="object" attrs="{'invisible':['|',('msg_check_read','!=',False),('msg_check_unread','!=',False)]}" />
+					   			<button icon='read-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_read','=',False)]}"/>
+					   			<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_unread','=',False)]}"/>
+							</tree>
+						</field>
+						<!-- ############################################################################## -->
+						<newline/>
+						<!-- <field name="stock_transfer_product1" widget="one2many_list"  context="{'nodelete':1}" nolabel="1" attrs="{'invisible':[('state','in',('draft','assigned','cancel','done'))]}">
+							<tree string="Product List" editable="top">
+								<field name="product_name" readonly="1"/>
+								<field name="product_uom" readonly="1"/>
+						 -->		<!-- <field name="batch" readonly="1"/> -->
+						<!-- 		<field name="mfg_date" readonly="1"/>
+								<field name="quantity" string="Allocated Quantity" readonly="1"/>
+								<field name="rate" string="Rate" readonly="1"/>
+								<field name="local_rate" string="Rate" invisible="1"/>
+								<field name="amount" readonly="1"/>
+								<field name="carton_no" sum="Total"/>
+								<field name="carton_type"/>
+								<field name="contained"/>
+								<field name="order_by_group"/>
+							</tree>
+						</field>
+ -->
+<!-- ############################################################################################################# -->
+						<separator string="" colspan="8" />
+						<group>
+							<group col="4">
+                                <label string="" colspan="1"/>
+                                <label string="" colspan="1"/>
+                                <label string="" colspan="1"/>
+                                <label string="" colspan="1"/>
+                                <label string="" colspan="1"/>
+                            </group> 
+							<group col="4" colspan="1">
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <!-- <field name="product_cost" readonly="1"/><newline/> -->
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <newline/>
+								<!-- <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <field name="total_vat" readonly="1"/><newline/>
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <newline/> -->
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <field name="bird_pro_charge" readonly="1" attrs="{'invisible':[('bird_pro','=',False)]}"/><newline/>
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <newline/>
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+                                <field name="tax_one2many" nolabel="1"  invisible="1" widget="one2many_list" context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':True}">
+                                   <tree string="Tax" editable="top">   
+                                       <field name="name" />
+                                       <field name="amount"/>
+                                       <field name="account_tax_id" invisible="1"/>
+                                   </tree>
+                                </field><newline/>
+	                            <label string="" colspan="2"/><label string="" colspan="1"/>
+                                <newline/>
+								<!-- <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <field name="total_st" readonly="1"/><newline/>
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <newline/> -->
+								<label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <field name="total_amount" string="Grand Total" readonly="1"/><newline/>
+	                            <label string="" colspan="1"/><label string="" colspan="1"/>
+	                            <newline/>
+							</group>
+						</group>
+					</page>
+					<page string="Transport Details" attrs="{'invisible':[('state','=','draft')]}">
+						<group col="4" colspan="4">
+								<field name="total_weight" attrs="{'readonly':[('state','not in',('assigned','confirmed'))]}" string="Total weight in kg.(Actual)"/>
+								<field name="estimated_value" attrs="{'readonly':[('state','not in',('assigned','confirmed'))]}" invisible="1"/>
+								<field name="freight_amount" invisible="1"/>
+								<field name="mode_transport" attrs="{'required':[('state','=','assigned')]}"/>
+								<field name="person_name" attrs="{'readonly':[('mode_transport','=','hand_delivery')]}" string="Delivered By"/>
+								<field name="transporter" attrs="{'readonly':[('mode_transport','=','hand_delivery')]}"/>
+								<field name="vehicle_no" attrs="{'readonly':['|',('mode_transport','=','hand_delivery'),('state','not in',('assigned','confirmed'))]}"/>
+								<field name="driver_name" attrs="{'readonly':['|',('mode_transport','=','hand_delivery'),('state','not in',('assigned','confirmed'))]}"/>
+								<field name="mobile_no" attrs="{'readonly':[('state','not in',('assigned','draft','confirmed'))]}"/>
+								<field name="lr_no"/>
+								<field name="lr_date"/>
+								<field name="delivery_date" attrs="{'required':[('state','=','assigned')],'readonly':[('state','in',('draft','cancel'))]}" on_change="onchange_date(stock_transfer_date_new,delivery_date)" invisible="1"/>
+								<field name="expected_delivery_time" attrs="{'required':[('state','=','assigned')],'readonly':[('state','!=','assigned')]}" invisible="1"/>
+								<field name="sale_check" invisible="1"/>
+								<field name="not_for_sale" invisible="1"/>
+								<field name="with_rate"/>
+						</group>
+					</page>
+<page string="Dispatch Details" attrs="{'invisible':[('state','=','draft')]}">
+						<group col="4" colspan="4">
+								<!-- <field name="excise_invoice_no"/> -->
+						   		<!-- <field name="excise_invoice_date"/> -->
+								<field name="packlist_no" attrs="{'invisible':[('state','in',('draft','assigned'))],'readonly':[('state','!=','assigned')]}"/>
+                                   	<field name="packlist_date" attrs="{'invisible':[('state','in',('draft','assigned'))],'readonly':[('state','!=','assigned')]}"/>
+								<field name="stock_transfer_note_no" attrs="{'invisible':[('delivery_type','in', ('sales_delivery'))]
+,'readonly':[('state','!=','assigned')]}"/>
+								<field name="stock_transfer_date" attrs="{'invisible':[('delivery_type','in', ('sales_delivery'))]
+,'readonly':[('state','!=','assigned')]}"/>
+								<field name="delivery_challan_no" string="Delivery Note No" attrs="{'invisible':[('state','in',('draft','assigned'))],'readonly':[('state','!=','assigned')]}"/>
+								<field name="delivery_challan_date" string="Delivery Note Date" attrs="{'invisible':[('state','in',('draft','assigned'))],'readonly':[('state','!=','assigned')]}"/>
+								<field name="invoice_no" invisible="1"/><!-- attrs="{'invisible':[('delivery_type','in', ('direct_sales','export_delivery','internal_delivery','external_delivery'))],'required':[('delivery_type','not in',('export_delivery','internal_delivery','direct_sales','external_delivery')),('state','=','confirmed')],'readonly':[('state','!=','assigned')]}"/>-->
+						   		<!-- <field name="invoice_date" attrs="{'invisible':[('delivery_type','in', ('direct_sales','export_delivery','internal_delivery','free_sample_delivery','calibration','external_delivery'))],'required':[('delivery_type','not in',('export_delivery','internal_delivery','free_sample_delivery','calibration','direct_sales','external_delivery')),('state','=','confirmed')],'readonly':[('state','!=','assigned')]}"/> -->
+						   		<field name="add_debit" invisible="1" attrs="{'invisible':[('delivery_type','not in', ('sales_delivery'))]}"/>
+								<field name="less_credit" invisible="1" attrs="{'invisible':[('delivery_type','not in', ('sales_delivery'))]}"/>
+								<field name="total_tax" invisible="1"/>
+								<field name="grt_tax" invisible="1"/>
+								<field name="total_unadjastable" invisible="1"/>
+								<field name="rounding_selection" invisible="1" attrs="{'invisible':[('delivery_type','not in', ('sales_delivery'))]}" />
+								<field name="rounding" invisible="1" attrs="{'invisible':[('delivery_type','not in', ('sales_delivery'))]}" />
+								<field name="road_permit_no" attrs="{'invisible':[('state','=','assigned')],'readonly':[('state','in',('cancel'))]}"/>
+								<field name="road_permit_date" attrs="{'invisible':[('state','=','assigned')],'readonly':[('state','in',('cancel'))]}" />
+								<field name="stn_remark" attrs="{'invisible':[('delivery_type','in', ('sales_delivery'))]
+}"/>
+								<field name="delivery_challan_remark" />
+								<field name="invoice_remark" invisible="1" attrs="{'invisible':[('delivery_type','in', ('direct_sales','export_delivery','internal_delivery','free_sample_delivery','calibration','external_delivery'))]}"/>
+						</group>
+					</page>
+					<!-- <page string="Serial No. Details" attrs="{'invisible':['|',('state','in',['draft','assigned']),('is_track_equipment','!=',True)]}">
+						<field name="transfer_series_ids" nolabel="1" 
+							 attrs="{'invisible':[('is_track_equipment','!=',True)]}" context="{'nocreate':1,'nodelete':1}">
+							<tree string="Serial No. Details" editable="bottom">
+								<field name="product_name" readonly="1"/>
+								<field name="product_uom" readonly="1"/>
+								<field name="serial_name" readonly="1"/>
+								<field name="batch" readonly="1"/>
+								<field name="from_date" readonly="1"/>
+								<field name="due_date" readonly="1"/>
+								<field name="duration" readonly="1"/>
+							</tree>
+						</field>
+					</page> -->
+					<page string="Notes">
+						<field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="8" readonly="1">
+							<tree string="Remarks">
+								<field name="user_name"/>
+								<field name="date"/>
+										<field name="source"/>
+								<field name="name"/>
+							</tree>
+							<form>
+									<group col="4" colspan="6">
+										<group>
+										<field name="user_name" />
+										</group>
+										<group>
+										<field name="source"/>
+										</group>
+										<group>
+										<field name="date"/>
+										</group>
+										</group>
+										<field name="name"/>
+							</form>
+						</field>
+						<newline/>
+						<newline/>
+						<group col="8" colspan="8"> 
+							<field name="remarks" colspan="4" attrs="{'invisible':[('state','in',('done','cancel'))]}"/>
+
+							<button name="post_remarks" string="Add Notes"  type="object"  colspan="1" attrs="{'invisible':[('state','in',('done','cancel'))]}"/> 
+							<label string="" colspan="3"/>
+						</group>
+					</page>
+				</notebook>
+					<group colspan="6" col="10">
+					<button name="print_report" string="Print" icon="gtk-print" type="object" />
+					<label string="" colspan="1"/>
+					<label string="" colspan="1"/>
+					<!--button name="road_permit" string="Require Road Permit" type="object" icon="gtk-go-forward" attrs="{'invisible':['|',('state','!=','assigned'),('permit_box','!=',True)]}"/-->  
+
+					<button name="nsd_dispatch" string="Dispatch" icon="gtk-go-forward" type="object" attrs="{'invisible':['|',('state','!=','confirmed'),('delivery_type','in',('sales_delivery'))]}"/>
+
+					<button name="psd_create_indent" string="Create Indent" icon="terp-stock_effects-object-colorize" type="object" attrs="{'invisible':['|',('state','!=','draft'),'|',('is_nsd_bhiwandi','!=',True),('invisible_create_indent','=',True)]}"/>
+		    		<button name="nsd_prepare_packlist" string="Packlist/Transport" icon="terp-stock_effects-object-colorize" type="object" attrs="{'invisible':['|',('state','!=','draft'),'|',('is_nsd_bhiwandi','=',True),('invisible_create_indent','=',True)]}"/>
+		    		<button name="nsd_update_stock_dispatch" string="Update Batch" icon="terp-stock_effects-object-colorize" type="object" attrs="{'invisible':['|',('state','!=','assigned'),('batch_edit','=',False)]}"/>
+					<button name="nsd_ready_to_dispatch" string="Ready to Dispatch" icon="gtk-go-forward" type="object" attrs="{'invisible':[('state','!=','assigned')]}"/>
+
+					<button name="nsd_cancel_packlist" string="Cancel Packlist" icon="terp-dialog-close" type="object" states="assigned"  confirm="This operation will cancel the Packlist.Do you want to continue?"/>
+					
+					<button name="nsd_cancel_stock_transfer" states="draft,assigned,confirmed" string="Cancel delivery Order" icon="gtk-cancel" type="object"  confirm="This operation will cancel the Transfer.Do you want to continue?" context="{'active_id':active_id}"/>
+
+					<button name="psd_create_invoice" string="Push to Invoice" icon="gtk-go-forward" type="object" confirm="This operation will create a draft Invoice Entry in Accounting. Do you want to continue?" attrs="{'invisible':['|',('state','!=','confirmed'),('against_free_replacement','=',True)]}" />
+
+					<!-- <button name="dispatch_sales" string="Dispatch" icon="gtk-go-forward" type="object" attrs="{'invisible':['|',('state','!=','confirmed'),('delivery_type','not in',('sales_delivery'))]}"/> -->
+					<!-- <button name="nsd_delivery_done" string="Done" icon="gtk-go-forward" type="object" attrs="{'invisible':['|','|',('state','!=','progress'),('delivery_type','not in',('sales_delivery','export_delivery')),('create_bool','=',True)]}"/>
+					
+					<button name="nsd_delivery_done" string="Done" icon="gtk-go-forward" type="object" attrs="{'invisible':['|',('create_bool','!=',True),('state','!=','progress')]}"/> -->
+					<!-- <button name="nsd_delivery_done" string="Done" icon="gtk-go-forward" type="object"/> -->
+			</group>		 
+			  </form>
+			</field>
+		</record>
+
+      	<!--  ######### Added by Nitin-->
+
+        <record model="ir.actions.act_window" id="action_view_stock_transfer_search2">
+			<field name="name">Stock Transfer </field>
+			<field name="res_model">stock.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="sk.stock_transfer_order_tree"/>
+			<field name="context">{'nodelete': 1, 'nocreate': 1}</field>
+			<field name="domain">[('psd_order_management','=',False)]</field>
+        </record>
+
+        <record id="action_stock_transfer_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="sk.stock_transfer_order_tree"/>
+            <field name="act_window_id" ref="action_view_stock_transfer_search2"/>
+        </record>
+
+        <record id="action_stock_transfer_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="sk.stock_transfer_order_form"/>
+            <field name="act_window_id" ref="action_view_stock_transfer_search2"/>
+        </record>
+
+
+        <menuitem name="Search" id="sk.menu_stock_transfer_search" parent="sk.menu_stock_transfer" action="action_view_stock_transfer_search2"/>
+
+       <record model="ir.actions.act_window" id="action_view_stock_transfer_create2">
+			<field name="name">Stock Transfer </field>
+			<field name="res_model">stock.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_id" ref="sk.stock_transfer_order_form"/>
+			<field name="view_mode">form</field>
+        </record>
+
+        <menuitem name="Create" id="sk.menu_stock_transfer_create" parent="sk.menu_stock_transfer" action="action_view_stock_transfer_create2"/>
+
+        <!-- ############################################# -->
+
+
+
+		<record model="ir.actions.act_window" id="action_view_order_management">
+			<field name="name">Delivery Order</field>
+			<field name="res_model">stock.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<!-- <field name="view_id" ref="stock_transfer_order_management_tree"/> -->
+			<field name="search_view_id" ref="stock_transfer_order_management_search"/>
+			<field name="domain">[('psd_order_management','=',True)]</field>
+			<field name="context">{'nodelete': 1, 'nocreate': 1}</field>
+        </record>
+
+
+		<record id="action_psd_order_management_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="stock_transfer_order_management_tree"/>
+            <field name="act_window_id" ref="action_view_order_management"/>
+        </record>
+
+        <record id="action_psd_order_management_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="stock_transfer_order_management_form"/>
+            <field name="act_window_id" ref="action_view_order_management"/>
+        </record>
+
+      	<menuitem id="menu_order_management" name="Sale Order Management" parent="sk.menu_res_indent" sequence="1"/>
+
+       	<menuitem action="action_view_order_management" id="menu_action_order_management" parent="menu_order_management" sequence="1"/>
+
+
+       	<record id="branch_stock_form" model="ir.ui.view">
+			<field name="name">Branch Stock Transfer</field>
+			<field name="model">branch.stock.transfer</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Branch Stock Transfer">
+				<group colspan="2" col="4" >
+					<group colspan="2" col="4" >
+					<field name="stock_transfer_no"/>
+					<field name="stock_transfer_date"/>
+					<field name="transporter"/>
+					<!--<field name="type"/>-->
+					<field name="delivery_type"/>
+					<field name="delivery_location"/>
+					<field name="eta_sync"/>
+					<field name="delivery_challan_no"/>
+					<field name="delivery_challan_date"/>
+					<!-- <field name="branch_name"/> HHH -->
+			     </group>
+			     </group>
+			  </form>
+			</field>
+		</record>
+		
+		<record model="ir.actions.act_window" id="action_branch_stock">
+			<field name="name">Branch Stock Transfer</field>
+			<field name="res_model">branch.stock.transfer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+
+       	<!-- For indent dashboard -->
+	<record id="indent_graph_dashboard_new" model="ir.ui.view">
+		<field name="name">Stock Dashboard</field>
+		<field name="model">indent.new.dashboard</field>
+		<field name="type">graph</field>
+		<field name="arch" type="xml">
+			<graph string="Graph" type="bar">
+				<field name="month"/>
+				<field name="count2" string="Deliveries"/>
+				<field name="count1" string="Deliveries"/>
+				<!--<field name="count" domain="[('month','=',month),('check1','==',True)]" attrs="{'invisible':[('check1','==',False)]}" string="Previous year"/>-->
+			</graph>
+		</field>
+	</record>
+
+	<record id="action_indent_graph_new" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">indent.new.dashboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="indent_graph_dashboard_new"/>
+			<field name="domain">['|',('check','!=',False),('check1','!=',False)] </field>
+			<field name="context">{'nocreate':1,'nodelete':1}</field>
+        </record>
+
+
+    <record id="psd_stock_transfer_order_form" model="ir.ui.view">
+		<field name="name">Stock Transfer</field>
+		<field name="model">stock.transfer</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sk.stock_transfer_order_form"/>
+		<field name="arch" type="xml">
+		<xpath expr="//page[@string='Transport Details']/group/field[@name='estimated_value']" position="after">
+			<field name="freight_amount"/>
+			<field name="is_road_permit" invisible="1"/>
+		</xpath>
+		<xpath expr="//page[@string='Dispatch Details']/group/field[@name='road_permit_no']" position="replace">
+		<field name="road_permit_no" attrs="{'required':[('is_road_permit','=',True)],'invisible':[('state','!=',('confirmed'))]}"/>
+		</xpath>
+		<xpath expr="//page[@string='Dispatch Details']/group/field[@name='road_permit_date']" position="replace">
+			<field name="road_permit_date" attrs="{'required':[('is_road_permit','=',True)],	'invisible':[('state','!=',('confirmed'))]}"/>
+		</xpath>
+		</field>
+	</record>
+
+<record id="view_indent_form_inherit" model="ir.ui.view">
+		<field name="name">Indents Form</field>
+		<field name="model">res.indent</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sk.view_indent_form"/>
+		<field name="arch" type="xml">
+			<field name="indent_type" readonly="1" position="after">
+				<field name="delivery_id" attrs="{'invisible':[('indent_type','!=','external_delivery')],'required':[('indent_type','=','external_delivery')]}" domain="[('state','=','draft'),('invisible_create_indent','=',False)]" on_change="onchange_delivery_id(delivery_id)"/>
+			</field>
+			<field name="country" attrs="{'required':[('indent_type','in',('external_delivery','export_delivery','sales_delivery'))],'readonly':[('state','not in',('new','draft'))],'invisible':[('indent_type','in',('internal_delivery','direct_sales'))]}" position="replace">
+				<field name="country" attrs="{'required':[('indent_type','in',('external_delivery','export_delivery','sales_delivery'))],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')],'invisible':[('indent_type','in',('internal_delivery','direct_sales'))]}"/>
+			</field>
+			<field name="delivery_address" attrs="{'readonly':['|',('indent_type','=','internal_delivery'),('state','!=','draft')]}" position="replace">
+				<field name="delivery_address" attrs="{'readonly':['|',('indent_type','=','internal_delivery'),'|',('indent_type','=','external_delivery'),('state','!=','draft')]}"/>
+			</field>
+			<field name="indent_type" on_change="onchange_indent_type(indent_type)" position="replace">
+				<field name="indent_type" attrs="{'readonly':[('state','!=','draft')]}" invisible="0" on_change="onchange_indent_type(indent_type)" />
+			</field>
+			<field name="customer_name" attrs="{'required':[('indent_type','in',('external_delivery','export_delivery','sales_delivery'))],'readonly':[('state','not in',('new','draft'))],'invisible':[('indent_type','in',('internal_delivery','direct_sales'))]}" on_change="indent_onchange_type(indent_type,customer_name,branch_name)" position="replace">
+				<field name="customer_name" attrs="{'required':[('indent_type','in',('external_delivery','export_delivery','sales_delivery'))],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')],'invisible':[('indent_type','in',('internal_delivery','direct_sales'))]}" on_change="indent_onchange_type(indent_type,customer_name,branch_name)"/>
+			</field>
+<!-- 			<field name="customer_id" attrs="{'invisible':[('indent_type','!=','external_delivery')]}" position="replace">
+				<field name="customer_id" attrs="{'invisible':[('indent_type','!=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field> -->
+<!-- 			<field name="delivery_address_id" on_change="onchange_delivery_address_id(delivery_address_id)" attrs="{'invisible':[('indent_type','!=','external_delivery')],'required':[('indent_type','=','external_delivery')]}" position="replace">
+				<field name="delivery_address_id" on_change="onchange_delivery_address_id(delivery_address_id)" attrs="{'invisible':[('indent_type','!=','external_delivery')],'required':[('indent_type','=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field> -->
+<!-- 			<field name="billing_address_id" on_change="onchange_billing_address_id(billing_address_id)" attrs="{'invisible':[('indent_type','!=','external_delivery')]}" position="replace">
+				<field name="billing_address_id" on_change="onchange_billing_address_id(billing_address_id)" attrs="{'invisible':[('indent_type','!=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field>
+			<field name="delivery_location_id_char" attrs="{'invisible':[('indent_type','!=','external_delivery')]}" position="replace">
+				<field name="delivery_location_id_char" attrs="{'invisible':[('indent_type','!=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field>
+			<field name="billing_location_id_char" attrs="{'invisible':[('indent_type','!=','external_delivery')]}" position="replace">
+				<field name="billing_location_id_char" attrs="{'invisible':[('indent_type','!=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field>
+			<field name="billing_address_char" attrs="{'invisible':[('indent_type','!=','external_delivery')]}" position="replace">
+				<field name="billing_address_char" attrs="{'invisible':[('indent_type','!=','external_delivery')],'readonly':['|',('state','!=','draft'),('indent_type','=','external_delivery')]}"/>
+			</field> -->
+		</field>
+	</record>
+
+    </data>
+</openerp>

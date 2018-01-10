@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="account_sales_receipts_form_gst_inherit" model="ir.ui.view">
+            <field name="name">account.sales.receipts.form.gst.inherit</field>
+            <field name="model">account.sales.receipts</field>
+            <field name="inherit_id" ref="account_sales_branch.account_sales_receipts_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='/form/group/field[@name="billing_location"]' position='after'>
+                <!--                   <field name="invoice_advance_id" invisible="1"/>
+                  <field name="invoice_adjustment_amount" invisible="1"/> -->
+                  <field name="inv_adhoc_receipt_ids" invisible="1"/>
+                  <field name="gst_receipt" invisible="1"/>
+                </xpath>
+                <xpath expr='//button[@name="generate_report"]' position='replace'>
+                    <button name="generate_report" string="Print" type="object" colspan="1" 
+                            attrs="{'invisible':[('state','not in',('done','finish'))]}" icon="gtk-print"/>
+                     <!--('gst_receipt','=',True)]}" -->                                
+                            
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- Advance -->
+    <record model="ir.ui.view" id="gst_account_advance_payment_form">
+        <field name="name">Security Deposit Payment Form</field>
+        <field name="model">account.sales.receipts.line</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+             <group col="8" colspan="8">
+                <button name="save_advance_payment" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+                        attrs="{'invisible':[('state','in',('done','finish'))]}"/>
+                <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+                    attrs="{'invisible':[('state','in',('done','finish'))]}" confirm="Do you want to cancel?"/>
+                
+                <button name="save_invoice_number" attrs="{'invisible':[('state','in',('draft','finish'))]}"
+                    string="Save" type="object" colspan="0.5" icon="gtk-redo" />
+                <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="7.5"/>
+                <field name="customer_name" invisible="1"/>
+              </group>
+              <group col="8" colspan="8" >
+                    <field name="advance_one2many" widget="one2many_list" nolabel="1" colspan="6" attrs="{'readonly':[('state','in',('done','finish'))]}">
+                        <tree editable="bottom">
+                            <field name="cse" />
+                            <field name="ref_no" readonly="1"/>
+                            <field name="ref_date"/>
+                            <field name="service_classification" on_change="onchange_advance_amount(service_classification,ref_amount)" required="1"/>
+                            <field name="ref_amount" on_change="onchange_advance_amount(service_classification,ref_amount)" string="Advance Amount"/>
+                            <field name="taxable_amount" />
+                            <field name="cgst_rate" readonly="1"/>
+                            <field name="cgst_amount"/>
+                            <field name="sgst_rate" readonly="1"/>
+                            <field name="sgst_amount"/>
+                            <field name="igst_rate" invisible="1" readonly="1"/>
+                            <field name="igst_amount" invisible="1"/>
+                            <field name="partner_id" invisible="1"/>
+                        </tree>
+
+                    </field>
+                <label string="" colspan="2"/>
+              </group>
+            <group col="8" colspan="8">
+
+                <field name="invoice_number" colspan="3" attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}"
+                       domain="[('invoice_number','!=',False),('partner_id','=',customer_name),('status','in',('open','printed')),('pending_status','in',('open','pending'))]"
+                       context="{'test':True,'id':id}"/>
+                <field name="payment_status" attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}"/>
+                <!-- <button name="add_invoices" string="Add Invoice" type="object" colspan="0.5" attrs="{'invisible':[('state','in',('draft','finish'))]}"/> -->
+                <field name="state" colspan="1" widget="statusbar" invisible="1" />
+                <label string="" colspan="5"/>
+              </group>
+
+            <group col="8" colspan="8">
+                <field name="advance_invoice_one2many" widget="one2many_list" nolabel="1" colspan="8"
+                       attrs="{'readonly':[('state','=','finish')],'invisible':[('state','=','draft')]}">
+                    <tree string="Invoice Details"  editable="bottom">
+
+                        <field name="flag" readonly="1"/>
+                        <field name="invoice_id" invisible="1" string="Invoice Number"/>
+                        <field name="invoice_number" readonly="1"/>
+                        <field name="paid_date" readonly="1"/>
+                        <field name="invoice_date" readonly="1"/>
+                        <field name="tax_rate" readonly="1"/>
+                        <field name="invoice_amount" string="Invoice Pending Amount" readonly="1"/>
+                        <field name="cse" readonly="1" invisible="0" />
+                        <field name="cse_char" invisible="1" />
+                        <field name="payment_method_adv" invisible="1" />
+                        <field name="partial_payment_amount" attrs="{'readonly':['|',('flag','=',True),('payment_method_adv','=','full_payment')]}"/>
+                        
+                    </tree>
+                    <form string="Invoice Details">
+
+                        <field name="flag" readonly="1"/>
+                        <field name="invoice_number"/>
+                        <field name="invoice_date"/>
+                        <field name="tax_rate"/>
+                        <field name="invoice_amount"/>
+                        <field name="partial_payment_amount" attrs="{'readonly':[('flag','=',True)]}"/>
+                        <field name="cse_char" />
+                        <field name="cse" invisible="1" />
+                    </form>
+                </field>
+            </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="gst_account_against_ref_form">
+        <field name="name">Security Deposit Payment Form</field>
+        <field name="model">account.sales.receipts.line</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Payment">
+             <group col="8" colspan="8">
+                <button name="save_scrap_sale_against_ref" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+                    attrs="{'invisible':[('state','=','done')]}"/>
+                <button name="cancel" string="Cancel" icon="gtk-cancel" type="object"
+                      colspan="0.5" attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+                <field name="wizard_id" colspan="1" invisible="1"/><label string="" colspan="5"/>
+                <field name="visib" invisible="1"/>
+              </group><newline/>
+              <group col="8" colspan="8">
+                    <!-- For History of Invoice-->
+                    <field name="invoice_adhoc_history_one2many" widget="one2many_list" nolabel="1" colspan="5"
+                           context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','=','done')],'invisible':[('state','=','draft')]}">
+                        <tree editable="bottom" string="Paid Invoices Details">
+                            <field name="check_invoice" string=""/>
+                            <field name="invoice_number" readonly="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <!-- <field name="service_classification" /> -->
+                            <field name="tax_rate" readonly="1"/>
+                            <!-- <field name="cse" readonly="1" /> -->
+                            <field name="invoice_paid_amount" />
+                            <field name="invoice_paid_date" readonly="1"/>
+                        </tree>
+                    </field>
+                    <field name="payment_status" invisible="1"/>
+                    <field name="invoice_adhoc_one2many" widget="one2many_list" nolabel="1" colspan="5" context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','=','done')],'invisible':[('state','=','done')]}">
+                        <tree editable="bottom" string="Outstanding Invoices Details" >
+                            
+                            <field name="check_invoice" string=""/>
+                            <field name="invoice_number" readonly="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <!-- <field name="service_classification"  readonly="1"/> -->
+                            <field name="tax_rate" readonly="1"/>
+                            <field name="grand_total_amount" string="Invoice Amount"  readonly="1"/>
+                            <!--field name="pending_invoice_amount" string="Invoice Amount" invisible="0" readonly="1"/-->
+                            <field name="pending_amount" string="Pending Amount"  readonly="1"/>
+                            <!-- <field name="cse" readonly="1" /> -->
+                            <field name="partial_payment_amount" string="Receipt Amount"/>
+                            <field name="pending_status" invisible="1"/>
+                        </tree>
+
+                        <form string="Details">
+                            <field name="invoice_number" readonly="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <!-- <field name="service_classification" /> -->
+                            <field name="tax_rate" readonly="1"/>
+                            <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                            <field name="partial_payment_amount" />
+                            <!-- <field name="cse" readonly="1" /> -->
+                        </form>
+
+                    </field>
+
+                    <field name="invoice_adhoc_one2many_duplicate" widget="one2many_list" nolabel="1" colspan="5" context="{'nodelete':1,'nocreate':1}" attrs="{'readonly':[('state','=','done')],'invisible':[('state','=','draft')]}">
+                        <tree editable="bottom" string="Outstanding Invoices Details" >
+                            
+                            <field name="check_invoice" attrs="{'invisible':[('check_invoice','=',False)]}" string=""/>
+                            <field name="invoice_number" attrs="{'invisible':[('check_invoice','=',False)]}" readonly="1"/>
+                            <field name="invoice_date" attrs="{'invisible':[('check_invoice','=',False)]}" readonly="1"/>
+                            <!-- <field name="service_classification" attrs="{'invisible':[('check_invoice','=',False)]}" readonly="1"/> -->
+                            <field name="tax_rate" attrs="{'invisible':[('check_invoice','=',False)]}" readonly="1"/>
+                            <field name="grand_total_amount" attrs="{'invisible':[('check_invoice','=',False)]}" string="Invoice Amount"  readonly="1"/>
+                            <!--field name="pending_invoice_amount" string="Invoice Amount" invisible="0" readonly="1"/-->
+                            <field name="pending_amount" attrs="{'invisible':[('check_invoice','=',False)]}" string="Pending Amount"  readonly="1"/>
+                            <!-- <field name="cse" attrs="{'invisible':[('check_invoice','=',False)]}" readonly="1" /> -->
+                            <field name="partial_payment_amount" attrs="{'invisible':[('check_invoice','=',False)]}" string="Receipt Amount"/>
+                            <field name="pending_status" invisible="1"/>
+                        </tree>
+
+                        <form string="Details">
+                            <field name="invoice_number" readonly="1"/>
+                            <field name="invoice_date" readonly="1"/>
+                            <!-- <field name="service_classification" /> -->
+                            <field name="tax_rate" readonly="1"/>
+                            <field name="grand_total_amount" string="Invoice Amount" readonly="1"/>
+                            <field name="partial_payment_amount" />
+                            <!-- <field name="cse" readonly="1" /> -->
+                        </form>
+
+                    </field>
+                    
+                    
+                    
+                    <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+                    <label string="" colspan="2"/>
+             <newline/>
+
+              </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_account_advance_payment_form_new_reference_branch_splitting_gst" model="ir.ui.view">
+        <field name="name">view_account_advance_payment_form</field>
+        <field name="inherit_id" ref="gst_accounting.gst_account_advance_payment_form" />
+        <field name="model">account.sales.receipts.line</field>
+        <field name="arch" type="xml">          
+        <xpath expr="//field[@name='wizard_id']" position="after"><field name="is_transfered" invisible="1"/></xpath>
+        </field>
+    </record>
+
+    <record id="view_account_gst_account_against_ref_form_branch_splitting_gst" model="ir.ui.view">
+        <field name="name">view_account_advance_payment_form</field>
+        <field name="inherit_id" ref="gst_accounting.gst_account_against_ref_form" />
+        <field name="model">account.sales.receipts.line</field>
+        <field name="arch" type="xml">          
+        <xpath expr="//field[@name='wizard_id']" position="after"><field name="is_transfered" invisible="1"/></xpath>
+        </field>
+    </record>
+
+
+	</data>
+</openerp>

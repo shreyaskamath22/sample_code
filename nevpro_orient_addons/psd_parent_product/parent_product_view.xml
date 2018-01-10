@@ -1,0 +1,152 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+       <!-- XML for the Type of location -->
+
+       <record id="location_type_form_view" model="ir.ui.view">
+            <field name="name">location.type.form</field>
+            <field name="model">location.type</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Type of Location">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="location_type_tree_view" model="ir.ui.view">
+            <field name="name">location.type.tree</field>
+            <field name="model">location.type</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Type of Location">
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_location_type" model="ir.actions.act_window">
+                <field name="name">Type of Location</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">location.type</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_location_type_id" name="Type of Location" action="action_location_type" sequence="31" parent="sk.menu_product_confg"/>
+
+    <record model="ir.ui.view" id="product_generic_name_form_inherit">
+            <field name="name">New Product Generic Name</field>
+            <field name="model">product.generic.name</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sk.product_generic_name_form"/>
+            <field name="arch" type="xml">
+                    <field name="name" position="replace">
+                    <group col="6">
+                        <field name="name"/>
+                        <field name="sold_by_psd"/>
+                        <field name="amc_product"/>
+                        <field name="is_imported"/>
+                    </group>
+                    <newline/>
+              <field name="product_group_id" widget="one2many_list" nolabel="1">
+                        <tree editable="bottom">
+                            <field name="location_id"/>
+                            <field name="tax_name" on_change="onchange_tax_name(tax_name)"/>
+                            <field name="name" invisible="1"/>
+                            <field name="tax_rate" readonly="1"/>
+                            <field name="product_generic_line_id" invisible="1"/>
+                        </tree>
+                        <form string="VAT">
+                            <field name="location_id"/>
+                            <field name="tax_name"/>
+                            <field name="name" invisible="1"/>
+                            <field name="tax_rate" readonly="1"/>
+                            <field name="product_generic_line_id" invisible="1"/>
+                        </form>
+                    </field>
+                </field>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="product_generic_name_tree_inherit">
+            <field name="name">product.generic.name.tree.inherit</field>
+            <field name="model">product.generic.name</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string='New Product Generic Name'>
+                        <field name="name"/>
+                        <field name="sold_by_psd"/>
+                        <field name="amc_product"/>
+                </tree>
+            </field>
+    </record>
+
+    <!-- XML for the Product Group -->
+
+      <!--  <record id="product_group_form_view" model="ir.ui.view">
+            <field name="name">product.group.form</field>
+            <field name="model">product.group</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Product Group">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <newline/>
+                                <field name="product_group_id" widget="one2many_list" nolabel="1">
+                                    <tree>
+                                        <field name="location_id"/>
+                                        <field name="tax_rate"/>
+                                        <field name="product_line_id" invisible="1"/>
+                                    </tree>
+                                    <form string="VAT">
+                                        <field name="location_id"/>
+                                        <field name="tax_rate"/>
+                                        <field name="product_line_id" invisible="1"/>
+                                    </form>
+                                </field>
+                </form>
+            </field>
+        </record> -->
+
+       <!--  <record id="product_group_tree_view" model="ir.ui.view">
+            <field name="name">product.group.tree</field>
+            <field name="model">product.group</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Product Group">
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_group" model="ir.actions.act_window">
+                <field name="name">Product Group</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">product.group</field>
+                <field name="view_type">form</field>
+                <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_product_group_id" name="Product Group" action="action_product_group" sequence="32" parent="sk.menu_product_confg"/> -->
+
+   <!--  <record id="product_normal_form_view_inherited" model="ir.ui.view">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="product_tag_id" position="after">
+                    <field name="sold_by_psd"/>
+                    <field name="product_line_id"/>
+                </field>
+            </field>
+    </record> -->
+        
+
+    </data>
+</openerp>

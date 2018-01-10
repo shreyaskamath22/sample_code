@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="amc_quotation_seq" model="ir.sequence.type">
+            <field name="name">AMC Quotation Number</field>
+            <field name="code">amc.quotation</field>
+        </record>
+
+        <record id="sequence_rest_result_request_amc" model="ir.sequence">
+            <field name="name">AMC Quotation Number</field>
+            <field name="code">amc.quotation</field>
+            <field name="padding">6</field>
+        </record>
+        
+    </data>
+</openerp>

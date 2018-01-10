@@ -1,0 +1,239 @@
+<openerp>
+<data>
+<record model="ir.ui.view" id="psd_service_invoice_form">
+		<field name="name">Invoice Preview</field>
+		<field name="model">invoice.adhoc.master</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Service Invoice">
+				<field name="status" widget="statusbar" nolabel="1"/>
+				<newline/>
+				<field name="invoice_type" invisible="1"/>
+				<group col="8" colspan="4">
+					<group col="4">
+						<field name="cust_name" readonly="1" colspan="4"/>						
+						<field name="service_type" readonly="1" colspan="4"/>
+						<field name="classification" readonly="1" colspan="4"/>
+						<field name="order_period_from" colspan="2" readonly="1"/>
+						<field name="order_period_to" colspan="2" readonly="1"/>
+						<!-- <field name="site_address" colspan="4" domain="[('partner_id','=',partner_id)]" readonly="1"/> -->
+						<field name="partner_id" invisible="1"/>
+						<field name="service_order_id" invisible="1"/>
+						<field name="amc_inv_id" invisible="1"/>
+					</group>
+					<group col="4">
+						<field name="invoice_no_generated" invisible="1"/>
+						<field name="invoice_number" readonly="1" colspan="2"/>
+						<field name="invoice_date" readonly="1" colspan="2"/>
+						<field name="so_reference_no" colspan="2" readonly="1"/>
+						<field name="so_reference_date" colspan="2" readonly="1"/>
+						<field name="erp_order_no" string="Service Order No" readonly="1" colspan="2"/>
+						<field name="erp_order_date" string="Service Order Date" readonly="1" colspan="2"/>
+						<field name="billing_address" colspan="4" domain="[('partner_id','=',partner_id)]"/>
+						<field name="pse" readonly="1" colspan="4"/>
+					</group>
+				</group>
+			<notebook colspan="4">
+		  	<page string="Service Details">
+				<field name="service_invoice_lines" nolabel="1" widget="one2many_list" readonly="1">
+						 <tree string="Invoice Lines" editable="bottom">
+						 	<field name="invoice_type" invisible="1"/>
+                            <field name="invoice_no_ref" invisible="1"/>
+                            <field name="product_code" readonly="1" invisible="1"/>
+                            <field name="product_generic_name" required="1"/>
+                            <field name="product_id" domain='[("generic_name", "=",product_generic_name),("other_type","=","sale")]' required="1"/>
+                            <field name="particulars_equipment"/>
+                            <field name="no_of_visits" required="1"/>
+                            <field name="no_of_units" required="1"/>
+                            <field name="rate_per_unit"/>
+                            <field name ="total"/>
+                         <field name="cgst_rate" string="CGST Rate"/>
+                        <field name="cgst_amt" string="CGST Amt"/>
+                        <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                        <field name="sgst_amt" string="SGST/UTGST Amt"/>
+                        <field name="igst_rate" string="IGST Rate"/>
+                        <field name="igst_amt" string="IGST Amt"/>
+                        <field name="cess_rate" string="CESS Rate"/>
+                        <field name="cess_amt" string="CESS Amt"/>
+                        <!-- <field name="amount"/> -->
+                            <field name="total_amount" string="Charges" invisible="1"/>
+                        </tree>
+			</field>
+			<newline/>
+                                <group>
+                                     <group col="4">
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                        <label string="" colspan="1"/>
+                                     </group>      
+                                    <group col="4">
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="basic_charge" readonly="1"/><newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <field name="tax_one2many" nolabel="1" widget="one2many_list"  context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':True}">
+                                           <tree string="Tax" editable="top">   
+                                               <field name="name" />
+                                               <field name="amount"/>
+                                               <field name="account_tax_id" invisible="1"/>
+                                           </tree>
+                                        </field>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <!-- <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="service_tax_14" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="sb_cess_0_50" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="kk_cess_0_50" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <separator colspan="2"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/> -->
+                                        <label string="" colspan="1"/><label string="" colspan="1"/>
+                                        <field name="service_order_grand_total" readonly="1"/><newline/>
+                                        <label string="" colspan="2"/><label string="" colspan="1"/>
+                                        <newline/>
+                                    </group>
+                                </group>
+			</page>
+	       <page string="Operation History">
+                       <field name="history_line" colspan="2" nolabel="1" readonly="1">
+                        <tree string="Job History">
+                          <field name="contract_no" invisible="1"/>
+                            <field name="job_id"/>
+                            <field name="job_schedule_date"/>
+                            <field name="job_reschedule_date" invisible="1"/>
+                            <field name="record_date"/>
+                            <field name="no_hr_wasted" invisible="1"/>
+                            <field name="reschedule_by"/>
+                            <field name="reason_for_rescheduling"/>
+                            <field name="technician_squad"/>
+                            <field name="job_start_date"/>
+                            <field name="job_end_date"/>
+                            <field name="job_status"/>
+                        </tree>
+                             </field>
+                    <newline/>
+          	</page>
+          	 <page string="Payment History" invisible="0">
+            <field name="invoice_receipt_history_one2many" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+              <tree string="Invoice Receipt History">
+                <field name="receipt_number"/>
+                <field name="amount_receipt"/>
+                <field name="invoice_paid_date"/>
+                <field name="invoice_paid_amount" />
+                <field name="invoice_pending_amount" />
+                <field name="invoice_writeoff_amount" />
+                <field name="invoice_writeoff_date"/>
+                <field name="cheque_bounce_date"/>
+                <field name="advance_writeoff_date" string="Advance Settle Date"/>
+                <field name="advance_writeoff_amount" string="Advance Settle Amount" /> 
+                <field name="receipt_id_history" invisible="1"/>
+              </tree>
+            </field>
+          </page>
+
+
+		<page string="Notes">
+		<field name="comment_line_o2m" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+			<tree string="Comments">
+				<field name="user_name" />
+				<field name="comment_date" />
+				<field name="comment" />
+				<field name="comment_line_id" invisible="1"/>
+			</tree>
+			</field>
+			<newline/>
+			<separator string="" colspan="4"/>
+			<group col="8" colspan="8">
+				<field name="comment_remark" colspan="4" />
+				<button string="Add Notes" name="post_comment" type="object" colspan="1"/>
+				<label string="" colspan="3"/>
+			</group>
+       	</page>
+		</notebook>
+
+				
+<!--		Notebook End 		-->
+<!-- Cancel boolean and narration -->
+				<field name="branch_id" invisible="1"/>
+				<group col="8" colspan="8"> <!--Invoice Cancellation-->
+					<field name="canceled_date" colspan="2" attrs="{'invisible':['|',('cancel_boolean','=',False),('status','in',('paid','writeoff'))]}" />
+					<field name="cancel_reason" colspan="5" attrs="{'invisible':['|',('cancel_boolean','=',False),('status','in',('paid','writeoff'))]}"/>
+
+					<button name="cancel_invoice" string="Cancel" type="object" colspan="0.5" icon="gtk-cancel" confirm="Do you want to cancel?" invisible="0" attrs="{'invisible':['|',('cancel_boolean','=',False),('status','in',('paid','writeoff','cancelled'))]}" />
+				</group>
+				<newline/>
+
+				<group col="8" colspan="8"> <!-- Adhoc Invoice Cancellation-->
+					<field name="cancel_boolean" colspan="0.5" attrs="{'invisible':['|',('status','in',('paid','writeoff','cancelled')),('invoice_no_generated','!=',True)]}"/>
+				</group>
+				<newline/>
+				
+				<newline/>
+						 <group col="8" colspan="8">
+							<!--field name="invoice_narration_adhoc" colspan="3" attrs="{'invisible':[('adhoc_invoice','=',False)]}" /-->
+							<field name="invoice_narration" />
+							<button name="print_service_invoice" string="Print" type="object" colspan="1" icon="STOCK_PRINT" attrs="{'invisible':[('invoice_no_generated','!=',True)]}"/>
+							
+							<button name="generate_service_invoice" string="Generate Invoice" icon="gtk-ok" type="object" confirm="Are you sure you want to Generate Service Invoice?" attrs="{'invisible':[('invoice_number','!=',False)]}" colspan="1"/>
+							<button name="psd_receipt" string="Receipt" type="object" colspan="1" icon="gtk-open" attrs="{'invisible':['|',('status','in',('paid','writeoff')),('invoice_number','=',False)]}"/>
+							<button name="service_inv_cancel_button" string="Cancel" type="object" colspan="1" icon="gtk-cancel" attrs="{'invisible':[('invoice_number','!=',False)]}" confirm="Do you want to cancel?" invisible="0"/>
+						<newline/>
+				</group>
+						 
+<!-- Cancel boolean and narration -->
+						 
+			</form>
+		</field>
+	</record>
+
+
+	<record id="psd_action_invoice_service_order" model="ir.actions.act_window">
+		<field name="name">Service Invoice</field>
+		<field name="res_model">invoice.adhoc.master</field>
+		<field name="type">ir.actions.act_window</field>
+		<field name="view_mode">form</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="psd_service_invoice_form"/>
+		<field name="context">{'nocreate':1,'nodelete':1}</field>
+	</record>
+
+	<!-- <record id="action_psd_invoice_adhoc_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_invoice_adhoc_search_id1"/>
+            <field name="act_window_id" ref="psd_action_invoice_service_order"/>
+        </record> -->
+
+        <record id="action_psd_invoice_adhoc_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_service_invoice_form"/>
+            <field name="act_window_id" ref="psd_action_invoice_service_order"/>
+        </record>
+
+        <!-- <menuitem id="menu_psd_service_invoice_id" sequence="3" name="Service Invoice" action="psd_action_invoice_service_order" parent="menu_invoice_psd_search_id"/> -->
+
+        <record id="view_psd_invoice_adhoc_master_branch_splitting" model="ir.ui.view">
+            <field name="name">view_invoice_adhoc_master_form</field>
+            <field name="inherit_id" ref="psd_accounting.psd_service_invoice_form" />
+            <field name="model">invoice.adhoc.master</field>
+            <field name="arch" type="xml">
+            <xpath expr="/form/*" position="before"><group colspan="4" attrs="{'invisible':[('is_transfered','!=', True)]}"> <label string="" colspan="0.5"/> <html><h4 style="color:red">Customer is transfered to another Branch</h4></html> <label string="" colspan="0.5"/> </group></xpath>
+            <xpath expr="//field[@name='invoice_type']" position="after"><field name="is_transfered" invisible="1"/></xpath>
+            </field>
+        </record>
+
+</data>
+</openerp>

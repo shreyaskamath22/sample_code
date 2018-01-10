@@ -1,0 +1,196 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <record id="view_ccc_branch_form_psd_inherit_new" model="ir.ui.view">
+      <field name="name">view.ccc.branch.form.psd.inherit</field>
+      <field name="model">ccc.branch</field>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+      <form string="Branch">
+          <group col='4' colspan='4'>
+            <separator string="" colspan="4" col="4"/>
+              <field name="enquiry_type" colspan="2" on_change="onchange_enquiry_type(enquiry_type)" required="1"/>
+              <label colspan="2"/>
+              <newline/>
+              <separator string="" colspan="4" col="4"/>
+          </group>
+          <group col='4' colspan='4'>
+              <group col='8' colspan='4'>
+                  <field name="company_id" invisible="1"/>
+                  <field name="partner_name_cust"/>
+                  <field name="customer_id"/>
+                  <field name="req_id" attrs="{'readonly':[('enquiry_type','=','customers')]}"/>
+                  <field name="contact_name_cust"/>
+                  <field name="phone_cust" string="Contact Number"/>
+                  <field name="apartment"/>
+                  <!-- <field name="customer_category_id"/> -->
+                  <field name="building"/>
+                  <field name="subarea"/>
+                  <field name="landmark"/>
+                  <field name="street"/>
+                  <field name="city_id"/>
+                  <field name="pincode"/>
+                    <!--field name="address"/-->
+                  <field name="due_date_from_cust"/>
+                  <field name="due_date_to_cust"/>
+                  <field name="branch_id" string="PCI Office" attrs="{'readonly':[('enquiry_type','=','customers')]}"/>
+                  <!-- domain="[('establishment_type','=','psd')]" string="PSD Office" -->
+                  <field name="cse" string="PSE"/>
+                  <field name="state" attrs="{'invisible':[('enquiry_type','=','customers')]}" string="Status"/>
+                  <field name="contract_number" attrs="{'invisible':[('enquiry_type','!=','customer')]}" />
+                  <field name="job_id" attrs="{'invisible':[('enquiry_type','!=','customer')]}" />
+                  <newline/>
+                  <button name="search_ccc_branch_psd" string="Search" type="object" icon="srh"/>
+                  <button name="clear_crm_request_psd" string="Clear" type="object" icon="clear"/>
+              </group>
+          </group>
+
+          <field name="check" invisible="1"/>
+          <group col='6' colspan='6' attrs="{'invisible':[('check','=',False)]}">
+              <label string="" colspan="2"/>
+                  <html>
+                        <h3 style="color:red">No records found!</h3>
+                  </html>
+              <label string="" colspan="2"/>
+          </group>
+
+          <notebook colspan="4">
+
+            <page string="Customers" attrs="{'invisible':[('enquiry_type','!=','customers')]}">
+               <field name="customer_ids" nolabel="1" colspan="8" readonly="1">
+                <tree editable="top">
+                    <field name="customer_id" string="Customer ID"/>
+                    <field name="customer_name" string="Customer Name"/>
+                    <field name="contact_name"/>
+                    <field name="complete_address" string="Address"/>
+                    <field name="branch_id" string="PSD Office"/>
+                    <field name="contact_number" string="Contact Number"/>
+                    <field name="customer_since"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="employee_id" readonly="1"/>
+                    <button name="reload_customer" string="" type="object" icon="gtk-go-forward"/>
+                  </tree>
+              </field>
+            </page>
+
+            <page string="Product Requests" attrs="{'invisible':[('enquiry_type','!=','product_request')]}">
+              <field name="product_req_ids" nolabel="1" colspan="8" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="request_id" readonly="1"/>
+                    <field name="customer_name" readonly="1" string="Customer/Company Name"/>
+                    <field name="branch_id" readonly="1" string="PCI Office"/>
+                    <field name="origin" readonly="1"/>
+                    <field name="request_type_psd" readonly="1"/>
+                    <field name="date_age" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                    <field name="contact_number" readonly="1" string="Contact Number"/>
+                    <!-- <field name="created_date" string="Created Date" readonly="1"/> -->
+                    <field name="sort_date" readonly="1"/>
+                    <field name="created_by" readonly="1"  string="Created By"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="product_request_id" invisible="1" readonly="1"/>
+                    <button name="reload_product_request" string="" type="object"  icon="gtk-go-forward"/>
+                  </tree>
+              </field>
+            </page>
+
+            <page string="Complaint Requests" attrs="{'invisible':[('enquiry_type','!=','complaint_request')]}">
+              <field name="complaint_req_ids" nolabel="1" colspan="8" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="request_id" readonly="1"/>
+                    <field name="customer_name" readonly="1" string="Customer/Company Name"/>
+                    <field name="branch_id" readonly="1" string="PCI Office"/>
+                    <field name="origin" readonly="1"/>
+                    <field name="request_type_psd" readonly="1"/>
+                    <field name="date_age" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                    <field name="contact_number" readonly="1" string="Contact Number"/>
+                    <!-- <field name="created_date" readonly="1"/> -->
+                    <field name="sort_date" readonly="1"/>
+                    <field name="created_by" readonly="1" string="Created By"/>
+                    <field name="employee_id" readonly="1"/> 
+                    <field name="complaint_request_id" invisible="1"/>
+                    <button name="reload_complaint_request" string="" type="object"  icon="gtk-go-forward"/>
+                  </tree>
+              </field>
+            </page>
+
+            <page string="Information Requests" attrs="{'invisible':[('enquiry_type','!=','information_request')]}">
+              <field name="information_req_ids" nolabel="1" colspan="8" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="request_id" readonly="1"/>
+                    <field name="customer_name" readonly="1" string="Customer/Company Name"/>
+                    <field name="branch_id" readonly="1" string="PCI Office"/>
+                    <field name="origin" readonly="1"/>
+                    <field name="request_type_psd" readonly="1"/>
+                    <field name="date_age" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                    <field name="contact_number" readonly="1" string="Contact Number"/>
+                    <field name="sort_date" readonly="1"/>
+                    <field name="created_by" readonly="1" string="Created By"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="information_request_id" invisible="1"/>
+                    <button name="reload_information_request" string="" type="object"  icon="gtk-go-forward"/>
+                  </tree>
+              </field>
+            </page>
+
+            <page string="All Requests" attrs="{'invisible':[('enquiry_type','!=','all_requests')]}">
+              <field name="request_line" nolabel="1" colspan="8" context="{'nocreate':1,'nodelete':1}">
+                  <tree editable="bottom">
+                    <field name="request_id" readonly="1"/>
+                    <field name="customer_name" readonly="1" string="Customer/Company Name"/>
+                    <field name="branch_id" readonly="1" string="PCI Office"/>
+                    <field name="origin" readonly="1"/>
+                    <field name="request_type_psd" readonly="1"/>
+                    <field name="date_age" readonly="1"/>
+                    <field name="state" readonly="1"/>
+                    <field name="contact_number" readonly="1" string="Contact Number"/>
+                    <field name="sort_date"/>
+                    <field name="created_by" string="Created By"/>
+                    <field name="employee_id" readonly="1"/>
+                    <field name="information_request_id" invisible="1"/>
+                    <field name="complaint_request_id" invisible="1"/>
+                    <field name="product_request_id" invisible="1"/>
+                    <button name="reload_record" string="" type="object"  icon="gtk-go-forward"/> 
+                  </tree>
+              </field>
+          </page>
+          </notebook>
+       </form>
+     </field>
+    </record>
+
+<!--     <record model="ir.actions.act_window" id="action_global_search_psd">
+            <field name="name">Global Search</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ccc.branch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_ccc_branch_form_psd_inherit_new"/>
+    </record> -->
+
+<!--     <menuitem id="ccc_branch_crm_request" 
+              parent="CCC_branch.menu_res_indent_cc_branch"  
+              action="action_global_search_psd" 
+              name="Product Global Search" 
+              sequence="1"
+              groups="psd_cid.group_show_psd_global_search"/> -->
+
+<!--     <menuitem name="CID" 
+              id="CCC_branch.menu_res_indent_cc_branch" 
+              web_icon="images/request-management.png" 
+              web_icon_hover="images/request-management.png" 
+              sequence="0" 
+              action="action_global_search_psd"/>       -->    
+
+<!--     <menuitem id="ccc_branch_crm_request_psd" 
+              parent="CCC_branch.menu_res_indent_cc_branch"  
+              action="CCC_branch.action_ccc_branch_new" 
+              name="Global Search"
+              sequence="2"
+              groups="psd_cid_base.group_ssd"/> -->
+              
+  </data>
+</openerp>

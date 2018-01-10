@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+   <data>
+   	
+   	      <record id="branch_sale_contract_child_gst_inherit_ncs" model="ir.ui.view">
+          <field name="name">branch.sale.contract.child.gst.inherit.ncs</field>
+          <field name="model">sale.contract</field>
+          <field name="inherit_id" ref="gst_accounting.branch_sale_contract_child_gst_inherit"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="gst_contract"]' position='after'>
+                <field name="contract_number_ncs" invisible="1"/>
+            </xpath>
+          </field>
+      	  </record>
+
+      	  <record id="invoice_adhoc_id_gst_inherit_ncs" model="ir.ui.view">
+          <field name="name">invoice.adhoc.id.gst.inherit.ncs</field>
+          <field name="model">invoice.adhoc.master</field>
+          <field name="inherit_id" ref="gst_accounting.invoice_adhoc_id_gst_inherit"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="gst_adhoc"]' position='after'>
+                <field name="invoice_number_ncs" invisible="1"/>
+            </xpath>
+          </field>
+      	  </record>
+
+          <record id="account_journal_voucher_form_inherit_ncs" model="ir.ui.view">
+          <field name="name">account.journal.voucher.form.inherit.ncs</field>
+          <field name="model">account.journal.voucher</field>
+          <field name="inherit_id" ref="account_sales_branch.account_journal_voucher_form"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="sr_no_old"]' position='after'>
+                <field name="sr_no_ncs" invisible="0"/>
+                <field name="from_ncs" invisible="0"/>
+            </xpath>
+          </field>
+          </record>
+
+   </data>   
+</openerp>
+	

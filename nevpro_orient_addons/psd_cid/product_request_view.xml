@@ -1,0 +1,440 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+         <!--Product Request -->
+        <record model="ir.ui.view" id="view_product_request_form_crm">
+            <field name="name">Product Request</field>
+            <field name="model">product.request</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Product Request'>
+                    <newline/>
+                    <separator colspan="4"/>                    
+                    <field name="state" widget="statusbar" statusbar_colors='{"new":"red","open":"blue","assigned":"green","closed":"grey","cancel":"black"}'/>
+                    <newline/>
+                    <separator colspan="4"/>
+                    <group attrs="{'invisible':[('state','!=','assigned')]}">
+                            <html>
+                                <center><h4 style="color:red">"Resource is assigned &amp; it is pushed to Sales Module (Requests)!"</h4></center>
+                            </html>
+                    </group>
+                    <group col='10' colspan='5'>
+                        <field name="active" invisible="1"/>
+                        <field name="call_type" required="1" attrs="{'readonly':[('state','!=','new')]}"/>
+                        <field name="request_date" required="1" readonly="1"/>
+                        <field name="closed_date" invisible="1"/>
+                        <field name="inquiry_type" required="1" readonly="1"/>
+                        <field name="created_by" readonly="1"/>
+                        <field name="product_request_id" string="Request ID" colspan="2" readonly="1" 
+                               attrs="{'invisible':[('product_request_id','=',False)]}"/>
+                        <field name="request_type" invisible="1"/>
+                        <field name="parent_request" invisible="1"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string='Product Request'>
+                        <label string="" colspan="4"/>
+                        <newline/>
+                        <group colspan="4" col="5">
+                                <field name="confirm_check" invisible="1"/>
+                                <field name="hide_search" invisible="1"/>
+                                <field name="hide_ref" invisible="1"/>
+                                <field name="hide_segment" invisible="1"/>
+                                <field name="show_table" invisible="1"/>
+                                <field name="check_ref" invisible="1"/>
+                                <field name="psd_sales_entry" invisible="1"/>
+                                <field name="name" colspan="4" default_focus="1"
+                                       attrs="{'readonly':[('confirm_check','=', True)]}"/>
+                                <field name="partner_id" invisible="1"/>       
+                                <button string="Search" name="search_record" type="object" 
+                                        colspan=".5" icon="srh"
+                                        attrs="{'invisible':[('hide_search','=', True)]}"/>
+                                <field name="customer_id"  string="Customer ID" colspan="2" readonly="1"/>
+                                <field name="product_quotation_id" colspan="2" invisible="1"
+                                       attrs="{'invisible':[('product_quotation_id','=', False)]}" readonly="1" />  
+                                <field name="amc_quotation_id1" colspan="2" 
+                                       readonly="1" invisible="1"/>
+                                <field name="product_order_id" colspan="2" 
+                                       readonly="1" invisible="1"/>  
+                                <field name="company_id" invisible="1"/>          
+                                <field name="location_branch" invisible="1"/>               
+                            </group>
+                            <newline/>
+                            <group col="6" colspan="4">
+                                <newline/>
+                                    <group col="4" >
+                                        <separator string="Address Detail ( Fields mark with * are mandatory fields )" colspan="5"/>
+                                        <field name="primary_contact" invisible="1"/>
+                                        <field name="title" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="first_name" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="middle_name" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="last_name" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="designation" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="premise_type" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="location_name" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="apartment" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="building" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="sub_area" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="street" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="landmark" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="city_id" on_change="onchange_city_id(city_id)" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="district" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="tehsil" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="state_id" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="zip" attrs="{'readonly':
+                                            ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="segment" attrs="{'readonly':[('hide_segment','=', True)]}" string="Segment *"/>
+                                    </group>
+                                    <group colspan="2" col="3">
+                                        <separator string="Communication" colspan="6"/>
+                                        <newline/>       
+                                            <field name="phone_many2one" domain='[("partner_id", "=", partner_id)]'
+                                                   attrs="{
+                                                   'readonly':['|',('confirm_check','=', True),('customer_type','=','existing')],
+                                                   'invisible':[('customer_type','=','new')]
+                                                   }"/>
+                                            <field name="phone_many2one_new" 
+                                                   domain='[("phone_product_request_id", "!=", False),("phone_product_request_id", "=", id)]'
+                                                   attrs="{
+                                                    'readonly':['|',('confirm_check','=', True),('customer_type','=', 'existing')],
+                                                    'invisible':[('customer_type','=','existing')]
+                                                    }"/>
+                                            <button name="create_number_psd" type="object" string="Create" icon="add" colspan=".5"        attrs="{'invisible':[  
+                                                                '|',('customer_type','=','existing'),('confirm_check','=',True)
+                                                            ]}"/> 
+                                        <newline/> 
+                                        <field name="fax" colspan="3" attrs="{'readonly':
+                                               ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="email" widget="email" colspan="3" attrs="{'readonly':
+                                                ['|',('confirm_check','=', True),('customer_type','=', 'existing')]}"/>
+                                        <field name="ref_by" colspan="3" attrs="{'readonly':
+                                               [('hide_ref','=', True)]}" on_change="onchange_ref_by(ref_by)"/><newline/>
+                                        <field name="ref_text" attrs="{'invisible':[('check_ref','=', False)],
+                                                                       'required':[('check_ref','=',True)],
+                                                                       'readonly':[('hide_ref','=', True)]}" colspan="3"/>
+                                        <field name="customer_type" colspan="2" readonly="1"/>
+                                        <button string="Confirm Primary Contact" colspan="1" name="confirm_primary_contact" 
+                                                type="object" 
+                                                attrs="{'invisible':['|',('customer_type','!=','new'),('confirm_check','=',True)]}"/>
+                                        <group colspan="4" col="3" attrs="{'invisible':[
+                                                ('customer_type','!=','existing'),('confirm_check','=',False)]}">  
+                                            <group attrs="{'invisible':[('state','!=','new')]}">      
+                                                <field name="cust_address_id"
+                                                        string="Edit Location" 
+                                                        attrs="{
+                                                            'invisible':[('customer_type','=','new')],
+                                                            'readonly':[('state','in', ['closed','cancel'])]
+                                                            }"
+                                                        domain='[("partner_id", "!=", False),("partner_id", "=", partner_id)]'/>
+                                                <field name="cust_address_id_new"
+                                                        string="Edit Location" 
+                                                        attrs="{'invisible':[('customer_type','=','existing')]}"
+                                                        domain='[("product_request_id", "!=", False),("product_request_id", "=", id)]'/> 
+                                            </group>
+                                            <group attrs="{'invisible':[('state','!=','new')]}">           
+                                                <button string="Edit"
+                                                        name="edit_location" 
+                                                        attrs="{'invisible':
+                                                                [
+                                                                 ('cust_address_id','=', []),
+                                                                 ('cust_address_id_new','=', [])
+                                                                ]}"
+                                                        type="object"/>
+                                                <button string="Add New Location"
+                                                        name="add_new_location" 
+                                                        type="object"
+                                                        attrs="{'invisible':
+                                                            [
+                                                             ('partner_id','=', False),
+                                                             ('customer_type','=', 'existing')
+                                                            ]}"/>
+                                            </group>                    
+                                        </group>              
+                                        <newline/>
+                                        <group colspan="3" col="3" attrs="{'invisible':
+                                                ['|',('state','not in',['open','cancel']),('customer_type','=','existing')]}">
+                                            <newline/>
+                                            <newline/>
+                                            <label string="" colspan="2"/>
+                                            <field name="request_cancellation_type" attrs="{'readonly':[('state','=','cancel')]}"/>
+                                            <newline/>
+                                            <group colspan="3" col="3" 
+                                                   attrs="{'invisible': ['|',('request_cancellation_type','=',False),
+                                                                             ('request_cancellation_type','=','other_branch')]}">
+                                                <label string="" colspan="3"/>
+                                                <field name="new_partner_id" invisible="1"/>
+                                                <field name="new_name" colspan="3"  
+                                                       attrs="{'readonly':[('state','=','cancel')]}"/>
+                                                <button string="Search" name="search_record" type="object" colspan=".5"
+                                                        attrs="{'invisible':['|',('request_cancellation_type','=',False),
+                                                                             '|',('request_cancellation_type','=','other_branch'),
+                                                                                 ('state','=','cancel')]}"/>
+                                            </group>
+                                            <group colspan="3" col="3" attrs="{'invisible':
+                                                       ['|',('request_cancellation_type','=',False),
+                                                            ('request_cancellation_type','!=','other_branch')]}">
+                                                <label string="" colspan="3"/>
+                                                <field name="other_branch_id" domain="[('establishment_type', 'in', ['psd','branch'])]" attrs="{'readonly':[('state','=','cancel')]}"/>
+                                            </group>
+                                        </group>
+                                    <group>                    
+                                </group>
+                            </group>
+                        </group>
+                        <group invisible="1">
+                            <field name="product_request_line_ids">
+                                <tree editable="bottom">
+                                    <field name="address"/>
+                                    <field name="primary_contact" invisible="1"/>
+                                    <field name="product_request_ref" invisible="1"/>
+                                </tree>
+                             </field>
+                        </group>
+                    <group attrs="{'invisible':[('confirm_check','=',False)]}">
+                        <group attrs="{'invisible':[('state','!=','new')]}" col="4" colspan="3">
+                            <field name="cust_address_id_1" string="Select location"
+                                   attrs="{'invisible':['|',('customer_type','=','new'),
+                                                            ('state','in',['closed','cancel'])]}"
+                                   domain='[("partner_id", "!=", False),("partner_id", "=", partner_id)]' colspan="1"/>      
+                            <field name="cust_address_id_2" string="Select location" colspan="1"
+                                   attrs="{'invisible':['|',('customer_type','=','existing'),
+                                                        ('state','in',['closed','cancel'])]}"
+                                   domain='[("product_request_id", "!=", False),("product_request_id", "=", id)]'/>   
+                             <button string="Add Product" 
+                                    name="add_product_locations" 
+                                    type="object"
+                                    colspan=".5"/> 
+                            <label string="" colspan="2"/>         
+                            <newline/>                          
+                        </group>   
+                        <newline/>         
+                        <field name="location_request_line" nolabel="1" 
+                                attrs="{'readonly':[('state','!=','new')]}" context="{'nocreate':1}">
+                                <tree editable="bottom">
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="address" readonly="1" required="1"/>
+                                    <field name="address_id" invisible="1"/>
+                                    <field name="address_id_2" invisible="1"/>
+                                    <field name="branch_id" required="1" 
+                                           on_change="onchange_branch_id(branch_id)"/>
+                                           <!-- domain="['|',('establishment_type','=','psd'), -->
+                                                       <!-- ('id','=',company_id)]"  -->
+                                           <!-- on_change="onchange_branch_id(branch_id)" -->
+                                    <field name="check_sold_by_psd" invisible="1"/>  
+                                    <field name="check_sold_by_ssd" invisible="1"/>   
+<!--                                     <field name="product_generic_id" required="1" 
+                                           on_change="onchange_product_generic_id(product_generic_id)"
+                                           domain="[('is_imported','=',True),'|',('sold_by_psd','=',check_sold_by_ssd),
+                                                        ('sold_by_psd','=',check_sold_by_psd)]"/> -->
+                                    <field name="product_name" on_change="onchange_product_generic_id(product_name)" domain="[('other_type','=','sale'),('product_state','=','in_use'),('psd_sale','=',True)]"/>
+<!--                                     <field name="sku_name_id" 
+                                           domain="[('generic_name','=',product_generic_id),('other_type','=','sale')]"
+                                           />    -->
+                                           <!-- context="{'view_id':'type'}"    -->
+                                    <field name="product_uom_id"/>
+                                    <field name="exempted" invisible="1"/>
+                                    <field name="available_quantity" readonly="1"/>
+                                    <field name="quantity" required="1"/>
+                                    <field name="remarks"/>
+                                    <field name="product_request_ref" invisible="1"/>
+                                </tree>
+                        </field>
+                        <newline/>
+                    </group>
+                    <group  col="8" colspan="4">
+                        <group colspan="1" attrs="{'invisible':[('confirm_check','=',False)]}">
+                        <button string="Process" name="submit_product_request" colspan=".5"
+                                type="object" attrs="{'invisible':[('state','!=','new')]}"/>
+                        <button string="Cancel" name="product_request_cancel" colspan=".5"
+                                type="object" attrs="{'invisible':[('state','!=','new')]}" 
+                                confirm="This Product request will be deleted!"/>
+                        <button string="Close" name="close_product_request" type="object" colspan=".5"
+                                attrs="{'invisible':[('state','in',['cancel','closed'])]}"  
+                                confirm="You will be redirected to the Global Search, plese save the details before confirming!"/>
+                        </group>
+                        <group colspan=".5">
+                        <button string="Cancel &amp; create new request" name="cancel_and_create_new_request" type="object"
+                                attrs="{'invisible':['|',('request_cancellation_type','=',False),
+                                                    '|',('request_cancellation_type','=','other_branch'),
+                                                        ('state','=','cancel')]}"/>
+                        <button string="Send to other branch" name="send_to_other_branch" type="object"  colspan=".5"
+                                attrs="{'invisible':['|',('request_cancellation_type','=',False),
+                                            '|',('request_cancellation_type','!=','other_branch'),
+                                                ('state','=','cancel')]}"/>
+                        </group>
+                        <label string="" colspan="8"/>
+                    </group>
+                        <group col="4" colspan="4" attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                                            ('cancel_request','=',True)]}">
+                            <field name="employee_id" domain="[('role_selection','!=','executor')]" colspan="1"
+                                   attrs="{'invisible':['|',('state','in',['new','cancel']),
+                                                            ('request_cancellation_type','!=',False)],
+                                            'readonly':[('state','in',['assigned','closed'])]}"/>
+                            <label string="" colspan=".5"/> 
+                            <button string="Assign Resource &amp; Push To Sales" 
+                                    name="assign_resource" type="object" colspan=".5"
+                                    attrs="{'invisible':['|',('state','!=','open'), ('employee_id','=',False)]}"/>
+                            <label string="" colspan="2"/>
+                            <label string="" colspan="2"/> 
+                        </group>
+                        <newline/>
+                        <!-- <group col="4" colspan="2" attrs="{'invisible':[('state','!=','assigned')]}">
+                            <label string="" colspan="1"/>
+                            <html>
+                                <button style="color:green">Resource Assigned &amp; Pushed To Sales</button>
+                                <h4 style="color:red">Resource is assigned &amp; the request is pushed to sales module!</h4>
+                            </html>
+                             <label string="" colspan="1"/>
+                        </group> -->
+                        <group colspan="4">
+                           <label string="" colspan="4"/>        
+                        </group>
+                        <group colspan="4">
+                           <label string="" colspan="4"/>        
+                        </group>
+                        <group col="5" colspan="4" 
+                               attrs="{'invisible':['|',('location_branch','!=','same'),
+                                                        ('state','in',['new','assigned','closed'])]}">
+                            <group colspan="1">
+                                 <field name="cancel_request"  attrs="{'invisible':
+                                        ['|',('state','=','cancel'),('request_cancellation_type','!=',False)]}"/>
+                            </group>
+                            <field name="cancellation_reason" colspan="1.5"
+                                   attrs="{'invisible':[('cancel_request','=',False)],
+                                           'readonly':[('state','=','cancel')]}"/>  
+                            <label string="" colspan=".5"/>     
+                            <button string="Cancel Request" name="cancel_product_request" type="object"
+                                    attrs="{'invisible':['|',('cancel_request','=',False),('state','=','cancel')]}" 
+                                    colspan=".5"/> 
+                            <label string="" colspan="3"/> 
+                        </group>
+                         <group col="4" colspan="4" invisible="context.get('hide_create_quotation',False)">
+                        <group attrs="{'invisible':[('psd_sales_entry','=',True)]}">
+                                <button string="Create Quotation" name="generate_sales_product_quotation" 
+                                        type="object" colspan="0.5" attrs="{'invisible':['|',('state','!=','assigned'),
+                                                                            '|',('psd_sales_entry','=',True),
+                                                                                ('state','!=','assigned')]}"/>
+                                <label string="OR" colspan="0.5" attrs="{'invisible':[
+                                                                            '|',('state','!=','assigned'),
+                                                                            '|',('psd_sales_entry','=',True),
+                                                                                ('state','!=','assigned')]}"/>
+                                <button string="Create Product Order" name="generate_direct_sales_product_order" 
+                                        type="object" colspan="0.5" attrs="{'invisible':['|',('state','!=','assigned'),
+                                                                            '|',('psd_sales_entry','=',True),
+                                                                                ('state','!=','assigned')]}"/>
+                               <!--  <label string="OR" colspan="0.5" attrs="{'invisible':[
+                                                                            '|',('state','!=','assigned'),
+                                                                            '|',('psd_sales_entry','=',True),
+                                                                                ('state','!=','assigned')]}"/>
+                                <button string="Create Service Quotation" name="generate_service_quotation" 
+                                        type="object" colspan="0.5" attrs="{'invisible':[
+                                                                            '|',('state','!=','assigned'),
+                                                                            '|',('psd_sales_entry','=',True),
+                                                                                ('state','!=','assigned')]}"/> -->
+                                <label string="" colspan="1"/>
+                                <label string="" colspan="2"/>
+                            </group>
+                        </group>  
+                        </page>
+                        <page string="Notes">
+                                <field name="notes_line" widget="one2many_list" nolabel="1" colspan="3" readonly="1">             
+                                        <tree string="Comments">
+                                        <field name="user_id"/>
+                                        <field name="state" invisible="0"/>
+                                        <field name="comment_date"/>
+                                        <field name="comment"/>
+                                        <field name="product_request_ref" invisible="0"/>
+                                    </tree>
+                                </field>
+                                <newline/>
+                                <separator string="" colspan="4"/>
+                                <group col="8" colspan="8">
+                                        <field name="comment_remark" colspan="4"/>
+                                        <button string="Add Notes" name="new_post_comment" type="object" colspan="1"/>
+                                        <label string="" colspan="3"/>
+                                </group>
+                            </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_product_request_tree_crm">
+            <field name="name">Product Request</field>
+            <field name="model">product.request</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string='Product Request'>
+                        <field name="active"/>
+                        <field name="product_request_id"/>
+                        <field name="call_type"/>
+                        <field name="name"/>
+                        <field name="customer_type"/>
+                        <field name="request_date"/>
+                        <field name="inquiry_type"/>
+                        <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_product_request_crm">
+            <field name="name">Product Request</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_product_request_form_crm"/>
+            <field name="context">{
+                'hide_create_quotation':True,
+                'nodelete': 0,
+                'noselect': 0,
+                'noduplicate':1
+            }</field>
+        </record>
+
+
+   <!-- ################################## Product === AMC boolean ################################## -->
+
+        <record id="amcproduct_normal_form_view" model="ir.ui.view">
+            <field name="name">amcproduct.inherit</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="product_tag_id"]' position='after'>
+                  <field name="amc_product" invisible="1"/>
+                  <field name="is_imported" invisible="1"/>
+                  <field name="psd_sale"/>
+              </xpath>
+            </field>
+        </record>
+
+
+       <menuitem id="ccc_info_req_psd_crm2" 
+                 name="Product Request Management" 
+                 parent="CCC_branch.menu_res_indent_cc_branch"
+                 sequence="20"
+                 />
+        <menuitem id="ccc_psd_ssd_product_request"
+                    name="Product Request"
+                    action="action_product_request_crm" 
+                    parent="ccc_info_req_psd_crm2"
+                    sequence="1"
+        />        
+    </data>
+</openerp>

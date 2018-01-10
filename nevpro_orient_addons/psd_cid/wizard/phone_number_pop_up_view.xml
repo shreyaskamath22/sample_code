@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="phone_number_pop_up_psd_form" model="ir.ui.view">
+            <field name="name">phone.number.pop.up.psd.form</field>
+            <field name="model">phone.number.pop.up.psd</field>
+            <field name="arch" type="xml">
+                <form string="Phone Numbers">
+                <group col='8' colspan='8'>
+                <field name="phone_number_ids" nolabel="1">
+                    <tree editable="top">
+                        <field name="type" required="1"/>
+                        <field name="number" required="1"/>
+                        <field name="phone_product_request_id" invisible="1"/>
+                        <field name="complaint_request_id" invisible="1"/>
+                        <field name="information_request_id" invisible="1"/>
+                    </tree>
+                    <form>
+                        <field name="type" required="1"/>
+                        <field name="number" required="1"/>
+                        <field name="phone_product_request_id" invisible="1"/>
+                    </form>
+                </field> 
+                <label string="" colspan="4"/>
+                </group>
+                <group col='8' colspan='8'>
+                <button name="save_phone_number" type="object" string="Save" colspan="0.5" icon="gtk-redo"/>
+                <button name="phone_cancel" type="object" string="Cancel" colspan="0.5" icon="gtk-cancel"/>
+                <label string="" colspan="7"/>
+                </group>
+                <newline/>
+            </form>
+            </field>
+        </record>
+
+    </data>
+</openerp>

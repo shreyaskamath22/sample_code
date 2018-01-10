@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_product_group_line,product.group.line,model_product_group_line,psd_cid_base.group_psd,1,1,1,1
+
+
+

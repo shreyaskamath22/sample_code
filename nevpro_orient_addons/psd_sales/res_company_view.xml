@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+
+       <record id="view_res_company_form_psd_sales_margin" model="ir.ui.view">
+                <field name="name">view.res.company.form.custom.margin.inherited1</field>
+                <field name="model">res.company</field>
+                <field name="type">form</field>
+                <field name="inherit_id" ref="base.view_company_form"/>
+                <field eval="18" name="priority"/>
+                <field name="arch" type="xml">
+                    <page string="Customer ID Margin">
+					<separator string="PSD Sales ID Margin" colspan="6"/>
+						<field name="sale_quotation_id"/>
+						<field name="sale_order_id"/>
+						<field name="service_quotation_id"/>
+						<field name="service_order_id"/>
+                    <separator string="PSD Invoice ID Margin" colspan="6"/>
+                        <field name="product_invoice_id"/>
+                        <field name="service_invoice_id"/>
+                        <field name="composite_invoice_id"/>
+                    </page>
+		</field>	
+        </record>
+	
+    </data>
+</openerp>
+

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+
+  	<record model="ir.ui.view" id="psd_day_book_main_form">
+		<field name="name">Day Book</field>
+		<field name="model">day.book.main</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+
+			<form string="Day Book">
+				 <field name="line" invisible="1"/>
+				 <group col="8" colspan="8">
+				        <field name="from_date" colspan="1"/>
+				        <field name="to_date" colspan="1"/>
+				        <button name="search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+				        <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+				        <field name="day_book_line_one2many" widget="one2many_list" nolabel="1" colspan="8" attrs="{'invisible':[('line','=',False)]}" context="{'nocreate':1}">
+				                <tree string="Day Book">
+				                        <field name="date"/>
+				                        <field name="particulars"/>
+				                        <field name="voucher_type"/>
+				                        <field name="voucher_no"/>
+				                        <field name="debit_amount" />
+				                        <field name="credit_amount" 	/>
+				                </tree>
+				                <form string="Day Book">
+
+				                   
+				                        <field name="date" invisible="1"/>
+				                        <field name="particulars" invisible="1"/>
+				                        <field name="voucher_type" invisible="1"/>
+				                        <field name="voucher_no" invisible="1"/>
+				                        <field name="debit_amount" invisible="1"/>
+				                        <field name="credit_amount" invisible="1"/>
+
+				                        <field name="day_book_subline_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}">
+				                                <tree string="Day Book">
+				                                        <field name="date"/>
+				                                        <field name="particulars"/>
+				                                        <field name="voucher_type"/>
+				                                        <field name="voucher_no"/>
+				                                        <field name="debit_amount" sum="Total"/>
+				                                        <field name="credit_amount" sum="Total"/>
+				                                </tree>
+				                                <form string="Day Book">
+				                                        <field name="date" readonly="1"/>
+				                                        <field name="particulars" readonly="1"/>
+				                                        <field name="voucher_type" readonly="1"/>
+				                                        <field name="voucher_no" readonly="1"/>
+				                                        <field name="debit_amount" readonly="1"/>
+				                                        <field name="credit_amount" readonly="1"/>
+				                
+				                                </form>
+				                        </field>          
+				                </form>
+				        </field>
+                                </group>
+                        </form>
+                </field>
+        </record>
+        	<record model="ir.ui.view" id="psd_ledgerwise_main_form">
+		<field name="name">Ledgerwise Details</field>
+		<field name="model">ledgerwise.main</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+
+			<form string="Ledgerwise Details">
+
+				 <field name="line" invisible="1"/>		
+				 <field name="cbob_line" invisible="1"/>
+				 <field name="cfob_line" invisible="1"/>	
+
+				 <field name="cfob" invisible="1" />		        
+				 <group col="8" colspan="8">
+				        <field name="from_date" on_change="change_date(from_date)" colspan="1"/>
+				        <field name="to_date" colspan="1"/>
+
+				        <field name="account_id" string="Ledger Name" invisible="1"/>
+                                        <field name="ledger_name" on_change="change_selection(ledger_name)"  context="{'default_form_id':id}" colspan="1" />
+				        <field name="customer_id" attrs="{'invisible':[('cfob','=',False)]}"  colspan="1"/>				       
+				        <button name="search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+				        <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+				        <field name="ledgerwise_line_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}" attrs="{'invisible':[('line','=',False)]}">
+				                <tree string="Ledgerwise Book">
+				                        <field name="date"/>
+				                        <field name="particulars" />
+				                        <field name="voucher_type"/>
+				                        
+				                        <field name="account_id" invisible="0"/>
+				                        <field name="voucher_no"/>
+				                        <field name="debit_amount" />
+				                        <field name="credit_amount" />
+				                </tree>
+				                <form string="Ledgerwise Book">
+				                        <field name="date" invisible="1"/>
+				                        <field name="particulars"  invisible="1"/>
+				                        <field name="voucher_type" invisible="1"/>
+				                        <field name="voucher_no" invisible="1"/>
+				                        <field name="debit_amount" invisible="1"/>
+				                        <field name="credit_amount" invisible="1"/>
+
+
+											<field name="ledgerwise_child_one2many" widget="one2many_list" nolabel="1" colspan="8"  context="{'nocreate':1}">
+													<tree string="Ledgerwise Child Book">
+														    <field name="date"/>
+														    <field name="particulars" />
+														    <field name="voucher_type"/>
+														    <field name="account_id" invisible="0"/>
+														    <field name="voucher_no"/>
+														    <field name="debit_amount" sum="Total"/>
+														    <field name="credit_amount" sum="Total"/>
+								       				 </tree>
+
+													<form string="Ledgerwise Book">
+														    <field name="date" readonly="1"/>
+														    <field name="particulars" readonly="1"/>
+														    <field name="voucher_type" readonly="1"/>
+														    <field name="account_id" invisible="0"/>
+														    <field name="voucher_no" readonly="1"/>
+														    <field name="debit_amount" readonly="1"/>
+														    <field name="credit_amount" readonly="1"/>
+													</form>
+						  				   </field>
+
+				           </form>
+				   </field>
+		   
+
+				   <field name="cfob_report_line_one2many" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+				                <tree string="CFOB Reortbbbbbb">
+				                        <field name="date"/>
+				                        <field name="particulars" />
+				                        <field name="cfob_date" />
+				                        <field name="branch_name" />
+				                        <field name="tax_rate" />
+				                        <field name="cfob_service_classification" />
+				                        <field name="cse" />
+				                        <field name="voucher_type"/>
+				                        <field name="voucher_no"/>
+				                        <field name="invoice_date" />
+				                        <field name="debit_amount" sum="Total"/>
+				                        <field name="credit_amount" sum="Total"/>
+				                </tree>
+		                </field>
+		                <field name="cfob_report_debit_total" invisible="1"/>
+		                
+                
+		                
+		                
+		                
+		                
+		                
+			<field name="cbob_report_one2many" widget="one2many_list" nolabel="1" colspan="8"  invisible="1" >
+
+        
+        
+				                <tree string="Ledgerwise Book">
+				                        <field name="date"/>
+				                        <field name="particulars" />
+				                        <field name="tax_rate" />
+			                          	<field name="service_classification" />
+			                         	<field name="voucher_type" />
+			                            	<field name="voucher_no" />
+			                                <field name="debit_amount" />
+			                                <field name="cse_name" />
+				                        
+				                        <field name="created_date" invisible="1"/>
+				                        <field name="credit_amount"/>
+				                      
+				                </tree>
+				                <form string="Ledgerwise Book">
+				                        <field name="date"/>
+				                        <field name="particulars" />
+				                         <field name="tax_rate" />
+				                          <field name="service_classification" />
+				                           <field name="voucher_type" />
+				                            <field name="voucher_no" />
+				                             <field name="debit_amount" />
+				                             <field name="cse_name" />
+				                        
+				                        <field name="created_date" invisible="1"/>
+				                        <field name="credit_amount"/>
+				                       
+						</form>
+					</field>
+                </group>
+                
+                
+                
+                
+                
+        
+		 <group col="4" colspan="4">
+		 <label string="" colspan="3"/>
+	        <!--button name="gen_report" string="Print" type="object" icon="gtk-print" colspan="0.5" attrs="{'invisible':['|',('line','=',False),('cbob_line','=',False)]}"/-->
+	        <button name="gen_report" string="Print" type="object" icon="gtk-print" colspan="0.5" attrs="{'invisible':[('line','=',False)]}"/>
+	        <!--button name="gen_report_cbob" string="Print" type="object" icon="gtk-print" colspan="0.5" attrs="{'invisible':[('cbob_line','=',False)]}"/-->
+	        
+
+	          </group>
+			<field name="total_credit" invisible="1"/>
+			<field name="total_debit" invisible="1" />
+             </form>
+
+       </field>
+        </record>
+          	<record model="ir.ui.view" id="psd_account_book_main_form">
+		<field name="name">Cash/Bank Book</field>
+		<field name="model">account.book.main</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+
+			<form string="Cash/Bank Book">
+			        <field name="line" invisible="1"/>
+				 <group col="8" colspan="8">
+				        <field name="from_date" colspan="1"/>
+				        <field name="to_date" colspan="1"/>
+				        <button name="search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+				        <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+				        <field name="account_book_line_one2many" widget="one2many_list" nolabel="1" colspan="8" attrs="{'invisible':[('line','=',False)]}" context="{'nocreate':1}" >
+				                <tree string="Cash/Bank Book">
+				                       
+				                        <field name="account_id"/>
+				                        
+				                        <field name="debit_amount" />
+				                        <field name="credit_amount" />
+				                </tree>
+				                <form string="Cash/Bank Book">
+				                        <field name="account_id" invisible="1"/>
+				                        <field name="debit_amount" invisible="1"/>
+				                        <field name="credit_amount" invisible="1"/>
+				                        <field name="account_book_line_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}">
+				                             <tree string="Cash/Bank Book">    
+				                                <field name="account_name"/>
+				                                <field name="debit_amount" sum="Total"/>
+				                                <field name="credit_amount" sum="Total"/>
+				                                <field name="closing_balance" invisible="1"/>
+				                                <field name="closing_balance_str"/>
+				                             </tree>
+				                             <form string="">    
+				                                <field name="account_name" invisible="1"/>
+				                                <field name="debit_amount" invisible="1"/>
+				                                <field name="credit_amount" invisible="1"/>
+				                                <field name="closing_balance" invisible="1"/>
+				                                 <field name="account_book_subline_one2many" widget="one2many_list" nolabel="1" colspan="8" context="{'nocreate':1}">
+				                                        <tree string="Cash/Bank Book">
+				                                                <field name="date"/>
+				                                                <field name="account_name"/>
+				                                                <field name="voucher_type"/>
+				                                                <field name="voucher_no"/>
+				                                                <field name="debit_amount" />
+				                                                <field name="credit_amount"/>
+				                                        </tree>  
+				                                        <form string="">
+				                                                <field name="date" readonly="1"/>
+				                                                <field name="account_name" readonly="1"/>
+				                                                <field name="voucher_type" readonly="1"/>
+				                                                <field name="voucher_no" readonly="1"/>
+				                                                <field name="debit_amount" readonly="1"/>
+				                                                <field name="credit_amount" readonly="1"/>
+				                                        </form>  
+				                                </field>
+				                             </form>
+				                                
+				                        </field>
+				                </form>
+				        </field>
+                                </group>
+                        </form>
+                </field>
+        </record>
+        <record id="psd_account_bill_form_id" model="ir.ui.view">
+	<field name="name">Bill Payable</field>
+	<field name="model">bill.payable.main</field>
+	<field name="priority" eval="16"/>
+	<field name="type">form</field>
+	<field name="arch" type="xml">
+			<form string="Bill Payable Details">
+		        <field name="line" invisible="1"/>
+			 <group col="8" colspan="8">
+			        <field name="from_date" colspan="1"/>
+			        <field name="to_date" colspan="1"/>
+			        <button name="search" string="Search" type="object" icon="gtk-find" colspan="1"/>
+			        <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="1"/>
+			        <field name="bill_line_one2many" widget="one2many_list" nolabel="1" colspan="8" attrs="{'invisible':[('line','=',False)]}" context="{'nocreate':1}">
+			                <tree string="Bill Payable Details">
+			                
+			                        <field name="date"  />
+			                       <field name="name"  />
+			                        <field name="pending_amount" sum="Total" />
+			                </tree>
+			                <form string="Bill Payable Detailsk">
+			                        <field name="date" invisible="1" />
+			                       <field name="name" invisible="1"/>
+			                        <field name="pending_amount" sum="Total" invisible="1" />
+
+
+										<field name="bill_child_one2many" widget="one2many_list" nolabel="1" colspan="8"  context="{'nocreate':1}">
+			
+			
+												<tree string="Bill Payable Child Book">
+													    <field name="date"/>
+													    <field name="receipt_no" />
+													   <field name="name"/>
+													    <field name="debit_amount" sum="Total"/>
+													    <field name="credit_amount" sum="Total"/>
+							       				 </tree>
+
+												<form string="Bill Payable Book">
+													    <field name="date"/>
+													    <field name="receipt_no" />
+													   <field name="name"/>
+													    <field name="debit_amount" sum="Total"/>
+													    <field name="credit_amount" sum="Total"/>
+												</form>
+					  				   </field>
+
+			           </form>
+			   </field>
+        </group>
+	 <group col="4" colspan="4">
+	 <label string="" colspan="3"/>
+        <button name="gen_report" string="Print" type="object" icon="gtk-undelete" colspan="1" attrs="{'invisible':[('line','=',False)]}"/>
+
+          </group>
+     </form>
+
+</field>
+</record>
+    </data>
+</openerp>

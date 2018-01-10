@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<openerp>
+	<data>
+    
+  <!-- Hidding ssd request menus -->
+
+        <menuitem id="CCC_branch.ccc_branch_complaint" 
+                  name="Complaint Request" 
+                  action="CCC_branch.search_complaint_branch_customer_act" 
+                  sequence="3" 
+                  parent="CCC_branch.ccc_branch_request_create"
+                  groups="psd_cid_base.group_ssd"/>   
+
+        <menuitem id="CCC_branch.ccc_branch_renewal" 
+                  name="Renewal Request" 
+                  action="CCC_branch.search_renewal_branch_customer_act" 
+                  sequence="4" 
+                  parent="CCC_branch.ccc_branch_request_create"
+                  groups="psd_cid_base.group_ssd"/>
+
+        <menuitem id="CCC_branch.ccc_branch_info_req" 
+                  name="Miscellaneous Request" 
+                  action="CCC_branch.search_information_branch_customer_act" 
+                  sequence="6" 
+                  parent="CCC_branch.ccc_branch_request_create"
+                  groups="psd_cid_base.group_ssd"/>
+
+        <menuitem id="CCC_branch.ccc_branch_new_cust" 
+                  name="New Customer Request" 
+                  action="CCC_branch.ccc_branch_new_action" 
+                  sequence="1" 
+                  parent="CCC_branch.ccc_branch_request_create"
+                  groups="psd_cid_base.group_ssd"/>
+
+        <menuitem id="CCC_branch.ccc_branch_lead" 
+                  name="Existing Customer Request" 
+                  action="CCC_branch.search_lead_branch_customer_act" 
+                  sequence="2" 
+                  parent="CCC_branch.ccc_branch_request_create"
+                  groups="psd_cid_base.group_ssd"/>    
+
+        <menuitem id="CCC_branch.ccc_branch_report" 
+                  name="Reporting" 
+                  action="CCC_branch.action_reports" 
+                  sequence="30" 
+                  parent="CCC_branch.menu_res_indent_cc_branch"
+                  groups="psd_cid_base.group_ssd"/>                         
+    </data>
+</openerp>

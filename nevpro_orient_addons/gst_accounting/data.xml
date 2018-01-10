@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record id="bps_campaign" model="campaign">
+            <field name="name">Bird Pro Campaign</field>
+        </record>
+        <record id="festive_offer_campaign" model="campaign">
+            <field name="name">Festive Offer Campaign</field>
+        </record>
+        <record id="no_campaign" model="campaign">
+            <field name="name">No Campaign</field>
+        </record>
+    </data>
+</openerp>

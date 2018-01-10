@@ -1,0 +1,1284 @@
+ <openerp>
+    <data>
+        <record model="ir.ui.view" id="psd_quaterly_report_form">
+        <field name="name">quaterly Report</field>
+        <field name="model">quaterly.report</field>
+        <field name="priority" eval="16"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Quaterly Report">
+
+                <group col="8" colspan="8">
+                    <field name="quaterly_selection" colspan="3" on_change="change_quaterly_selection(quaterly_selection)" string="Quarterly Report"/>
+                    <label string="" colspan="3.5"/>
+                    <newline/>
+
+                </group>
+
+
+                <group col="8" colspan="8">
+                    
+                    <field name="from_date" colspan="1"/>
+                    <field name="to_date" colspan="1"/>
+                    <button name="generate" string="Print" type="object" icon="gtk-print" colspan="1"/>
+                    <label string="" colspan="6"/>
+                    
+                    <newline/>
+                    <field name="stmt_itds_one2many" nolabel="1" widget="one2many_list" context="{'nocreate':1,'nodelete':1}" colspan="8" invisible="1">
+                            <tree string="">
+                                    
+                                    <field name="receipt_date"/>
+                                    <field name="customer_name" string="Party Name"/>
+                                    <field name="tan_no"/>
+                                    <field name="receipt_no"/>
+                                    <field name="invoice_no"/>
+                                    <field name="invoice_date"/>
+                                    <field name="gross_amt"/>
+                                    <field name="itds_amt"/>
+                                    <field name="certificate_recd"/>
+                                    <field name="pending_amt"/>
+                                    
+                            </tree>
+                     </field>
+                     <newline/>
+<!-- EMD Summary -->                     
+                     <field name="total_gross_amt" invisible="1"/>
+                     <field name="total_itds_amt" invisible="1"/>
+                     <field name="total_certificate_recd" invisible="1"/>
+                     <field name="total_pending_amt" invisible="1"/>
+                     <field name="opening_sundry" invisible="1"/>
+                     <field name="emd_paid" invisible="1"/>
+                     <field name="refund_branch" invisible="1"/>
+                     <field name="emd_security" invisible="1"/>
+                     <field name="closing_sundry" invisible="1"/>
+                     <field name="company_id" invisible="1"/>
+                </group>
+
+<!-- ITDS Summary -->
+                <group col="8" colspan="8">
+                    <field name="opening_amount" invisible="1"/>
+                    <field name="deduction_during_period" invisible="1"/><newline/>
+                    <field name="certificate_collected" invisible="1"/>
+                    <field name="closing_amount" invisible="1"/>
+                </group>
+                
+                
+<!-- Security Deposit Summary -->
+                <group col="8" colspan="8">
+                        <field name="opening_security" invisible="1" />
+                    <field name="closing_security" invisible="1"/>
+                    <field name="sec_deposit_deducted" invisible="1"/>
+                    <field name="refund_received_branch" invisible="1"/>
+                    <field name="emd_converted_security" invisible="1"/>
+                </group>
+                
+
+<!-- Security Deposit Receivable -->
+                <group col="8" colspan="8">
+                    <field name="security_deposit_receivable_line" nolabel="1" widget="one2many_list" invisible="1">
+                        <tree string="">
+                            <field name="date"/>
+                            <field name="ref_no"/>
+                            <field name="party_name"/>
+                            <field name="opening_amount"/>
+                            <field name="pending_amount"/>
+                            <field name="overdue_days"/>
+                        </tree>
+                    </field><newline/>
+                    <field name="opening_amt_total" invisible="1"/>
+                    <field name="pending_amt_total" invisible="1"/>
+                </group>
+<!-- Sundry Deposit Receivable -->
+                <group col="8" colspan="8">
+                    <field name="sundry_deposit_receivable_line" nolabel="1" widget="one2many_list" invisible="1">
+                        <tree string="">
+                            <field name="date"/>
+                            <field name="ref_no"/>
+                            <field name="party_name"/>
+                            <field name="opening_amount"/>
+                            <field name="pending_amount"/>
+                            <field name="overdue_days"/>
+                        </tree>
+                    </field><newline/>
+                    <field name="sundry_opening_total" invisible="1"/>
+                    <field name="sundry_pending_total" invisible="1"/>
+                </group>
+
+<!-- Advance to staff aaaa-->
+
+                <group col="8" colspan="8">
+                    <field name="advance_to_staff_line_rec" invisible="1" nolabel="1" widget="one2many_list" >
+                        <tree string="">
+                            <field name="emp_name"/>
+
+                            <field name="opening_bal"/>
+                            <field name="debit_amount"/>
+                            <field name="credit_amount"/>
+                            <field name="closing_bal"/>
+
+                        </tree>
+                    </field><newline/>
+                </group>
+                <group col="8" colspan="8">
+                    <field name="advance_to_staff_line" invisible="1" nolabel="1" widget="one2many_list" >
+                        <tree string="">
+                            <field name="emp_name"/>
+
+                            <field name="opening_bal"/>
+                            <field name="debit_amount"/>
+                            <field name="credit_amount"/>
+                            <field name="closing_bal"/>
+
+                        </tree>
+                    </field><newline/>
+                </group>
+                <group col="8" colspan="8">
+                    <field name="opening_amt_total" invisible="1"/>
+                    <field name="debit_amt_total" invisible="1"/>
+                    <field name="credit_amt_total" invisible="1"/>
+                    <field name="closing_amt_total" invisible="1"/>
+                </group>
+                
+            </form>
+        </field>
+    </record>
+
+
+         <record model="ir.ui.view" id="psd_monthly_report_form">
+                 <field name="name">Monthly Report</field>
+                 <field name="model">monthly.report</field>
+                 <field name="priority" eval="16"/>
+                    <field name="type">form</field>
+                    <field name="arch" type="xml">
+                    <form string="Monthly Report">
+
+                        <group col="8" colspan="8">
+                                <group col="6" colspan="6">
+                                    <field name="monthly_selection" colspan="2" on_change="change_monthly_selection(monthly_selection)"/>
+                                        
+
+                                    <field name="payment_method"  attrs="{'invisible':[('monthly_selection','!=','bank_slip_book')]}"  colspan="2"/>
+
+                                                                                
+                                        <field name="report_type" on_change="change_report_selection(report_type)"  attrs="{'invisible':[('monthly_selection','!=','st_input_report')]}"  colspan="2"/>
+                                            
+
+                                        
+
+
+                        
+                                            <field name="from_date" colspan="1" />
+                                            <field name="to_date" colspan="1" attrs="{'readonly':[('monthly_selection','=','st_input_report')]}"/>
+
+                        
+                                        </group>
+                                        <field name="xls_source" colspan="1" invisible="1"/>
+                        
+
+                            <group col="8" colspan="8">
+                            <label string="" colspan="5"/>
+                            <button name="psd_print_monthly_report" string="Print" type="object" icon="gtk-print" colspan="1" attrs="{'invisible':[('monthly_selection','=','st_input_report')]}"/>
+                            
+                            <button name="generate_xls" string="Generate XLS" type="object" attrs="{'invisible':[('monthly_selection','!=','st_input_report')]}" colspan="1"/>
+
+                        <field name="xls_data" nolabel="1" readonly="1" width="100" filename="xls_source" colspan="1" attrs="{'invisible':[('monthly_selection','!=','st_input_report')]}"/>
+                        
+                        
+
+
+
+                         </group>
+                                        </group>
+
+        <!--Summary of Service Tax#a-->
+
+                    <group col="8" colspan="8" string="Gross Billing" invisible="1" >
+                                <field name="gross_billing_service_12_36" />
+                                <field name="gross_billing_service_taxable_amount"/>
+                                <field name="gross_billing_non_taxable_amount"/>
+                                <field name="gross_billing_port_12_36"/>
+                                <field name="gross_billing_air_taxable_12_36"/>
+                                <field name="gross_billing_service_exempted"/>
+                    </group>
+                    <group col="8" colspan="8"   string="Collection Against" invisible="1" >
+                                <field name="collection_against_service_12_36"/>
+                                <field name="collection_against_taxable_amount"/>
+                                <field name="collection_against_non_taxable_amount"/>
+                                <field name="collection_against_port_12_36"/>
+                                <field name="collection_against_air_taxable_12_36"/>
+                    </group>
+
+                    <group col="8" colspan="8"   string="Advance Collection" invisible="1" >
+                                <field name="advance_collection_service_12_36"/>
+                                <field name="advance_collection_service_taxable_amount"/>
+                                <field name="advance_collection_non_taxable_amount"/>
+                                <field name="advance_collection_port_12_36"/>
+                                <field name="advance_collection_air_taxable_12_36"/>
+                    </group>
+
+
+                    <group col="8" colspan="8"   string="Billing During" invisible="1" >
+                                <field name="billing_during_period_service_12_36"/>
+                                <field name="billing_during_period_service_taxable_amount"/>
+                                <field name="billing_during_period_non_taxable_amount"/>
+                                <field name="billing_during_period_port_12_36"/>
+                                <field name="billing_during_period_air_taxable_12_36"/>
+                    </group>
+
+
+                    <group col="8" colspan="8"   string="Credit Note" invisible="1" >
+                                <field name="credit_note_service_12_36"/>
+                                <field name="credit_note_service_taxable_amount"/>
+                                <field name="credit_note_non_taxable_amount"/>
+                                <field name="credit_note_port_12_36"/>
+                                <field name="credit_note_air_taxable_12_36"/>
+                                
+                    </group>
+            
+
+
+                    <group col="8" colspan="8"   string="Service Tax Period Service" invisible="1" >
+                                <field name="service_tax_period_service_12_36"/>
+                                <field name="service_tax_period_service_taxable_amount"/>
+                                <field name="service_tax_period_non_taxable_amount"/>
+                                <field name="service_tax_period_port_12_36"/>
+                                <field name="service_tax_period_air_taxable_12_36"/>
+                    </group>
+
+
+
+
+                    <group col="8" colspan="8"   string="Service Tax Collection Against" invisible="1" >
+                                <field name="service_tax_collection_against_service_12_36"/>
+                                <field name="service_tax_collection_against_taxable_amount"/>
+                                <field name="service_tax_collection_against_non_taxable_amount"/>
+                                <field name="service_tax_collection_against_port_12_36"/>
+                                <field name="service_tax_collection_against_air_taxable_12_36"/>
+                    </group>
+
+
+
+
+                    <group col="8" colspan="8"   string="Service Tax Advance Collection"  invisible="1" >
+                                <field name="service_tax_advance_collection_service_12_36"/>
+                                <field name="service_tax_advance_collection_service_taxable_amount"/>
+                                <field name="service_tax_advance_collection_non_taxable_amount"/>
+                                <field name="service_tax_advance_collection_port_12_36"/>
+                                <field name="service_tax_advance_collection_air_taxable_12_36"/>
+                    </group>
+
+
+                    <group col="8" colspan="8"   string="Service Tax Billing During"  invisible="1" >
+                                <field name="service_tax_billing_during_period_service_12_36"/>
+                                <field name="service_tax_billing_during_period_service_taxable_amount"/>
+                                <field name="service_tax_billing_during_period_non_taxable_amount"/>
+                                <field name="service_tax_billing_during_period_port_12_36"/>
+                                <field name="service_tax_billing_during_period_air_taxable_12_36"/>
+                    </group>
+
+                    <group col="8" colspan="8"   string="Service Tax Credit Note"  invisible="1" >
+                                <field name="service_tax_credit_note_service_12_36"/>
+                                <field name="service_tax_credit_note_service_taxable_amount"/>
+                                <field name="service_tax_credit_note_non_taxable_amount"/>
+                                <field name="service_tax_credit_note_port_12_36"/>
+                                <field name="service_tax_credit_note_air_taxable_12_36"/>
+                    </group>
+            
+                    <group col="8" colspan="8"   string="classification"  invisible="1" >
+                                <field name="cleaning_service_u65_gross"/>
+                                <field name="port_service_u65_gross"/>
+                                <field name="airport_service_u65_gross"/>
+                                <field name="classification_total"/>
+                    </group>
+
+                    <group col="8" colspan="8"   string="classification Tax"  invisible="1" >
+                                <field name="cleaning_service_u65_tax"/>
+                                <field name="port_service_u65_tax"/>
+                                <field name="airport_service_u65_tax"/>
+                                <field name="classification_total_tax"/>
+                    </group>
+                
+
+                    <group col="8" colspan="8"   string="Total" invisible="1" >
+                                <field name="total_10_20"/>
+                                <field name="total_10_30"/>
+                                <field name="total_12_24"/>
+                                <field name="total_12_36"/>
+                                <field name="total_exempted"/>
+                                <field name="total_taxable"/>
+                                <field name="total_non_taxable"/>
+                                <field name="total_port_10_30"/>
+                                <field name="total_port_12_36"/>
+                                <field name="total_air_port_10_30"/>
+                                <field name="total_air_port_12_36"/>
+
+
+                            <group col="8" colspan="8"   string="Total" invisible="1" >
+                                <field name="service_total_10_20"/>
+                                <field name="service_total_10_30"/>
+                                <field name="service_total_12_24"/>
+                                <field name="service_total_12_36"/>
+                                <field name="service_total_exempted"/>
+                                <field name="service_total_taxable"/>
+                                <field name="service_total_non_taxable"/>
+                                <field name="service_total_port_10_30"/>
+                                <field name="service_total_port_12_36"/>
+                                <field name="service_total_air_port_10_30"/>
+                                <field name="service_total_air_port_12_36"/>
+                                </group>
+
+
+
+                    </group>
+
+
+            
+        <!-- Statement of Collection -->
+                        <group col="8" colspan="8">
+                            <field name="stmt_collection_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="receipt_no"/>
+                                    <field name="party_name"/>
+                                    <field name="iob_acc_one" sum="Total"/>
+                                    <field name="iob_acc_one_second" sum="Total"/>
+                                    <field name="iob_acc_one_cheque" sum='Total'/>
+                                    <field name="iob_acc_one_second_cheque" sum='Total'/>
+                                    <field name="cash" sum="Total"/>
+                                    <field name="security_deposit" sum="Total"/>
+                                    <field name="itds" sum="Total"/>
+                                    <field name="others_cfob" sum="Total"/>
+                                    <field name="gross_amount" sum="Total"/>
+                                    <field name="taxable1" sum="Total"/>
+                                    <field name="taxable2" sum="Total"/>
+                                    <field name="taxable3" sum="Total"/>
+                                    <field name="taxable3_cheque" sum="Total"/>
+                                    <field name="non_taxable_services"/>
+                                    <field name="other_collection" sum="Total"/>
+                                    <field name="remarks"/>
+                                </tree>
+
+                                <form string="">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="date"/>
+                                    <field name="receipt_no"/>
+                                    <field name="party_name"/>
+                                    <field name="iob_acc_one" sum="Total"/>
+                                    <field name="iob_acc_one_cheque" sum='Total'/>
+                                    <field name="cash" sum="Total"/>
+                                    <field name="security_deposit" sum="Total"/>
+                                    <field name="itds" sum="Total"/>
+                                    <field name="others_cfob" sum="Total"/>
+                                    <field name="gross_amount" sum="Total"/>
+                                    <field name="taxable1" sum="Total"/>
+                                    <field name="taxable2" sum="Total"/>
+                                    <field name="taxable3" sum="Total"/>
+                                    <field name="taxable3_cheque" sum="Total"/>
+                                    <field name="non_taxable_services"/>
+                                    <field name="other_collection" sum="Total"/>
+                                    <field name="remarks"/>
+                                </form>
+        <group col="8" colspan="8">
+                            <field name="cash_withdraw_cheq_payment_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="cheque_no"/>
+                                    <field name="party_name"/>
+                                    <field name="cash_withdrawn"/>
+                                    <field name="cheque_payments"/>
+                                    <field name="account_head"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="cash_withdrawn_total" colspan="2" invisible="1"/>
+                            <field name="cheque_payment_total" colspan="2" invisible="1"/><label string="" colspan="4"/>
+                        </group>
+                            </field>
+
+                            <field name="iob_one_total" invisible="1"/>
+                            <field name="iob_one_total_second" invisible="1"/>
+                            <field name="iob_one_total_cheque" invisible="1"/>
+                            <field name="iob_one_second_total_cheque" invisible="1"/>
+                            <field name="sd_total" invisible="1"/>
+                            <field name="cash_total" invisible="1"/>
+                            <field name="itds_total" invisible="1"/>
+                            <field name="others_total" invisible="1"/>
+                            <field name="taxable_total1" invisible="1"/>
+                            <field name="taxable_total2" invisible="1"/>
+                            <field name="taxable_total3" invisible="1"/>
+                            <field name="taxable_total3_cheque" invisible="1"/>
+                            <field name="gross_amount_total" invisible="1"/>
+                            <field name="others_collect_total" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+        <!-- Summary of A/c -->
+                        <group col="8" colspan="8">
+                            <field name="total_sales_receipts_cash" invisible="1"/>
+                            <field name="total_sales_receipts_iob_one" invisible="1"/>
+                            <field name="total_sales_receipts_iob_one_second" invisible="1"/>
+                            <field name="cash_deposited" invisible="1"/><newline/>
+                            <field name="total_other_receipts_cash" invisible="1"/>
+                            <field name="total_other_receipts_iob_one" invisible="1"/>
+                            <field name="total_other_receipts_iob_one_second" invisible="1"/>
+                            <field name="cash_withdrawn" invisible="1"/><newline/>
+                            <field name="contra_iob_one" invisible="1"/>
+                            <field name="contra_iob_one_second" invisible="1"/>
+                            <field name="contra_iob_two" invisible="1"/><newline/>
+                            <field name="cash_total1" invisible="1"/>
+                            <field name="cash_total2" invisible="1"/>
+                            <field name="iob_one_total1" invisible="1"/><newline/>
+                            <field name="iob_one_total1_second" invisible="1"/><newline/>
+                            <field name="iob_one_total2" invisible="1"/>
+                            <field name="iob_one_total2_second" invisible="1"/>
+                            <group col="8" colspan="8">
+                            <field name="cash_withdraw_cheq_payment_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="cheque_no"/>
+                                    <field name="party_name"/>
+                                    <field name="cash_withdrawn"/>
+                                    <field name="cheque_payments"/>
+                                    <field name="account_head"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="cash_withdrawn_total" colspan="2" invisible="1"/>
+                            <field name="cheque_payment_total" colspan="2" invisible="1"/><label string="" colspan="4"/>
+                        </group>
+                            <field name="iob_two_total1" invisible="1"/>
+                            <field name="iob_two_total2" invisible="1"/><newline/>
+                            <field name="payment_cash_credit" invisible="1"/>
+                            <field name="payment_iob_two_cr" invisible="1"/>
+                            <field name="cash_withdrawn_iob_two_cr" invisible="1"/><newline/>
+                            <field name="cash_collected_iob_one" invisible="1"/><newline/>
+                            <field name="cash_collected_iob_one_second" invisible="1"/><newline/>
+                            <field name="ho_remittance" invisible="1"/>
+                            <field name="ho_remittance_second" invisible="1"/>
+                            <field name="bank_charges_cash" invisible="1"/>
+                            <field name="bank_charges_iob" invisible="1"/>                  
+
+                            <field name="cash_opening" invisible="1"/><newline/>
+                            <field name="iob_one_opening" invisible="1"/>
+                            <field name="iob_one_opening_second" invisible="1"/>
+                            <field name="iob_two_opening" invisible="1"/><newline/>
+                            <field name="sub_total_cash" invisible="1"/>
+                            <field name="sub_total_iob_one" invisible="1"/>
+                            <field name="sub_total_iob_one_second" invisible="1"/>
+                            <field name="sub_total_iob_two" invisible="1"/><newline/>
+
+                            <field name="cash_closing" invisible="1"/>
+                            <field name="iob_one_closing" invisible="1"/>
+                            <field name="iob_one_closing_second" invisible="1"/>
+                            <field name="iob_two_closing" invisible="1"/><newline/>
+                        </group>
+
+        <!-- Statement of Bank Charges -->
+                        <group col="8" colspan="8">
+                            <field name="stmt_bank_charges_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="voucher_date"/>
+                                    <field name="bank_date"/>
+                                    <field name="iob_one"/>
+                                    <field name="iob_two"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="total_bank_charges_one" colspan="2" invisible="1"/>
+                            <field name="total_bank_charges_two" colspan="2" invisible="1"/><label string="" colspan="4"/>
+                        </group>
+
+
+        <!-- Cse COllection summary -->
+
+                        <group col="8" colspan="8">
+                            <field name="cse_collection_one2many" widget="one2many_list" nolabel="1" colspan="8" invisible="1" >
+                            
+                                <tree string="">
+                                    <field name="grand_amount_bill"/>
+                                    <field name="basic_amount_net"/>
+                                    <field name="with_in_ccp"/>
+                                    <field name="beyond_ccp"/>
+                                    <field name="cse_text"/>
+                                    <field name="cce_amt"/> 
+                                </tree>
+                                <form string="">
+                                    <field name="grand_amount_bill"/>
+                                    <field name="basic_amount_net"/>
+                                    <field name="with_in_ccp"/>
+                                    <field name="beyond_ccp"/>
+                                    <field name="cse_text"/>
+                                    <field name="cce_amt"/> 
+                                </form>
+                            </field><newline/>
+                        </group>
+
+        <!-- Statement of Bank Slip Book IOB I -->
+                        <group col="8" colspan="8">
+                            <field name="slip_book_one_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="sequence"/>
+                                    <field name="party_name"/>
+                                    <field name="cheque_no"/>
+                                    <field name="cheque_date"/>
+                                    <field name="bank_name"/>
+                                    <field name="branch_name"/>
+                                    <field name="voucher_no"/>
+                                    <field name="amount"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="total_amount" colspan="2" invisible="1"/><label string="" colspan="6"/>
+                        </group>
+
+        <!-- Cash Withdrawal and Cheque Payment from A/c II -->
+                        <group col="8" colspan="8">
+                            <field name="cash_withdraw_cheq_payment_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="cheque_no"/>
+                                    <field name="party_name"/>
+                                    <field name="cash_withdrawn"/>
+                                    <field name="cheque_payments"/>
+                                    <field name="account_head"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="cash_withdrawn_total" colspan="2" invisible="1"/>
+                            <field name="cheque_payment_total" colspan="2" invisible="1"/><label string="" colspan="4"/>
+                        </group>
+
+                        <group col="8" colspan="8">
+                            <field name="cash_withdraw_cheq_payment_line_new" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="cheque_no"/>
+                                    <field name="party_name"/>
+                                    <field name="cash_withdrawn"/>
+                                    <field name="cheque_payments"/>
+                                    <field name="account_head"/>
+                                </tree>
+                            </field><newline/>
+                        </group>
+
+
+        <!-- Statement of TDS Recoveries -->
+                        <group col="8" colspan="8">
+                            <field name="tds_recovery_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="payment_date"/>
+                                    <field name="party_name_address"/>
+                                    <field name="pan_no"/>
+                                    <field name="bill_no"/>
+                                    <field name="bill_date"/>
+                                    <field name="bill_amount"/>
+                                    <field name="bill_amount_invisible"/>
+                                    <field name="tds_rate"/>
+                                    <field name="tds_amount"/>
+                                    <field name="tds_amount_invisible"/>
+                                    <field name="net_amount"/>
+                                    <field name="net_amount_invisible"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="bill_amount_total" colspan="2" invisible="1"/>
+                            <field name="tds_amount_total" colspan="2" invisible="1"/>
+                            <field name="net_amount_total" colspan="2" invisible="1"/><label string="" colspan="2"/>
+                        </group>
+
+                        
+        <!-- Statement Recoveries -->
+                        <group col="8" colspan="8">
+                            <field name="sor_one2many" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    
+                                    <field name="date"/>
+                                    <field name="customer_name"/>
+                                    <field name="cash"/>
+                                    <field name="iob_one"/>
+                                    <field name="iob_two"/>
+                                    <field name="remark"/>              
+                                        </tree>
+                                        <form string="Details">
+                                    
+                                    <field name="date"/>
+                                    <field name="customer_name"/>
+                                    <field name="cash"/>
+                                    <field name="iob_one"/>
+                                    <field name="iob_two"/>
+                                    <field name="remark"/>              
+                                        </form>
+                                            </field>
+                                            <newline/>
+                                            <field name="total_cash" invisible="1"/>
+                                            <field name="total_iob_one" invisible="1"/>
+                                            <field name="total_iob_two" invisible="1"/>
+                                            
+                                        </group>                                                               
+                                
+
+        <!--Statement of Funds Transferred to IOB II-->
+                        <group col="8" colspan="8">
+                            <field name="funds_transferred_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="cheque_no"/>
+                                    <field name="cheque_date"/>
+                                    <field name="remarks"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="total_amount" colspan="2" invisible="1"/><label string="" colspan="6"/>
+                        </group>
+
+
+        <!--Statement of Funds Remmited to ho/branches-->
+                                        <group col="8" colspan="8">
+                                                <field name="stmt_funds_one2many" widget="one2many_list" nolabel="1" colspan="8"  invisible="1" >
+                                <tree string=""> 
+                                        <field name="voucher_date"/> 
+                                        <field name="cheque_date"/> 
+                                        <field name="iob_one"/> 
+                                        <field name="ho_service"/> 
+                                        <field name="product"/> 
+                                        <field name="branch"/> 
+                                        <field name="remark"/> 
+                                        </tree>
+                            </field><newline/>
+                            <field name="total_remi_iob" invisible="1"/>
+                            <field name="total_remi_ho" invisible="1"/>
+                            <field name="total_remi_br" invisible="1"/>
+                        </group>
+
+
+        <!-- Reconciliation Statement Sundry Debtors -->
+                        <group col="8" colspan="8" >
+                            <field name="opening_outstanding1" invisible="1"/>
+                            <field name="month_bill1" invisible="1"/>
+                            <field name="period_collection1" invisible="1"/>
+                            <field name="head_office_collection1" invisible="1"/>
+                            <field name="collection_other_branches1" invisible="1"/>
+                            <field name="credit_note1" invisible="1"/>
+                            <field name="advance_receipt1" invisible="1"/>
+                            <field name="other_branch_collection1" invisible="1"/>
+                            <field name="debit_notes1" invisible="1"/>
+                            <field name="cheques_dishonoured1" invisible="1"/>
+                            <field name="excess_collection1" invisible="1"/>
+                            <field name="sales_refund1" invisible="1"/>
+                            <field name="outstanding1" invisible="1"/>
+                            <field name="total_outstanding1" invisible="1"/>
+                        </group>
+
+                        <group col="8" colspan="8">
+                            <field name="opening_outstanding2" invisible="1"/>
+                            <field name="month_bill2" invisible="1"/>
+                            <field name="period_collection2" invisible="1"/>
+                            <field name="head_office_collection2" invisible="1"/>
+                            <field name="collection_other_branches2" invisible="1"/>
+                            <field name="credit_note2" invisible="1"/>
+                            <field name="advance_receipt2" invisible="1"/>
+                            <field name="other_branch_collection2" invisible="1"/>
+                            <field name="debit_notes2" invisible="1"/>
+                            <field name="cheques_dishonoured2" invisible="1"/>
+                            <field name="excess_collection2" invisible="1"/>
+                            <field name="sales_refund2" invisible="1"/>
+                            <field name="outstanding2" invisible="1"/>
+                            <field name="total_outstanding2" invisible="1"/>
+                        </group><group col="8" colspan="8">
+                            <field name="cash_withdraw_cheq_payment_line" widget="one2many_list" nolabel="1" colspan="8" invisible="1">
+                                <tree string="">
+                                    <field name="date"/>
+                                    <field name="cheque_no"/>
+                                    <field name="party_name"/>
+                                    <field name="cash_withdrawn"/>
+                                    <field name="cheque_payments"/>
+                                    <field name="account_head"/>
+                                </tree>
+                            </field><newline/>
+                            <field name="cash_withdrawn_total" colspan="2" invisible="1"/>
+                            <field name="cheque_payment_total" colspan="2" invisible="1"/><label string="" colspan="4"/>
+                        </group>
+
+
+                        <group col="8" colspan="8">
+                            <field name="opening_outstanding3" invisible="1"/>
+                            <field name="month_bill3" invisible="1"/>
+                            <field name="period_collection3" invisible="1"/>
+                            <field name="head_office_collection3" invisible="1"/>
+                            <field name="collection_other_branches3" invisible="1"/>
+                            <field name="credit_note3" invisible="1"/>
+                            <field name="advance_receipt3" invisible="1"/>
+                            <field name="other_branch_collection3" invisible="1"/>
+                            <field name="debit_notes3" invisible="1"/>
+                            <field name="cheques_dishonoured3" invisible="1"/>
+                            <field name="excess_collection3" invisible="1"/>
+                            <field name="sales_refund3" invisible="1"/>
+                            <field name="outstanding3" invisible="1"/>
+                            <field name="total_outstanding3" invisible="1"/>
+                        </group>
+
+                        <group col="8" colspan="8">
+                            <field name="opening_outstanding4" invisible="1"/>
+                            <field name="month_bill4" invisible="1"/>
+                            <field name="period_collection4" invisible="1"/>
+                            <field name="head_office_collection4" invisible="1"/>
+                            <field name="collection_other_branches4" invisible="1"/>
+                            <field name="credit_note4" invisible="1"/>
+                            <field name="advance_receipt4" invisible="1"/>
+                            <field name="other_branch_collection4" invisible="1"/>
+                            <field name="debit_notes4" invisible="1"/>
+                            <field name="cheques_dishonoured4" invisible="1"/>
+                            <field name="excess_collection4" invisible="1"/>
+                            <field name="sales_refund4" invisible="1"/>
+                            <field name="outstanding4" invisible="1"/>
+                            <field name="total_outstanding4" invisible="1"/>
+                        </group>
+
+
+                        <group col="8" colspan="8" invisible="1">
+                            <field name="opening_outstanding5" />
+                            <field name="month_bill5" />
+                            <field name="period_collection5" />
+                            <field name="head_office_collection5" />
+                            <field name="collection_other_branches5" />
+                            <field name="credit_note5"/>
+                            <field name="advance_receipt5" />
+                            <field name="other_branch_collection5" />
+                            <field name="debit_notes5" />
+                            <field name="cheques_dishonoured5" />
+                            <field name="excess_collection5" />
+                            <field name="sales_refund5" />
+                            <field name="outstanding5" />
+                            <field name="total_outstanding5" />
+                        </group>
+
+        <!-- Statement of Payment -->
+                        <group col="8" colspan="8">
+                                                <field name="stmt_payment_line" widget="one2many_list" colspan="8" nolabel="1" invisible="1" >
+                                <tree string="">
+                                    <field name="account_name_grandparents"/>
+                                    <field name="no_of_vchrs"/>
+                                    <field name="cash_debit"/>
+                                    <field name="cash_credit"/>
+                                    <field name="bank_debit"/>
+                                    <field name="bank_credit"/>
+                                    <field name="total"/>
+                                </tree>
+
+                                <form string="">
+                                    <field name="account_name_grandparents"/>
+                                    <field name="no_of_vchrs"/>
+                                    <field name="cash_debit"/>
+                                    <field name="cash_credit"/>
+                                    <field name="bank_debit"/>
+                                    <field name="bank_credit"/>
+                                    <field name="total"/>
+
+                                    <field name="stmt_payment_line_parent" widget="one2many_list" colspan="8" nolabel="1" invisible="1">
+                                        <tree string="">
+                                            <field name="account_name_parent"/>
+                                            <field name="no_of_vchrs"/>
+                                            <field name="cash_debit"/>
+                                            <field name="cash_credit"/>
+                                            <field name="bank_debit"/>
+                                            <field name="bank_credit"/>
+                                            <field name="total"/>
+                                        </tree>
+
+                                        <form string="">
+                                            <field name="account_name_parent"/>
+                                            <field name="no_of_vchrs"/>
+                                            <field name="cash_debit"/>
+                                            <field name="cash_credit"/>
+                                            <field name="bank_debit"/>
+                                            <field name="bank_credit"/>
+                                            <field name="total"/>
+
+                                            <field name="stmt_payment_line_child" widget="one2many_list" colspan="8" nolabel="1" invisible="1">
+                                                <tree string="">
+                                                    <field name="account_name_child"/>
+                                                    <field name="no_of_vchrs"/>
+                                                    <field name="cash_debit"/>
+                                                    <field name="cash_credit"/>
+                                                    <field name="bank_debit"/>
+                                                    <field name="bank_credit"/>
+                                                    <field name="total"/>
+
+                                                </tree>
+
+                                                <form string="">
+                                                    <field name="account_name_child"/>
+                                                    <field name="no_of_vchrs"/>
+                                                    <field name="cash_debit"/>
+                                                    <field name="cash_credit"/>
+                                                    <field name="bank_debit"/>
+                                                    <field name="bank_credit"/>
+                                                    <field name="total"/>
+
+                                                </form>
+                
+                                            </field>
+
+                                        </form>
+
+                
+                                    </field>
+
+                                </form>
+
+                            </field>
+                            <field name="final_report_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1" >
+                                <tree string="">
+                                    <field name="account_name"/>
+                                    <field name="no_of_vchrs"/>
+                                    <field name="cash_debit"/>
+                                    <field name="cash_credit"/>
+                                    <field name="bank_debit"/>
+                                    <field name="bank_credit"/>
+                                    <field name="total"/>
+                                </tree>
+
+                                <form string="">
+                                    <field name="account_name"/>
+                                    <field name="no_of_vchrs"/>
+                                    <field name="cash_debit"/>
+                                    <field name="cash_credit"/>
+                                    <field name="bank_debit"/>
+                                    <field name="bank_credit"/>
+                                    <field name="total"/>
+                                    <field name="grandparent_check"/>
+                                    <field name="parent_check"/>
+                                    
+                                    
+                                    </form>
+                                </field>
+                            <field name="cash_debit_total" invisible="1"/>
+                            <field name="cash_credit_total" invisible="1"/>
+                            <field name="bank_debit_total" invisible="1"/>
+                            <field name="bank_credit_total" invisible="1"/>
+                            <field name="report_main_total" invisible="1"/>
+                            <field name="final_cash_total" invisible="1"/>
+                            <field name="final_iob_total" invisible="1"/>
+                            
+                        </group>
+                        
+        <!--Bank Reconciliation for iob_one-->
+
+
+                                        <group col="8" colspan="8">
+                                                
+                                                <field name="bank_rec_iob_one_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1" >
+                                <tree string="">
+                                    <field name="date_iob"/>
+                                    <field name="voucher"/>
+                                    <field name="name_party"/>
+                                    <field name="debit_amt"/>
+                                    <field name="credit_amt"/>
+                                    </tree>
+                                    <form string="">
+                                            <field name="date_iob"/>
+                                    <field name="voucher"/>
+                                    <field name="name_party"/>
+                                    <field name="debit_amt"/>
+                                    <field name="credit_amt"/>
+                                    </form>
+                                    </field>
+                                    
+                                    <field name="total_debit_iob_one" invisible="1"/>
+                                                <field name="total_credit_iob_one" invisible="1"/>
+                                                <field name="balance_soa" invisible="1"/>
+                                                <field name="balance_bank_state" invisible="1"/>
+                            </group>            
+                        
+                        
+        <!--Bank Reconciliation for iob_two-->
+
+
+                                        <group col="8" colspan="8">
+                                                
+                                                <field name="bank_rec_iob_two_one2many" widget="one2many_list" colspan="8" nolabel="1"  invisible="1">
+                                <tree string="">
+                                    <field name="date_iob"/>
+                                    <field name="voucher"/>
+                                    <field name="name_party"/>
+                                    <field name="debit_amt"/>
+                                    <field name="credit_amt"/>
+                                    </tree>
+                                    <form string="">
+                                            <field name="date_iob"/>
+                                    <field name="voucher"/>
+                                    <field name="name_party"/>
+                                    <field name="debit_amt"/>
+                                    <field name="credit_amt"/>
+                                    </form>
+                                    </field>
+                                    
+                                    <field name="total_debit_iob_two" invisible="1"/>
+                                                <field name="total_credit_iob_two" invisible="1"/>
+                                                <field name="balance_soa_iob_two" invisible="1"/>
+                                                <field name="balance_bank_iob_two" invisible="1"/>
+                            </group>
+
+                        
+                    </form>
+                </field>
+            </record>
+            <record model="ir.ui.view" id="psd_trial_balance_form">
+                <field name="name">Trial Balance</field>
+                <field name="model">trial.balance</field>
+                <field name="priority" eval="16"/>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                    <form string="Trial Balance">
+
+                        <group col="8" colspan="8">
+                                <field name="from_date" colspan="2"/>
+                            <field name="to_date" colspan="2"/>
+                            <button name="generate_trial_balance" string="Generate Trial balance" type="object" icon="gtk-find" colspan="2"/>
+                            <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="2"/>
+
+                            <field name="attrs1" invisible="1" />
+                            <field name="total_debit" invisible="1"/>
+                            <field name="total_credit" invisible="1"/>
+                            
+                        </group>
+                        <group col="8" colspan="8">
+                                <field name="trial_balance_line_one2many" widget="one2many_list" colspan="8" nolabel="1"  context="{'nocreate':1}" attrs="{'invisible': [('attrs1','!=',True)]}">
+                                        <tree string="Trial balance">
+                                                <field name="account_name_grandparents"/>
+                                                <field name="debit_amount"/>
+                                                <field name="credit_amount"/>
+                                                
+                                              
+                                        </tree>
+                                        <form string="Trial balance">
+                                                <field name="account_name_grandparents" invisible="1"/>
+                                                <field name="credit_amount" invisible="1"/>
+                                                <field name="debit_amount" invisible="1"/>
+                                                <field name="trial_balance_line_parent" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" >
+                                                        <tree string="Trial balance">
+                                                                <field name="account_name_parents"/>
+                                                                <field name="debit_amount"/>
+                                                                <field name="credit_amount"/>
+                                                                
+                                                              
+                                                        </tree>
+                                                        <form string="Trial balance">
+                                                                <field name="account_name_parents" invisible="1"/>
+                                                                <field name="credit_amount" invisible="1"/>
+                                                                <field name="debit_amount" invisible="1"/>
+                                                                <field name="trial_balance_line_child" widget="one2many_list" colspan="8" nolabel="1"  context="{'nocreate':1}">
+                                                                        <tree string="Trial balance">
+                                                                                <field name="account_name_child"/>
+                                                                                <field name="debit_amount"/>
+                                                                                <field name="credit_amount"/>
+                                                                                
+                                                                                <field name="advance1" invisible="1"/>
+                                                                                
+                                                                              
+                                                                        </tree>
+                                                                        <form string="Trial balance">
+                                                                                <field name="account_name_child" invisible="1"/>
+                                                                                <field name="credit_amount" invisible="1"/>
+                                                                                <field name="debit_amount" invisible="1"/>
+                                                                                <field name="advance1" invisible="1"/>
+                                                                                <field name="customer" invisible="1"/>
+                                                                        
+
+
+                                                            <field name="trial_balance_line_subchild" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" attrs="{'invisible': ['|',('advance1','=',True),('customer','=',True)]}">
+                                                                        <tree string="Trial balance" >
+                                                                                <field name="account_name_subchild"/>
+                                                                                
+                                                                                <field name="employee_name" invisible="1"/>
+                                                                                <field name="debit_amount"/>
+                                                                                <field name="credit_amount"/>
+                                                                        </tree>
+                                                                        <form string="Trial balance">
+                                                                                <field name="account_name_subchild"/>
+                                                                                
+                                                                                <field name="employee_name"/>
+                                                                                <field name="credit_amount"/>
+                                                                                <field name="debit_amount"/>
+                                                                        </form>
+                                                    </field>
+
+
+                                                            <field name="trial_balance_line_subchild1" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" attrs="{'invisible': [('advance1','!=',True)]}" >
+                                                                        <tree string="Trial balance" >
+                                                                                <field name="account_name_subchild" invisible="1"/>
+                                                                                
+                                                                                <field name="employee_name"/>
+                                                                                <field name="debit_amount"/>
+                                                                                <field name="credit_amount"/>
+                                                                        </tree>
+                                                                        <form string="Trial balance">
+                                                                                <field name="account_name_subchild"/>
+                                                                                
+                                                                                <field name="employee_name"/>
+                                                                                <field name="credit_amount"/>
+                                                                                <field name="debit_amount"/>
+                                                                        </form>
+                                                    </field>
+                                                    <field name="trial_balance_line_subchild2" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" attrs="{'invisible': [('customer','!=',True)]}" >
+                                                                        <tree string="Trial balance" >
+                                                                                <field name="customer_id" invisible="0"/>
+                                                                                <field name="debit_amount"/>
+                                                                                <field name="credit_amount"/>
+                                                                        </tree>
+                                                                        <form string="Trial balance">
+                                                                                <field name="customer_id"/>
+                                                                                <field name="credit_amount"/>
+                                                                                <field name="debit_amount"/>
+                                                                        </form>
+                                                    </field>
+
+
+
+
+                                                </form>
+                                                                    
+                                                                </field>
+                                                              
+                                                        </form>
+                                                        
+                                                </field>
+                                              
+                                        </form>
+                                
+                                </field>
+                                <newline/>
+                                <label string="" colspan="6"/>
+                            <button name="print_trial_balance1" string="Print" type="object" icon="gtk-print" colspan="2" attrs="{'invisible': [('attrs1','!=',True)]}"/>                       
+                                <newline/>
+                                <field name="final_report_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1" context="{'nocreate':1}">
+                                        <tree string="Trial balance Report">
+                                                <field name="account_name"/>
+                                                <field name="credit"/>
+                                                <field name="debit"/>
+                                                <field name="grandparent_check"/>
+                                                <field name="parent_check"/>
+                                              
+                                        </tree>
+                                        <form string="Trial balance Report">
+                                                <field name="account_name" invisible="1"/>
+                                                <field name="credit" invisible="1"/>
+                                                <field name="debit" invisible="1"/>
+                                        </form>
+                                </field>
+                                <field name="opening_balance_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1">
+                                        <tree string="Opening Balance">
+                                                <field name="account_name"/>
+                                                <field name="credit"/>
+                                                <field name="debit"/>
+                                                <field name="opening_balance"/>
+                                                
+                                              
+                                        </tree>
+                                        <form string="Opening Balance">
+                                                <field name="account_name" invisible="1"/>
+                                                <field name="credit" invisible="1"/>
+                                                <field name="debit" invisible="1"/>
+                                                <field name="opening_balance"/>
+                                        </form>
+                                </field>
+                                                
+                                
+                        
+                        
+                        </group>
+                        
+                        </form>
+                        </field>
+                </record>
+        <record model="ir.ui.view" id="psd_balance_sheet_form_id">
+        <field name="name">Balance Sheet</field>
+        <field name="model">balance.sheet</field>
+        <field name="priority" eval="16"/>
+        <field name="type">form</field>
+
+        <field name="arch" type="xml">
+            <form string="Balance Sheet">
+
+                <group col="8" colspan="8">
+                        <field name="from_date" colspan="1"/>
+                    <field name="to_date" colspan="1"/>
+                    <field name="attrs1" invisible="1" />
+                    <button name="generate_balance_sheet" string="Generate Balance Sheet" type="object" icon="gtk-find" colspan="1"/>
+                    <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="2"/>
+                    <label string="" colspan="5"/>
+                    <newline/>
+                        <field name="balance_sheet_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" attrs="{'invisible': [('attrs1','!=',True)]}">
+                                <tree string="Balance sheet">
+                                        <field name="particulars"/>
+                                        <field name="amount" invisible="1"/>
+                                        <field name="total_amount"/>
+                                </tree>
+                                <form string="balance Sheet">
+                                        <field name="particulars" invisible="1"/>
+                                        <field name="amount" invisible="1"/>
+                                        <field name="total_amount" invisible="1"/>
+                                        <newline/>
+                                        <field name="balance_sheet_parent_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}">
+                                                <tree string="Balance Sheet">
+                                                       <field name="particulars"/>
+                                                       <field name="amount"/>
+                                                       <field name="total_amount" invisible="1"/>
+                                                
+                                                </tree>
+                                                <form string="Balance Sheet">
+                                                       <field name="particulars" invisible="1"/>
+                                                       <field name="amount" invisible="1"/>
+                                                       <field name="total_amount" invisible="1"/>
+                                                       <field name="balance_sheet_child_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}">
+                                                                <tree string="Balance Sheet">
+                                                                       <field name="particulars"/>
+                                                                       <field name="debit_amount"/>
+                                                                       <field name="credit_amount"/>
+                                                                      
+                                                                
+                                                                </tree>
+                                                                <form string="Balance Sheet">
+                                                                       <field name="particulars"/>
+                                                                       <field name="debit_amount"/>
+                                                                       <field name="credit_amount"/>
+                                                                       
+                                                                
+                                                                </form>
+                                                        
+                                                        </field>
+                                                
+                                                </form>
+                                        
+                                        </field>
+                                        
+                                </form>
+                    </field>
+                    <newline/>
+                        <label string="" colspan="6"/>
+                    <button name="print_balance_sheet" string="Print" type="object" icon="gtk-print" colspan="2" attrs="{'invisible': [('attrs1','!=',True)]}"/>                        
+                    <newline/>
+                    <field name="balance_sheet_report_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1" context="{'nocreate':1}">
+                                <tree string="Balance sheet">
+                                        <field name="particulars"/>
+                                        <field name="amount"/>
+                                        <field name="total_amount"/>
+                                        <field name="parent_flag"/>
+                                        <field name="child_flag"/>
+                                </tree>
+                                <form string="balance Sheet">
+                                        <field name="particulars"/>
+                                        <field name="amount"/>
+                                        <field name="total_amount"/>
+                                        
+                                </form>
+                        </field>          
+                                        
+                </group>
+                </form>
+                </field>
+        </record>
+            <record model="ir.ui.view" id="psd_profit_loss_form">
+        <field name="name">Profit And Loss</field>
+        <field name="model">profit.loss</field>
+        <field name="priority" eval="16"/>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Profit And Loss">
+
+                <group col="8" colspan="8">
+                        <field name="from_date" colspan="2"/>
+                    <field name="to_date" colspan="2"/>
+                    <button name="generate_profit_loss" string="Generate Profit Loss" type="object" icon="gtk-find" colspan="2"/>
+                    <field name="attrs1" invisible="1" />
+                    
+                    <button name="clear" string="Clear" type="object" icon="gtk-undelete" colspan="2"/>
+                    
+                    <newline/>
+                    <field name="opening_stock" invisible="1"/>
+                    <field name="closing_stock" invisible="1"/>
+                    <newline/>
+                        <field name="profit_loss_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}" attrs="{'invisible': [('attrs1','!=',True)]}">
+                                <tree string="Profit And Loss">
+                                        <field name="seq_id" invisible="1"/>
+                                        <field name="particulars"/>
+                                        <field name="amount" />
+                                        <field name="total_amount"/>
+                                        <field name="acc_selection" invisible="1"/>
+                                </tree>
+                                <form string="Profit And Loss">
+                                        <field name="particulars" invisible="1"/>
+                                        <field name="amount" invisible="1"/>
+                                        <field name="total_amount" invisible="1"/>
+                                        <field name="acc_selection" invisible="1"/>
+                                        <newline/>
+                                        <field name="profit_loss_parent_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}">
+                                                <tree string="Profit And Loss">
+                                                       <field name="particulars"/>
+                                                       <field name="amount"/>
+                                                       <field name="total_amount" invisible="1"/>
+                                                
+                                                </tree>
+                                                <form string="Profit And Loss">
+                                                       <field name="particulars" invisible="1"/>
+                                                       <field name="amount" invisible="1" />
+                                                       <field name="total_amount" invisible="1"/>
+                                                       <field name="profit_loss_child_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}">
+                                                                <tree string="Profit And Loss">
+                                                                       <field name="particulars"/>
+                                                                       <field name="credit_amount"/>
+                                                                       <field name="debit_amount"/>
+                                                                
+                                                                </tree>
+                                                                <form string="Profit And Loss" >
+                                                                       <field name="particulars" invisible="1"/>
+                                                                       <field name="credit_amount" invisible="1"/>
+                                                                       <field name="debit_amount" invisible="1"/>
+                                                                
+                                            <field name="profit_loss_subchild_one2many" widget="one2many_list" colspan="8" nolabel="1" context="{'nocreate':1}">
+                                <tree string="Profit And Loss Child">
+                                                                       <field name="particulars"/>
+                                                                       <field name="credit_amount"/>
+                                                                       <field name="debit_amount"/>
+                                </tree>
+                                <form string="Profit And Loss Child">
+                                                                       <field name="particulars" invisible="1"/>
+                                                                       <field name="credit_amount" invisible="1"/>
+                                                                       <field name="debit_amount" invisible="1"/>
+                                        <newline/>
+                        </form></field>
+                        
+
+
+
+
+                                                                </form>
+                                                        
+                                                        </field>
+                                                
+                                                </form>
+                                          </field>
+                                </form>
+                    </field>
+                    <newline/>
+                    <label string="" colspan="6"/>
+                    <button name="print_profit_loss" string="Print" type="object" icon="gtk-print" colspan="2" attrs="{'invisible': [('attrs1','!=',True)]}"/>
+                    <field name="profit_loss_report_one2many" widget="one2many_list" colspan="8" nolabel="1" invisible="1">
+                                <tree string="Profit Loss">
+                                        <field name="particulars"/>
+                                        <field name="amount"/>
+                                        <field name="total_amount"/>
+                                        <field name="parent_flag"/>
+                                        <field name="child_flag"/>
+                                </tree>
+                                <form string="Profit Loss">
+                                        <field name="particulars"/>
+                                        <field name="amount"/>
+                                        <field name="total_amount"/>
+                                </form>
+                        </field>
+                </group>
+                </form>
+                </field>
+        </record>
+        
+        
+        
+    </data>
+</openerp>

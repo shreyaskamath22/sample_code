@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+   <data>
+   	
+   	<record model="ir.ui.view" id="account_bank_st_input_form_igst_inherit">
+		<field name="name">account.bank.st.input.form.igst.inherit</field>
+		<field name="model">payment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_input_bank_gst" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="bank_st_input_igst_ids" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="bank_payment_line_igst_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" on_change="onchange_igst_input_rate(bill_value,gst_input_rate)" required="1"/>
+							<field name="gst_input_rate" required="1" 
+								   on_change="onchange_igst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="igst_tax_amount" readonly="0"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="classification" required="1"/>
+							<field name="input_type" required="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_bank_st_input_form_cgst_inherit">
+		<field name="name">account.bank.st.input.form.cgst.inherit</field>
+		<field name="model">payment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_input_bank_gst" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="bank_st_input_cgst_ids" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="bank_payment_line_cgst_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" on_change="onchange_igst_input_rate(bill_value,gst_input_rate)" required="1"/>
+							<field name="gst_input_rate" required="1" 
+								   on_change="onchange_cgst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="cgst_tax_amount" readonly="0" string="CGST TAX AMOUNT"/>
+							<field name="sgst_tax_amount" readonly="0" string="SGST/UGST AMOUNT"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="classification" required="1"/>
+							<field name="input_type" required="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="bank_payment_freight_entry_form">
+		<field name="name">bank.payment.freight.entry.form</field>
+		<field name="model">payment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_bank_freight_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="freight_input_rate" invisible="1"/>
+					<field name="igst_check" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="bank_payment_freight_one2many" widget="one2many_list" nolabel="1" colspan="4"
+						   attrs="{'readonly':[('state','=','done')]}" context="{'default_freight_input_rate':freight_input_rate,'default_igst_check':igst_check}">
+						<tree editable="bottom">
+							<field name="bank_payment_freight_id" invisible="1"/>
+							<field name="bill_no" string="Bill No/L.R No." required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="from_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="to_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="bill_value" string="Paid Value" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="freight_input_rate" readonly="1"/>
+							<field name="cgst_tax_amount" readonly="0" string="CGST AMOUNT"/>
+							<field name="sgst_tax_amount" readonly="0" string="SGST/UGST AMOUNT"/>
+							<field name="igst_tax_amount" readonly="0" string="IGST AMOUNT"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="igst_check" invisible="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="expense_bank_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">payment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="customer_name" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="bank_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}" context="{'default_customer_name':customer_name}">
+						<tree editable="bottom">
+							<field name="customer_name" invisible="1"/>
+							<field name="bank_payment_expense_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1"/>
+							<field name="gst_item_master" readonly="0" on_change="onchange_item_master(customer_name,bill_value,gst_item_master)" required="1"/>
+							<field name="hsn_sac_code" readonly="0" required="1"/>
+							<field name="rate" readonly="0"/>
+							<field name="cgst_amount" invisible="0"/>
+							<field name="sgst_amount" invisible="0"/>
+							<field name="igst_amount" invisible="0"/>
+							<field name="tax_amount" readonly="0"/>
+							<field name="total_amount" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+	
+		<record model="ir.ui.view" id="bank_expense_payment_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">payment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_sundry_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="sundry_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}" context="{'nodelete':1,'nocreate':1}">
+						<tree editable="bottom">
+							<field name="check_exp"/>
+							<field name="customer_name" readonly="1"/>
+							<field name="bank_sundry_expense_id" invisible="1"/>
+							<field name="purchase_id" invisible="1"/>
+							<field name="name" readonly="1"/>
+							<field name="bill_no" readonly="1"/>
+							<field name="bill_date" readonly="1"/>
+							<field name="bill_value" readonly="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+   </data>   
+</openerp>
+	

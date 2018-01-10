@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="account_debit_note_form_gst_inherit" model="ir.ui.view">
+            <field name="name">account.debit.note.form.gst.inherit</field>
+            <field name="model">debit.note</field>
+            <field name="inherit_id" ref="account_sales_branch.account_debit_note_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="debit_note_date"]' position='after'>
+                  <field name="gst_debit_note" invisible="1"/>
+              </xpath>
+              <xpath expr='//button[@name="gen_report"]' position='attributes'>
+                  <attribute name="attrs">{'invisible':[('state','!=','done')]}</attribute>
+              </xpath>
+            </field>
+        </record>
+
+
+	</data>
+</openerp>

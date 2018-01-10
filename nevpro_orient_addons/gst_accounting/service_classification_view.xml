@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+	<data>
+	
+	<record model="ir.ui.view" id="service_classification_form_view">
+		<field name="name">service.classification.form.view</field>
+		<field name="model">service.classification</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Service Classification">
+				<group col="6" colspan="4">
+					<field name="active"/>
+					<field name="name"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record id="service_classification_tree_view" model="ir.ui.view">
+		<field name="name">service.classification.tree.view</field>
+		<field name="model">service.classification</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Service Classification">
+				<field name="active"/>
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_service_classification_gst" model="ir.actions.act_window">
+		<field name="name">Service Classification</field>
+		<field name="res_model">service.classification</field>
+		<field name="view_type">form</field>
+		<field name="view_id" ref="service_classification_tree_view"/>
+	</record>
+
+	<menuitem id="action_menu_service_classification_gst" 
+			  name="Service Classification" 
+			  action="action_service_classification_gst" 
+			  sequence="40" 
+			  parent="base.menu_config"/>
+	
+	</data>
+</openerp>
+	

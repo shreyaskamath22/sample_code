@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+      <record id="branch_sale_contract_child_gst_inherit" model="ir.ui.view">
+          <field name="name">branch.sale.contract.child.gst.inherit</field>
+          <field name="model">sale.contract</field>
+          <field name="inherit_id" ref="sales_branch.branch_sale_contract_child"/>
+          <field name="arch" type="xml">
+            <xpath expr='//field[@name="complementary_job"]' position='after'>
+                <field name="gst_contract" invisible="1"/>
+            </xpath>
+            <xpath expr='/form/notebook/page[@string="Contract (01)"]' position='replace'>
+                <page string="Contract (01)" attrs="{'invisible':[('gst_contract','=',True)]}">
+                    <field colspan="2" name="contract_line_id" nolabel="1" widget="one2many_list"  
+                           context="{'nocreate':1,'call_from':'sale_contract'}" 
+                           attrs="{'readonly':['|',('state','in',('renewal_lost','cancel','lost')),
+                                                   ('payterm_button','=',True)]}">
+                        <tree string="Service"> 
+                          <field name="address_new" />
+                          <field name="address_invisible" invisible="1"/>
+                          <field name="address_flag" invisible="1"/>
+                          <field name="service_area"/>
+                          <field name="pms"/>
+                          <field name="service_frequency"/>
+                          <field name="no_of_services"/>
+                          <field name="no_of_inspections"/>
+                          <field name="rate"/>
+                          <field name="area"/>
+                          <field name="unit"/>
+                          <field name="estimated_contract_cost" string="Amount"/>
+                          <field name="requested_date"/>
+                        </tree>
+                  </field>
+                  <newline/>
+                  <group>
+                      <group col="4">
+                          <field name="total_amount" invisible="1"/>
+                          <field name="grand_total" invisible="1"/>
+                      </group>      
+                      <group col="4">
+                          <field name="total_amount" invisible="1"/>
+                          <field name="grand_total" invisible="1"/>
+                      </group>   
+                      <group col="4" >
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <field name="total_amount"/>
+                          <newline/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <field colspan="1" name="tax_one2many" nolabel="1" widget="one2many_list"  
+                                context="{'nocreate':1,'nodelete':1}" attrs="{'readonly':True}">
+                          <tree string="Tax" editable="top"> 
+                               <field name="name" />
+                               <field name="amount"/>
+                          </tree>
+                          </field>
+                          <newline/>
+                          <label string="" colspan="1"/>
+                          <label string="" colspan="1"/>
+                          <field name="grand_total"/>
+                      </group> 
+                      <label string="" colspan="3"/>
+                  </group>    
+                  <group col="8" colspan="8" >   
+                      <field name="lost_check" attrs="{'invisible':['|',('contract_number','=',False),('state','not in','open')],'readonly':[('state','=',('lost'))]}" />
+                      <field name="lost_date" attrs="{'invisible':[('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_check','=',True)]}"/>
+                      <field name="lost_reason" attrs="{'invisible':[('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_check','=',True)]}" />
+                      <field name="competitor" attrs="{'invisible':['|',('lost_reason','!=','lost_to_competitor'),('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_reason','=','lost_to_competitor')]}" />
+                    <label string="" colspan="4"/>
+                  </group>
+                  <group col="8"> 
+                      <field name="check_renew_lost" attrs="{'invisible':[('renew_check','=',False)]}"/>  
+                      <field name="renew_lost_date" attrs="{'invisible':[('check_renew_lost','=',False)],'readonly':[('state','=','renewal_lost')]}" />
+                      <field name="reason" attrs="{'invisible':[('check_renew_lost','=',False)],'readonly':[('state','=','renewal_lost')]}" colspan="4"/>
+                      <label string="" colspan="4"/>
+                  </group>
+                  <group col="8" colspan="8" >   
+                      <field name="cancel_box_new" attrs="{'invisible':['|',('state','in',('renewal_lost','cancel','renew','open')),('contract_number','=',False)]}" string="Contract Cancel"/>
+                      <field name="cancel_date" attrs="{'invisible':[('cancel_box_new','=',False)],'readonly':[('state','in',('renewal_lost','cancel'))],'required':[('cancel_box_new','=',True)]}"/>
+                      <field name="cancel_reason" attrs="{'invisible':[('cancel_box_new','=',False)],'readonly':[('state','in',('renewal_lost','cancel'))],'required':[('cancel_box_new','=',True)]}" colspan="4"/>
+                      <field name="allow_logo" attrs="{'invisible':['|','|','|',('lead_no','!=',False),('contract_number','=',False),('state','in',('cancel','renewal_lost')),('check_renew_lost','!=',False)]}" colspan="3"/>
+                      <label string="" colspan="3"/>
+                  </group>
+                  <newline/>
+                  <group col="8" colspan="8">
+                      <field name="renew_check" invisible="1"/>
+                      <field name="hide_renew_button" invisible="1"/>
+                      <field name="show_process_button" invisible="1"/>
+                      <label colspan="4" string=""/>
+                      <button name="generate_contract" string="Generate Contract" type="object" attrs="{'invisible':[('contract_number','!=',False)]}" colspan="1" icon="gtk-ok"/>
+                      <button name="print_multiple_job" string="Print Schedule" type="object" icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>
+                      <button name="renew_print" string="Renewal Print" type="object" icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('hide_renew_button','=',True)]}" colspan="1"/>
+                      <button name="renew_contract" string="Renew Contract" type="object"  icon="gtk-yes" attrs="{'invisible':['|','|','|',('contract_number','=',False),('state','in',('cancel','renewal_lost')),('check_renew_lost','!=',False),('hide_renew_button','=',True)]}" colspan="1"/>
+                      <button name="contract_print1" string="Contract Print" type="object"  icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>
+                       <button name="contract_print" string="Generate Jobs" type="object"  icon="gtk-print" attrs="{'invisible':['|','|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True),('show_process_button','=',False)]}" colspan="0.5"/>
+                      <button name="print_tnc" string="T&#38;C Print" type="object" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel','renew')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>  
+                      <button name="contract_cancel_new" string="Contract Cancel" type="object" icon="gtk-cancel" attrs="{'invisible':['|',('state','in',('renewal_lost','cancel')),('cancel_box_new','=',False)]}"/>
+                  </group>  
+              </page>
+            </xpath>
+
+
+            <xpath expr='/form/notebook/page[@string="Contract (01)"]' position='after'>
+              <page string="Contract (01)" attrs="{'invisible':[('gst_contract','=',False)]}">
+                <field colspan="2" name="contract_line_id12" nolabel="1" widget="one2many_list"  
+                       context="{'nocreate':1,'call_from':'sale_contract'}" 
+                       attrs="{'readonly':['|',('state','in',('renewal_lost','cancel','lost')),
+                                               ('payterm_button','=',True)]}">
+                    <tree> 
+                      <field name="address_new" invisible="1"/>
+                      <field name="services"/>
+                      <field name="address_invisible" invisible="1"/>
+                      <field name="address_flag" invisible="1"/>
+                      <field name="service_area"/>
+                      <field name="pms" invisible="1"/>
+                      <field name="service_frequency"/>
+                      <field name="area"/>
+                      <field name="no_of_inspections"/>
+                      <field name="hsn_code"/>
+                      <field name="no_of_services" string="Qty."/>
+                      <field name="unit"/>
+                      <field name="rate" string="Rate(per item)"/>
+                      <field name="estimated_contract_cost" string="Total"/>
+                      <field name="discount"/>
+                      <field name="taxable_value"/>
+                      <field name="requested_date" invisible="1"/>
+                      <field name="cgst_rate" string="CGST Rate"/>
+                      <field name="cgst_amt" string="CGST Amt"/>
+                      <field name="sgst_rate" string="SGST/UTGST Rate"/>
+                      <field name="sgst_amt" string="SGST/UTGST Amt"/>
+                      <field name="igst_rate" string="IGST Rate"/>
+                      <field name="igst_amt" string="IGST Amt"/>
+                      <field name="cess_rate" string="CESS Rate"/>
+                      <field name="cess_amt" string="CESS Amt"/>
+                    </tree>
+                </field>
+            <newline/>
+            <group>
+                <group col="8">
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                      <label string="" colspan="1"/>
+                </group>       
+                <group col="8">
+                    <field name="gst_total_amount" invisible="1"/>
+                    <field name="gst_grand_total" invisible="1"/>
+                    <newline/>
+                    <field name="gst_total_amount" invisible="1"/>
+                    <field name="gst_grand_total" invisible="1"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <label string="" colspan="2"/>
+                    <field name="gst_total_amount" string="Sub Total" invisible="0"  readonly="1"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <label string="" colspan="2"/>
+                    <field name="total_tax_amt" invisible="0"  readonly="1"/>
+                    <newline/>
+                    <label string="" colspan="2"/>
+                    <label string="" colspan="2"/>
+                    <field name="gst_grand_total" string="Gross Value(Incl. Tax)"  readonly="1"/>
+                </group> 
+                <label string="" colspan="3"/>
+            </group>    
+            <group col="8" colspan="8" >   
+                <field name="lost_check" attrs="{'invisible':['|',('contract_number','=',False),('state','not in','open')],'readonly':[('state','=',('lost'))]}" />
+                <field name="lost_date" attrs="{'invisible':[('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_check','=',True)]}"/>
+                <field name="lost_reason" attrs="{'invisible':[('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_check','=',True)]}" />
+                <field name="competitor" attrs="{'invisible':['|',('lost_reason','!=','lost_to_competitor'),('lost_check','=',False)],'readonly':[('state','=',('lost'))],'required':[('lost_reason','=','lost_to_competitor')]}" />
+                <label string="" colspan="4"/>
+            </group>
+            <group col="8"> 
+                <field name="check_renew_lost" attrs="{'invisible':[('renew_check','=',False)]}"/>  
+                <field name="renew_lost_date" attrs="{'invisible':[('check_renew_lost','=',False)],'readonly':[('state','=','renewal_lost')]}" />
+                <field name="reason" attrs="{'invisible':[('check_renew_lost','=',False)],'readonly':[('state','=','renewal_lost')]}" colspan="4"/>
+                <label string="" colspan="4"/>
+            </group>
+            <group col="8" colspan="8" >   
+                <field name="cancel_box_new" attrs="{'invisible':['|',('state','in',('renewal_lost','cancel','renew','open')),('contract_number','=',False)]}" string="Contract Cancel"/>
+                <field name="cancel_date" attrs="{'invisible':[('cancel_box_new','=',False)],'readonly':[('state','in',('renewal_lost','cancel'))],'required':[('cancel_box_new','=',True)]}"/>
+                <field name="cancel_reason" attrs="{'invisible':[('cancel_box_new','=',False)],'readonly':[('state','in',('renewal_lost','cancel'))],'required':[('cancel_box_new','=',True)]}" colspan="4"/>
+                <field name="allow_logo" attrs="{'invisible':['|','|','|',('lead_no','!=',False),('contract_number','=',False),('state','in',('cancel','renewal_lost')),('check_renew_lost','!=',False)]}" colspan="3"/><label string="" colspan="3"/>
+            </group>
+            <newline/>
+            <group col="8" colspan="8">
+                <field name="renew_check" invisible="1"/>
+                <field name="hide_renew_button" invisible="1"/>
+                <field name="show_process_button" invisible="1"/>
+                <label colspan="4" string=""/>
+                <button name="generate_contract" string="Generate Contract" type="object" attrs="{'invisible':[('contract_number','!=',False)]}" colspan="1" icon="gtk-ok"/>
+                <button name="print_multiple_job" string="Print Schedule" type="object" icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>
+                <button name="renew_print" string="Renewal Print" type="object" icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('hide_renew_button','=',True)]}" colspan="1"/>
+                <button name="renew_contract" string="Renew Contract" type="object"  icon="gtk-yes" attrs="{'invisible':['|','|','|',('contract_number','=',False),('state','in',('cancel','renewal_lost')),('check_renew_lost','!=',False),('hide_renew_button','=',True)]}" colspan="1"/>
+                <button name="contract_print1" string="Contract Print" type="object"  icon="gtk-print" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>
+                 <button name="contract_print" string="Generate Jobs" type="object"  icon="gtk-print" attrs="{'invisible':['|','|','|','|',('state','in',('renewal_lost','cancel')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True),('show_process_button','=',False)]}" colspan="0.5"/>
+                <button name="print_tnc" string="T&#38;C Print" type="object" attrs="{'invisible':['|','|','|',('state','in',('renewal_lost','cancel','renew')),('contract_number','=',False),('check_renew_lost','!=',False),('lost_check','=',True)]}" colspan="0.5"/>  
+                <button name="contract_cancel_new" string="Contract Cancel" type="object" icon="gtk-cancel" attrs="{'invisible':['|',('state','in',('renewal_lost','cancel')),('cancel_box_new','=',False)]}"/>
+            </group>  
+          </page>
+        </xpath>
+
+        </field>
+      </record>
+
+	</data>
+</openerp>

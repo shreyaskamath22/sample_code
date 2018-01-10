@@ -1,0 +1,759 @@
+<?xml version="1.0"?>
+<!--Version 1.0.022   Added Changes of Statement Sundry Debtors-->
+<document filename="test.pdf">
+  <template pageSize="(842.0,595.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="57.0" y1="57.0" width="728" height="520"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+        <lineStyle kind="GRID" colorName="#b3b3b3" start="0,0" stop="-1,-1"/>		
+    </blockTableStyle>
+    <blockTableStyle id="Table_2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,1" stop="2,1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,1" stop="5,1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,1" stop="7,1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,2" stop="1,2"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,2" stop="4,2"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,2" stop="6,2"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P2" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="CENTER"/>
+    <paraStyle name="P4" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P5" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT"/>
+    <paraStyle name="P8" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="CENTER"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT"/>
+    <paraStyle name="P11" fontName="Helvetica-Bold" fontSize="11.0" leading="14" alignment="CENTER"/>
+<paraStyle name="P15" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+        <paraStyle name="P16" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="P1">[[repeatIn(objects,'o')]]</para>
+    <para style="P2">[[ setLang(o.partner_id.lang) ]]</para>
+    <blockTable colWidths="200.0,381.0,100.0,100.0" style="Table1">
+      <tr>
+		<td>		
+				<para style="Table Contents">
+      				<font color="white"> </font>
+   				</para>
+
+		</td>
+        <td>
+          <para style="P11">PCI PEST CONTROL PVT LTD</para>
+          <para style="P3">
+            <font face="Helvetica" size="9.0">[[o.company_id.name]]</font>
+          </para>
+          <para style="P9">
+          [[ get_branch_addr(o.company_id.id) ['branch_addr'] ]]
+          </para> 
+          <para style="P7">
+            <font color="white"> </font>
+          </para>
+          <para style="P8">
+            <font face="Helvetica" size="10.0">Reconciliation Statement Sundry Debtors</font>
+          </para>
+          <para style="P9">For The Period : [[ formatLang(o.from_date,date=True) ]] - [[ formatLang(o.to_date,date=True) ]]</para>
+        </td>
+        <td>
+         <para style="P3">
+        <font color="white"> </font></para>
+        </td>
+
+		<td>
+
+			 <blockTable colWidths="340.0,190.0" style="Table1">
+				<tr>
+					<td>
+						<illustration height="40.0" width="40.0">
+							<image x="-25" y="0" height="37.0" width="40.0">[[o.company_id.logo]]</image>
+						  </illustration>
+	
+					</td>
+				
+					<td>
+						<para style="Table Contents">
+            				<font color="white"> </font>
+          				</para>
+					</td>
+				</tr>
+			  </blockTable>
+
+		</td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="220.0,72,70.0,64.0,64.0,64.0,64.0,64.0,64.0,64.0" style="Table2"> <!--Harshal -->
+      <tr>
+        <td>
+          <para style="P6">Description</para>
+        </td>
+        <!-- <td>
+          <para style="P6">Taxable 10.20 Amount</para>
+        </td> -->
+        <td>
+          <para style="P6">Taxable 10.30 Amount</para>
+        </td>
+        <td>
+          <para style="P6">Taxable 12.24 Amount</para>
+        </td>
+        <td>
+          <para style="P6">Taxable 12.36 Amount</para>
+        </td>
+        <td>
+          <para style="P6">Taxable 14.0 Amount</para>
+        </td>
+        <td>
+          <para style="P6">Taxable 14.5 Amount</para>
+        </td>
+         <td>
+          <para style="P6">Taxable 15.0 Amount</para>
+        </td>
+         <td>
+          <para style="P6">Taxable 18.0 Amount</para>
+        </td>
+        <td>
+          <para style="P6">NonTaxable Amount</para>
+        </td>
+        <td>
+          <para style="P6">PCIL</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P4">Opening Outstanding as on [[ formatLang(o.from_date,date=True) ]]</para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.opening_outstanding1 ]][[ o.opening_outstanding1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding2) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding3) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding4) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding5) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding6) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding7) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding8) ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding10) ]]</font></para>
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.opening_outstanding11) ]]</font></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Billing during the month</font>
+          </para>
+        </td>
+         <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill1 ]][[ o.month_bill1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill2 ]][[ o.month_bill2!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill3 ]][[ o.month_bill3!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill4 ]][[ o.month_bill4!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill5 ]][[ o.month_bill5!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill6 ]][[ o.month_bill6!=False and ' Dr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill7 ]][[ o.month_bill7!=False and ' Dr' or ' Cr' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill8 ]][[ o.month_bill8!=False and ' Dr' or ' Cr' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill10 ]][[ o.month_bill10!=False and ' Dr' or '' ]]</font></para>		  
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.month_bill_new_company ]][[ o.month_bill_new_company!=False and ' Dr' or '' ]]</font></para>     
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P4">Less : Collections for the Period [[ formatLang(o.from_date,date=True) ]] to [[ formatLang(o.to_date,date=True) ]]</para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection1 ]][[ o.period_collection1!=False and ' Cr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection2 ]][[ o.period_collection2!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection3 ]][[ o.period_collection3!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection4 ]][[ o.period_collection4!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection5 ]][[ o.period_collection5!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection6 ]][[ o.period_collection6!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+         <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection7 ]][[ o.period_collection7!=False and ' Cr' or '' ]] </font></para>     
+        </td>
+        <td>
+         <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection8 ]][[ o.period_collection8!=False and ' Cr' or '' ]] </font></para>     
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.period_collection10 ]][[ o.period_collection10!=False and ' Cr' or '' ]] </font></para>
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Less : Collection at Head Office</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection1 ]][[ o.head_office_collection1!=False and ' Cr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection2 ]][[ o.head_office_collection2!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection3 ]][[ o.head_office_collection3!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection4 ]][[ o.head_office_collection4!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection5 ]][[ o.head_office_collection5!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection6 ]][[ o.head_office_collection6!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection7 ]][[ o.head_office_collection7!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.head_office_collection8 ]][[ o.head_office_collection8!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" > [[ o.head_office_collection10 ]][[ o.head_office_collection10!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td><!-- for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Less : Collection at Other Branches</font>
+          </para>
+        </td>
+<!--         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches1 ]][[ o.collection_other_branches1!=False and ' Cr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches2 ]][[ o.collection_other_branches2!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches3 ]][[ o.collection_other_branches3!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches4 ]][[ o.collection_other_branches4!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches5 ]][[ o.collection_other_branches5!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches6 ]][[ o.collection_other_branches6!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches7 ]][[ o.collection_other_branches7!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches8 ]][[ o.collection_other_branches8!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches10 ]][[ o.collection_other_branches10!=False and ' Cr' or '' ]] </font></para>
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.collection_other_branches11 ]][[ o.collection_other_branches11!=False and ' Cr' or '' ]] </font></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Less : Credit Notes</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note1 ]][[ o.credit_note1!=False and ' Cr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note2 ]][[ o.credit_note2!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note3 ]][[ o.credit_note3!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note4 ]][[ o.credit_note4!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note5 ]][[ o.credit_note5!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note6 ]][[ o.credit_note6!=False and ' Cr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note7 ]][[ o.credit_note7!=False and ' Cr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note8 ]][[ o.credit_note8!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.credit_note10 ]][[ o.credit_note10!=False and ' Cr' or '' ]] </font></para>
+        </td>
+        <td>
+          <!-- for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Less : Advance Receipt Billed during the Period</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt1 ]][[ o.advance_receipt1!=False and ' Cr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt2 ]][[ o.advance_receipt2!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt3 ]][[ o.advance_receipt3!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt4 ]][[ o.advance_receipt4!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt5 ]][[ o.advance_receipt5!=False and ' Cr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt6 ]][[ o.advance_receipt6!=False and ' Cr' or '' ]]</font></para>
+
+        </td>
+         <td>
+         <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt7 ]][[ o.advance_receipt7!=False and ' Cr' or '' ]]</font></para>
+      
+        </td>
+         <td>
+         <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt8 ]][[ o.advance_receipt8!=False and ' Cr' or '' ]]</font></para>
+      
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.advance_receipt10 ]][[ o.advance_receipt10!=False and ' Cr' or '' ]] </font></para>
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Other Branch Collection</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection1 ]][[ o.other_branch_collection1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection2 ]][[ o.other_branch_collection2!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection3 ]][[ o.other_branch_collection3!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td> 
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection4 ]][[ o.other_branch_collection4!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection5 ]][[ o.other_branch_collection5!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection6 ]][[ o.other_branch_collection6!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection7 ]][[ o.other_branch_collection7!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.other_branch_collection8 ]][[ o.other_branch_collection8!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" > [[ o.other_branch_collection10 ]][[ o.other_branch_collection10!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Debit Notes</font>
+          </para>
+        </td>
+       <!--  <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes1 ]][[ o.debit_notes1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes2 ]][[ o.debit_notes2!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes3 ]][[ o.debit_notes3!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes4 ]][[ o.debit_notes4!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes5 ]][[ o.debit_notes5!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes6 ]][[ o.debit_notes6!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes7 ]][[ o.debit_notes7!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.debit_notes8 ]][[ o.debit_notes8!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" > [[ o.debit_notes10 ]][[ o.debit_notes10!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Cheques Dishonoured</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured1 ]][[ o.cheques_dishonoured1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured2 ]][[ o.cheques_dishonoured2!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured3 ]][[ o.cheques_dishonoured3!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured4 ]][[ o.cheques_dishonoured4!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured5 ]][[ o.cheques_dishonoured5!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured6 ]][[ o.cheques_dishonoured6!=False and ' Dr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured7 ]][[ o.cheques_dishonoured7!=False and ' Dr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured8 ]][[ o.cheques_dishonoured8!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+	 <para style="P7"><font face="Helvetica-Bold" >[[ o.cheques_dishonoured10 ]][[ o.cheques_dishonoured10!=False and ' Dr' or '' ]] </font></para>
+        </td>
+        <td><!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Excess Collection / Advance Receipt</font>
+          </para>
+        </td>
+         <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection1) ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection2) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection3) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection4) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection5) ]]</font></para>
+        </td>
+        
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection6) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection7) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection8) ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.excess_collection10) ]]</font></para>
+        </td>
+        <td>
+          <!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P6">
+            <font face="Helvetica-Bold">Add : Sales Refund to Parties (against Credit Notes)</font>
+          </para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund1 ]][[ o.sales_refund1!=False and ' Dr' or '' ]]</font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund2 ]][[ o.sales_refund2!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund3 ]][[ o.sales_refund3!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund4 ]][[ o.sales_refund4!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund5 ]][[ o.sales_refund5!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund6 ]][[ o.sales_refund6!=False and ' Dr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund7 ]][[ o.sales_refund7!=False and ' Dr' or '' ]]</font></para>
+        </td>
+         <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund8 ]][[ o.sales_refund8!=False and ' Dr' or '' ]]</font></para>
+        </td>
+        <td>
+
+          <para style="P7"><font face="Helvetica-Bold" >[[ o.sales_refund10 ]][[ o.sales_refund10!=False and ' Dr' or '' ]] </font></para>
+        </td>
+         <td>
+          <!--for PCIL-->
+          <para style="P7"></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P5">Outstanding as on [[ formatLang(o.to_date,date=True) ]]</para>
+        </td>
+        <!-- <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding1) ]] </font></para>
+        </td> -->
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding2) ]] </font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding3) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding4) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding5) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding6) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding7) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding8) ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding10)  ]]</font></para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" >[[ dr_cr_sign(o.outstanding11)  ]]</font></para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P5">Total Outstanding</para>
+        </td>
+        <td>
+          <para style="P7"><font face="Helvetica-Bold" size="9.0"> [[ o.total_outstanding1 and '&#8377;' or '' ]]  [[ dr_cr_sign(o.total_outstanding1)]]</font></para>
+        </td>
+        <td>
+          <para style="P7">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P7">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P7">
+            <font color="white"> </font>
+          </para>
+        </td>
+
+        <td>
+          <para style="P7">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="P6"></para>
+        </td>
+      </tr>
+    </blockTable>
+     <para style="P7">
+            <font color="white"> </font>
+          </para>
+           <para style="P7">
+            <font color="white"> </font>
+          </para>
+           <para style="P7">
+            <font color="white"> </font>
+          </para>
+         <para style="P7">
+            <font color="white"> </font>
+          </para>
+           <para style="P7">
+            <font color="white"> </font>
+          </para>
+           <para style="P7">
+            <font color="white"> </font>
+          </para>
+           <para style="P7">
+            <font color="white"> </font>
+          </para>
+<blockTable colWidths="573.0" style="Table_2">
+ 
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+
+          <blockTable colWidths="28.0,68.0,95.0,109.0,87.0,68.0,117.0" style="Table6">
+            <tr>
+              <td>
+                <para style="P6">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">DATE</para>
+              </td>
+              <td>
+                <para style="P7">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">ACCOUNTANT</para>
+              </td>
+              <td>
+                <para style="P7">
+                  <font color="white"> </font>
+                </para>
+              </td>
+              <td>
+                <para style="P7">BRANCH MANAGER</para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="terp_default_9">
+            <font color="white">[[set_to_zero()]] </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+
+        <record id="view_psd_amc_sale_customer_search_wizard" model="ir.ui.view">
+            <field name="name">AMC Sale Order Customer Search Wizard</field>
+            <field name="model">psd.amc.sale.customer.search.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="AMC Sale Order Customer Search Wizard">
+                    <group>
+                    <group col='8' colspan='4'>
+                            <field name="name"/>
+                            <field name="contact_no"/>
+                            <field name="invoice_no"/>
+                            <field name="flat_no"/>
+                            <field name="building_name"/>
+                            <field name="sub_area"/>
+                            <field name="street"/>
+                            <field name="landmark"/>
+                            <field name="pincode"/>
+                            <field name="order_no"/>
+                    </group>
+                        <group col='2' colspan='1'>    
+                            <group>
+                                <button string="Search" name="product_request_search_customer" type="object"/>
+                                <button string="Clear" name="clear_customer"  type="object"/>
+                            </group>
+                            <group>
+                            </group>  
+                            <group>
+                               <button string="Select" name="select_searched_customer" type="object"/>
+                            </group> 
+                            <group>
+                            </group>  
+                        </group>
+                    <group col='8' colspan='4'>
+                    <field name="psd_amc_sale_customer_search_line" nolabel="1">
+                    <tree editable="bottom">
+                            <field name="select_cust" invisible="1"/>
+                            <button name="select_customer" type="object" icon="gtk-yes" attrs="{'invisible': [('select_cust','=', True)]}"/>
+                            <button name="selected_cust_details" type="object" 
+                                    icon="gtk-stop" attrs="{'invisible': [('select_cust','=', False)]}"/>
+                            <field name="name" />
+                            <field name="partner_id" invisible="1"/>
+                            <field name="contact_name" />
+                            <field name="cust_address" />
+                            <field name="contact_no"/>
+                    </tree>
+                </field>
+                </group>
+                </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_psd_amc_sale_customer_search_wizard" model="ir.actions.act_window">
+             <field name="name">Customer Search Wizard</field>
+             <field name="res_model">psd.amc.sale.customer.search.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_mode">form</field>
+             <field name="target">new</field>
+       </record>
+
+    </data>
+</openerp>

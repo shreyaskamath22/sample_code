@@ -1,0 +1,1006 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="psd_view_res_scheduledjobs_filter_new1" model="ir.ui.view">
+				   <field name="name">res.scheduledjobs.filter</field>
+				   <field name="model">res.scheduledjobs</field>
+				   <field name="type">search</field>
+				   <field name="arch" type="xml">
+					<search string="Search">
+					<group col="8" colspan="8">
+						<group>
+						   <field name="name_contact" colspan="2"/>
+						   </group>
+						   <group>
+						   <field name="scheduled_job_id" colspan="2"/>
+						   </group>
+						   <field name="web_order_no" colspan="2"/>
+						   <group>
+						   <field name="squad_name" colspan="2"/>
+						   </group>
+						   <group>
+						   <field name="job_category" colspan="2"/>
+						   </group>
+						  <!--  <group>
+						   <field name="delivery_date" colspan="2"/>
+						   </group> -->
+						   <group>
+						   <field name="phone1" colspan="2" string="Contact No"/>
+						   </group>
+						   <group>
+						   <field name="tentative_from" colspan="2" string="Tentative Date From" filter_domain="[('req_date_time','&gt;=',self)]"/>
+						   </group>
+						    <group>
+						   <field name="tentative_to" colspan="2" string="Tentative Date To" filter_domain="[('req_date_time','&lt;=',self)]"/>
+						   </group>
+						   	<group>
+						   <field name="state" string="Job Status" colspan="2"/>
+						   </group><newline/>
+						    <group>
+						   <field name="job_start_date" filter_domain="[('job_start_date','&gt;=',self)]"/>
+						   </group>
+						   <group>
+						   <field name="job_end_date" filter_domain="[('job_end_date','&lt;=',self)]"/>
+						   </group>
+						   	<group>
+						   <field name="service_order_no" colspan="2" string="Service Order No"/>
+						   </group>
+						  <group>
+						   <field name="delivery_order_no" colspan="2"/>
+						   </group>
+						   <group>
+						   <field name="delivery_challan_no" colspan="2"/>
+						   </group>
+			   				<!--field name="contact_name"/-->
+						   <!-- <field name="service_area"  colspan="2"/> -->
+						   <group>
+			  			   <field name="service_area_search" widget="selection" colspan="2" invisible="1"/>
+			  			</group>
+			  			<group>
+			               <field name="tech_id"   string="Assigned Squad" colspan="2"/>
+			           </group>
+				           <!-- <field name="pms" string<field name="req_date_time" colspan="2" string="Tentative Date From"/>="PMS" invisible="1"/> -->
+				           <group>
+			              <field name="squad_id" widget="selection" string="Assigned Technician" colspan="2"/>
+			          </group>
+				          <group>
+				          	<field name="name_equipment"   string="Product" colspan="2"/>
+				          </group>
+				         	<!-- <field name="service_card_serial_no"/>
+			  			  <field name="service_completion_slipno"/> --> 
+					</group>
+					</search>
+				   </field>
+				</record>
+
+
+	  <record model="ir.ui.view" id="psd_cust_id">
+           <field name="name">Existing customer tree view</field>
+             <field name="model">res.scheduledjobs</field>
+             <field name="type">tree</field>
+             <field name="arch" type="xml">
+  <!--normaljob-blue-->
+              <tree string="customers" colors="#515151:state=='cancel';#9933ff:state=='completed_previously';#044531:state=='rescheduled';#000099:state=='scheduled';red:state=='completed_previously';green:state=='confirmed';#800080:state=='extended';#4C1700:state=='job_done';black:state=='unscheduled';#6600CC:state=='adjusted';red:job_category   '=='complaint';red:job_category =='adhoc_complaint';">
+          <!-- <field name="is_customer_specified" string = "Cust.Pref."/> -->
+			<field name="scheduled_job_id"/>
+          	<field name="req_date_time" string="Tentative Date"/>
+            <field name="name_contact"/>
+          	<!-- <field name="web_order_no"/> -->
+          	<field name="job_category"/>
+          	<field name="service_order_no" string="Service Order No"/>
+          	<field name="delivery_order_no" string="Delivery Order No"/>
+          	<field name="phone1"/>
+            <!-- <field name="phone_on_fly"/> -->
+            <!-- <field name="delivery_by"/> -->
+            <field name="tech_id" string="Technician"/>
+            <field name="squad_id" string="Squad"/>
+            <field name="job_start_date"/>
+            <field name="job_end_date"/>
+          	<!-- <field name="delivery_date"/> -->
+            <field name="state" string="Status"/>
+            <field name="date" invisible="1"/>
+            <field name="is_transfered" invisible="1"/>
+            <field name="pms_search" string="PMS" invisible="1"/> 
+            <field name="flat_nos" invisible="1"/>
+            <field name="job_id1" invisible="1"/>  
+            <field name="assigned_technician" string="Assigned Tech" invisible="1"/>
+          	<field name="assigned_squad" invisible="1"/>
+          	<field name="technician_squad_merge" invisible="1"/>
+          	<field name="service_area_search" invisible="1"/>
+          	<field name="service_area_on_fly" invisible="1"/>
+        	<field name="job_start_time" string="Start Date:Time" invisible="1"/>
+          	<field name="new_job_end_time1" string="End Date:Time" invisible="1"/>
+          	<field name="job_age" string="Age" invisible="1"/>
+          	<field name="lastjob_bool" invisible="1"/>
+            <field name="tech" invisible="1"/>
+            <field name="city" invisible="1"/>
+            <field name="expdate" invisible="1"/>
+          	<field name="type_of_visit" invisible="1"/>
+          	<field name="technician_reassign" invisible="1"/>
+          	<button name="show_message" string="View" type="object" icon="unread-msg" attrs="{'invisible':[('message_id','!=',True)]}" confirm="Do you want to view?"/>
+          	<field name="jobid_bool" invisible="1"/>
+          	<field name="message_id" invisible="1"/>
+          </tree>
+         </field>
+       </record>
+
+        <record model="ir.ui.view" id="psd_view_check_tech_availability_new">
+          <field name="name">Check Technician Availability</field>
+          <field name="model">res.scheduledjobs</field>
+          <field name="type">calendar</field>
+          <field name="arch" type="xml">
+          <calendar string="Check Availability" color="tech_squad_sample" mode="day" date_start="new_job_start_time1" date_stop="new_job_end_time1">      
+          <!--field name="tech_squad_sample"/technician_service-->
+           <field name="tech_squad_sample"/>
+          </calendar>
+          </field>
+        </record>
+      
+
+
+	<record model="ir.ui.view" id="psd_form_cust">
+		<field name="name">Customer Form</field>
+		<field name="model">res.scheduledjobs</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+		<form string="Job Details">
+			<field name="state" widget="statusbar" colspan="4" statusbar_visible="complaint,unscheduled,rescheduled,scheduled,confirmed,extended,job_done,cancel" statusbar_colors='{"cancel":"#515151","complaint":"red","completed_previously":"#9933ff","rescheduled":"#044531","scheduled":"#000099","adjusted":"#6600CC","confirmed":"green","extended":"#800080","job_done":"#4C1700","unscheduled":"black"}'/>
+		<newline/>
+		<notebook colspan="4">
+			<page string="General">
+				<group colspan="12" col="12" string="Customer Details">
+					<!--separator string="Customer Details" colspan="4" col="4"/-->
+				<newline/>
+				 <field name="scheduledjobs_id" colspan="2" invisible="1"/>
+				<field name="partner_id_sale" invisible="1"/>
+				<group>
+					<field name="name_contact" readonly="1" colspan="4"/>
+					<field name="job" readonly="1" colspan="4"/>
+					<newline/><newline/>
+					<field name="job_id" colspan="4" readonly="1" string="Job ID"/>
+					<newline/>
+
+					
+					<field name="msg_check_fields" invisible="1"/>
+					<field name="sync_bool" invisible="1"/>
+					<field name="sync_bool1" invisible="1"/>
+					<newline/>
+					<field name="contract_start_date" readonly="1" invisible="1"/>
+					<field name="complain_id" invisible="1"/>
+				</group>
+				<group>
+					<field name="service_area" colspan="2" readonly="1" invisible="1"/>
+					<field name="service_area_on_fly" colspan="2" readonly="1" invisible="1"/><newline/>
+					<field name="service_area_search" colspan="2" readonly="1" invisible="1"/>
+					<field name="customer_id" colspan="2" readonly="1" invisible="1"/><newline/>
+					<!-- <field name="job_category" required="1"/> -->
+					<field name="delivery_order_no" readonly="1" attrs="{'invisible':[('job','not in',['delivery','adhoc_product','product_complaint'])]}" colspan="4"/>
+					<field name="delivery_challan_no" colspan="4" readonly="1" attrs="{'invisible':[('job','not in',['delivery','adhoc_product','product_complaint'])]}"/>
+					<newline/><newline/>
+					<label string="" colspan="2"/>
+					<label string="" colspan="2"/>
+					<field name="pse" colspan="4" readonly="1"/>
+					
+					<field name="location_id" colspan="2" readonly="1" invisible="1"/>
+					<field name="locatn_id" invisible="1"/>
+					<field name="classification" readonly="1" 
+						 attrs="{'invisible':[('job','not in',['service','adhoc_service','adhoc_service_complaint'])]}" colspan="4"/>
+					<field name="service_type" readonly="1" attrs="{'invisible':[('job','not in',['service','adhoc_service','adhoc_service_complaint'])]}" colspan="4"/><newline/>
+					<label string="" colspan="4"/>
+					
+					<field name="location_id2" invisible="1"/>
+					<field name="contract_end_date" readonly="1" invisible="1"/>
+				</group>
+				 <group>
+				<field name="delivery_address" readonly="1" string="Delivery Address" attrs="{'invisible':[('job','not in',['delivery','adhoc_product','product_complaint'])]}" colspan="4"/>
+					<field name="site_address1" string="Site Address"
+				 attrs="{'invisible':[('job','not in',['service','adhoc_service','adhoc_service_complaint'])]}" readonly="1"  colspan="4"/>
+			</group>
+		</group>
+
+		<!-- Service Details -->
+		<group colspan="12" col="12" string="Service Details" attrs="{'invisible':[('job','not in',['service','adhoc_service','adhoc_service_complaint'])]}">
+				<newline/>
+				<group>
+					<field name="service_order_no" readonly="1" colspan="4" />
+					<field name="ordered_period_from" colspan="4" readonly="1"/>
+					<field name="is_transfered" invisible="1"/>
+					<!-- <field name="delivered_by" colspan="2" readonly="1"/> -->
+				</group>
+				<group>
+					<field name="erp_order_date" colspan="4" readonly="1"/>	
+					<field name="ordered_period_to" colspan="4" readonly="1"/>
+				</group>
+				<group>
+					<field name="name_equipment" colspan="4" readonly="1"/>
+					<field name="contract_period" colspan="4" readonly="1" string="Contract Period(In months)"/>
+				</group>
+		</group> 
+		 <!--############### -->
+
+		<group string="Order Details" attrs="{'invisible':[('job','not in',['delivery','adhoc_product','product_complaint'])]}">
+				<group col="10" colspan="10">
+				<group>
+					<field name="web_order_no" readonly="1"/>
+					<field name="scheduled_job_id"  readonly="1" invisible="1"/><newline/>
+					<field name="pms" invisible="1"/>
+					<field name="delivered_by" invisible="1"/>
+					<field name="pms_search" readonly="1" invisible="1"/><newline/>
+					<field name="record_date"  invisible ="1" /><newline/>
+					<label string="" colspan="1"/><newline/>
+					<label string="" colspan="1"/><newline/>
+					<label string="" colspan="1"/><newline/>
+					<label string="" colspan="1"/><newline/>
+					<label string="" colspan="1"/><newline/>
+					<label string="" colspan="1"/><newline/>
+					<!--field name="use_service_card"  colspan="2" attrs="{'readonly':['|',('hide_buttons','=',True),('state','!=','unscheduled')]}"/-->
+					
+					<!--field name="service_completion_slip" attrs="{'readonly':['|',('hide_buttons','=',True),('state','!=','unscheduled')]}"/-->
+					<field name="is_ipm" colspan="1" readonly="1" invisible="1"/><newline/>
+					<field name="adhoc_job_type" readonly="1" colspan="1" attrs="{'invisible':[('adhoc_job_type_bool','!=',True)]}" /><newline/>
+					<field name="is_customer_specified" invisible="1" string = "Customer Preferred" colspan="1" attrs="{'readonly':[('state','not in',('unscheduled','complaint','rescheduled'))]}"/>
+<!--<newline/>			<field name="branch_location" colspan="1"/>-->
+<newline/>
+					<field name="assign_material_bool" invisible="1"/>
+				</group>
+				<!--group>
+					<label string="kk"/><newline/>
+					<label string="kk"/><newline/>
+					<label string="kk"/><newline/>
+					<label string="kk"/>
+				</group-->
+				<group>
+					<field name="web_order_date" readonly="1"/>
+					<field name="against_free_replacement" readonly="1"/>   
+					<field name="complaint_request_id"  readonly="1" invisible="1"/><newline/>
+					<field name="no_of_services" readonly="1"  invisible="1" /><newline/>
+					<field name="contract_frequency"  invisible="1" attrs="{'invisible':[('job_type','==','product')]}" readonly="1" colspan="1"/><newline/>
+					<field name="prev_assign_tech"  invisible="1" readonly="1"/><newline/>
+					<field name="assigned_technician"  invisible="1"/><newline/>
+					<field name="completed_previously"  invisible="1"  attrs="{'readonly':[('state','not in',('unscheduled','complaint','rescheduled'))]}"/><newline/>
+					<field name="not_required"  invisible="1" attrs="{'readonly':[('state','not in',('unscheduled','complaint','rescheduled'))]}"/><newline/>
+					<!--field name="service_card_serial_no" readonly="1"/-->
+				</group>			
+				<group>
+					<field name="job_age" readonly="1"  invisible="1"/><newline/>
+					<field name="erp_order_no" readonly="1"/>
+					<field name="no_of_inspection" readonly="1"  invisible="1"/><newline/>
+					
+					<field name="job_category" readonly="1"  invisible="1"/><newline/>
+					<field name="prev_assign_squad" readonly="1"  invisible="1"/><newline/>
+					<field name="sq_name_new1" string="Squad Name" readonly="1" invisible="1"/><newline/>
+					<field name="sq_name_new" string="Squad Name" readonly="1" invisible="1"/><newline/>
+					<field name="sq_name_new2" readonly="1" invisible="1"/>
+					<field name="service_completion_slipno" readonly="1" invisible="1"/><newline/>
+					<field name="card_number"  invisible="1" attrs="{'readonly':[('state','not in',('unscheduled','complaint','rescheduled'))]}"/>
+				</group>
+					<field name="job_total_days" colspan="1" invisible="1"/>
+					<field name="assigned_squad" string="Squad Name" colspan="1" invisible="1"/><newline/><newline/>
+					<!--field name="job_age" colspan="2" attrs="{'invisible':[('state','in',('unscheduled','new','booked','schedule'))]}"/-->
+				<field name="scheduled_age" colspan="2" invisible="1"/>
+				 <field name="invisible_id" invisible="1"/>
+				<field name="other_frequency" attrs="{'invisible':[('invisible_id','!=','Others')]}" />
+				<field name="operation_remark" colspan="2" invisible="1"/>
+				<!--field name="prod_line" nolabel="1" colspan="2" attrs="{'invisible':[('job_type','==','service')]}"/-->
+				<field name="prod_line" nolabel="1" colspan="2" invisible="1"/>
+				<!--field name="prod_line" nolabel="1" colspan="4"/-->
+					</group>
+		   </group> <newline/>
+
+
+		   <!-- Other Details -->
+		<group colspan="6" col="6" string="Other Details">
+				<newline/>
+					<field name="tech_id" readonly="1"/>
+					<field name="squad_id" readonly="1"/>
+					<field name="delivery_date" readonly="1"/>
+					<newline/>
+		</group> 
+		 <!--############### -->
+
+		  <newline/>
+			<field name="product_transfer_id" nolabel="1" context="{'nocreate':1,'nodelete':1}" attrs="{'invisible':[('job','not in',['delivery','adhoc_product','product_complaint'])]}">
+					<tree string="Product Details" editable="bottom">
+						<field name="product_name" string="Product SKU Name*" readonly="1"/>
+						<field name="product_uom" readonly="1"/>
+						<field name="quantity" string="allocated_quantity" readonly="1"/>
+						<field name="extended_warranty" readonly="1"/>
+						<field name="batch" readonly="1"/>
+						<field name="exp_date" readonly="1"/>
+					</tree>
+				 </field>
+			<group col="30" colspan="4">
+			<separator string="Job" colspan="30" attrs="{'invisible':['|',('hide_buttons1','=',True)]}"/>
+			  <!--group string="Job"-->
+				<group>
+				<field name="req_date_time" string="Tentative Date of Delivery" on_change="onchange_requested_date(req_date_time,date)" attrs="{'invisible':[('hide_buttons1','=',True)],'readonly':['|',('state','not in',('unscheduled','complaint','rescheduled')),('hide_buttons','=',True)]}"/><newline/>
+				</group>
+					<button name="psd_check_available" type="object" icon="gtk-go-forward" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('unscheduled','complaint','rescheduled'))],'readonly':[('hide_buttons','=',True)]}" string="Check Schedule" invisible="0"/>
+				<button name="check_available1" type="object" icon="gtk-go-forward" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('unscheduled','complaint','rescheduled'))],'readonly':[('hide_buttons','=',True)]}" string="Check Schedule" invisible="1"/>
+			<group>
+				<!-- <field name="job_start_time" on_change="onchange_start_time(job_start_time,date)" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','in',('unscheduled','rescheduled','complaint'))],'readonly':[('state','not in',('unscheduled','rescheduled','complaint'))]}" /> --><newline/>
+				<!-- <field name="new_job_start_time1"  string="Delivery Schedule Date From" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('unscheduled','rescheduled','complaint'))]}" /> -->
+				<field name="job_start_time"/>
+				<field name="job_start_time1" invisible="1"/><newline/> 
+			</group>
+			<group>
+				<!-- <field name="new_job_end_time1"  string="Delivery Schedule Date To" attrs="{'invisible':['|',('hide_buttons1','=',True),],'readonly':[('state','not in',('unscheduled','rescheduled','complaint'))]}" />
+				<field name="job_end_time" colspan="0.5" on_change="onchange_end_time(job_end_time,date)" invisible="1"/> -->
+				<newline/>
+				<field name="job_end_time"/>
+				<field name="job_end_time1" invisible="1"/><newline/> 
+			</group>
+			
+			<group col="30" colspan="2" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','in',('complaint','unscheduled','rescheduled'))]}">
+				<label string="JOB Duration"/>
+				<field name="job_duration_in_days" colspan="0.5" readonly="1" invisible="1"/>
+				<label string=""/>
+				<field name="job_duration_in_time" widget = "float_time" colspan="0.5" readonly="1"/>
+				<label string="(in hours)"/>
+					<field name="job_start_date" colspan="2" invisible="1"/>
+					<field name="job_end_date" colspan="2" invisible="1"/>	
+			 </group>
+			</group><newline/>
+			<group col="30" colspan="4" attrs="{'invisible':[('onhold_bool','!=',True)]}">
+				<separator string="Reschedule Details" colspan="5"/>
+				<newline/>
+				 <group>
+					<field name="onhold_reason" colspan="0.5"/>
+				 </group>
+				<group>
+					<field name="reschedule_by" colspan="0.5"/>
+				</group>
+				<group>
+					<field name="hours" colspan="0.5" invisible="1"/><!-- Pratik -->
+				</group>
+				<group>
+					<label string="" colspan="1"/>
+				</group>
+				<group>
+					<label string="" colspan="1"/>
+				</group><newline/>
+				<group><!--attrs="{'invisible':[('bool_check','!=',True)]}"-->
+				<field name="expense_line" colspan="0.5" nolabel="1">
+					 <tree string="Expense" editable="bottom">
+								<field name="expense_type"/>
+								<field name="expense_quantity"/>
+								<field name="expense_amt"/>
+								<field name="expense_remarks" attrs="{'required':[('expense_type','=',('miscellaneous'))]}"/>
+					 </tree>
+					 </field>
+				 <label string="" colspan="2"/>
+				</group><newline/>
+				<group>
+					<group>
+					<button name="job_onhold_new" type="object" icon="gtk-ok"  string="Save and Process" confirm="Do you want to process?" />
+					</group>
+					<group>
+					<button name="job_cancel_new" type="object" icon="gtk-ok"  string="Cancel" confirm="Do you want to cancel?" />
+					</group>
+					<group>
+						<label string="" colspan="1"/>
+					</group>
+					<group>
+						<label string="" colspan="1"/>
+					</group>
+				</group><newline/>
+				<separator  colspan="5"/>
+			</group>
+
+			<group col="30" colspan="4" attrs="{'invisible':[('extened_bool','!=',True)]}">
+				<separator string="Job Extend Details" colspan="5"/>
+				<newline/>
+<!--aaaaaaaaaaaaaa start -->
+					<field name="job_extended_one2many" widget="one2many_list" nolabel="1" colspan="3">
+										<tree string="" editable="top">
+											<field name="extended_start_time" on_change="onchange_extended_start_time(extended_start_time,parent.job_end_time)"/>
+											<field name="extended_end_time" on_change="onchange_extended_start_time(extended_end_time,parent.job_end_time)"/>
+											<field name="extended_reason"/>
+										</tree>
+										<form string="">
+											<field name="extended_start_time"/>
+											<field name="extended_end_time" />
+											<field name="extended_reason"/>
+										</form>
+					</field><newline/>
+							<group col="4" colspan="4">
+							<button name="psd_job_extended_new" type="object" icon="gtk-ok"  string="Save and Process" colspan="1" confirm="Do you want to process"/>
+							<button name="psd_job_extended_cancel" type="object" icon="gtk-ok"  string="Cancel" colspan="1" confirm="Do you want to cancel"/>
+							<label string="" colspan="2"/>
+							</group>
+			</group>
+<!--aaaaaaaaaaaaaa end -->
+				 <!--group>
+					<field name="extension_reason" colspan="0.5"/>
+				 </group>
+				<group>
+					<field name="extended_start_time"/>
+				</group>
+				<group>
+					<field name="extended_end_time"/>
+				</group>
+				<group>
+					<label string="" colspan="1"/>
+				</group>
+				<group>
+					<label string="" colspan="1"/>
+				</group><newline/>
+
+				<group>
+					<group>
+					<button name="job_extended_new" type="object" icon="gtk-ok"  string="Save and Process" colspan="1"/>
+
+					</group>
+					<group>
+						<label string="" colspan="1"/>
+					</group>
+					<group>
+						<label string="" colspan="1"/>
+					</group>
+					<group>
+						<label string="" colspan="1"/>
+					</group>
+				</group><newline/>
+				<separator  colspan="5"/>
+			</group-->
+			<group>
+				<field name="job_completion_date" colspan="2" attrs="{'invisible':[('state','not in',('job_done','completed','assigned_material'))],'readonly':['|',('state','!=','assigned_material'),('hide_buttons','=',True)]}"/>
+				<label string="" colspan="2"/>
+			</group>
+			<newline/>
+		   <group col="8" colspan="9">
+			 <button name="psd_show_technician" type="object" string="Show Manpower Resources" context="{'default_search_record':True}" icon="gtk-yes" colspan="2" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('complaint','unscheduled','rescheduled'))],'readonly':[('hide_buttons','=',True)]}"/>
+			 <label string="" colspan="1"/>
+			 <label string="" colspan="1"/>
+			 <label string="" colspan="1"/>
+			 <!--field name="squad_name_main" readonly="1" attrs="{'invisible':[('squad_bool','!=',True)]}"/--><!--anuj_10april added field-->
+			 <button name="create_squad" states="booked" string="Create a New Squad" type="object" icon="gtk-go-forward" colspan="2" confirm="Do you want to create?"/>
+			 <field name="available_squad" on_change="onchange_available_squad(available_squad)" invisible="1"/>
+			 <field name="available_technician" on_change="onchange_available_technician(available_technician)" invisible="1"/>
+				   </group>
+		   <newline/>
+			<field name="check_box_hold" invisible="1"/>
+			<newline/>
+				   <group col="5" colspan="8">
+				   <group col="2" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('complaint','unscheduled','rescheduled'))]}">
+						 <field name="technician_detail" widget="one2many_list" context="{'nocreate':1,'nodelete':1}" nolabel="1">
+				 <form string="Technician Details">
+									<notebook>
+										<page string="Technician Details">
+											<group colspan="2" col="2">
+														 <field name="check_technician" invisible="1"/>
+												 <field name="technician_id"/>
+								 <field name="name"/>
+														 <field name="tech_id"/>
+												 <field name="location_id"/>
+							 <field name="job_start_time"/>
+						</group>
+					</page>
+				</notebook>
+				 </form>
+				 <tree string="Details of Manpower Resources" editable="bottom"><!--Anuj_10april string name change-->
+								<field name="check_technician" />
+								<field name="tech_id" readonly="1"/>
+				<field name="designation" readonly="1" invisible="1"/>
+				<field name="designation1" readonly="1" />
+				<field name="service_info" readonly="1" string="Previous Service area and date"/>
+				<field name="location_address" readonly="1"/>
+								<field name="location_id" invisible="1"/>
+				 </tree>
+					</field>
+			   </group>
+					   <group col="2" attrs="{'invisible':['|',('hide_buttons1','=',True),('state','not in',('complaint','unscheduled','rescheduled'))]}">
+						 <field name="squad_detail" widget="one2many_list" context="{'nocreate':1,'nodelete':1}" nolabel="1">
+				 <form string="Squad Details">
+									<notebook>
+										<page string="Squad Details">
+											<group colspan="2" col="2">
+								 <field name="name" readonly="1"/>
+							 <field name="squad_id" readonly="1"/>
+												 <field name="location_id" readonly="1"/>
+							 <field name="technicians" readonly="1"/>
+						</group>
+					</page>
+				</notebook>
+				 </form>
+				 <tree string="Squad Details" editable="bottom">
+				<field name="check_squad"/>
+				<field name="squad_id" readonly="1"/>
+								<field name="location_id" invisible="1" />
+				<field name="technicians" readonly="1"/><!--karishma_11april-->
+				 </tree>
+					</field>
+			   </group>
+				   </group>
+		   <group col="8" colspan="10">
+			 <group>
+							 <button name="psd_unscheduled" type="object" icon="gtk-go-forward" string="Schedule Job" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|',('state','not in',('complaint','unscheduled','rescheduled')),('not_overtime_bool','!=',True),('attrs_cancel','=',True),'|',('hide_buttons1','=',True),]}" colspan="1" confirm="Do you want to schedule?"/>
+							 <button name="psd_unscheduled_new" type="object" icon="gtk-go-forward" string="Schedule Job"  attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|',('state','not in',('complaint','unscheduled','rescheduled')),('overtime_bool','!=',True),('attrs_cancel','=',True),'|',('hide_buttons1','=',True),]}" colspan="1" confirm="Selected schedule time will be considered as overtime.Do you want to schedule?"/>
+
+			<button name="psd_job_reschedule" type="object" icon="gtk-ok" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|','|','|',('state','not in',('scheduled','confirmed')),('attrs_cancel','=',True),('attrs_extended','=',True),('attrs_reschedule','=',True),('attrs_cancel','=',True),('hide_buttons1','=',True)]}" string="Reschedule" colspan="1" />
+
+			<button name="psd_job_extended1" type="object" icon="gtk-ok" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|',('state','not in',('extended')),('attrs_reschedule','=',True),('attrs_cancel','=',True),('attrs_extended','=',True)]}" string="Job Extended" colspan="1"/>
+			 <!--button name="cancel" type="object" icon="gtk-ok" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':[('state','not in',('booked','schedule','new','assigned_material'))]}" string="On Hold"/-->
+			<!--button name="reschedule_job" type="object" icon="gtk-ok" states="scheduled,confirmed" attrs="{'readonly':[('hide_buttons','=',True)]}" string="Reschedule "/-->
+					<label string="" colspan="1" attrs="{'invisible':[('state','not in',('new'))]}"/>
+			</group>
+			<group>
+			 <button name="psd_confirm" type="object" icon="gtk-go-forward" states="scheduled" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|','|',('state','!=','scheduled'),('attrs_reschedule','=',True),('hide_buttons1','=',True),('attrs_cancel','=',True)]}" string=" Confirm " confirm="Do you want to confirm?"/>
+			<button name="psd_job_extended" type="object" icon="gtk-ok" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|','|','|','|',('state','not in',('confirmed',)),('attrs_reschedule','=',True),('attrs_cancel','=',True),('attrs_extended','=',True),('hide_buttons1','=',True)]}" string="Job Extended" colspan="1"/>
+			<button name="psd_job_cancel" type="object" icon="gtk-ok" attrs="{'invisible':['|','|','|','|',('state','not in',('confirmed','unscheduled','complaint','rescheduled','scheduled')),('attrs_extended','=',True),('attrs_cancel','=',True),('attrs_reschedule','=',True),('hide_buttons1','=',True)],'readonly':[('hide_buttons','=',True)]}"  string="Cancel" colspan="1" />
+			 <!--button name="assign_techniciannn" type="object" icon="gtk-go-forward" states="booked" attrs="{'readonly':[('hide_buttons','=',True)]}" string="Assign Manpower Resources"/-->
+			 <!--button name="job_complete" type="object" icon="gtk-go-forward" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':[('state','!=','assigned_material')]}" string="Job Completed"/-->
+			<!--label string="" colspan="1" attrs="{'invisible':[('state','not in',('booked','schedule','new'))]}"/-->
+			</group>
+			<group>
+				<!--button name="complete" type="object" icon="gtk-go-forward" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':[('state','!=','job_done')]}" string="JOB Closed" colspan="1"/-->
+				<button name="test" type="object" icon="gtk-go-forward" attrs="{'readonly':[('hide_buttons','=',True)],'invisible':['|',('state','!=','completed')]}" string="Job Closure Screen" colspan="1" confirm="Do you want to process?"/>
+				<newline/>
+			</group>
+			<group>
+				<label string="" colspan="1"/> 
+			</group>
+			<group>
+				<label string="" colspan="1"/> 
+			</group>
+		</group><newline/>
+		<group col="8" colspan="10">
+			<group>
+				<field name="complaint_job_cancel" invisible="1"/> <newline/>
+				<field name="complaint_job_cancel_reason" attrs="{'invisible':['|',('complaint_job_cancel','!=',True),('state','not in',('confirmed','unscheduled','complaint','rescheduled','scheduled'))]}"  colspan="1"/>
+				<label colspan="2"/>
+				<field name="no_of_hours_wasted" invisible="1" /><newline/><!--pratik -->
+			</group>
+		</group><newline/>
+		<group>
+			<group>
+				<field name="expense_line_new" colspan="0.5" nolabel="1" attrs="{'invisible':['|',('complaint_job_cancel','!=',True),('state','not in',('confirmed','unscheduled','complaint','rescheduled','scheduled'))]}">
+						 <tree string="Expense" editable="bottom">
+								<field name="expense_type"/>
+								<field name="expense_quantity"/>
+								<field name="expense_amt"/>
+								<field name="expense_remarks" attrs="{'required':[('expense_type','=',('miscellaneous'))]}"/>
+						 </tree>
+					 </field>
+			</group>
+			<group>
+				<label string="" colspan="3"/><newline/>
+			</group>
+		</group><newline/>
+		<group>
+			<button name="save_job_cancel" type="object" icon="gtk-ok"  string="Save" attrs="{'invisible':['|',('complaint_job_cancel','!=',True),('state','not in',('confirmed','unscheduled','complaint','rescheduled','scheduled'))],'readonly':[('hide_buttons','=',True)]}" confirm="Do you want to save?"/>
+			<button name="save_job_cancel_cancel" type="object" icon="gtk-ok"  string="Cancel" attrs="{'invisible':['|',('complaint_job_cancel','!=',True),('state','not in',('confirmed','unscheduled','complaint','rescheduled','scheduled'))],'readonly':[('hide_buttons','=',True)]}" confirm="Do you want to cancel?"/>
+			<label colspan="2"/>
+		</group>
+		</page>
+	
+		<page string="Manpower Estimate" invisible="1">
+		<!--page string="Manpower Estimate" attrs="{'invisible':[('state','in',('unscheduled','complaint','rescheduled'))]}"-->
+			<!--field name="manpower_line" colspan="4" nolabel="1" attrs="{'invisible':[('state','!=','booked')],'readonly':[('state','=','booked')]}"-->
+			<field name="manpower_line" colspan="4" readonly="1" nolabel="1" context="{'nodelete':1}">
+							<tree string="Manpower Estimate (SC-06-01)" >
+					<field name="empl"  readonly="1"/>
+					<!--field name="squad_name"/-->
+					<field name="designation" readonly="1"/>
+					<field name="designation1" readonly="1"/>
+					<field name="no_of_manpower"  readonly="1"/>
+					<field name="no_of_hours" widget="float_time" readonly="1"/>
+					<field name="no_of_over_time_hours"  readonly="1"/>
+							</tree>
+				<form string="Manpower Estimate (SC-06-01)" >
+					<field name="empl"  readonly="1"/>
+					<!--field name="squad_name"/-->
+					<field name="designation" readonly="1"/>
+					<field name="designation1" readonly="1"/>
+					<field name="no_of_manpower"  readonly="1"/>
+					<field name="no_of_hours"  widget="float_time" readonly="1"/>
+					<field name="no_of_over_time_hours"  readonly="1"/>
+							</form>
+					</field>
+		</page>
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA-->
+		<page string="Estimate Vs Actual" invisible="1">
+				<group col="10" colspan = "10">
+					<group>
+							<field name="customer_job_id" readonly="1"/><newline/>
+							<field name="job_closed_date" readonly="1"/>
+					</group>
+					<group>
+							<field name="cust_name" readonly="1"/><newline/>
+							<field name="attached_completion_slip" readonly="1"/>
+						
+					</group>
+					<group>
+						<field name="service_location_area" readonly="1"/><newline/>
+					</group>
+				</group>
+				<group col="10" colspan= "10">
+					<group col="5" colspan="5">
+						<field name="estimates_chem_equip_one2many" widget="one2many_list" nolabel="1" readonly="1" >
+							<tree string="Estimated Chem/Equip" editable="top">	
+							<field name="chemical_name"/>
+							<field name="uom"/>
+							<field name="quantity"/>
+							<field name="sequence" invisible="1"/>
+							</tree>
+							<form>	
+							<field name="chemical_name"/>
+							<field name="uom"/>
+							<field name="quantity"/>
+							<field name="sequence" invisible="1"/>
+							</form>
+						</field>
+					</group>
+					<group col="5" colspan="5">
+						<field name="consumed_estimate_actual_line" widget="one2many_list" nolabel="1" readonly="1">
+							<tree string="Consumed Chem/Equip" editable="top" >
+							<field name="chemical_name" on_change="onchange_uom(chemical_name)"/>
+							<field name="quantity" string="Consumed qty"/>
+							<field name="uom"/>
+							<field name="batch_id"/>
+							<field name="tag_id"/>
+							<field name="sequence" invisible="1"/>
+							</tree>
+							<form>
+							<field name="chemical_name" on_change="onchange_uom(chemical_name)"/>
+							<field name="quantity" string="Consumed qty"/>
+							<field name="uom"/>
+							<field name="batch_id"/>
+							<field name="tag_id"/>
+							<field name="sequence" invisible="1"/>
+							</form>
+						</field>
+					</group>
+				</group>
+			<newline/>
+				<group col="10" colspan="10">
+					<group>
+					<field name="manpower_req_one2many" nolabel="1" widget="one2many_list" context="{'nocreate':1,'nodelete':1}" readonly="1">
+								<tree string="Manpower Requirements" editable="bottom">
+									<field name="designation"/>
+									<field name="no_of_manpower" invisible="1"/>
+									<field name="no_of_hours"/>
+									<field name="no_of_over_time_hours"/>
+									<field name="sequence" invisible="1"/>
+								</tree>
+								<form>
+									<field name="designation"/>
+									<field name="no_of_manpower" invisible="1"/>
+									<field name="no_of_hours"/>
+									<field name="no_of_over_time_hours"/>
+									<field name="sequence" invisible="1"/>
+								</form>
+							</field>
+					</group>
+					<group>
+						<field name="manpower_est_one2many" widget="one2many_list" nolabel="1" readonly="1">
+							 <tree string="Manpower Utilisation" >
+							<field name="empl"  readonly="1"/>
+							<!--field name="squad_name"/-->
+							<field name="designation" readonly="1" invisible="1"/>
+							<field name="designation1" readonly="1"/>
+							<field name="no_of_manpower"  readonly="1" invisible="1"/>
+							<field name="no_of_hours"  readonly="1"  widget="float_time"/>
+							<field name="no_of_over_time_hours"  readonly="1"/>
+							<field name="sequence" invisible="1"/>
+									</tree>
+							 <form>
+							<field name="empl"  readonly="1"/>
+							<!--field name="squad_name"/-->
+							<field name="designation" readonly="1"/>
+							<field name="designation1" readonly="1"/>
+							<field name="no_of_manpower"  readonly="1" invisible="1"/>
+							<field name="no_of_hours"  readonly="1"  widget="float_time"/>
+							<field name="no_of_over_time_hours"  widget="float_time" readonly="1"/>
+							<field name="sequence" invisible="1"/>
+									</form>
+
+							</field>
+
+					</group>
+				</group><newline/>
+				<group col="10" colspan="10">
+					<group>
+						<field name="treatment_line1" colspan="2" nolabel="1" readonly="1">
+								<tree string="Treatment Areas" editable="bottom">
+									<field name="treatment_name"/>
+									<field name="observations"/>
+								<field name="sequence" invisible="1"/>
+									<field name="area_sq_foot"/>
+								</tree>
+								<form string="Treatment Areas">
+									<field name="treatment_name"/>
+									<field name="observations"/>
+								<field name="sequence" invisible="1"/>
+									<field name="area_sq_foot"/>
+								</form>
+						</field>
+					</group>
+					<group>
+						<field name="expense_line_wiz1" colspan="2" nolabel="1" readonly="1">
+							<tree string="Expenses Incurred" editable="bottom">
+								 <field name="expense_type"/>
+								 <field name="expense_quantity"/>
+								 <field name="expense_amt"/>
+								 <field name="expense_remarks" attrs="{'required':[('expense_type','=',('miscellaneous'))]}"/>
+								 <field name="sequence" invisible="1"/>
+							</tree>
+							<form string="Expenses Incurred">
+								 <field name="expense_type"/>
+								 <field name="expense_quantity"/>
+								 <field name="expense_amt"/>
+								 <field name="expense_remarks" attrs="{'required':[('expense_type','=',('miscellaneous'))]}"/>
+								 <field name="sequence" invisible="1"/>
+							</form>
+						</field>
+					</group>
+				</group><newline/>
+			<group col="10" colspan = "10">
+			 <button name="more_details" type="object" string="More Details" invisible="1"/>
+			<label string="" colspan="8"/>
+			</group>
+			</page>
+<!--AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAend-->
+		<!--page string="Material / Equipment Issue" attrs="{'invisible':[('state','in',('unscheduled','booked','confirmed'))]}"-->
+		<page string="Material / Equipment Issue" invisible="1">
+			<!--group col="4" colspan="4" attrs="{'invisible':[('state','not in',('new','progress'))]}"-->
+			<group col="4" colspan="4">
+				<field name="chemical" nolabel="1" colspan="2">
+								<tree string="Material Issue (SC-06-02)" editable="bottom">
+								<!--field name="id1" invisible="1"/--> 
+								<field name="name"/>
+								<field name="uom"/>
+								<field name="quantityhand"/>
+								<field name="quantityavailable"  invisible="1"/>
+								</tree>
+
+				</field>
+				<field name="equipment" nolabel="1" colspan="2">
+								<tree string="Equipment &#38; other tools Issue(SC-06-03)" editable="bottom">
+								<field name="name_equipment"/>
+								<field name="uom_equipment"/>
+								<field name="quantityhand_equipment"/>
+								<field name="quantityavailable_equipment" invisible="1"/>
+								</tree>
+				</field>
+
+			</group>			
+		</page>
+		<!--page string="Treatment Area" attrs="{'invisible':[('state','in',('unscheduled','booked','confirmed','new'))]}"-->
+				<page string="Treatment Area" invisible="1">
+			<!--field name="treatment_line" colspan="2" nolabel="1" attrs="{'invisible':[('state','=',('booked'))]}"-->
+			<field name="treatment_line" colspan="2" nolabel="1">
+							<tree string="Treatment Area" editable="bottom">
+								<field name="treatment_name"/>
+								<field name="observations"/>
+							</tree>
+			</field>			
+		</page>
+		<!--page string="Operational Expenses" invisible="1"--> <!--attrs="{'invisible':[('state','not in',('job_done'))]}"-->
+			<!--field name="expense_line" colspan="2" nolabel="1">
+				<tree string="Expense" editable="bottom"-->
+					 <!--field name="account_id" domain="[('type','!=','view')]"/-->
+							 <!--field name="expense_type"/>
+							 <field name="expense_quantity"/>
+							 <field name="expense_amt"/>
+							 <field name="expense_remarks" attrs="{'required':[('expense_type','=',('miscellaneous'))]}"/>
+				</tree>
+			</field>
+		</page-->
+		<!--page string="Rescheduling Overheads" attrs="{'invisible':[('check_box_hold','=',False)]}">
+			<field name="hours"/>
+		</page-->
+		<!--page string="Remarks">
+			<field name="operations_remark" colspan="2" nolabel="1">
+				<tree string="Remarks" editable="bottom">
+					<field name="remarks_user" readonly="1" invisible="1"/>
+					<field name="remarks_time" readonly="1"/>
+					<field name="remarks_description"/>
+				</tree>
+					   </field>
+		</page-->
+		<page string="Add Notes" attrs="{'invisible':[('state','not in',('rescheduled','complaint','cancel','confirmed','unscheduled','job_done','scheduled','completed','adjusted','extended'))]}">
+							<field name="comment_line" widget="one2many_list" nolabel="1" colspan="3" context="{'nocreate':1,'nodelete':1}" readonly="1">
+									<tree string="Comments">
+										<field name="user_id"/>
+										<!--field name="source"/-->
+										<field name="comment_date"/>
+										<field name="comment"/>
+										<field name="sequence" invisible="1"/>
+									</tree>
+									<form string="Comments">
+										<field name="user_id" />
+										<!--field name="source" /-->
+										<field name="comment_date"/>
+										<field name="comment"/>
+										<field name="sequence" invisible="1"/>
+
+									</form>
+							</field>
+							<newline/>
+							<separator string="" colspan="4"/>
+							<group col="8" colspan="8">
+								<field name="comment_remark" colspan="4" attrs="{'invisible':[('hide_buttons1','=',True)]}"/>
+								<button string="POST" name="post_comment" type="object" colspan="1" attrs="{'invisible':[('hide_buttons1','=',True)]}"/>
+								<label string="" colspan="3"/>
+							</group>
+						</page>
+		<page string="History">
+			<field name="history_line" colspan="2" nolabel="1" domain="[('contract_no','=',job_id)]" context="{'nocreate':1,'nodelete':1}" readonly="1">
+				<tree string="Remarks" editable="bottom">
+					<field name="contract_no" invisible="1"/>
+					<field name="job_id"/>
+					<field name="job_schedule_date"/>
+					<field name="job_reschedule_date" invisible="1"/>
+					<field name="record_date"/>
+					<field name="no_hr_wasted" invisible="1"/>
+					<field name="reschedule_by"/>
+					<field name="reason_for_rescheduling"/>
+					<field name="technician_squad"/>
+					<field name="job_start_date"/>
+					<field name="job_end_date"/>
+					<field name="job_status"/>
+				</tree>
+					 </field>
+		</page><!-- ops history-->
+		<page string="Operations Job History">
+			<field name="ops_record_noncomplaint" colspan="2" nolabel="1" readonly="1">
+				<tree string="Job History(Except Complaint)">
+					<field name="scheduled_job_id" string="JOB ID"/>
+					<field name="pms" invisible="1"/>
+					<field name="req_date_time" string="Tentative Date"/>
+					<field name="record_date"/>
+					<field name="technician_squad_merge"/>
+					<field name="job_category"/>
+					<field name="job_start_time" string="Job Start Time"/>
+					<field name="new_job_end_time1" string="Job End Time"/>
+					<field name="contract_field"/>
+					<field name="state" string="Current Status"/>
+				</tree>
+					 </field>
+			<newline/>
+			<field name="ops_record_complaint" colspan="2" nolabel="1" readonly="1">
+				<tree string="Job History(Complaint)" editable="bottom">
+					<field name="scheduled_job_id" string="JOB ID"/>
+					<field name="pms" invisible="1"/>
+					<field name="req_date_time" string="Tentative Date"/>
+					<field name="record_date"/>
+					<field name="technician_squad_merge"/>
+					<field name="job_category"/>
+					<field name="job_start_time" string="Job Start Time"/>
+					<field name="new_job_end_time1" string="Job End Time"/>
+					<field name="contract_field"/>
+					<field name="state" string="Current Status"/>
+				</tree>
+					</field>
+		</page>
+			<page string="Chemical History" invisible="1">
+							<field name="chemical_rec_one2many" widget="one2many_list" nolabel="1" colspan="3" context="{'nocreate':1,'nodelete':1}">
+									<tree string="Chemical his">
+										<field name="tech_name"/>
+										<field name="job_id"/>
+										<field name="chemical_id"/>
+										<field name="squad_name"/>
+										<field name="squad_bool"/>
+										<field name="tech_date"/>
+									</tree>
+									<form string="Chemical his">
+										<field name="tech_name"/>
+										<field name="job_id"/>
+										<field name="chemical_id"/>
+										<field name="squad_name"/>
+										<field name="squad_bool"/>
+										<field name="tech_date"/>
+									</form>
+							</field>
+						</page>
+		</notebook>
+			<group col="8">
+			<group col="8" colspan="15">
+			<label string="" colspan="2"/>
+					</group>
+			<group col="8" colspan="10">
+				<label string="" colspan="2"/>
+					<!--button name="reschedule" type="object" icon="gtk-go-forward" states="confirmed" attrs="{'readonly':[('hide_buttons','=',True)]}" string="Reschedule"/><label string="" colspan="2"/-->
+			</group>
+<!--attrs="{'invisible':['|',('hide_buttons','=',True),('state','!=','unscheduled')]}"-->		
+<!-- new Buttons-->
+			  <!--button  name="save" type="object" icon="gtk-ok" states="booked" string="Save"/-->
+			  <button name="cancel_new" type="object" icon="gtk-ok" states="booked" string="Cancel" attrs="{'readonly':[('hide_buttons','=',True)]}" invisible="1"/>
+			 <group col="8" colspan="10">
+				<label string="" colspan="2"/>
+			  <button name="psd_job_completion" type="object" icon="gtk-ok" states="new" attrs="{'readonly':[('hide_buttons','=',True)]}" string="Assign Material" confirm="Do you want to assign?"/><label string="" colspan="2"/>
+			</group>
+<!-- end-->			
+			<button name="book" type="object" icon="gtk-go-forward" states="booked" string="Confirm Job" confirm="Are you sure that the quantities assigned are correct?" invisible="1"/>
+			  <!--button name="change_progress" type="object" icon="gtk-go-forward" states="schedule" string="In Progress"/-->
+
+						  <!--button name="complete" type="object" icon="gtk-go-forward" states="schedule" string="Completed"/-->
+			  <label string="" colspan="3"/>
+						  <!--button name="reset" type="object" icon="gtk-go-forward" states="rescheduled" attrs="{'readonly':[('hide_buttons','=',True)]}" string="Reset to New"/-->
+			  <field name="assign_resource_id" invisible="1"/>
+			  <field name="assign_resource_id1" invisible="1"/>
+						  <field name="bool_check" invisible="1"/>
+			  <field name="extened_bool" invisible="1"/>
+			   <field name="onhold_bool" invisible="1"/>
+			   <field name="job_id1" invisible="1"/>
+			   <field name="overtime_bool" invisible="1"/>
+			   <field name="not_overtime_bool" invisible="1"/>
+			   <field name="attrs_reschedule" invisible="1"/>
+			   <field name="attrs_extended" invisible="1"/>
+			   <field name="attrs_cancel" invisible="1"/>
+			   <field name="technician_squad_merge" invisible="1"/>
+			   <field name="job_extended_bool" invisible="1"/>
+			   <field name="jobid_bool" invisible="1"/>
+			   <field name="squad_bool" invisible="1"/>
+			   <field name="use_service_card_readonly_bool" invisible="1"/>
+			 <field name="adhoc_bool" invisible="1"/>
+			<field name="location_invisible" readonly="1" invisible="1"/>
+			 <field name="adhoc_job_type_bool" invisible="1"/>
+				<field name="job_complete_hide" invisible="1"/>
+			   <field name="hide_buttons" invisible="1"/>
+<!-- 			   <field name="hide_button_function" invisible="1"/> 
+ -->			  <field name="hide_buttons1" invisible="1"/>
+
+<!-- 			   <field name="hide_button_function1" invisible="1"/>
+			   <field name="extend_bool" invisible="1"/>
+			   <field name="onhold_reason_bool" invisible="1"/>
+			   <field name="check_boool" invisible="1"/-->
+
+						  <button name="job_completion_reminder_email_function" type="object" icon="gtk-go-forward" states="job_done" string="Test Button" invisible="1"/>
+					</group> 
+		</form>
+		</field>
+		</record>
+		<!-- <record model="ir.actions.act_window" id="calling">
+				  <field name="name">View Schedule</field>
+				  <field name="res_model">res.scheduledjobs</field>
+				  <field name="view_type">form</field>
+				<field name="domain">[('state','in',('new','schedule'))]</field>
+				<field name="search_view_id" ref="psd_view_res_scheduledjobs_filter_new2"/>
+			<field name="view_mode">calendar,tree,form</field>
+		</record>
+		 <record model="ir.actions.act_window" id="psd_calling_form">
+				  <field name="name">View Schedule</field>
+				  <field name="res_model">res.scheduledjobs</field>
+				  <field name="view_type">form</field>
+				  <field name="view_mode">form</field> 
+				  <field name="view_id" ref="existing_customer.form_cust"/> 
+		</record> -->
+
+		<!-- ############################################################################# -->
+    <record model="ir.actions.act_window" id="psd_new_cust_id1">
+		    <field name="name">Jobs</field>
+		    <field name="res_model">res.scheduledjobs</field>
+		    <field name="view_type">form</field>
+		    <field name="view_mode">tree,form</field>
+		    <field name="view_id" eval="cust_id1"  ref="psd_cust_id"/>
+		    <field name="domain">[('holiday_active','=',False)]</field>
+		    <field name="context">{'nodelete': 1, 'nocreate': 1,'noselect':1}</field>
+		    <field name="search_view_id" ref="psd_view_res_scheduledjobs_filter_new1"/>
+    </record>
+
+    <record id="psd_new_job_tree" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="psd_cust_id"/>
+            <field name="act_window_id" ref="psd_new_cust_id1"/>
+    </record>
+
+    <record id="psd_new_job_form" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="psd_form_cust"/>
+            <field name="act_window_id" ref="psd_new_cust_id1"/>
+    </record>
+
+    <record model="ir.actions.act_window" id="psd_cal_check_tech_availability1">
+        <field name="name">Jobs</field>
+        <field name="res_model">res.scheduledjobs</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">calendar,form</field>
+        <field name="view_id" ref="psd_view_check_tech_availability_new"/>
+      </record>
+<!-- ############################################################################# -->
+	</data>
+</openerp>

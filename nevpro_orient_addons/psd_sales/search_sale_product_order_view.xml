@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="search_sale_product_order_form">
+            <field name="name">search.sale.product.order.form</field>
+            <field name="model">search.sale.product.order</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string='Quotation Search'>
+                    <group col="8" colspan="8">
+                        <newline/>
+                        <group col="8" >
+                            <field name="name"/>
+                            <field name="request_id"/>
+                            <field name="customer_id"/>
+                            <field name="contact_name"/>
+                            <field name="contact_number"/>
+                            <field name="flat_no"/>
+                            <field name="building_name"/>
+                            <field name="sub_area"/>
+                            <field name="landmark"/>
+                            <field name="street"/>
+                            <field name="city_id"/>
+                            <field name="web_order_date_from" invisible="1"/>
+                            <field name="web_order_date_to" invisible="1"/>
+                            <field name="pse_id"/>
+                            <field name="status"/>
+                            <field name="web_order_no"/>
+                            <field name="erp_order_no"/>
+                            <field name="erp_order_date_from"/>
+                            <field name="erp_order_date_to"/>
+                            <field name="sku_name_id"/>
+                            <field name="product_name_id" invisible="1"/>
+                            <field name="bird_pro"/>
+                            <newline/>
+                            <button string="Search" name="search_sales_product_order" 
+                                    type="object" icon="srh" colspan="0.5"/>
+                            <button string="Clear" icon="gtk-clear" name="clear_product_order" type="object" colspan="0.5"/>
+                            <field name="not_found" invisible="1"/>
+                        </group>         
+                    </group>
+                    <group attrs="{'invisible':[('not_found','=',False)]}">
+                        <html>
+                            <h4 style="color:red"><center>Record Not Found!</center></h4>
+                        </html>
+                    </group>
+                    <newline/>
+                    <field name="search_sales_product_order_lines" nolabel="1" context="{'nocreate':1,'nodelete':1}" >
+                        <tree editable="bottom" colors="red:state=='new'">
+                                <field name="erp_order_no" readonly="1"/>
+                                <field name="name" readonly="1"/>
+                                <field name="delivery_location_id" readonly="1"/>
+                                <field name="web_order_no" readonly="1"/>                               
+                                <!-- <field name="created_date" readonly="1"/> -->                               
+                                <field name="delivery_date" readonly="1"/>
+                                <field name="state" readonly="1"/>
+                                <field name="total_amount_paid" string="Order Amount" readonly="1" sum="Total" />
+                                <field name="invoiced_amount" readonly="1" sum="Total" />
+                                <field name="erp_order_date" string="Created Date" readonly="1"/>
+                                <field name="user_id" string="Created By" readonly="1"/>
+                                <button name="reload_product_quotation" type="object" icon="gtk-go-forward"/>
+                        </tree>
+                    </field>                    
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_search_sale_product_order_form">
+            <field name="name">Product Order Search</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">search.sale.product.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="search_sale_product_order_form"/>
+        </record>
+
+        <menuitem id="menu_search_sale_product_order_form" 
+                  name="Search Product Order" 
+                  action="action_search_sale_product_order_form" 
+                  sequence="1" 
+                  parent="menu_branch_sale_product_order_main"/>
+
+</data>
+</openerp>

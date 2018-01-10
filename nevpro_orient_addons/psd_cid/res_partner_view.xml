@@ -1,0 +1,53 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+        <record id="view_partner_form_crm_history" model="ir.ui.view">
+            <field name="name">view.partner.form.crm.history</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="zip"]' position='after'>
+                  <field name="segment" string="Segment *"/>
+              </xpath>
+              <xpath expr='//field[@name="customer_category_id"]' position='after'>
+                  <field name="psd" invisible="1"/>
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_address_form1_psd" model="ir.ui.view">
+            <field name="name">view.partner.address.form1.psd</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_form1"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="zip"]' position='after'>
+                  <field name="segment" required="1" string="Segment *"/>
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_address_wizard_form_psd" model="ir.ui.view">
+            <field name="name">view.partner.address.wizard.form.psd</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_wizard_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="zip"]' position='after'>
+                  <field name="segment" string="Segment *"/>
+              </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_address_edit_wizard_form_psd" model="ir.ui.view">
+            <field name="name">view.partner.address.edit.wizard.form.psd</field>
+            <field name="model">res.partner.address</field>
+            <field name="inherit_id" ref="base.view_partner_address_edit_wizard_form"/>
+            <field name="arch" type="xml">
+              <xpath expr='//field[@name="zip"]' position='after'>
+                  <field name="segment" string="Segment *"/>
+              </xpath>
+            </field>
+        </record>
+        
+    </data>
+</openerp>

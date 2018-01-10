@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <report auto="False" id="psd_report_purchase_indent" model="purchase.indent" name="purchase.indent"
+                rml="psd_accounting/report/print_order.rml" string="Print Order"
+                usage="default" menu="False"/> 
+	<report auto="False" id="quaterly_report_itds_id" model="quaterly.report" name="itds.pending.certificate"
+                rml="account_sales_branch/report/itds.rml" string="Statement of Itds"
+                usage="default" header="False"/>
+
+    <report auto="False" id="psd_print_invoice_accounting" model="invoice.adhoc.master" name="psd.invoice.accounting"
+                rml="psd_accounting/report/psd_print_invoice.rml" string="Print Invoice"
+                usage="default" menu="False"/>  
+    <report auto="False" id="print_service_invoice" model="invoice.adhoc.master" name="service.invoice"
+                rml="psd_accounting/report/service_invoice.rml" string="Print Invoice"
+                usage="default" menu="False"/>
+<!--     <report auto="False" id="psd_summary_accounts_id" model="monthly.report" name="summary.accounts"
+                rml="PSD_branch/addons_branch/psd_accounting/report/summary_of_accounts.rml" string="Summary Of Accounts"
+                usage="default" header="False"/>  -->   
+
+    <report id="psd_report_statement_collection_old_records"
+            string="Statement of Collection RML for Old Records"
+            model="monthly.report"
+            name="psd.statement.collection.old.records"
+            rml="psd_accounting/report/stmt_of_collection_old_records.rml"
+            auto="False"
+            header="False"/>
+            
+    <report id="psd_report_statement_collection_old_records_new1"
+            string="Statement of Collection RML for Old Records NEW"
+            model="monthly.report"
+            name="psd.statement.collection.old.records.new1"
+            rml="psd_accounting/report/stmt_of_collection_old_records_new.rml"
+            auto="False"
+            header="False"/>
+
+   </data>
+</openerp>
+

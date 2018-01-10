@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+   <data>
+
+<!-- Purchase Receipts Entry -->
+<record model="ir.ui.view" id="account_purchase_receipts_form">
+		<field name="name">Purchase Receipts</field>
+		<field name="model">account.purchase.receipts</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Purchase Receipts">
+				 <group col="8" colspan="8">
+					<field name="customer_name" colspan="3" required="1" domain="[('supplier','=',True),('ou_id','!=','')]" on_change="customer_name_change(customer_name)" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+					<field name="customer_id"  attrs="{'readonly':[('state','in',('done','finish','cancel'))]}" readonly="1"/>
+					<field name="customer_id_invisible" invisible="1"/>
+					<label string="" colspan="0.5"/>
+				  	<field name="receipt_no" colspan="2" readonly="1"/>
+					<label string="" colspan="0.5"/>
+					<field name="receipt_date" colspan="2" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+					<label string="" colspan="0.5"/>
+					<field name="voucher_type" invisible="1"/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				     <field name="company_id" invisible="1"/>
+				     <field name="credit_amount" invisible="1"/>
+				     <field name="debit_amount" invisible="1"/>
+				<group col="8" colspan="8" string=" ">
+				     <group col="8" colspan="8" >
+						<field name="account_id" colspan="2" domain="[('type','!=','view')]"
+							   attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"
+							   on_change="account_type(account_id,account_select_boolean)"/>
+						<field name="type" colspan="1" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}"/>
+						<button name="add_info" string="Add" type="object" colspan="0.5"
+								 attrs="{'invisible':[('state','in',('done','finish','cancel'))]}"/>
+						<label string="" colspan="3"/>
+						<newline/>
+				     </group>
+				     <group col="8" colspan="8" >
+					<field name="purchase_receipt_one2many" widget="one2many_list" nolabel="1" colspan="8"
+						   context="{'nocreate':1}" attrs="{'readonly':[('state','in',('done','finish','cancel'))]}">
+						<tree editable="bottom">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" sum="Total Credit"
+								   attrs="{'readonly':['|',('type','=','debit')]}"/>
+							<button name="add" string="Add" type="object" icon="gtk-go-forward"/>
+						</tree>
+
+						<form string="Purchase Receipts">
+							<field name="account_id" readonly="1"/>
+							<field name="type" colspan="1" invisible="1"/>
+							<field name="debit_amount" attrs="{'readonly':[('type','=','credit')]}"/>
+							<field name="credit_amount" attrs="{'readonly':[('type','=','debit')]}"/>
+						</form>
+				        </field>
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','finish','cancel'))]} "/>
+					<label string="" colspan="2"/>
+					<field name="receipt_type" invisible="1"/>
+				     </group>
+				     <group col="8" colspan="8">
+						<button name="process" string="Process" type="object" colspan="1" states="draft" icon="terp-camera_test"
+								confirm="Do you want to Process?"/>
+					<!-- <group>
+						<field name="cancel_reason"  colspan="1" attrs="{ 'readonly':[('state','in',('cancel'))],'required': [('cancel_boolean','=',True)] ,'invisible':[('cancel_boolean','=',False)]}"/>
+					</group> -->
+					<!-- <group> <button name="cancel_process" colspan="2" string="Receipt Cancel" type="object" icon="gtk-cancel" attrs="{'invisible':['|',('cancel_boolean','=',False),('state','in',('draft','cancel'))]}" confirm="Do you want to cancel?" groups="base.group_Administrator"/>	</group> -->					     
+					     <!-- <button name="generate_report" string="Print" type="object" colspan="1" attrs="{'invisible':[('state','not in',('done','finish'))]}" icon="gtk-print"/ -->
+						 <field name="state"  widget="statusbar" nolabel="1" attrs="{'invisible':[('state','in',('done','finish','draft','cancel'))]}"/>
+						 <label string="" colspan="6"/>
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+
+	<record model="ir.ui.view" id="account_purchase_receipts_tree">
+		<field name="name">Purchase Receipts</field>
+		<field name="model">account.purchase.receipts</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Purchase Receipts">
+				<field name="receipt_no"/>
+				<field name="receipt_date"/>
+				<field name="customer_name"/>
+				<field name="credit_amount" sum="Total"/>
+				<field name="debit_amount" sum="Total"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_account_purchase_receipts" model="ir.actions.act_window">
+            <field name="name">Purchase</field>
+            <field name="res_model">account.purchase.receipts</field>
+            <field name="type">ir.actions.act_window</field>
+	    	<field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{'nodelete':1}</field>
+            <!-- <field name="domain">[('receipt_no','!=',False)]</field> -->
+        </record>
+
+    <record model="ir.ui.view" id="account_purchase_receipts_search">
+		<field name="name">Purchase</field>
+		<field name="model">account.purchase.receipts</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Purchase">
+				<field name="receipt_no"/>
+				<field name="from_date" filter_domain="[('receipt_date','&gt;=',self)]"/>
+				<field name="to_date" filter_domain="[('receipt_date','&lt;=',self)]"/>
+				<field name="customer_name" domain="[('supplier','=',True),'|',('active','=',False),('active','=',True)]"/>
+				<field name="customer_id"/>
+				<field name="state"/>
+				<field name="debit_amount" string="Amount"/>
+			</search>
+		</field>
+	</record>
+
+    <!-- Legal and Profession Charges-->
+  	<record model="ir.ui.view" id="account_purchase_receipts_line_form">
+		<field name="name">Legal and Profession Charges form</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Legal and Profession Charges">
+			<group col="4" colspan="4">
+			          <button name="save_legal_profession_charges" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state','!=','draft')]}"/>
+					  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state','!=','draft')]}" confirm="Do you want to cancel?"/>
+					  <field name="tax_rate" invisible="1"/>
+					  <field name="igst_check" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group><newline/>
+			  <field name="state" invisible="1"/>
+			  <group col="4" colspan="4">
+			  		
+					<field name="legal_profession_one2many" widget="one2many_list"
+						   nolabel="1" colspan="3.5" context="{'default_rate':tax_rate,'default_igst_check':igst_check}" attrs="{'readonly':[('state','=','done')]}"> 
+						   <!-- context="{'nodelete':1,'nocreate':1}" -->
+						<tree editable="bottom">
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" on_change="onchange_bill_value(bill_value,rate,igst_check)" required="1"/>
+							<field name="rate" readonly="1"/>
+							<field name="cgst_amount"/>
+							<field name="sgst_amount"/>
+							<field name="igst_amount"/>
+							<field name="total_amount"/>
+							<field name="igst_check" invisible="1"/>
+							<field name="legal_profession_id" invisible="1"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+						<form string="Legal Profession Charges">
+							<field name="bill_no"/>
+							<field name="bill_date"/>
+							<field name="bill_value"/>
+							<field name="rate"/>
+							<field name="cgst_amount"/>
+							<field name="sgst_amount"/>
+							<field name="igst_amount"/>
+							<field name="total_amount"/>
+							<field name="igst_check" invisible="1"/>
+							<field name="legal_profession_id" invisible="1"/>
+							<field name="round_off"/>
+						</form>
+				        </field>
+			  </group>
+			</form>
+		</field>
+	</record>
+
+<record model="ir.ui.view" id="account_purchase_receipts_line_igst_form">
+		<field name="name">account.account.purchase.receipts.line</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_input_purchase_gst" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="purchase_line_igst_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="purchase_line_igst_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1" 
+							 on_change="onchange_igst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="gst_input_rate" required="1" 
+						     on_change="onchange_igst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="igst_tax_amount" readonly="0"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="classification" required="1"/>
+							<field name="input_type" required="1"/>
+							<field name="round_off" required="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_purchase_receipts_line_cgst_form">
+		<field name="name">account.purchase.receipts.line.cgst.form</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_input_purchase_gst" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="purchase_line_cgst_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="purchase_line_cgst_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1" 
+							 on_change="onchange_cgst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="gst_input_rate" required="1" 
+						     on_change="onchange_cgst_input_rate(bill_value,gst_input_rate)"/>
+							<field name="cgst_tax_amount" readonly="0" string="CGST TAX AMOUNT"/>
+							<field name="sgst_tax_amount" readonly="0" string="SGST TAX AMOUNT"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="classification" required="1"/>
+							<field name="input_type" required="1"/>
+							<field name="round_off" required="1"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="purchase_freight_entry_form">
+		<field name="name">freight.entry.form</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+				<group col="8" colspan="8">
+				   <button name="save_freight_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo"
+				         attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5"
+				  		 attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="freight_input_rate" invisible="1"/>
+					<field name="igst_check" invisible="1"/>
+					<label string="" colspan="7.5"/>
+				</group>
+				<group col="8" colspan="8" >
+					<field name="purchase_freight_one2many" widget="one2many_list" nolabel="1" colspan="4"
+					  attrs="{'readonly':[('state','=','done')]}" context="{'default_freight_input_rate':freight_input_rate,'default_igst_check':igst_check}">
+						<tree editable="bottom">
+							<field name="purchase_freight_id" invisible="1"/>
+							<field name="bill_no" string="Bill No/L.R No." required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="from_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="to_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="bill_value" string="Paid Value" required="1" on_change="onchange_freight_input_rate(from_state,to_state,igst_check,bill_value,freight_input_rate)"/>
+							<field name="freight_input_rate" readonly="1"/>
+							<field name="cgst_tax_amount" readonly="0" string="CGST AMOUNT"/>
+							<field name="sgst_tax_amount" readonly="0" string="SGST/UGST AMOUNT"/>
+							<field name="igst_tax_amount" readonly="0" string="IGST AMOUNT"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="igst_check" invisible="1"/>
+							<field name="round_off" required="1"/>
+						</tree>
+					</field>
+				<label string="" colspan="4"/>
+				<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_stat_adjustment_form">
+		<field name="name">Stat. Adjustment</field>
+		<field name="model">account.stat.adjustment</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Stat. Adjustment">
+				 <group col="8" colspan="8">
+				 	<field name="cus_new" invisible="1"/>
+					<field name="customer_name" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"
+							   on_change="customer_name_change(customer_name)" domain="[('supplier','=','True'),('ou_id','!=','')]"/>
+					<field name="customer_id" attrs="{'readonly':[('state','in',('done','cancel'))]}" colspan="2" readonly="1"/>
+					<field name="customer_id_invisible" attrs="{'readonly':[('state','in',('done','cancel'))]}" colspan="2" readonly="1" invisible="1"/>
+					<label string="" colspan="0.5"/>
+				  	<field name="stat_adjustment_number" colspan="2" readonly="1"/>
+					<label string="" colspan="0.5"/>
+					<field name="date" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+					<label string="" colspan="0.5"/>
+					<field name="voucher_type" invisible="1"/>
+					<field name="total_credit" invisible="1"/>
+					<field name="total_debit" invisible="1"/>
+					<field name="from_date" invisible="1"/>
+					<field name="to_date" invisible="1"/>
+				     </group>
+				     <label string="" colspan="6"/>
+				     <newline/>
+				     <field name="company_id" invisible="1"/>
+				     <field name="credit_amount" invisible="1"/>
+				     <field name="debit_amount" invisible="1"/>
+				<group col="8" colspan="8" string=" ">
+				     <group col="8" colspan="8" >
+						<field name="account_id" colspan="3" domain="[('type','!=','view')]"
+							   attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<field name="type" colspan="2" attrs="{'readonly':[('state','in',('done','cancel'))]}"/>
+						<button name="add_info" string="Add" type="object" colspan="0.5" attrs="{'invisible':[('state','=','done')]}"/>
+	
+						<newline/>
+				     </group>
+				     <group col="8" colspan="8" >
+					<field name="stat_adjustment_one2many" widget="one2many_list" nolabel="1"
+							   colspan="8" attrs="{'readonly':[('state','in',('done','cancel'))]}" context="{'nocreate':1}">
+                            <tree editable="bottom">
+								<field name="account_id" readonly="1"/>
+								<field name="customer_name" invisible="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+								<button name="add" string="Add" type="object" icon="gtk-go-forward"/>
+							</tree>
+
+							<form string="Details">
+								<field name="account_id" readonly="1"/>
+								<field name="customer_name" readonly="1"/>
+								<field name="type" colspan="1" invisible="1"/>
+								<field name="debit_amount" sum="Total Debit" attrs="{'readonly':[('type','=','credit')]}"/>
+								<field name="credit_amount" sum="Total Credit" attrs="{'readonly':[('type','=','debit')]}"/>
+							</form>
+							</field>
+					
+				     </group>
+				     <group col="8" colspan="8">
+					<field name="narration" colspan="6" attrs="{'readonly':[('state','in',('done','finish','cancel'))]} "/>
+				     </group>
+				     <group col="8" colspan="8">
+						<button name="process" string="Process" type="object" colspan="2" attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to Process?"/>
+					<!-- <group>
+						<field name="cancel_reason"  colspan="1" attrs="{ 'readonly':[('state','in',('cancel'))],'required': [('cancel_boolean','=',True)] ,'invisible':[('cancel_boolean','=',False)]}"/>
+					</group> -->
+					<!-- <group> <button name="cancel_process" colspan="2" string="Receipt Cancel" type="object" icon="gtk-cancel" attrs="{'invisible':['|',('cancel_boolean','=',False),('state','in',('draft','cancel'))]}" confirm="Do you want to cancel?" groups="base.group_Administrator"/>	</group> -->					     
+					     <!-- <button name="generate_report" string="Print" type="object" colspan="1" attrs="{'invisible':[('state','not in',('done','finish'))]}" icon="gtk-print"/ -->
+						 <field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				     </group>
+				</group>
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_stat_adjustment_search">
+		<field name="name">Stat Adjustment</field>
+		<field name="model">account.stat.adjustment</field>
+		<field name="type">search</field>
+		<field name="arch" type="xml">
+			<search string="Stat Adjustment">
+				<field name="stat_adjustment_number"/>
+				<field name="from_date" filter_domain="[('date','&gt;=',self)]"/>
+				<field name="to_date" filter_domain="[('date','&lt;=',self)]"/>
+				<field name="customer_name" domain="[('supplier','=',True),'|',('active','=',False),('active','=',True)]"/>
+				<field name="customer_id"/>
+				<field name="state"/>
+				<field name="total_debit" string="Amount"/>
+			</search>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="account_stat_adjustment_tree">
+		<field name="name">Stat Adjustment</field>
+		<field name="model">account.stat.adjustment</field>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Stat Adjustment">
+				<field name="stat_adjustment_number"/>
+				<field name="date"/>
+				<field name="customer_name"/>
+				<field name="total_credit" sum="Total"/>
+				<field name="total_debit" sum="Total"/>
+			</tree>
+		</field>
+	</record>
+
+	<record id="action_account_stat_adjustment" model="ir.actions.act_window">
+            <field name="name">Stat Adjustment</field>
+            <field name="res_model">account.stat.adjustment</field>
+            <field name="type">ir.actions.act_window</field>
+	    	<field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="context">{'nodelete':1}</field>
+            <!-- <field name="domain">[('stat_adjustment_number','!=',False)]</field> -->
+        </record>
+
+
+    <!-- Stat Legal and Profession Charges-->
+  	<record model="ir.ui.view" id="account_stat_adjustment_line_form">
+		<field name="name">Stat Legal and Profession Charges form</field>
+		<field name="model">account.stat.adjustment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Stat Legal and Profession Charges">
+			<group col="4" colspan="4">
+			          <button name="save_stat_legal_profession_charges" string="Save" type="object" colspan="0.5" icon="gtk-redo" attrs="{'invisible':[('state','!=','draft')]}"/>
+					  <button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" attrs="{'invisible':[('state','!=','draft')]}" confirm="Do you want to cancel?"/>
+					  <field name="tax_rate" invisible="1"/>
+				  <label string="" colspan="4"/>
+			  </group><newline/>
+			  <field name="state" invisible="1"/>
+			  <group col="4" colspan="4">
+			  		
+					<field name="stat_legal_profession_one2many" widget="one2many_list"
+						   nolabel="1" colspan="3.5" context="{'default_rate':tax_rate}" attrs="{'readonly':[('state','=','done')]}"> 
+						   <!-- context="{'nodelete':1,'nocreate':1}" -->
+						<tree editable="bottom">
+							<field name="bill_no"/>
+							<field name="bill_date"/>
+							<field name="bill_value" on_change="onchange_bill_value(bill_value,rate)"/>
+							<field name="rate" readonly="1"/>
+							<field name="cgst_amount"/>
+							<field name="sgst_amount"/>
+							<field name="igst_amount"/>
+							<field name="total_amount"/>
+							<field name="round_off" readonly="0"/>
+							<field name="stat_legal_profession_id" invisible="1"/>
+						</tree>
+						<form string="Legal Profession Charges">
+							<field name="bill_no"/>
+							<field name="bill_date"/>
+							<field name="bill_value"/>
+							<field name="rate"/>
+							<field name="cgst_amount"/>
+							<field name="sgst_amount"/>
+							<field name="igst_amount"/>
+							<field name="total_amount"/>
+							<field name="round_off"/>
+							<field name="stat_legal_profession_id" invisible="1"/>
+						</form>
+				        </field>
+			  </group>
+			</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="expense_purchase_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="customer_name" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="purchase_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','in',('done','finish'))]}" context="{'default_customer_name':customer_name}">
+						<tree editable="bottom">
+							<field name="purchase_line_expense_id" invisible="1"/>
+							<field name="customer_name" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1"/>
+							<field name="gst_item_master" readonly="0" on_change="onchange_item_master(customer_name,bill_value,gst_item_master)" required="1"/>
+							<field name="hsn_sac_code" readonly="0" required="1"/>
+							<field name="rate" readonly="0"/>
+							<field name="cgst_amount" invisible="0"/>
+							<field name="sgst_amount" invisible="0"/>
+							<field name="igst_amount" invisible="0"/>
+							<field name="tax_amount" readonly="0"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="goods_expense_purchase_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">account.purchase.receipts.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_goods_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="customer_name" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="goods_purchase_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','in',('done','finish'))]}" context="{'default_customer_name':customer_name}">
+						<tree editable="bottom">
+							<field name="goods_purchase_line_expense_id" invisible="1"/>
+							<field name="customer_name" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1"/>
+							<field name="qty" on_change="onchange_goods_item_master(customer_name,bill_value,qty,goods_rate,gst_item_master)" required="1"/>
+							<field name="goods_rate" on_change="onchange_goods_item_master(customer_name,bill_value,qty,goods_rate,gst_item_master)" required="1"/>
+							<field name="goods_uom" required="1"/>
+							<field name="gst_item_master" readonly="0" on_change="onchange_goods_item_master(customer_name,bill_value,qty,goods_rate,gst_item_master)" required="1"/>
+							<field name="hsn_sac_code" readonly="0" required="1" invisible="0"/>
+							<field name="rate" string="Item Rate" readonly="0"/>
+							<field name="cgst_amount" invisible="0"/>
+							<field name="sgst_amount" invisible="0"/>
+							<field name="igst_amount" invisible="0"/>
+							<field name="tax_amount" readonly="0" invisible="1"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="expense_stat_adjustment_line_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">account.stat.adjustment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="stat_adjustment_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="stat_adjustment_line_expense_id" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1"/>
+							<field name="gst_item_master" readonly="0" on_change="onchange_item_master(customer_name,bill_value,gst_item_master)" required="1"/>
+							<field name="hsn_sac_code" readonly="0" required="1"/>
+							<field name="rate" readonly="0"/>
+							<field name="cgst_amount" invisible="0"/>
+							<field name="sgst_amount" invisible="0"/>
+							<field name="igst_amount" invisible="0"/>
+							<field name="tax_amount" readonly="0"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="goods_expense_stat_adjustment_line_form">
+		<field name="name">expense.entry.form</field>
+		<field name="model">account.stat.adjustment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				    <button name="save_goods_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/>
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="goods_stat_adjustment_expense_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}">
+						<tree editable="bottom">
+							<field name="goods_stat_adjustment_line_expense_id" invisible="1"/>
+							<field name="customer_name" invisible="1"/>
+							<field name="bill_no" required="1"/>
+							<field name="bill_date" required="1"/>
+							<field name="bill_value" required="1"/>
+							<field name="qty" required="1"/>
+							<field name="goods_rate" required="1"/>
+							<field name="goods_uom" required="1"/>
+							<field name="gst_item_master" readonly="0" on_change="onchange_item_master(customer_name,bill_value,gst_item_master)" required="1"/>
+							<field name="hsn_sac_code" readonly="0" required="1" invisible="0"/>
+							<field name="rate" readonly="0"/>
+							<field name="cgst_amount" invisible="0"/>
+							<field name="sgst_amount" invisible="0"/>
+							<field name="igst_amount" invisible="0"/>
+							<field name="tax_amount" readonly="0" invisible="1"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+		</record>
+
+		<record model="ir.ui.view" id="freight_input_stat_adjustment_line_form">
+		<field name="name">freight.input.form</field>
+		<field name="model">account.stat.adjustment.line</field>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Payment">
+			 	<group col="8" colspan="8">
+				   <!--  <button name="save_expense_entry" string="Save" type="object" colspan="0.5" icon="gtk-redo" 
+				    	    attrs="{'invisible':[('state','=','done')]}"/> -->
+					<button name="cancel" string="Cancel" icon="gtk-cancel" type="object" colspan="0.5" 
+					 	    attrs="{'invisible':[('state','=','done')]}" confirm="Do you want to cancel?"/>
+					<field name="wizard_id" colspan="1" invisible="1"/>
+					<field name="freight_input_rate" invisible="1"/>
+					<label string="" colspan="7.5"/>
+			 	</group>
+				<group col="8" colspan="8" >
+					<field name="stat_freight_one2many" widget="one2many_list" nolabel="1" colspan="4" 
+						   attrs="{'readonly':[('state','=','done')]}" context="{'default_freight_input_rate':freight_input_rate}">
+						<tree editable="bottom">
+							<field name="stat_freight_id" invisible="1"/>
+							<field name="bill_no" string="Bill No/L.R No." required="1"/>
+							<field name="bill_date" required="1"/>
+							<!-- <field name="from_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,bill_value,freight_input_rate)"/> -->
+							<!-- <field name="to_state" required="1" on_change="onchange_freight_input_rate(from_state,to_state,bill_value,freight_input_rate)"/> -->
+							<field name="bill_value" string="Paid Value" required="1" on_change="onchange_freight_input_rate(from_state,to_state,bill_value,freight_input_rate)"/>
+							<field name="freight_input_rate" readonly="1"/>
+							<field name="cgst_tax_amount" readonly="0" string="CGST AMOUNT"/>
+							<field name="sgst_tax_amount" readonly="0" string="SGST/UGST AMOUNT"/>
+							<field name="igst_tax_amount" readonly="0" string="IGST AMOUNT"/>
+							<field name="total_amount" readonly="0"/>
+							<field name="round_off" readonly="0"/>
+						</tree>
+					</field>
+					<label string="" colspan="4"/>
+					<field name="state" colspan="1" widget="statusbar" invisible="1"/>
+				</group>
+			</form>
+		</field>
+		</record>
+
+        <!-- Purchase Tab -->
+	    <menuitem id="purchase_receipts_menu" name="Purchase" parent="account_sales_branch.menu_invoice_master_id" action="action_account_purchase_receipts" sequence="6"/>
+
+	     <!-- Stat. Adjustment Tab -->
+	    <menuitem id="stat_adjustment_menu" name="Stat Adjustment" parent="account_sales_branch.menu_invoice_master_id" action="action_account_stat_adjustment" sequence="7"/>
+
+</data>
+</openerp>

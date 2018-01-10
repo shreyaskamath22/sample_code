@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_search_service_invoice,search.service.invoice,model_search_service_invoice,psd_cid_base.group_psd,1,1,1,1
+access_service_invoice_number,service.invoice.number,model_service_invoice_number,psd_cid_base.group_psd,1,1,1,1
+access_product_invoice_number,product.invoice.number,model_product_invoice_number,psd_cid_base.group_psd,1,1,1,1
+access_composite_invoice_number,composite.invoice.number,model_composite_invoice_number,psd_cid_base.group_psd,1,1,1,1
+access_credit_invoice_batch_quantity,credit.invoice.batch.quantity,model_credit_invoice_batch_quantity,psd_cid_base.group_psd,1,1,1,1

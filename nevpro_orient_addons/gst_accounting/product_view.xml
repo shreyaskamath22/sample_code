@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+   <data>
+   	
+   	<record id="product_normal_form_view_gst_inherit" model="ir.ui.view">
+		<field name="name">product.normal.form.view.gst.inherit</field>
+		<field name="model">product.product</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="CCC_branch.product_normal_form_view_inherit"/>
+		<field name="arch" type="xml">
+		<xpath expr="//field[@name='is_fum']" position="after">
+			<field name="hsn_code"/>
+		</xpath>		
+		</field>
+	</record>
+
+	
+   </data>   
+</openerp>

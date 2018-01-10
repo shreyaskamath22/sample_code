@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="complaint_customer_search_form" model="ir.ui.view">
+            <field name="name">complaint.customer.search.form</field>
+            <field name="model">complaint.customer.search</field>
+            <field name="arch" type="xml">
+                <form string="Complaint Customer Search">
+                    <group>
+
+                        <group col='8' colspan='8'>
+                            <newline/>
+                            <group col="8" >
+                                <field name="customer"/>
+                                <field name="contact"/>
+                                <field name="flat"/>
+                                <field name="building"/>
+                                <field name="sub_area"/>
+                                <field name="street"/>
+                                <field name="landmark"/>
+                                <field name="pincode"/>
+                                <field name="order_num"/>
+                                <field name="invoice_num"/>
+                                <newline/>
+                                <label string=""/>
+                                <button name="search_complaint_customer" type="object" 
+                                            string="Search" colspan="0.5"/>
+                                <button name="clear_complaint_customer" type="object"
+                                            string="Clear" colspan="0.5"/>     
+                                <newline/>
+                                <newline/>
+                                <newline/> 
+                                <separator string="" colspan="8"/>
+                                <newline/>
+                                <button name="select_complaint_customer" type="object" 
+                                            string="Select" colspan="0.5"/>   
+                            </group>                               
+                        </group>
+
+                        <group col='8' colspan='4'>
+                            <field name="complaint_customer_line_ids" nolabel="1" context="{'nocreate':1,'nodelete':1}">
+                                <tree editable="bottom">
+                                    <button name="select_cust_details" type="object" 
+                                            icon="gtk-yes" attrs="{'invisible': [('select_cust','=', True)]}"/>
+                                    <button name="deselect_cust_details" type="object" 
+                                            icon="gtk-apply" attrs="{'invisible': [('select_cust','=', False)]}"/>
+                                    <field name="select_cust" invisible="1"/>
+                                    <field name="customer_name" readonly="1"/>
+                                    <field name="complete_address" readonly="1"/>
+                                    <field name="contact_person" widget="many2many_tags" readonly="1"/>
+                                    <field name="contact_number" widget="many2many_tags" readonly="1"/>
+                                    <field name="partner_id" invisible="1" readonly="1"/>
+                                    <field name="branch_id" readonly="1"/>
+                                </tree>
+                            </field>
+                        </group>
+
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="complaint_customer_search_form_action" model="ir.actions.act_window">
+            <field name="name">Complaint Customer Search</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">complaint.customer.search</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</openerp>

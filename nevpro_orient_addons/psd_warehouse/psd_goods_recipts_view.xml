@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<record id="receive_indent_form_nsd" model="ir.ui.view"> 
+			<field name="name">Goods Receive</field>
+			<field name="model">receive.indent</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			  <form string="Stock Inward">
+			    <separator colspan="8" string=""/>
+			      <group colspan="4">
+					<field name="grn_no" attrs="{'invisible':[('state','=','intransit')]}" readonly="1" />
+					<field name="grn_date" attrs="{'invisible':[('state','=','intransit')]}" readonly="1" />
+					<field name="new_delivery_type" readonly="1" />
+					<field name="source_company" widget="selection"  string="Dispatcher" readonly="1" />
+					<field name="stn_no_others"  readonly="1" attrs="{'invisible':[('stn_no_others','=','')]}" />
+					<field name="stn_date" readonly="1" attrs="{'invisible':[('stn_date','=','')]}" />
+					<field name="road_permit_no" attrs="{'invisible':[('new_delivery_type','in',('banned_st','excess_st','inter_branch_st'))],'readonly':[('state','!=','intransit')]}"/>
+					<field name="road_permit_date" attrs="{'invisible':[('new_delivery_type','in',('banned_st','excess_st','inter_branch_st'))],'readonly':[('state','!=','intransit')]}"/>
+					<field name="indent_no" readonly="1" attrs="{'invisible':[('indent_no','=','')]}"  />
+					<field name="indent_date" readonly="1" attrs="{'invisible':[('indent_date','=','')]}" />
+					<field name="transporter" string="Transporter" readonly="1"/>
+					<field name="branch_name" readonly="1"/>
+					<field name="customer_name"  attrs="{'invisible':[('delivery_type','not in',('export_delivery'))]}"/>
+					<field name="concern_branch"  string="Godown" attrs="{'invisible':[('delivery_type','not in',('direct_sales'))]}" invisible="1"/>
+					<field name="delivery_type"  invisible="1"/>
+					<field name="document_date" readonly="1" invisible="1" />
+					<field name="stock_id" invisible="1"/>
+						<field name="msg_check_fields" invisible="1"/>
+			     </group>
+
+				<notebook colspan="8">
+					<page string="Delivery Details">
+							<group colspan="8">
+								<field name="receive_indent_line"  nolabel="1" attrs="{'readonly':[('state','in',('done'))]}">
+									<form string="Material Details">
+										<field name="product_code"/>
+							
+										<field name="product_name"/>
+										<field name="generic_id"/>
+										<field name="batch"/>
+		                                <field name="manufacturing_date" />
+						    			<field name="product_qty" readonly="1"/> 
+						    			<field name="short" />
+						    			<field name="excess"/>
+						    			<field name="reject"/>
+						    			<field name="qty_received" string="Total Received" />
+						    			<field name="indented_quantity" readonly="1"/>
+						    			<field name="product_uom" readonly="1"/>
+						    			<field name="price_unit" attrs="{'readonly':[('delivery_type','!=',('local_purchase'))]}"/>
+						    			
+		                               	<field name="subtotal" string="Amount"/>
+										<field name="delivery_type" on_change="onchange_delivery_type(parent.delivery_type_others)" invisible="1"/>
+										<field name="indent_line_sequence" invisible="1"/>
+										<field name="series_check_new" invisible="1"/>
+								<separator string="Attach Serial" colspan="4" /> 
+									  <group colspan="4">
+										<field name="serial_line" widget="one2many_list" nolabel="1" attrs="{'invisible':[('series_check_new','=',False)]}" >
+											<form string="Serial Line" >
+												<field name="serial_no"/>
+												<field name="batch"/>
+											</form>
+											<tree string="Serial Line" editable="bottom" >
+												<field name="serial_no" invisible="1"/>
+												<field name="sr_no" invisible="1"/>
+												<field name="serial_name"/>
+												<field name="reject_serial_check"/>
+												<field name="short"/>
+												<field name="excess"/>
+												<field name="product_code" invisible="1"/>
+												<field name="product_category" invisible="1"/>
+												<field name="product_uom" invisible="1"/>
+												<field name="product_name" invisible="1"/>
+												<field name="quantity" invisible="1"/>
+												<field name="serial_check" invisible="1"/>
+												<field name="active_id" invisible="1"/>
+												<field name="batch" invisible="1"/>
+												<field name="serie_line" invisible="1"/>
+											</tree>
+										</field>
+									  </group>
+                                      <separator string="" colspan="4"/>
+  									  <group colspan="4" col="4">
+												<field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="3" >
+														<tree string="Comments">
+															<field name="user_id"/>
+															<field name="source"/>
+															<field name="comment_date"/>
+															<field name="comment"/>
+														</tree>
+														<form string="Comments">
+															<field name="user_id" invisible="1"/>
+															<field name="source" invisible="1"/>
+															<field name="comment_date" invisible="1"/>
+															<field name="comment" invisible="1"/>
+														</form>
+												</field>
+											</group>
+											<newline/>
+									</form>
+									<tree string="Material Details" editable="bottom">
+										<field name="product_code" readonly="1"/>
+										<field name="product_name" readonly="1"/>
+										<field name="generic_id" readonly="1"/>
+										<field name="batch" readonly="1"/>
+		                                <field name="manufacturing_date" readonly="1"/>
+						    			<field name="product_qty"  readonly="1"/> 
+						    			<field name="short" />
+						    			<field name="excess"/>
+						    			<field name="reject"/>
+						    			<field name="qty_received" string="Total Received" readonly="1"/>
+						    			<field name="indented_quantity" readonly="1"/>
+						    			<field name="product_uom" readonly="1"/>
+						    			<field name="price_unit" readonly="1"/>
+		                               	<field name="subtotal" string="Amount" readonly="1"/>
+										<field name="indent_line_sequence" invisible="1"/>
+										<field name="series_check_new" invisible="1"/>
+										<button name="psd_series_wizard_others" string="Process" type="object" icon="gtk-go-forward" attrs="{'invisible':[('series_check_new','=',False)]}" />
+									<field name="msg_check_read" invisible="1"/>
+									<field name="msg_check_unread" invisible="1"/>
+						   			<button icon='create' name="show_notes" type="object" attrs="{'invisible':['|',('msg_check_read','!=',False),('msg_check_unread','!=',False)]}" />
+						   			<button icon='read-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_read','=',False)]}"/>
+						   			<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_unread','=',False)]}"/>
+									</tree>
+								</field>
+							</group>
+							<group colspan="8">
+								<label string="" colspan="2"/>
+								<field name="document_value" colspan="2" string="Total"/>
+							</group>
+			       		</page>
+					<page string="Condition Of Delivery Material"> 
+								
+								<field name="delay_delivery"/>
+								<field name="deliver_percent"/>
+								<field name="labelling"/>
+								<field name="leakage"/>
+								<field name="certificate_quality"/>
+								<field name="sum_delivery"/>
+						       <field name="company_id"/>
+
+						</page>
+					<page string="Notes">
+						<field name="comment_line" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+									<tree string="Comments">
+										<field name="user_id"/>
+										<field name="source"/>
+										<field name="comment_date"/>
+										<field name="comment"/>
+									</tree>
+									<form>
+									<group col="4" colspan="6">
+										<group>
+										<field name="user_id" />
+										</group>
+										<group>
+										<field name="source"/>
+										</group>
+										<group>
+										<field name="comment_date"/>
+										</group>
+										</group>
+										<field name="comment"/>
+									</form>
+
+						</field>
+						<newline/>
+						<separator string="" colspan="4"/>
+						<group col="8" colspan="8">
+							<field name="comment_remark" colspan="4" attrs="{'invisible':[('state','not in',('intransit'))]}"/>
+							<button string="Add Notes" name="post_comment" type="object" colspan="1" states="intransit"/>
+							<label string="" colspan="3"/>
+						</group>
+					</page>
+				</notebook>
+				<field name="state" widget="statusbar" statusbar_colors='{"done":"grey","intransit":"green","cancel":"black"}'/>
+				<group col="8">
+				<button name="grn_report" string="View GRN" states="done" icon="gtk-apply" type="action"/>
+				<field name="generate_grn_invisible" invisible="1"/>
+			<group attrs="{'invisible': [('state', 'in',('done','cancel')) ] }">
+				<button name="update_serial_check" type="object" attrs="{'invisible': [('generate_grn_invisible','=',True)]}" string="Update Serial Check" colspan="1"/>
+				<button name="nsd_generate_indent_grn" colspan="1" string="Generate GRN" attrs="{'invisible':[('generate_grn_invisible', '!=', True)]}" icon="gtk-apply" type="object"/>
+			</group>
+				<button name="view" string="View" type="object"  icon="gtk-go-forward" invisible="1"/>
+        		</group>
+			  </form>
+			</field>
+		</record>
+
+	<record id="receive_indent_others_form_nsd" model="ir.ui.view"> 
+			<field name="name">Goods Receive-Others</field>
+			<field name="model">receive.indent</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+			  <form string="Stock Inward">
+				<separator colspan="8" string=""/>
+					<group colspan="8">
+						<field name="grn_no" attrs="{'invisible':[('state','=','intransit')]}" readonly="1"/>
+						<field name="grn_date" attrs="{'invisible':[('state','=','intransit')]}" readonly="1"/>
+						<field name="delivery_type_others"  required="1" attrs="{'readonly':[('state','!=','intransit')]}" on_change="onchange_delivery_type(delivery_type_others)"/>
+						<field name="branch_name" required="1" domain="[('godown_check', '=',True)]" attrs="{'readonly':[('state','!=','intransit')]}" on_change="onchange_branch_name(branch_name)"/>
+						<field name="stn_no" attrs="{'invisible':[('delivery_type_others','not in',('banned_st','excess_st','inter_branch_st','internal_delivery'))],'readonly':[('state','!=','intransit')]}" on_change="onchange_stn_no(stn_no,branch_name)"/>
+						<field name="stn_date" attrs="{'invisible':[('delivery_type_others','not in',('banned_st','excess_st','inter_branch_st','internal_delivery'))],'readonly':[('state','!=','intransit')]}"/>
+						<field name="road_permit_no" attrs="{'invisible':[('delivery_type_others','not in',('banned_st','excess_st','inter_branch_st','internal_delivery'))],'readonly':[('state','!=','intransit')]}"/>
+						<field name="road_permit_date" attrs="{'invisible':[('delivery_type_others','not in',('banned_st','excess_st','inter_branch_st','internal_delivery'))],'readonly':[('state','!=','intransit')]}"/>
+						<field name="po_no" domain="[('state','=','done')]" attrs="{'invisible':[('delivery_type_others','!=','local_purchase')],'readonly':[('state','!=','intransit')]}"/> 
+
+
+						<field name="po_date" attrs="{'invisible':[('delivery_type_others','!=','local_purchase')],'readonly':[('state','!=','intransit')]}"/>
+						<newline/>
+					
+						<field name="indent_id" on_change="onchange_indent_id1(indent_id)" attrs="{'invisible':[('delivery_type_others','!=','direct_delivery')],'required':[('delivery_type_others','=','direct_delivery')],'readonly':[('state','!=','intransit')]}" />
+						<field name="indent_date" attrs="{'invisible':[('delivery_type_others','!=','direct_delivery')],'readonly':[('state','!=','intransit')]}"/>
+						<field name="delivery_challan_no1" attrs="{'invisible':[('delivery_type_others','not in',('direct_delivery','internal_delivery','local_purchase'))],'required':[('delivery_type_others','in',('direct_delivery','internal_delivery','local_purchase'))],'readonly':[('state','!=','intransit')]}"/>
+						<field name="delivery_challan_date1" attrs="{'invisible':[('delivery_type_others','not in',('direct_delivery','internal_delivery','local_purchase'))],'required':[('delivery_type_others','in',('direct_delivery','internal_delivery','local_purchase'))],'readonly':[('state','!=','intransit')]}"/>
+						
+						<field name="invoice_no" attrs="{'invisible':[('delivery_type_others','not in',('local_purchase'))]}"/>
+						<field name="invoice_date" attrs="{'invisible':[('delivery_type_others','not in',('local_purchase'))]}"/>
+						<field name="transporter_name" attrs="{'readonly':[('state','!=','intransit')],'invisible':[('delivery_type_others','not in',('direct_delivery','local_purchase'))]}"/>
+						<field name="transporter" attrs="{'readonly':[('state','!=','intransit')],'invisible':[('delivery_type_others','in',('direct_delivery','local_purchase'))]}"/>
+        		        <field name="source_company" widget="selection" string="Dispatcher" attrs="{'invisible':[('delivery_type_others','in',('direct_delivery','local_purchase'))],'readonly':[('state','!=','intransit')]}"/>
+						<field name="supplier_name" attrs="{'invisible':[('delivery_type_others','not in',('direct_delivery','local_purchase','internal_delivery'))],'readonly':[('state','!=','intransit')]}" 
+							 domain="[('supplier','=',True)]"/>
+						<!-- <field name="supplier_address" invisible="1"/> -->
+						<field name="delivery_receive_date" required="1"  attrs="{'readonly':[('state','!=','intransit')]}"/>
+						<field name="po_no_others" invisible="1"/>
+						<field name="stn_no_others" invisible="1"/>
+						<field name="test_state" invisible="1"/>
+						<field name="delivery_name" invisible="1"/>
+						<field name="reject_check_stn" invisible="1"/>
+
+						<field name="eta_sync" invisible="1"/>
+						<field name="delivery_challan_no" invisible="1"/>
+						<field name="delivery_challan_date" invisible="1"/>
+						<field name="msg_check_fields" invisible="1"/>
+
+			     	</group>
+					    <newline/>
+						<group colspan="8">
+							<button name="view_rejection" string="Reject" type="object"  colspan="1" invisible="1"/>
+							<label string="" colspan="3"/>
+							<label string="" colspan="2"/>
+							<label string="" colspan="2"/>
+						</group>
+					<notebook colspan="8">
+			       		<page string="Delivery Details">
+							<group colspan="8">
+								<field name="receive_indent_line"  nolabel="1" attrs="{'readonly':[('state','in',('done'))]}" on_change="onchange_receive_indent_line1(receive_indent_line)" context="{'branch_name': branch_name}">
+									<form string="Material Details">
+										<field name="product_code"/>
+									
+										<field name="product_name"  domain="[('is_imported','=',True)]"/>
+										<field name="generic_id"/>
+										<field name="batch" required="1" context="{'batch_source':'local_purchase'}"/>
+		                                <field name="manufacturing_date" invisible="1"/> 
+						    			<field name="product_qty" required="1"/> 
+						    			<field name="short" />
+						    			<field name="excess"/>
+						    			<field name="reject"/>
+										<field name="product_uom" readonly="1"/>
+						    			<field name="qty_received" string="Total Received"/>
+						    			<field name="indented_quantity" readonly="1"/>
+										<field name="local_uom" readonly="1" invisible="1"/>
+
+										<field name="local_price"/>
+						    			<field name="price_unit" attrs="{'readonly':[('delivery_type','not in',('local_purchase','direct_delivery'))]}"/> 
+
+						    			
+
+		                               	<field name="subtotal" string="Amount"/>
+
+										<field name="delivery_type" on_change="onchange_delivery_type(parent.delivery_type_others)" invisible="1"/>
+										<field name="indent_line_sequence" invisible="1"/>
+										<field name="series_check_new" invisible="1"/>
+
+									 <group colspan="4">  
+										<field name="serial_line" widget="one2many_list" nolabel="1" attrs="{'invisible':[('series_check_new','=',False)]}" >
+											<form string="Serial Line" >
+												<field name="serial_no"/>
+												<field name="batch"/>
+
+											</form>
+											<tree string="Serial Line" editable="bottom">
+												<field name="serial_no" invisible="1"/>
+												<field name="sr_no" invisible="1"/>
+												<field name="serial_name"/>
+												<field name="reject_serial_check"/>
+												<field name="short"/>
+												<field name="excess"/>
+												<field name="product_code" invisible="1"/>
+												<field name="product_category" invisible="1"/>
+												<field name="product_uom" invisible="1"/>
+												<field name="product_name" invisible="1"/>
+												<field name="quantity" invisible="1"/>
+												<field name="serial_check" invisible="1"/>
+												<field name="active_id" invisible="1"/>
+												<field name="batch" invisible="1"/>
+												<field name="serie_line" invisible="1"/>
+												<field name="stn_no" invisible="1"/>
+
+											</tree>
+										</field>
+									  </group>
+  									  <newline/>
+  									  <group colspan="4" col="4">
+												<field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="3" >
+														<tree string="Comments">
+															<field name="user_id"/>
+															<field name="source"/>
+															<field name="comment_date"/>
+															<field name="comment"/>
+														</tree>
+														<form string="Comments">
+															<field name="user_id" invisible="1"/>
+															<field name="source" invisible="1"/>
+															<field name="comment_date" invisible="1"/>
+															<field name="comment"/>
+														</form>
+												</field>
+  									  </group>
+  									  <newline/>
+									</form>
+									<tree string="Material Details" editable="bottom">
+										<field name="product_code" on_change="onchange_product_code(product_name)"/>
+										<field name="product_name" on_change="onchange_product_name(product_name)"  domain="[('is_imported','=',True)]"/>
+										<field name="generic_id" on_change="onchange_generic_name(product_name)"/>
+										<!-- <field name="batch" on_change="onchange_batch_manudate(batch,delivery_type)" required="1"/>   -->
+		                                <field name="manufacturing_date" /> 
+						    			<field name="product_qty" on_change="onchange_documented_quantity(product_qty,short,excess,reject)" required="1"/>
+						    			<field name="short" on_change="onchange_documented_quantity(product_qty,short,excess,reject)"/>
+						    			<field name="excess" on_change="onchange_documented_quantity(product_qty,short,excess,reject)"/>
+						    			<field name="reject" on_change="onchange_documented_quantity(product_qty,short,excess,reject)"/>
+										<field name="product_uom" attrs="{'readonly':[('delivery_type','not in',('internal_delivery','free_sample_delivery','calibration'))]}"/>
+						    			<field name="qty_received" string="Total Received" attrs="{'readonly':[('delivery_type','not in',('internal_delivery'))]}"/>
+						    		<!-- 	<field name="indented_quantity" attrs="{'readonly':[('delivery_type','not in',('internal_delivery','free_sample_delivery','calibration'))]}"/> -->
+										<field name="local_uom" readonly="1" invisible="1"/>
+										<field name="price_unit" attrs="{'readonly':[('delivery_type','not in',('local_purchase','direct_delivery','internal_delivery','free_sample_delivery','calibration'))]}"/> 
+										<field name="cst_vat" attrs="{'invisible':[('delivery_type','!=','local_purchase')]}"/>
+						    			<field name="excise_value" attrs="{'invisible':[('delivery_type','!=','local_purchase')]}"/>
+						    			
+						    		
+		                               	<field name="subtotal" string="Amount"/>
+										<field name="delivery_type" on_change="onchange_delivery_type(parent.delivery_type_others)" invisible="1"/>
+										<field name="indent_line_sequence" invisible="1"/>
+										<field name="series_check_new" invisible="1"/>
+										<field name="origin" invisible="1"/>
+										<field name="stn_no" invisible="1" />
+									<!-- <field name="last_delivery"  attrs="{'invisible':[('delivery_type','not in',('direct_delivery'))]}"/> -->
+										<button name="series_wizard_others" string="Process" type="object" icon="gtk-go-forward" attrs="{'invisible':[('series_check_new','=',False)]}" />
+									<field name="msg_check_read" invisible="1"/>
+									<field name="msg_check_unread" invisible="1"/>
+									<field name="godown" invisible="1"/>
+						   			<button icon='create' name="show_notes" type="object" attrs="{'invisible':['|',('msg_check_read','!=',False),('msg_check_unread','!=',False)]}" />
+						   			<button icon='read-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_read','=',False)]}"/>
+						   			<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check_unread','=',False)]}"/>
+									</tree>
+								</field>
+							</group>
+							<group colspan="8">
+								<label string="" colspan="2"/>
+								<field name="document_value" colspan="2" string="Total"/>
+							</group>
+							
+			       		</page>
+						<page string="Condition Of Delivery Material"> 
+								
+								<field name="delay_delivery"/>
+								<field name="deliver_percent"/>
+								<field name="labelling"/>
+								<field name="leakage"/>
+								<field name="certificate_quality"/>
+								<field name="sum_delivery"/>
+						       <field name="company_id"/>
+
+						</page>
+			       		<page string="Notes">
+							<field name="comment_line" widget="one2many_list" nolabel="1" colspan="3" readonly="1">
+									<tree string="Comments">
+										<field name="user_id"/>
+										<field name="source"/>
+										<field name="comment_date"/>
+										<field name="comment"/>
+									</tree>
+									<form>
+									<group col="4" colspan="6">
+										<group>
+										<field name="user_id" />
+										</group>
+										<group>
+										<field name="source"/>
+										</group>
+										<group>
+										<field name="comment_date"/>
+										</group>
+										</group>
+										<field name="comment"/>
+									</form>
+
+							</field>
+							<newline/>
+							<separator string="" colspan="4"/>
+							<group col="8" colspan="4">
+								<field name="comment_remark" colspan="4" attrs="{'invisible':[('state','not in',('intransit'))]}"/>
+								<button string="Add Notes" name="post_comment" type="object" colspan="1" states="intransit"/>
+								<label string="" colspan="3"/>
+							</group>
+			       		</page>
+			       	</notebook>
+					<group col="6" colspan="4">
+						<field name="state" widget="statusbar" statusbar_visible="intransit,done" statusbar_colors='{"done":"grey","intransit":"green","cancel":"black"}'/>
+						<label string=""/><label string=""/>
+						<button name="grn_report" string="View GRN" states="done" icon="gtk-apply" type="object"/>
+						<button name="nsd_generate_grn" string="Generate GRN" states="intransit" icon="gtk-apply" type="object"/>
+					</group>
+				  	<button name="view" string="View" type="object" icon="gtk-go-forward" invisible="1"/>
+			  </form>
+			</field>
+		</record>
+
+		<!--<record id="search_receive_indent" model="ir.ui.view">
+			<field name="name">receive.indent.search</field>
+			<field name="model">receive.indent</field>
+			<field name="type">search</field>
+			<field name="arch" type="xml">
+				<search string="Good Receipt-Indent (SC-52)">
+					<field name="grn_no"/>
+					<field name="indent_date_from" filter_domain="[('grn_date','&gt;=',self)]"/>
+					<field name="indent_date_to" filter_domain="[('grn_date','&lt;=',self)]"/>
+					<field name="indent_no"/>
+					<field name="supplier_name"/>
+					<field name="source_company" string="Dispatcher"/>
+					<field name="state" string="Status"/>
+				</search>
+			</field>
+		</record> -->
+
+	<record id="receive_indent_tree_nsd" model="ir.ui.view">
+			<field name="name">Receive Indent</field>
+			<field name="model">receive.indent</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+			  <tree colors="grey:state=='done';green:state=='intransit';black:state=='cancel';" string="Stock Inward">
+				<field name="check_product_serial" invisible="1"/>
+				<field name="grn_no"/>
+				<field name="grn_date"/>
+				<field name="source_company" string="Dispatcher"/>
+				<field name="indent_no"/>
+				<field name="indent_date"/>
+				<field name="state" string="Status"/>
+				<field name="test_state" invisible="1"/>
+				<button name="view_indent" string="View" type="object" attrs="{'invisible':[('check_product_serial','=','False')]}" icon="gtk-go-forward"/>
+				<field name="msg_check" invisible="1"/>
+	   			<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check','=',False)]}"/>				
+			</tree>
+		</field>
+	</record>
+
+
+	<record id="receive_indent_others_tree_nsd" model="ir.ui.view">
+			<field name="name">Goods Receipt-Others</field>
+			<field name="model">receive.indent</field>
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+			  <tree colors="red:check_product_serial=='True';grey:state=='done';green:state=='intransit';black:state=='cancel';">
+				<field name="check_product_serial" invisible="1"/>
+				<field name="check_attachment" invisible="1"/>
+				<field name="grn_no"/>
+				<field name="grn_date"/>
+				<field name="source_company" string="Sender"/>
+				<field name="supplier_name"/>
+				<field name="indent_id"/>
+				<field name="indent_date"/>
+				<field name="state" string="Status"/>
+				<field name="test_state" invisible="1"/>
+				<button name="view" string="View" type="object" attrs="{'invisible':[('check_product_serial','=','False')]}" icon="red_forward"/>
+				<button name="view" string="View" type="object" attrs="{'invisible':[('check_attachment','=',False)]}" icon="gtk-go-forward"/>
+				<field name="msg_check" invisible="1"/>
+	   			<button icon='unread-msg' name="show_notes" type="object" attrs="{'invisible':[('msg_check','=',False)]}"/>
+			</tree>
+		</field>
+	</record> 
+
+
+	<record model="ir.actions.act_window" id="action_view_receive_indent_nsd">
+			<field name="name">Receive Indents(SC-52)</field>
+			<field name="res_model">receive.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="receive_indent_tree_nsd"/>
+			<field name="context">{'type':'internal','nocreate':1,'nodelete':1}</field>
+			<field name="domain">[('type','=','internal')]</field>
+        </record>
+
+
+
+	<record model="ir.actions.act_window" id="action_view_receive_indent_new_nsd">
+			<field name="name">Goods Receipt-Others</field>
+			<field name="res_model">receive.indent</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+			<field name="view_id" ref="receive_indent_others_tree_nsd"/>
+			<field name="context">{'type':'others','nodelete':1}</field>
+			<field name="domain">[('type','=','others')]</field>
+	</record>
+
+	<record model="ir.actions.act_window.view" id="action_receive_indent_others_tree_nsd">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="receive_indent_others_tree_nsd"/>
+            <field name="act_window_id" ref="action_view_receive_indent_new_nsd"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_receive_indent_others_form_nsd">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="receive_indent_others_form_nsd"/>
+            <field name="act_window_id" ref="action_view_receive_indent_new_nsd"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_receive_indent_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="receive_indent_tree_nsd"/>
+            <field name="act_window_id" ref="action_view_receive_indent_nsd"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_receive_indent_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="receive_indent_form_nsd"/>
+            <field name="act_window_id" ref="action_view_receive_indent_nsd"/>
+        </record>
+<!--       	<menuitem id="menu_order_management_nsd" name="Goods Receipt" parent="sk.menu_res_indent" sequence="4"/>
+      	<menuitem name="Indents" action="action_view_receive_indent_nsd" id="menu_action_order_management_new1" parent="menu_order_management_nsd"/>
+      	<menuitem name="Others" action="action_view_receive_indent_new_nsd" id="menu_action_order_management_new2" parent="menu_order_management_nsd"/> -->
+
+
+
+
+      <!-- Hiding Conversion quantities and UOM from stock management --> 
+
+      <record id="product_product_tree_view11_remove" model="ir.ui.view">
+		<field name="name">Customer</field>
+		<field name="model">product.product</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="product.product_product_tree_view11"/>
+		<field name="arch" type="xml">
+		<xpath expr="//tree[@string='Products']/field[@name='local_qty']" position="replace">
+			<field name="local_qty" invisible="1"/>
+		</xpath>
+
+		<xpath expr="//tree[@string='Products']/field[@name='local_uom_id']" position="replace">
+			<field name="local_uom_id" invisible="1"/>
+		</xpath>
+		
+		</field>
+	</record>
+
+	<!-- Material details green arrow open this form-->
+
+	<record id="psd_material_details_form" model="ir.ui.view">
+			<field name="name">receive.indent.search</field>
+			<field name="model">material.details</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form>
+					<button name="save" string="Save" type="object" />
+					<newline/>
+					<field name="product_code" readonly="1"/>
+					<field name="product_name" readonly="1"/>
+					<field name="generic_id" readonly="1"/>
+					<field name="batch" readonly="1"/>
+		           		<field name="manufacturing_date" readonly="1"/>
+					<field name="product_qty" readonly="1"/> <!-- shrikar_4oct -->
+					<field name="short" readonly="1"/>
+					<field name="excess" readonly="1"/>
+					<field name="reject" readonly="1"/>
+					<field name="qty_received" string="Total Received" readonly="0"/>
+					<field name="indented_quantity" readonly="1"/>
+					<field name="product_uom" readonly="1"/>
+					<!-- <field name="price_unit" attrs="{'readonly':[('delivery_type','!=',('local_purchase'))]}"/> -->
+					<field name="price_unit"/>
+				        <field name="subtotal" string="Amount"/>
+                       	<field name="sgst_rate"/>
+                       	<field name="cgst_rate"/>
+                       	<field name="igst_rate"/>
+                       	<field name="sgst_amount" invisible="1"/>
+                       	<field name="cgst_amount" invisible="1"/>
+                       	<field name="igst_amount" invisible="1"/>
+					<field name="delivery_type" on_change="onchange_delivery_type(parent.delivery_type_others)" invisible="1"/>
+					<field name="indent_line_sequence" invisible="1"/>
+					<field name="excess_check" invisible="1"/><!-- shrikar_17Jan-->
+					<field name="readonly_check" invisible="1"/><!-- shrikar_17Jan-->
+					<field name="series_check_new" invisible="1"/>
+					<button string="Create" name="create_series" type="object" colspan="1" attrs="{'invisible':[('excess_check','=',False)]}"/>			
+					<separator string="Attach Serial" colspan="4" /> <!-- shrikar_5dec-->
+					<group colspan="4">
+						<field name="serial_line" widget="one2many_list" nolabel="1" attrs="{'invisible':[('series_check_new','=',False)]}">
+							<tree string="Serial Line" editable="bottom">
+								<field name="serial_name"/>
+								<field name="reject_serial_check"/>
+								<field name="short"/><!--shrikar_13Jan-->
+								<field name="excess"/><!-- shrikar_17Jan-->
+							</tree>
+							<form string="Serial Line" >
+								<field name="serial_no"/>
+								<field name="batch"/>
+							</form>
+						</field>
+					</group>
+					<newline/>
+					<group colspan="4" col="4">
+						<field name="notes_one2many" widget="one2many_list" nolabel="1" colspan="3" >
+							<tree string="Comments">
+								<field name="user_id"/>
+								<field name="source"/>
+								<field name="comment_date"/>
+								<field name="comment"/>
+							</tree>
+							<form string="Comments">
+								<field name="user_id" invisible="1"/>
+								<field name="source" invisible="1"/>
+								<field name="comment_date" invisible="1"/>
+								<field name="comment"/>
+							</form>
+						</field>
+  					</group>
+  					<newline/>
+
+				</form>
+			</field>
+		</record>
+
+
+
+	<record model="ir.actions.act_window" id="psd_action_material_details">
+			<field name="name">Receive Indents</field>
+			<field name="res_model">material.details</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">form</field>
+			<field name="view_id" ref="psd_material_details_form"/>
+        </record>
+
+
+<!--end-->
+
+
+
+	<!-- <record id="stock_material_form_inherit" model="ir.ui.view">
+		<field name="name">Stock</field>
+		<field name="model">stock.material</field>
+		<field name="type">form</field>
+		<field name="inherit_id" ref="sk.stock_material_form"/>
+		<field name="arch" type="xml">
+		<xpath expr="//tree[@string='Product List']/field[@name='local_qty']" position="replace">
+			<field name="local_qty" invisible="1"/>
+		</xpath>
+
+		<xpath expr="//tree[@string='Product List']/field[@name='local_uom_id']" position="replace">
+			<field name="local_uom_id" invisible="1"/>
+		</xpath>
+
+		<xpath expr="//tree[@string='Product List']/field[@name='local_price']" position="replace">
+			<field name="local_price" invisible="1"/>
+		</xpath>
+		
+		</field>
+	</record> -->
+
+
+	  <!-- <record id="batchnumber_tree_inherit" model="ir.ui.view">
+		<field name="name">Batch</field>
+		<field name="model">res.batchnumber</field>
+		<field name="type">tree</field>
+		<field name="inherit_id" ref="store.batchnumber_tree"/>
+		<field name="arch" type="xml">
+		<xpath expr="//field[@name='local_qty']" position="replace">
+			<field name="local_qty" invisible="1"/>
+		</xpath>
+
+		<xpath expr="//field[@name='local_uom_id']" position="replace">
+			<field name="local_uom_id" invisible="1"/>
+		</xpath>
+
+		<xpath expr="//field[@name='local_price_view']" position="replace">
+			<field name="local_price_view" invisible="1"/>
+		</xpath>
+		
+		</field>
+	</record> -->
+
+	<record id="batchnumber_form_inherit_id" model="ir.ui.view">
+			<field name="name">Batch Number</field>
+			<field name="model">res.batchnumber</field>
+			<field name="type">form</field>
+			<field name="inherit_id" ref="store.batchnumber_form"/>
+			<field name="arch" type="xml">
+				<field name="batch_source" colspan="2" required="1" attrs="{'readonly':[('state','!=','draft')]}" on_change="onchange_batch_source()" position="replace">
+					<field name="batch_source" colspan="2" required="1" on_change="onchange_batch_source()"/>
+				</field>
+				<field name="name" colspan="2" required="1" on_change="onchange_name(name,branch_name)" attrs="{'readonly':[('state','!=','draft')]}" position="replace">
+					<field name="name" colspan="2" required="1" on_change="onchange_name(name,branch_name)"/>
+				</field>
+				<field name="generic_id" colspan="2" widget="selection" on_change="onchange_generic_name(name)" position="replace">
+					<field name="generic_id" colspan="2" widget="selection" on_change="onchange_generic_name(name)"/>
+				</field>
+				<field name="batch_no" required="1" attrs="{'readonly':['|',('state','!=','draft'),('name','=',False)]}" position="replace">
+					<field name="batch_no" required="1"/>
+				</field>
+				<field name="manufacturing_date" colspan="2" on_change="onchange_expirydate(manufacturing_date,test,exp_date)" attrs="{'required':[('batch_no','!=','NA')],'readonly':[('state','!=','draft')]}" position="replace">
+					<field name="manufacturing_date" colspan="2" on_change="onchange_expirydate(manufacturing_date,test,exp_date)"/>
+				</field>
+				<field name="exp_date" colspan="2" attrs="{'required':[('batch_no','!=','NA')],'readonly':[('state','!=','draft')]}" position="replace">
+					<field name="exp_date" colspan="2"/>
+				</field>
+			<xpath expr="//form[@string='Batch Number']/group/group/button[@name='batch_close']" position="replace">
+
+			</xpath>
+			</field>
+	</record>
+	</data>
+</openerp>

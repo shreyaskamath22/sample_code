@@ -1,0 +1,289 @@
+<openerp>
+	<data>
+		<record model="ir.ui.view" id="psd_security_deposite_form">
+		<field name="name">Security Deposit</field>
+		<field name="model">security.deposit</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Security Deposit">
+				<field name="customer_name" domain="[('is_transfered', '=', False)]" on_change="change_ou_id(customer_name)"/>
+				<field name="ref_date"/>
+				<field name="ref_no"/>
+				<field name="ref_amount"/>
+				<field name="cse"/>
+				<field name="acc_status_new"/>
+				<field name="customer_id" />
+				<field name="new_sec"/>
+				<field name="security_check_import"/>
+			</form>
+		</field>
+	</record>
+	<record model="ir.ui.view" id="psd_security_deposite_tree">
+		<field name="name">Security Deposit</field>
+		<field name="model">security.deposit</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Security Deposit">
+				<field name="customer_name"/>
+				<field name="ref_date"/>
+				<field name="ref_no"/>
+				<field name="ref_amount"/>
+				<field name="cse"/>
+				<field name="acc_status_new"/>
+			</tree>
+		</field>
+	</record>
+		<record id="psd_sale_supplier_form" model="ir.ui.view">
+            <field name="name">Supplier</field>
+            <field name="model">account.supplier.master</field>
+            <field name="priority" eval="16"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+			<form string="Supplier">
+			<group col="6" colspan='4'>
+				<field name="message_id_new" invisible="1"/>
+ 				<field name="supp_id"/>
+ 				<field name="supplier_name"/>
+ 				<field name="contact_name"/>
+
+ 				<!--field name="mobile"/-->
+ 				<!--field name="phone"/-->
+				<field name="zip" string="Pincode"/>
+				<field name="city_id" string="Location"/>
+				<field name="from_date" />
+				<field name="to_date" />
+				<newline/>
+				<group col="8" colspan="8">	
+				<button name="psd_create_supplier" string="Create" type="object" colspan="1" icon="create"/>
+				<button name="search_supplier" string="Search" type="object" colspan="1" icon="srh"/>
+				<button name="clear_supplier" string="Clear" type="object" colspan="1" icon="clear"/>
+				<label string="" colspan="5"/>
+				</group>
+			</group>
+			<field name="supp_search_line" widget="one2many_list" nolabel="1" colspan="4" context="{'nocreate':1,'nodelete':1}">
+                <tree string="">
+		   		<field name="supp_id" />
+		   		<field name="supp_name" />
+		   		<field name="contact_name" />
+		   		<field name="supp_city" />
+		   		<field name="supp_zip" />
+		   		<field name="phone_mobile" />
+		   		<button name="psd_add" string="Add" type="object" icon="gtk-go-forward"/>
+                </tree>
+                <form string="">
+		   		<field name="supp_id" />
+		   		<field name="supp_name" />
+		   		<field name="contact_name" />
+		   		<field name="supp_city" />
+		   		<field name="supp_zip" />
+		   		<field name="phone_mobile" />
+                </form>
+				</field>
+			</form>
+		</field>
+	</record>
+		
+	<record model="ir.ui.view" id="psd_Itds_tree">
+		<field name="name">ITDS</field>
+		<field name="model">itds.adjustment</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="ITDS">
+				<field name="itds_adjustment_search_id" colspan="2"/>
+					<field name="receipt_date" colspan="2"/>
+					<field name="customer_name" colspan="2"/>
+					<field name="tan_no" colspan="2"/>
+					<field name="receipt_no" colspan="2"/>
+					<field name="invoice_no" colspan="2"/>
+					<field name="gross_amt" colspan="2"/>
+					<field name="itds_amt" colspan="2"/>
+					<field name="certificate_recd" colspan="2"/>
+					<field name="pending_amt" colspan="2"/>
+			</tree>
+		</field>
+	</record>
+ 	
+				<record id="psd_view_opening_balance_form" model="ir.ui.view">
+		    <field name="name">opening.balance.form</field>
+		    <field name="model">opening.balance</field>
+		    <field name="priority" eval="16"/>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+			<form string="Outstanding Bill">
+				<group col="8" colspan="8">
+					<field name="account_id"/>
+					<field name="account_name"/>
+					<field name="start_date"/>
+					<field name="end_date"/>
+					<field name="opening_balance"/>
+					<field name="type"/>
+
+				</group>
+
+			</form>
+		    </field>
+		</record>
+		
+		<record id="psd_view_opening_balance_tree" model="ir.ui.view">
+		    <field name="name">opening.balance.tree</field>
+		    <field name="model">opening.balance</field>
+		    <field name="priority" eval="16"/>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+			<tree string="Outstanding Bill">
+					<field name="account_id"/>
+					<field name="account_name"/>
+					<field name="start_date"/>
+					<field name="end_date"/>
+					<field name="opening_balance"/>
+					<field name="type"/>
+
+
+			</tree>
+		    </field>
+		</record>
+
+		<record model="ir.ui.view" id="psd_EMD_security_deposite_search">
+                <field name="name">EMD Security Deposit</field>
+                <field name="model">sundry.deposit</field>
+                <field name="priority" eval="16"/>
+                <field name="type">search</field>
+                <field name="arch" type="xml">
+                        <search string="Security Deposite">
+                                <field name="customer_name"/>
+                                <field name="payment_date"/>
+                                <field name="payment_no"/>
+                                <field name="payment_amount"/>
+                                <field name="cse"/>
+                                <field name="acc_status_new"/>
+                        </search>
+                </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="psd_EMD_security_deposite_tree">
+                <field name="name">EMD Security Deposit</field>
+                <field name="model">sundry.deposit</field>
+                <field name="priority" eval="16"/>
+                <field name="type">tree</field>
+                <field name="arch" type="xml">
+                        <tree string="Security Deposite">
+                                <field name="customer_name"/>
+                                <field name="payment_date"/>
+                                <field name="payment_no"/>
+                                <field name="payment_amount"/>
+                                <field name="cse"/>
+                                <field name="acc_status_new"/>
+                        </tree>
+                </field>
+        </record>
+
+        <record model="ir.ui.view" id="psd_EMD_security_deposite_form">
+                <field name="name">EMD Security Deposit</field>
+                <field name="model">sundry.deposit</field>
+                <field name="priority" eval="16"/>
+                <field name="type">form</field>
+                <field name="arch" type="xml">
+                        <form string="Security Deposite">
+                                <field name="customer_name" domain="[('is_transfered', '=', False)]" on_change="change_ou_id(customer_name)"/>
+                                <field name="payment_date"/>
+                                <field name="payment_no"/>
+                                <field name="payment_amount"/>
+                                <field name="cse"/>
+                                <field name="acc_status_new"/>
+                                <field name="customer_id" />
+                                <field name="new_sec" readonly="1"/>
+				<field name="security_check_EMD_import" readonly="1"/>
+				
+                        </form>
+                </field>
+        </record>
+        <record id="psd_view_bill_payable_import_form" model="ir.ui.view">
+		    <field name="name">bill.payable.import.form</field>
+		    <field name="model">bill.payable.import</field>
+		    <field name="priority" eval="16"/>
+		    <field name="type">form</field>
+		    <field name="arch" type="xml">
+			<form string="Bills Payable">
+				<group>
+					<field name="cse"/>
+					<field name="ref_no"/>
+					<field name="ref_date"/>
+					<field name="partner_id"/>
+					<field name="service_classification"/>
+					<field name="tax_rate"/>
+					<field name="ref_amount"/>	
+				</group>
+
+			</form>
+		    </field>
+		</record>
+
+		
+		<record id="psd_view_bill_payable_import_tree" model="ir.ui.view">
+		    <field name="name">bill.payable.import.tree</field>
+		    <field name="model">bill.payable.import</field>
+		    <field name="priority" eval="16"/>
+		    <field name="type">tree</field>
+		    <field name="arch" type="xml">
+			<tree string="Bills Payable">
+					<field name="cse"/>
+					<field name="ref_no"/>
+					<field name="ref_date"/>
+					<field name="partner_id"/>
+					<field name="service_classification"/>
+					<field name="tax_rate"/>
+					<field name="ref_amount"/>	
+			</tree>
+		    </field>
+		</record>
+
+<record id="psd_view_bill_payable_import_search" model="ir.ui.view">
+		    <field name="name">bill.payable.import.search</field>
+		    <field name="model">bill.payable.import</field>
+		    <field name="priority" eval="16"/>
+		    <field name="type">search</field>
+		    <field name="arch" type="xml">
+			<search string="Bills Payable">
+					<field name="cse"/>
+					<field name="ref_no"/>
+					<field name="ref_date"/>
+					<field name="partner_id"/>
+					<field name="service_classification"/>
+					<field name="tax_rate"/>
+					<field name="ref_amount"/>	
+			</search>
+		    </field>
+		</record>
+			<record model="ir.ui.view" id="psd_bank_name_form">
+		<field name="name">Bank Names</field>
+		<field name="model">bank.name</field>
+		<field name="priority" eval="16"/>
+		<field name="type">form</field>
+		<field name="arch" type="xml">
+			<form string="Bank Names">
+			 	<group col="8" colspan="8">
+					<field name="name" colspan="2"/><label string="" colspan="6"/>
+				     </group>
+				     
+			</form>
+		</field>
+	</record>
+
+	<record model="ir.ui.view" id="psd_bank_name_tree">
+		<field name="name">Bank Names</field>
+		<field name="model">bank.name</field>
+		<field name="priority" eval="16"/>
+		<field name="type">tree</field>
+		<field name="arch" type="xml">
+			<tree string="Bank Names">
+				<field name="name"/>
+			</tree>
+		</field>
+	</record>
+ 
+	</data>
+</openerp>
