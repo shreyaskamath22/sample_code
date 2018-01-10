@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_1">
+            <field name="sr_no">1</field>
+            <field name="grade">A1</field>
+            <field name="mode_of_travel">Train 2nd Class Non-AC Bus</field>
+            <field name="mode_of_local_conveyance">Local Train- 2nd class, City Bus (Auto if with material)</field>
+        </record>
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_2">
+            <field name="sr_no">2</field>
+            <field name="grade">B1</field>
+            <field name="mode_of_travel">1st Class, Train- III AC (Only if Travel time is more than 8 hours), AC Luxury Bus</field>
+            <field name="mode_of_local_conveyance">Local Train/Auto rickshaw/City Bus. Taxi can be taken if with material</field>
+        </record>
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_3">
+            <field name="sr_no">3</field>
+            <field name="grade">B2</field>
+            <field name="mode_of_travel">Train- III/AC Luxury Bus</field>
+            <field name="mode_of_local_conveyance">Local Train/Auto rickshaw/City Bus. Taxi can be taken if with material</field>
+        </record>
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_4">
+            <field name="sr_no">4</field>
+            <field name="grade">C1</field>
+            <field name="mode_of_travel">Train- III AC (if no reservation available then II AC) (only if travel time is more than 8 hours) Volvo Luxury Bus/Air-Economy Class (Urgent Travel)</field>
+            <field name="mode_of_local_conveyance">Local Train/Auto rickshaw/Taxi with material</field>
+        </record>
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_5">
+            <field name="sr_no">5</field>
+            <field name="grade">C2</field>
+            <field name="mode_of_travel">Train- II AC/Volvo Luxury Bus Air-Economy Class</field>
+            <field name="mode_of_local_conveyance">Taxi</field>
+        </record>
+        
+        <record model="gradewise.mode.of.travel.details" id="detail_6">
+            <field name="sr_no">6</field>
+            <field name="grade">C3</field>
+            <field name="mode_of_travel">Air-Economy Class</field>
+            <field name="mode_of_local_conveyance">Taxi</field>
+        </record>
+
+        
+
+    </data>
+</openerp>

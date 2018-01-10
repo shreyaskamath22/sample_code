@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="1">
+
+        <record id="wireless_package_comm_rule" model="ir.rule">
+            <field name="name">Personal Package Commission</field>
+            <field ref="model_packaged_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsa')),(4, ref('wirelessvision_dsr.group_wireless_dsr_stl'))]"/>
+        </record>
+
+        <record id="wireless_package_comm_rule_rsm" model="ir.rule">
+            <field name="name">Store Package Commission</field>
+            <field ref="model_packaged_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.sap_id.id','=',user.sap_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsm')),(4, ref('wirelessvision_dsr.group_wireless_dsr_mid'))]"/>
+        </record>
+
+        <record id="wireless_package_comm_rule_mm" model="ir.rule">
+            <field name="name">Market Package Commission</field>
+            <field ref="model_packaged_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.market_id.id','=',user.market_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_mm'))]"/>
+        </record>
+
+        <record id="wireless_package_comm_rule_dos" model="ir.rule">
+            <field name="name">Region Package Commission</field>
+            <field ref="model_packaged_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.region_id.id','=',user.region_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_dos'))]"/>
+        </record>
+
+        <record id="wireless_sales_comm_rule" model="ir.rule">
+            <field name="name">Personal Sales Commission</field>
+            <field ref="model_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsa')),(4, ref('wirelessvision_dsr.group_wireless_dsr_stl'))]"/>
+        </record>
+
+        <record id="wireless_sales_comm_rule_rsm" model="ir.rule">
+            <field name="name">Store Sales Commission</field>
+            <field ref="model_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.sap_id.id','=',user.sap_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsm')),(4, ref('wirelessvision_dsr.group_wireless_dsr_mid'))]"/>
+        </record>
+
+        <record id="wireless_sales_comm_rule_mm" model="ir.rule">
+            <field name="name">Market Sales Commission</field>
+            <field ref="model_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.market_id.id','=',user.market_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_mm'))]"/>
+        </record>
+
+        <record id="wireless_sales_comm_rule_dos" model="ir.rule">
+            <field name="name">Region Sales Commission</field>
+            <field ref="model_commission_tracker" name="model_id"/>
+            <field name="domain_force">[('name.user_id.region_id.id','=',user.region_id.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_dos'))]"/>
+        </record>        
+
+        <record id="wireless_trans_analysis_rule" model="ir.rule">
+            <field name="name">Personal Transactions Analysis</field>
+            <field ref="model_wireless_transactions_report" name="model_id"/>
+            <field name="domain_force">[('sales_employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsa'))]"/>
+        </record>
+
+        <record id="wireless_trans_analysis_rule_stl" model="ir.rule">
+            <field name="name">STL Transaction Analysis</field>
+            <field ref="model_wireless_transactions_report" name="model_id"/>
+            <field name="domain_force">[('dsr_store_id.id','=',user.sap_id.id),'|',('sales_employee_id.job_id.model_id','=','rsa'),('sales_employee_id.user_id.id','=',user.id)]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_stl'))]"/>
+        </record>
+
+        <record id="wireless_trans_analysis_rule_rsm" model="ir.rule">
+            <field name="name">Store Transactions Analysis</field>
+            <field ref="model_wireless_transactions_report" name="model_id"/>
+            <field name="domain_force">[('sales_employee_id.user_id.sap_id.id','in',[s.id for s in user.employee_ids[0].store_ids])]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_rsm')),(4, ref('wirelessvision_dsr.group_wireless_dsr_mid'))]"/>
+        </record>
+
+        <record id="wireless_trans_analysis_rule_mm" model="ir.rule">
+            <field name="name">Market Transactions Analysis</field>
+            <field ref="model_wireless_transactions_report" name="model_id"/>
+            <field name="domain_force">[('sales_employee_id.user_id.market_id.id','in',[s.id for s in user.employee_ids[0].covering_market_ids])]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_mm'))]"/>
+        </record>
+
+        <record id="wireless_trans_analysis_rule_dos" model="ir.rule">
+            <field name="name">Region Transactions Analysis</field>
+            <field ref="model_wireless_transactions_report" name="model_id"/>
+            <field name="domain_force">[('sales_employee_id.user_id.region_id.id','in',[s.id for s in user.employee_ids[0].covering_region_ids])]</field>
+            <field name="groups" eval="[(4, ref('wirelessvision_dsr.group_wireless_dsr_dos'))]"/>
+        </record>
+
+    </data>
+</openerp>

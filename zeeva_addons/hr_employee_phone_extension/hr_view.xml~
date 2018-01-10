@@ -1,0 +1,63 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_employee_form_inherit_extension" model="ir.ui.view">
+      <field name="name">view.employee.form.inherit.extension</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form"/>
+      <field name="arch" type="xml">
+
+        <field name="work_phone"  position="after">
+          <field name="extension" />
+        </field>
+        <field name="coach_id" position="replace">
+			<field name="coach_id" invisible="1"/>
+           <field name="join_date" required="1"/>
+           <field name="tenure" />
+           <field name="date_of_confirmation" />
+           <field name="one_year_completion" />           
+           <field name="status_of_confirmation" />
+        </field>
+
+        <field name="job_id" position="replace"> 
+    		<field name="job_id" string="Designation"/>
+		</field>
+		<field name="parent_id" position="replace"> 
+    		<field name="parent_id" string="Reporting Manager"/>
+		</field>
+		
+		
+      </field>
+    </record>
+
+
+	
+	
+	<record id="view_employee_tree_inherited_1" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit1</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_emergency_details.view_employee_tree_inherited"/>
+            <field name="arch" type="xml">
+			        <field name="bank_account_id" position="after">
+			          <field name="join_date"/>
+			          <field name="tenure"/>
+			          <field name="date_of_confirmation"/>
+        			  <field name="one_year_completion"/>
+        			  <field name="work_location"/>
+        			  <field name="mobile_phone"/>
+			        </field>
+			        <field name="job_id" position="replace"> 
+    					<field name="job_id" string="Designation"/>
+					</field>
+					<field name="work_phone" position="replace"> 
+    					<field name="work_phone" invisible="1"/>
+					</field>
+					<field name="parent_id" position="replace"> 
+    					<field name="parent_id" string="Reporting To"/>
+					</field>
+            </field>
+	</record>
+	
+  </data>
+</openerp>

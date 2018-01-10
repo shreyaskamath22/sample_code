@@ -1,0 +1,231 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_employee_form_inherit_extension" model="ir.ui.view">
+      <field name="name">view.employee.form.inherit.extension</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form"/>
+      <field name="arch" type="xml">
+		<field name="company_id" position="replace">
+          <field name="company_id" />
+        </field>
+	<field name="mobile_phone" position="replace">
+          <field name="mobile_phone" string="Mobile Number"/>
+        </field>
+        <field name="work_phone"  position="after">
+          <field name="extension" />
+        </field>
+        <field name="coach_id" position="replace">
+			<field name="coach_id" invisible="1"/>
+           <field name="join_date" required="1"/>
+           <!--field name="tenure" /-->
+           <field name="date_of_confirmation" />
+           <field name="one_year_completion" />           
+           <field name="status_of_confirmation" />
+        </field>
+
+        <field name="job_id" position="replace"> 
+    		<field name="job_id" string="Designation"/>
+		</field>
+		<field name="parent_id" position="replace"> 
+    		<field name="parent_id" string="Reporting Manager1" domain="[('manager','=',True)]"/>
+			<field name="parent_id2" domain="[('manager','=',True)]"/>
+    		<field name="parent_id3" domain="[('manager','=',True)]"/>
+    		<field name="hro" />
+		</field>
+				
+      </field>
+    </record>
+
+   <record id="view_users_form_inherit" model="ir.ui.view">
+      <field name="name">res.users.form.inherit.</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="base.view_users_form"/>
+      <field name="arch" type="xml">
+		<field name="company_id" position="after">
+			<field name="is_hro"/>
+		</field>
+				
+      </field>
+    </record>	
+	
+	<record id="view_employee_tree_inherited_1" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit1</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_emergency_details.view_employee_tree_inherited"/>
+            <field name="arch" type="xml">
+			        <field name="bank_account_id" position="after">
+			          <field name="join_date"/>
+			          <!--field name="tenure"/-->
+			          <field name="date_of_confirmation"/>
+        			  <field name="one_year_completion"/>
+        			  <field name="work_location"/>
+        			  <field name="mobile_phone" string="Mobile Number"/>
+			        </field>
+			        <field name="job_id" position="replace"> 
+    					<field name="job_id" string="Designation"/>
+					</field>
+					<field name="work_phone" position="replace"> 
+    					<field name="work_phone" invisible="1"/>
+					</field>
+					<field name="parent_id" position="replace"> 
+    					<field name="parent_id" string="Reporting To"/>
+					</field>
+            </field>
+	</record>
+	
+	<record model="ir.ui.view" id="hr.hr_kanban_view_employees">
+        <field name="name">HR - Employess Kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="last_login"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_employee_vignette">
+                            <div class="oe_employee_image">
+                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
+                            </div>
+                            <div class="oe_employee_details">
+                                <h4>
+                                    <a type="open"><field name="name"/></a>
+                                </h4>
+                                <ul>
+                                    <li id="last_login">
+                                        <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" style="font-size: 100%%">
+                                              <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                        </span>
+                                    </li>
+                                    <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                    <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                    <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
+                                    <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
+                                    <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <script>
+                            $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                        </script>
+                    </t>
+                </templates>
+            </kanban>
+
+        </field>
+    </record>
+
+  <record id="view_emp_no_edit" model="ir.ui.view">
+        <field name="name">hr.emp.non.edit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('new_group_employee_view')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">false</attribute>
+            </xpath>
+            
+        </field>
+    </record>
+	
+	<record id="open_view_employee_list_my_copy" model="ir.actions.act_window">
+            <field name="name">Employees</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="domain">['|',('user_id','=',uid),('parent_id.user_id','=',uid)]</field>
+            <field name="context">{}</field>
+            <field name="view_id" ref="hr.hr_kanban_view_employees"/>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new employee.
+              </p><p>
+                With just a quick glance on the OpenERP employee screen, you
+                can easily find all the information you need for each person;
+                contact data, job position, availability, etc.
+              </p>
+            </field>
+        </record>
+
+       <record id="hr.view_partner_tree2" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="field_parent">child_ids</field>
+            <field eval="20" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Employees">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="coach_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action2_new" model="ir.actions.act_window">
+            <field name="name">Reportees</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="domain">[('user_id','=',uid)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="hr.view_partner_tree2"/>
+        </record>
+
+
+        <!-- ZEEVA Employee Search View -->
+        <record id="hr.view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees"/>
+                    <field name="department_id" />
+                    <field name="category_ids" groups="base.group_hr_user"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Company" name="company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Manager" name="manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" name="coach" domain="[]" context="{'group_by':'coach_id'}"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+
+         <!-- ZEEVA Company Structure action -->
+        <record id="zeeva_company_structure_action" model="ir.actions.act_window">
+            <field name="name">Company's Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_company':1,'search_default_department':1, 'search_default_job':1}</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help"></field>
+        </record>
+        <record id="zeeva_company_structure_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_company_structure_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="hr.view_employee_tree"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem id="menu_company_structure_view"
+            name="Company's Structure" 
+            parent="hr.menu_hr_main"
+            action="zeeva_company_structure_action"  
+            sequence="4" groups="base.group_hr_manager"/>
+        
+
+	 <menuitem action="open_view_employee_list_my_copy" id="menu_open_view_employee_list_my_copy" sequence="1" parent="hr.menu_hr_main" groups="new_group_employee_view"/>
+   <menuitem action="action2_new" id="menu_action2_new" sequence="2" parent="hr.menu_hr_main" groups="new_group_reporting_manager_view"/>
+   <menuitem action="hr.open_view_employee_list_my" id="hr.menu_open_view_employee_list_my" sequence="3" groups="base.group_hr_manager" parent="hr.menu_hr_main"/>
+	
+  </data>
+</openerp>

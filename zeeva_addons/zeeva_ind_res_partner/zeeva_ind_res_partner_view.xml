@@ -1,0 +1,895 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+       <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field eval="1" name="priority"/>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet" position="before">
+                    <header>
+                        <button name="submit_to_management" string="Submit To Management" type="object" icon="gtk-yes" attrs="{'invisible': [('customer_state','in',('waiting_management_approval','customer_created'))]}" groups="zeeva_ind_products.group_product_user"/>
+                        <button name="reset_to_draft" string="Reset To Draft" type="object" icon="gtk-ok" attrs="{'invisible': [('customer_state','=','draft')]}" groups="zeeva_ind_products.group_product_manager"/>
+                        <button name="approved" string="Approved" type="object" icon="gtk-apply" attrs="{'invisible': [('customer_state','in',('draft','customer_created')) ]}" groups="zeeva_ind_products.group_product_manager"/>
+                        <field name="customer_state" string="Customer status" widget="statusbar" statusbar_visible="draft,waiting_management_approval,customer_created" statusbar_colors='{"draft":"blue", "waiting_management_approval":"green", "customer_created":"grey"}'/>
+                    </header>
+                </xpath>
+                <field name="active" position="replace">
+                </field>
+                <field name="category_id" position="before">
+                    <field name="owner_partner_name" placeholder="Name of the Owner/Partner" attrs="{'required':[('general_trade','=',True)],'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="category_id" position="replace">
+                </field>
+                <field name="comment" position="replace">
+                </field>
+                <field name="date" position="replace">
+                </field>
+                <field name="user_id" position="replace">
+                </field>
+                <field name="ref" position="replace">
+                </field>
+                <field name="fax" position="replace">
+                </field>
+                <!-- <field name="section_id" position="replace">
+                </field> -->
+                <div class="oe_right oe_button_box" name="buttons" position="replace">
+                    <div class="oe_right oe_button_box" name="buttons" groups="zeeva_ind_products.group_product_manager"> 
+                    </div> 
+                </div>
+                <label for="street" string="Address" position="replace">
+                    <label for="street" string="Billing Address"/>
+                </label>
+                <field name="website" widget="url" placeholder="e.g. www.openerp.com" position="before">
+                    <field name="same_as_above" on_change="onchange_same_as_above(same_as_above,street,street2,city,state_id,zip,country_id,billing_city,billing_destination)" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                    <label for="shipping_street" string="Shipping Address"/>
+                    <div>
+                        <field name="shipping_street" placeholder="Street..." attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                        <field name="shipping_street2"  attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                        <div class="address_format">
+                            <field name="shipping_city" placeholder="City" style="width: 40%%" attrs="{'readonly':[('customer_state','!=','draft')]}" invisible="1"/>
+                            <field name="shipping_destination" placeholder="Shipping Destination" style="width: 40%%" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                            <field name="shipping_city2" placeholder="City" style="width: 40%%" attrs="{'readonly':[('customer_state','!=','draft')]}" options="{'create': false, 'create_edit': false, 'search_more':true'}"/>
+                            <field name="shipping_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_shipping_state_id(shipping_state_id)" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                            <field name="shipping_zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                        </div>
+                            <field name="shipping_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                        </div>
+                </field>
+                <field name="title" position="after">
+                    <field name="headquarters" attrs="{'readonly':[('customer_state','!=','draft')]}" domain="[('customer','=',True)]" on_change="onchange_headquarters(headquarters)"/>
+                </field>
+                <xpath expr="/form/sheet/notebook/page[@string='Internal Notes']" position="replace">
+                </xpath>
+                <xpath expr="//page[@string='Sales &amp; Purchases']" position="attributes"> 
+                        <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='Sales &amp; Purchases']" position="after">
+                    <page string="General Details">
+                        <group>
+                            <group>
+                                <field name="company_id" readonly="1"/>
+                                <field name="active" readonly="1"/>
+                            </group>
+                            <group>
+                                    <field name="business_commencement_date_zeeva" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                            </group>
+                            <group colspan="8">
+                            </group>
+                            <group string="Channels">
+                                <label for="modern_trade" string="Type"/>
+                                <div>
+                                    Modern Trade <field name="modern_trade" attrs="{'readonly':[('customer_state','!=','draft')]}" on_change="onchange_modern_trade(modern_trade)"/> or General Trade
+                                    <field name="general_trade" attrs="{'readonly':[('customer_state','!=','draft')]}" on_change="onchange_general_trade(general_trade)"/>
+                                </div>
+                                <newline/>
+                                    <field name="general_trade_channels" widget='many2many_tags' options="{'limit': 10, 'create': false, 'create_edit': false, 'search_more':true'}" domain="['|',('modern_trade','=',modern_trade),('general_trade','=',general_trade)]" string="Channels" required="1" attrs="{'readonly':[('modern_trade','=',False),'|',('general_trade','=',False),('customer_channels_readonly','=',False),]}"/>
+                                    <!-- attrs="{'readonly':['|',('customer_state','!=','draft'),('modern_trade','=',False),('general_trade','=',False)]}"-->
+                                    <field name="salesperson" widget='many2many_tags' attrs="{'readonly':[('customer_state','!=','draft')]}" domain="[('default_section_id','!=',user_id)]"/>
+                                    <field name="customer_channels_readonly" invisible="1"/>
+                                    <field name="source_of_crf" invisible="1"/>
+									<field name="type_of_customer" invisible="1"/>
+                            </group>
+                            <group string="Brands">
+                                    <field name="product_brand" widget="many2many_tags" attrs="{'readonly':[('customer_state','!=','draft')]}" required="1"/>
+                            </group>
+                        </group>
+                        <group colspan="8">
+                        </group>
+                        <group string="Bank Details">
+                        <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}" attrs="{'readonly':[('customer_state','!=','draft')]}" colspan="8" nolabel="1">
+                                <tree string="Bank Details">
+                                    <field name="state" invisible="1"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="account_holder_name"/>
+                                    <field name="bank_name"/>
+                                    <field name="acc_number"/>
+                                    <field name="bank_bic" string="IFSC Code"/>
+                                    <field name="micr_code"/>
+                                    <field name="owner_name" string="Branch Name"/>
+                                </tree>
+                        </field>
+                        </group>
+                        <group>
+                            <field name="comment" nolabel="1" placeholder="Remarks" colspan="8" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                        </group>
+                    </page>
+                    <page string="Signing Authority Details">
+                        <group>
+                            <group string="Sales Department">
+                                <field name="user_id" attrs="{'readonly':[('customer_state','!=','draft')]}" domain="[('default_section_id','!=',user_id)]"/>
+                            </group>
+                            <group string="Signing Date">
+                                <field name="date" string="Signing Date" readonly="1"/>
+                            </group>
+                            <group string="Verified Details">
+                                <field name="verified_by" readonly="1"/>
+                                <field name="verified_date" readonly="1"/>
+                            </group>
+                            <group string="Approved Details">
+                                <field name="approved_by" readonly="1"/>
+                                <field name="approved_date" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                    <page string="Geographical Locations">
+                        <group>
+                            <group>
+                                <field name="country_id1" required="1" on_change="onchange_country_id1(country_id1)" attrs="{'readonly':[('customer_state','!=','draft')]}" string="Country"/>
+                                <field name="state_id1" domain="[('customer_zone','=',zone_id)]" required="1" on_change="onchange_state_id1(state_id1)" attrs="{'readonly':['|',('state_editable','=',False),('customer_state','!=','draft')]}" string="State"/>
+                                <field name="regions" widget="many2many_tags" domain="[('city_id','=',city_id1)]" attrs="{'invisible':[('modern_trade','=',True)],'required':[('general_trade','=',True)],'readonly':['|',('city_region_editable','=',False),('customer_state','!=','draft')]}" string="Regions"/>
+                            </group>
+                            <group>
+                                <field name="zone_id" domain="[('country_id','=',country_id1)]" required="1" on_change="onchange_zone_id(zone_id)" attrs="{'readonly':['|',('zone_editable','=',False),('customer_state','!=','draft')]}" string="Zone"/>
+                                <field name="city_id1" domain="[('state_name','=',state_id1)]" attrs="{'readonly':['|',('city_region_editable','=',False),('customer_state','!=','draft')]}" string="City"/>
+                                <field name="zone_editable" invisible="1"/>
+                                <field name="state_editable" invisible="1"/>
+                                <field name="city_region_editable" invisible="1"/>
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+                <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline" position="replace">
+                    <field name="is_company" on_change="onchange_type(is_company)" class="oe_inline" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="name" default_focus="1" placeholder="Name" position="replace">
+                    <h2>
+                        <field name="ref" attrs="{'invisible': [('is_company','=', False)]}" placeholder="Code" style="width: 25%%" readonly="1"/>
+                        <field name="name" default_focus="1" placeholder="Name" attrs="{'readonly':[('customer_state','!=','draft')]}" style="width: 74%%"/>
+                    </h2>
+                </field>
+                <field name="parent_id" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}" attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)]}" on_change="onchange_address(use_parent_address, parent_id)" position="replace">
+                     <field name="parent_id" placeholder="Company" domain="[('is_company', '=', True)]" context="{'default_is_company': True, 'default_supplier': supplier, 'default_customer': customer}" attrs="{'invisible': [('is_company','=', True),('parent_id', '=', False)],'readonly':[('customer_state','!=','draft')]}" on_change="onchange_address(use_parent_address, parent_id)"/>
+                </field>
+                <field name="category_id" widget="many2many_tags" placeholder="Tags..." position="replace">
+                     <field name="category_id" widget="many2many_tags" placeholder="Tags..." attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="use_parent_address" class="oe_inline" on_change="onchange_address(use_parent_address, parent_id)" attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)]}" position="replace">
+                    <field name="use_parent_address" class="oe_inline" on_change="onchange_address(use_parent_address, parent_id)" attrs="{'invisible': ['|', ('is_company', '=', True),('parent_id', '=', False)],'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="street" placeholder="Street..."  attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                    <field name="street" placeholder="Street..."  attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="street2"  attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                    <field name="street2"  attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="city" placeholder="City" style="width: 40%%" attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                    <field name="city" placeholder="City" style="width: 40%%" attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}" invisible="1"/>
+                    <field name="billing_city" placeholder="City" style="width: 40%%" attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}" options='{"no_open": True}'/>
+                </field>
+                <field name="billing_city" placeholder="City" style="width: 40%%" attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}" options='{"no_open": True}' position="before">
+                    <field name="billing_destination" placeholder="Billing Destination" style="width: 40%%" attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)" attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="zip" placeholder="ZIP" style="width: 20%%" attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                    <field name="zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly':['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('use_parent_address','=',True)]}" position="replace">
+                     <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': ['|',('use_parent_address','=',True),('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="website" widget="url" placeholder="e.g. www.openerp.com" position="replace">
+                        <field name="website" widget="url" placeholder="e.g. www.openerp.com" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)]}" position="replace">
+                        <field name="function" placeholder="e.g. Sales Director" attrs="{'invisible': [('is_company','=', True)],'readonly': [('use_parent_address','=',True)]}"/>
+                </field>
+                <field name="phone" placeholder="e.g. +32.81.81.37.00" position="replace">
+                    <field name="phone" placeholder="e.g. +32.81.81.37.00" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="mobile" position="replace">
+                    <field name="mobile" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="fax" position="replace">
+                    <field name="fax" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>      
+                <field name="email" widget="email" position="replace">
+                    <field name="email" widget="email" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="title" options='{"no_open": True}' position="replace">
+                    <field name="title" options='{"no_open": True}' attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                </field>
+                <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}" position="replace">
+                    <field name="child_ids" mode="kanban" context="{'default_parent_id': active_id, 'default_street': street, 'default_street2': street2, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_supplier': supplier, 'default_customer': customer, 'default_use_parent_address': True}" attrs="{'readonly':[('customer_state','!=','draft')]}">
+                                <kanban>
+                                    <field name="color"/>
+                                    <field name="name"/>
+                                    <field name="title"/>
+                                    <field name="email"/>
+                                    <field name="parent_id"/>
+                                    <field name="is_company"/>
+                                    <field name="function"/>
+                                    <field name="phone"/>
+                                    <field name="street"/>
+                                    <field name="street2"/>
+                                    <field name="zip"/>
+                                    <field name="city"/>
+                                    <field name="country_id"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                    <field name="state_id"/>
+                                    <field name="has_image"/>
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color + (record.title.raw_value == 1 ? ' oe_kanban_color_alert' : '')" style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                <a type="open">
+                                                    <t t-if="record.has_image.raw_value === true">
+                                                        <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                    </t>
+                                                    <t t-if="record.image and record.image.raw_value !== false">
+                                                        <img t-att-src="'data:image/png;base64,'+record.image.raw_value" class="oe_avatar oe_kanban_avatar_smallbox"/>
+                                                    </t>
+                                                    <t t-if="record.has_image.raw_value === false and (!record.image or record.image.raw_value === false)">
+                                                        <t t-if="record.is_company.raw_value === true">
+                                                            <img t-att-src='_s + "/base/static/src/img/company_image.png"' class="oe_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        </t>
+                                                        <t t-if="record.is_company.raw_value === false">
+                                                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image oe_kanban_avatar_smallbox"/>
+                                                        </t>
+                                                    </t>
+                                                </a>
+                                                    <div class="oe_module_desc">
+                                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
+                                                            <table class="oe_kanban_table">
+                                                                <tr>
+                                                                    <td class="oe_kanban_title1" align="left" valign="middle">
+                                                                        <h4><a type="open"><field name="name"/></a></h4>
+                                                                        <i><div t-if="record.function.raw_value">
+                                                                            <field name="function"/></div></i>
+                                                                        <div><a t-if="record.email.raw_value" title="Mail" t-att-href="'mailto:'+record.email.value">
+                                                                            <field name="email"/>
+                                                                        </a></div>
+                                                                        <div t-if="record.phone.raw_value">Phone: <field name="phone"/></div>
+                                                                        <div t-if="record.mobile.raw_value">Mobile: <field name="mobile"/></div>
+                                                                        <div t-if="record.fax.raw_value">Fax: <field name="fax"/></div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                                <form string="Contact" version="7.0">
+                                    <sheet>
+                                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                                        <div class="oe_title">
+                                            <label for="name" class="oe_edit_only"/>
+                                            <h1><field name="name" style="width: 70%%"/></h1>
+                                            <field name="category_id" widget="many2many_tags" placeholder="Tags..." style="width: 70%%" invisible="1"/>
+                                        </div>
+                                        <group>
+                                            <field name="function" placeholder="e.g. Sales Director" string="Designation"/>
+                                            <field name="mobile" string="Mobile No." required="1"/>
+                                            <field name="phone" string="Landline No." required="1"/>
+                                            <field name="email"/>    
+                                            <field name="primary_contact"/>
+                                        </group>
+                                        <div>
+                                            <field name="use_parent_address"/><label for="use_parent_address"/>
+                                        </div>
+                                        <group>
+                                            <label for="type"/>
+                                            <div name="div_type">
+                                                <field class="oe_inline" name="type"/>
+                                            </div>
+                                            <label for="street" string="Address" attrs="{'invisible': [('use_parent_address','=', True)]}"/>
+                                            <div attrs="{'invisible': [('use_parent_address','=', True)]}" name="div_address">
+                                                <field name="street" placeholder="Street..."/>
+                                                <field name="street2"/>
+                                                <div class="address_format">
+                                                    <field name="city" placeholder="City" style="width: 40%%"/>
+                                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
+                                                    <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                                </div>
+                                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                                            </div>
+                                        </group>
+                                        <field name="supplier" invisible="True"/>
+                                        <field name="customer" invisible="True"/>
+                                    </sheet>
+                                </form>
+                            </field>
+                </field>            
+            </field>
+        </record>
+
+        <!-- Add section_id (Sales Team) to res.partner -->
+        <record id="view_partners_form_crm1_inherit" model="ir.ui.view">
+                <field name="name">view.res.partner.form.crm.inherited2</field>
+                <field name="model">res.partner</field>
+                <field name="inherit_id" ref="crm.view_partners_form_crm1"/>
+                <field eval="18" name="priority"/>
+                <field name="arch" type="xml">
+                    <field name="section_id" completion="1" position="replace">
+                    </field>
+                </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="res_partner_opt_out_form_inherit">
+            <field name="name">res.partner.opt_out.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="email_template.res_partner_opt_out_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='opt_out']" position="replace">
+                    <field name="opt_out" attrs="{'readonly':[('customer_state','!=','draft')]}" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+        <record id="view_emails_partner_info_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.emails.info.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="mail.view_emails_partner_info_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='notification_email_send']" position="replace">
+                    <field name='notification_email_send' attrs="{'readonly':[('customer_state','!=','draft')]}" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_property_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.property.form.inherit1</field>
+            <field name="model">res.partner</field>
+            <field name="priority">2</field>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page[@string='Accounting']" position="replace">
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='Contacts']" position="before">
+                     <page string="Statutory/Other Details" col="4" name="accounting" attrs="{'invisible': [('is_company','=',False),('parent_id','!=',False)]}">
+                            <group>
+                                <group>
+                                    <field name="property_account_position" widget="selection" invisible="1"/>
+                                    <field name="vat_no" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                    <field name="cst_no" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                    <field name="pan_no" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="last_reconciliation_date" invisible="1"/>
+                                    <field name="business_commencement_date" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="type_of_sales" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                    <field name="warehouse_id"/>
+                                </group>
+                                <group>
+                                    <field name="cform_criteria" attrs="{'invisible': [('type_of_sales','=','within_state')],'readonly':[('customer_state','!=','draft')]}"/>
+									<field name="road_permit" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                    <field name="grn" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="property_account_receivable" groups="account.group_account_invoice" attrs="{'readonly':[('customer_state','!=','draft')]}" string="Classification of Debtors"/>
+                                    <field name="credit"/>
+                                    <field name="credit_limit" attrs="{'readonly':[('customer_state','!=','draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="property_payment_term" widget="selection" attrs="{'readonly':[('customer_state','!=','draft')]}" string="Payment Term"/>
+                                    <field name="property_account_payable" groups="account.group_account_invoice" invisible="1"/>
+                                    <field name="property_supplier_payment_term" widget="selection" invisible="1"/>
+                                    <field name="debit" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                <page string="Accounting" name="accounting_disabled" attrs="{'invisible': ['|',('is_company','=',True),('parent_id','=',False)]}">
+                    <div>
+                        <p>Accounting-related settings are managed on <button name="open_commercial_entity" type="object" string="the parent company" class="oe_link"/></p>
+                    </div>
+                </page>
+            </xpath>
+            </field>
+        </record>
+
+        <record id="view_partner_bank_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.bank.form.inherit</field>
+            <field name="model">res.partner.bank</field>
+            <field name="inherit_id" ref="base.view_partner_bank_form"/>
+            <field name="arch" type="xml">
+                    <field name="acc_number" position="replace">
+                    </field>
+                    <label for="street" string="Address" position="replace">
+                    </label>
+                    <field name="owner_name" placeholder="Name" position="replace">
+                    </field>
+                    <field name="street" placeholder="Street" position="replace">
+                    </field>
+                    <field name="partner_id" position="replace">
+                        <field name="partner_id" required="0" invisible="1"/>
+                        <field name="account_holder_name"/>
+                        <field name="acc_number" required="0"/>
+                    </field>
+                    <field name="bank" position="replace">
+                    </field>
+                    <field name="state" position="replace">
+                    </field>
+                    <field name="zip" class="oe_inline" placeholder="ZIP" position="replace">
+                    </field>
+                    <field name="city" position="replace">
+                    </field>
+                    <field name="state_id" position="replace">
+                    </field>
+                    <field name="country_id" position="replace">
+                    </field>
+                    <field name="bank_bic" placeholder="e.g. GEBABEBB" position="replace">
+                        <label for="street" string="Address"/>
+                            <div>
+                                <field name="owner_name" placeholder="Branch Name"/>
+                                <field name="street" placeholder="Street"/>
+                                <div>
+                                    <field name="zip" class="oe_inline" placeholder="Pincode"/>
+                                    <field name="city" class="oe_inline" placeholder="City"/>
+                                </div>
+                                <field name="state_id" placeholder="State" options='{"no_open": True}'/>
+                                <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                            </div>
+                        <field name="bank_bic" placeholder="e.g. GEBABEBB" string='IFSC Code'/>
+                        <field name="micr_code"/>
+                    </field>
+            </field>
+        </record>
+
+        <record id="base.view_partner_tree" model="ir.ui.view">
+            <field name="name">res.partner.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="ref" string="Code"/>
+                    <field name="name"/>
+                    <field name="property_payment_term" string="Payment Term"/>
+					<field name="type_of_customer" />
+                    <field name="general_trade_channels" string="Channels" widget="many2many_tags"/>
+					<!--field name="modern_trade" string="Modern Trade"/>
+                    <field name="general_trade" string="General Trade"/-->
+                    <field name="function" invisible="1"/>
+                    <field name="phone" invisible="1"/>
+                    <field name="email" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="is_company" invisible="1"/>
+                    <field name="country" invisible="1"/>
+                    <field name="country_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
+                    <field name="zone_id" string="Zone"/>
+                    <field name="state_id1" string="State"/>
+                    <field name="city_id1" string="City"/>
+                    <field name="customer_state" string="Status"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="view_partner_contacts_tree" model="ir.ui.view">
+            <field name="name">res.partner.contacts.tree</field>
+            <field name="model">res.partner</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Contacts">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                    <field name="function"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="primary_contact"/>
+                </tree>
+            </field>
+        </record>
+
+
+         <record id="view_partner_simple_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.simplified.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form"/>
+            <field name="arch" type="xml">
+                    <field name="category_id" position="replace">
+                    </field>
+                    <field name="phone" position="replace">
+                    </field>
+                    <field name="mobile" position="replace">
+                    </field>
+                    <field name="function" placeholder="e.g. Sales Director" position="replace">
+                        <field name="function" placeholder="e.g. Sales Director" string="Designation"/>
+                        <field name="mobile" string="Mobile No."/>
+                        <field name="phone" string="Landline No."/>
+                    </field>
+                    <field name="email" position="after">
+                        <field name="primary_contact"/>
+                    </field>
+            </field>
+        </record>
+
+        <record id="base.action_partner_form" model="ir.actions.act_window">
+            <field name="name">Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','=',False)]</field>
+            <!-- <field name="context">{"search_default_customer":1}</field> -->
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+
+
+        <record id="action_partner_contact_form" model="ir.actions.act_window">
+            <field name="name">Customer Contacts</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False)]</field>
+            <!-- <field name="context">{"search_default_customer":1}</field> -->
+            <field name="search_view_id" ref="base.view_res_partner_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a contact in your address book.
+              </p><p>
+                OpenERP helps you easily track all activities related to
+                a customer; discussions, history of business opportunities,
+                documents, etc.
+              </p>
+            </field>
+        </record>
+
+         <record id="action_partner_contact_form_view1" model="ir.actions.act_window.view">
+            <field eval="0" name="sequence"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="base.res_partner_kanban_view"/>
+            <field name="act_window_id" ref="action_partner_contact_form"/>
+        </record>
+
+        <record id="action_partner_contact_form_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="base.view_partner_simple_form"/>
+            <field name="act_window_id" ref="action_partner_contact_form"/>
+        </record>
+
+        <record id="action_partner_contact_tree_view1" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_partner_contacts_tree"/>
+            <field name="act_window_id" ref="action_partner_contact_form"/>
+        </record>
+
+        <menuitem id="menu_customer_contact" parent="zeeva_ind_products.menu_customer" action="action_partner_contact_form" sequence="2"/>
+
+        <menuitem id="menu_customer_configuration" name="Configuration" parent="zeeva_ind_products.zeeva_ind_menu_customer" sequence="41"/>
+
+        <menuitem action="account.action_payment_term_form" id="menu_action_payment_term_form_customer" parent="menu_customer_configuration"/>
+        
+        <menuitem id="base.menu_config_address_book" parent="zeeva_ind_products.zeeva_ind_menu_customer" name="Address Book" sequence="40" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <!-- Inherited the Localization -->
+        <menuitem id="base.menu_localisation" name="Localization" parent="base.menu_config_address_book" sequence="1" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem action="base.action_country" id="base.menu_country_partner" parent="base.menu_localisation" sequence="0" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem action="base.action_country_state" id="base.menu_country_state_partner" parent="base.menu_localisation" sequence="1" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem action="base.action_res_bank_form" id="base.menu_action_res_bank_form" parent="base.menu_config_address_book" sequence="11" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem action="base.action_res_partner_bank_account_form"
+            id="base.menu_action_res_partner_bank_form"
+            parent="base.menu_config_address_book"
+            groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"
+            sequence="9"/>
+
+         <menuitem action="base.action_res_partner_bank_type_form"
+            id="base.menu_action_res_partner_bank_typeform"
+            parent="base.menu_config_address_book"
+            groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"
+            sequence="15"/>
+
+        <!-- Accounting Tab-->
+        <menuitem id="account.menu_account_config" name="Accounting" parent="base.menu_config" groups="zeeva_ind_products.group_product_manager"/>
+
+
+        <!-- Inherited the Hr City view from zeeva_hr -->
+        <record id="zeeva_hr.view_city_tree" model="ir.ui.view">
+            <field name="name">res.city.tree</field>
+            <field name="model">res.city</field>
+            <field name="arch" type="xml">
+                <tree string="Cities/Towns">
+                    <field name="name"/>
+                    <field name="country"/>
+                    <field name="zone_id"/>
+                    <field name="state_name"/>
+                    <field name="classification_level"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="view_city_form_inherit" model="ir.ui.view">
+            <field name="name">res.city.form</field>
+            <field name="model">res.city</field>
+            <field name="inherit_id" ref="zeeva_hr.view_city_form"/>
+            <field name="arch" type="xml">
+                <field name="country" position="replace">
+                </field>
+                <field name="name" position="after">
+                    <field name="country"/>
+                    <field name="zone_id" domain="[('country_id','=',country)]"/>
+                </field>
+                <field name="state_name" position="replace">
+                    <field name="state_name" domain="[('customer_zone','=',zone_id)]"/>
+                </field>
+            </field>
+        </record>
+
+        <!-- <menuitem action="customer_cities_form_action" id="customer_cities_menu" name="City" parent="base.menu_localisation" sequence="3"/> -->
+
+        <menuitem id="customer_cites_menu" name="Cities" parent="base.menu_localisation" action="zeeva_hr.open_expense_city_details" sequence="3"/>
+
+        <!-- XML View for the Channels for the customer-->
+        <record id="customer_channels_tree_view" model="ir.ui.view">
+            <field name="name">customer.channels.tree</field>
+            <field name="model">customer.channels</field>
+            <field name="arch" type="xml">
+                <tree string="Customer Channels" version="7.0">
+                    <field name="name"/>
+                    <field name="type_of_channels"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_channels_form_view" model="ir.ui.view">
+            <field name="name">customer.channels.form</field>
+            <field name="model">customer.channels</field>
+            <field name="arch" type="xml">
+                <form string="Customer Channels" version="7.0">
+                    <sheet>
+                      <group>
+                        <field name="name"/>
+                        <field name="type_of_channels" invisible="1"/>
+                        </group>
+                        <group>
+                        <label for="modern_trade" string="Type"/>
+                        <div>
+                            Modern Trade <field name="modern_trade" on_change="onchange_modern_trade(modern_trade)"/> or   General Trade
+                            <field name="general_trade" on_change="onchange_general_trade(general_trade)"/>
+                        </div>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_channels_form_action" model="ir.actions.act_window">
+            <field name="name">Customer Channels</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.channels</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="customer_channels_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Customer Channel.
+              </p><p>
+                You can define a Channel for Customer.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="customer_channels_form_action" id="customer_channels_menu" name="Customer Channels" parent="menu_customer_configuration"/>
+
+
+        <!-- XML View for the Zones for the customer-->
+        <record id="customer_zones_tree_view" model="ir.ui.view">
+            <field name="name">customer.zones.tree</field>
+            <field name="model">customer.zones</field>
+            <field name="arch" type="xml">
+                <tree string="Zones" version="7.0">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_zones_form_view" model="ir.ui.view">
+            <field name="name">customer.zones.form</field>
+            <field name="model">customer.zones</field>
+            <field name="arch" type="xml">
+                <form string="Zones" version="7.0">
+                    <sheet>
+                      <group colspan="2" col="2">
+                         <field name="name"/>
+                         <field name="country_id"/>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_zones_form_action" model="ir.actions.act_window">
+            <field name="name">Zones</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.zones</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="customer_zones_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Zone.
+              </p><p>
+                You can define a Zone for Customer.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="customer_zones_form_action" id="customer_zone_menu" name="Zones" parent="base.menu_localisation" sequence="1"/>
+
+
+        <record id="base.view_country_state_tree" model="ir.ui.view">
+            <field name="name">res.country.state.tree</field>
+            <field name="model">res.country.state</field>
+            <field name="arch" type="xml">
+                <tree string="State">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="country_id"/>
+                    <field name="customer_zone"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_country_state_form_inherit" model="ir.ui.view">
+            <field name="name">res.country.state.form</field>
+            <field name="model">res.country.state</field>
+            <field name="inherit_id" ref="base.view_country_state_form"/>
+            <field name="arch" type="xml">
+                <field name="country_id" position="after">
+                    <field name="customer_zone" domain="[('country_id','=',country_id)]"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="action_country_state_inherit" model="ir.actions.act_window">
+            <field name="name">States</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.country.state</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="base.view_country_state_tree"/>
+            <field name="help">If you are working on the American market, you can manage the different federal states you are working on from here. Each state is attached to one country.</field>
+        </record>
+
+        <menuitem action="action_country_state_inherit" id="base.menu_country_state_partner" parent="base.menu_localisation" name="States" sequence="2"/>
+
+
+        <!-- XML View for the Cities for the customer-->
+        <!-- <record id="customer_cities_tree_view" model="ir.ui.view">
+            <field name="name">customer.cities.tree</field>
+            <field name="model">customer.cities</field>
+            <field name="arch" type="xml">
+                <tree string="Zones" version="7.0">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <field name="zone_id"/>
+                    <field name="state_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_cities_form_view" model="ir.ui.view">
+            <field name="name">customer.cities.form</field>
+            <field name="model">customer.cities</field>
+            <field name="arch" type="xml">
+                <form string="Zones" version="7.0">
+                    <sheet>
+                      <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="country_id"/>
+                        <field name="zone_id" domain="[('country_id','=',country_id)]"/>
+                        <field name="state_id" domain="[('customer_zone','=',zone_id)]"/>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_cities_form_action" model="ir.actions.act_window">
+            <field name="name">City</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.cities</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="customer_cities_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new City.
+              </p><p>
+                You can define a City for Customer.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="customer_cities_form_action" id="customer_cities_menu" name="City" parent="base.menu_localisation" sequence="3"/> -->
+
+         <!-- XML View for the Regons for the customer-->
+        <record id="customer_regions_tree_view" model="ir.ui.view">
+            <field name="name">customer.regions.tree</field>
+            <field name="model">customer.regions</field>
+            <field name="arch" type="xml">
+                <tree string="Regions" version="7.0">
+                    <field name="name"/>
+                    <field name="country_id"/>
+                    <field name="zone_id"/>
+                    <field name="state_id"/>
+                    <field name="city_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="customer_regions_form_view" model="ir.ui.view">
+            <field name="name">customer.regions.form</field>
+            <field name="model">customer.regions</field>
+            <field name="arch" type="xml">
+                <form string="Regions" version="7.0">
+                    <sheet>
+                      <group colspan="2" col="2">
+                        <field name="name"/>
+                        <field name="country_id"/>
+                        <field name="zone_id" domain="[('country_id','=',country_id)]"/>
+                        <field name="state_id" domain="[('customer_zone','=',zone_id)]"/>
+                        <field name="city_id" domain="[('state_name','=',state_id)]"/>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="customer_regions_form_action" model="ir.actions.act_window">
+            <field name="name">Regions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">customer.regions</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="customer_regions_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Regions.
+              </p><p>
+                You can define a Regions for Customer.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="customer_regions_form_action" id="customer_regions_menu" name="Regions" parent="base.menu_localisation" sequence="4"/>
+
+
+    </data>
+</openerp>

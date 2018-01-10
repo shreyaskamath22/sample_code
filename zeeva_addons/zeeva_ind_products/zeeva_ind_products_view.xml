@@ -1,0 +1,1122 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+
+       <!-- Product Customer Sale Price -->
+
+        <record id="product_customer_saleprice_tree_view" model="ir.ui.view">
+            <field name="name">product.customer.saleprice.tree</field>
+            <field name="model">product.customer.saleprice</field>
+            <field name="arch" type="xml">
+                <tree string="Products Sale Price" version="7.0">
+                    <field name="product_id"/>
+                    <field name="customer_id"/>
+                    <field name="sales_price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_customer_saleprice_form_view" model="ir.ui.view">
+            <field name="name">product.customer.saleprice.form</field>
+            <field name="model">product.customer.saleprice</field>
+            <field name="arch" type="xml">
+                <form string="Products Sale Price" version="7.0">
+                    <sheet>
+                      <group colspan="2" col="2">
+                         <field name="product_id" invisible="1"/>
+                         <field name="customer_id" invisible="1"/>
+                             <field name="sales_price"/>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_customer_form_action" model="ir.actions.act_window">
+            <field name="name">Product Sale Price</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.customer.saleprice</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_customer_saleprice_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Product.
+              </p><p>
+                You can define a Sale Price for Multiple Customer for the Product.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="product_customer_form_action" id="product_customer_menu" name="Product Sale Price" parent="product.prod_config_main" sequence="15"/>
+
+
+         <record id="combo_product_tree_view" model="ir.ui.view">
+            <field name="name">combo.product.tree</field>
+            <field name="model">combo.product.line</field>
+            <field name="arch" type="xml">
+                <tree string="Combo Products">
+                    <field name="product_id"/>
+                    <field name="shipped_quantity"/>
+                    <field name="billed_quantity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="combo_product_form_view" model="ir.ui.view">
+            <field name="name">combo.product.form</field>
+            <field name="model">combo.product.line</field>
+            <field name="arch" type="xml">
+                <form string="Combo Products" version="7.0">
+                    <sheet>
+                        <field name="product_id"/>
+                        <field name="shipped_quantity"/>
+                        <field name="billed_quantity"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="combo_product_form_action" model="ir.actions.act_window">
+            <field name="name">Combo Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">combo.product.line</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="combo_product_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Combo Product.
+              </p><p>
+                You can define a Products in one Combo Product.
+              </p>
+            </field>
+        </record>
+        
+        <!-- <menuitem action="product_customer_form_action" id="product_customer_menu" name="Product Sale Price" parent="product.prod_config_main" sequence="15"/>
+ -->
+        <!-- Product Analysis Table for reporting purpose the History Tab-->
+
+        <record id="product_analysis_tree_view" model="ir.ui.view">
+            <field name="name">product.analysis.tree</field>
+            <field name="model">product.analysis</field>
+            <field name="arch" type="xml">
+                <tree string="Products Analysis">
+                    <field name="product_id"/>
+                    <field name="customer_id"/>
+                    <field name="from_date"/>
+                    <field name="to_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_analysis_form_view" model="ir.ui.view">
+            <field name="name">product.analysis.form</field>
+            <field name="model">product.analysis</field>
+            <field name="arch" type="xml">
+                <form string="Products Analysis" version="7.0">
+                    <!-- <button name="export_data" string="Export Data" type="object" icon="gtk-select-color"/> -->
+                    <sheet>
+                      <group>
+                        <group string="Product">
+                            <field name="product_id" on_change="onchange_from_date(product_id,customer_id,from_date,to_date)"/>
+                        </group>
+                        <group string="Customer">
+                            <field name="customer_id" on_change="onchange_from_date(product_id,customer_id,from_date,to_date)" domain="[('customer','=',True)]"/>
+                        </group>
+                      </group>
+                      <group>
+                        <group string="Period">
+                        <group>
+                            <field name="from_date" on_change="onchange_from_date(product_id,customer_id,from_date,to_date)"/>
+                        </group>
+                        <group>
+                            <field name="to_date" on_change="onchange_from_date(product_id,customer_id,from_date,to_date)"/>
+                            <field name="export_file" filename="file_name" invisible="1"/>
+                        </group>
+                        </group>
+                        <group>
+                            <field name="file_url" invisible="1"/>
+                            <field name="file_name" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="saleorderline_ids">
+                        <tree string="Sales Order Lines" editable="bottom">
+                                    <field name="order_id"/>
+                                    <field name="create_date" string="Order Date"/>
+                                    <field name="create_uid"/>
+                                    <field name="write_date"/>
+                                    <field name="write_uid"/>
+                                    <field name="order_partner_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_billed_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="state"/>
+                                    <field name="invoiced"/>
+                        </tree>
+                    </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_analysis_form_action" model="ir.actions.act_window">
+            <field name="name">Product Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.analysis</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_analysis_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Product Analysis.
+              </p><p>
+                You can get Product Analysis Here.
+              </p>
+            </field>
+        </record>
+        
+        <menuitem action="product_analysis_form_action" id="product_analysis_menu" name="Product Analysis" parent="product.prod_config_main" sequence="41"/>
+
+        <!-- Export TAble Path Config -->
+        <record id="view_export_table_config_form" model="ir.ui.view">
+            <field name="name">export.table.config.form</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <form string="Export File Path" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="path"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_export_table_config_tree" model="ir.ui.view">
+            <field name="name">export.table.config.tree</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <tree string="Export File Path">
+                    <field name="path"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_export_table_config_data" model="ir.actions.act_window">
+            <field name="name">Export File Path</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">export.table.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_export_table_config_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create Export File Path.
+                </p>
+            </field>
+        </record>
+
+	<record id="product_brand_search_view" model="ir.ui.view">
+            <field name="name">product.brand.search</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <search string="Product Categories">
+                    <field name="name" string="Product Brand"/>
+                    <field name="parent_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="product_brand_form_view" model="ir.ui.view">
+            <field name="name">product.brand.form</field>
+            <field name="model">product.brand</field>
+            <field name="arch" type="xml">
+                <form string="Product Brand" version="7.0">
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group name="parent" col="4">
+                                <field name="parent_id" domain="[('type','=','view')]"/>
+                                <field name="type"/>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="product_brand_list_view" model="ir.ui.view">
+            <field name="name">product.brand.list</field>
+            <field name="model">product.brand</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Product Brands">
+                    <field name="complete_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_brand_action" model="ir.actions.act_window">
+            <field name="name">Product Brands</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.brand</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product_brand_search_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Product Brand
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="product_brand_action" id="product_brand_menu" name="Product Brands" parent="product.prod_config_main" sequence="18"/>
+
+        <!-- <menuitem action="action_export_table_config_data" id="menu_export_table_config_data" name="Export File Path" parent="product.prod_config_main" sequence="42"/> -->
+
+
+        <!-- <record id="view_product_hr_expense_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.expense.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="hr_expense.view_product_hr_expense_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/div/div/field[@name='hr_expense_ok']" position="replace">
+                    <field name="hr_expense_ok" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </xpath>
+            </field>
+        </record> -->
+
+        <record id="product_normal_form_view_inherit1" model="ir.ui.view">
+            <field name="name">product.normal.form.inherit1</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="state" position="replace">
+                </field>
+                <xpath expr="/form/sheet" position="before">
+                    <header>
+                        <button name="submit_to_management" string="Submit To Management" type="object" states="draft" icon="gtk-yes" groups="zeeva_ind_products.group_product_user"/>
+                        <button name="reset_to_draft" string="Reset To Draft" type="object" states="submit_to_management,sellable" icon="gtk-ok" groups="zeeva_ind_products.group_product_manager"/>
+                        <button name="approved" string="Approve" states="submit_to_management" type="object" icon="gtk-apply" groups="zeeva_ind_products.group_product_manager"/>
+                        <field name="state" string="Product status" widget="statusbar" statusbar_visible="draft,submit_to_management,sellable" statusbar_colors='{"draft":"blue", "submit_to_management":"green", "sellable":"grey"}'/>
+                    </header>
+                </xpath>
+                <field name="default_code" position="replace">
+                </field>
+                <label for="warranty" position="replace">
+                </label>
+                <field name="warranty" position="replace">
+                </field>
+                <label for="name" string="Product Name" position="replace">
+                </label>
+                <field name="name" position="replace">
+                </field>
+                <label for="categ_id" class="oe_edit_only" position="replace">
+                </label>
+                <field name="categ_id" position="replace">
+                </field>
+                <div name="options" groups="base.group_user" position="replace">
+                </div>
+                <field name="image_medium" position="replace">
+                    <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                    <field name="manager_fields" invisible="1"/>
+                </field>
+                <field name="image_small" widget="image" class="oe_avatar oe_left" position="after">
+                    <div class="oe_title">
+                        <div>
+                            <label for="default_code" string="Product Code" class="oe_edit_only"/>
+                        </div>
+                        <h1>
+                            <field name="default_code" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </h1>
+                        <div>
+                            <label for="name" string="Product Name" class="oe_edit_only"/>
+                        </div>
+                        <h1>
+                            <field name="name" required="1" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </h1>
+                        <label for="categ_id" class="oe_edit_only"/>
+                        <h2><field name="categ_id" on_change="onchange_categ_id(categ_id)" attrs="{'readonly':[('state','!=','draft')]}"/></h2>
+                        <div name="options" groups="base.group_user">
+                            <field name="sale_ok" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            <label for="sale_ok"/>
+                        </div>
+                        <field name="expense_category" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        <label string="Expense Category" for="expense_category"/>
+                    </div>
+                </field>
+                <field name="sale_ok" position="before">
+                    <field name="combo_product" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <label string="Combo Product" for="combo_product"/>
+                </field>
+                <!-- <label for="sale_ok" position="after">
+                    <field name="expense_category"/>
+                    <label string="Expense Category" for="expense_category"/>
+                </label> -->
+                <!-- comment -->
+                <field name="combo_product" position="before">
+                    <field name="raw_approval_flag" invisible="1"/>
+                    <label string="Is Approved" for="raw_approval_flag" invisible="1"/>
+                </field>
+                <field name="list_price" position="replace">
+                    <field name="list_price" invisible="1"/>
+                </field>
+                <field name="type" position="replace">
+                    <field name="type" invisible="1"/>
+                </field>
+                <field name="list_price" position="after">
+                    <field name="vat" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="product_color" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="product_brand" attrs="{'readonly':[('state','!=','draft')]}" on_change="onchange_product_brand(product_brand)" domain="[('type','=','view')]" options="{'limit': 10, 'create': false, 'create_edit': false, 'search_more':true'}"/>
+                    <field name="sub_brand" attrs="{'invisible':[('subbrand_visible','!=',True)]}" domain="[('type','=','normal'),('parent_id','=', product_brand)]" options="{'limit': 10, 'create': false, 'create_edit': false, 'search_more':true'}"/>
+                    <field name="subbrand_visible" invisible="1"/>
+                </field>
+                <label for="ean13" position="replace">
+                    <label string="Barcode" for="ean13"/>
+                </label>
+                <field name="ean13" position="replace">
+                    <field name="ean13" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field>
+                <field name="product_manager" position="replace">
+                    <field name="product_manager" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field>
+                <field name="description" position="replace">
+                    <field name="description" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field>
+                <label string="Barcode" for="ean13" position="before">
+                    <field name="product_mrp" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="packaging_information" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </label>
+               <field name="sub_brand" position="after">
+                    <label for="warranty"/>
+                    <div>
+                        <field name="warranty" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> months
+                    </div>
+                </field>
+                <xpath expr="/form/sheet/notebook/page[@string='Accounting']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+                <!-- comment -->
+              <!--   <field name="produce_delay" position="replace">
+                    <field name="produce_delay" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field> -->
+                <!-- <field name="active" position="replace">
+                    <field name="active" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field> -->
+                <field name="description_purchase" position="replace">
+                    <field name="description_purchase" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </field>
+                <page string="Information" position="before">
+                    <page string="Images">
+                        <field name="image_ids" mode="kanban" attrs="{'readonly':[('state','!=','draft')]}">
+                            <kanban>
+                                <field name="name"/>
+                                <field name="color"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                            <div t-att-class="color" style="position: relative">
+                                                <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                <div class="oe_module_vignette">
+                                                <a type="open">
+                                                    <img t-att-src="kanban_image('product.image', 'image_medium', record.id.value, {'preview_image': 'image_medium'})" class="oe_avatar"/>
+                                                </a>
+                                                </div>
+                                            </div>
+                                        </t>
+                                </templates>
+                            </kanban>
+                            <form string="Image" version="7.0">
+                                <group>
+                                  <button name="make_thumbnail" string="Use this image for thumbnails" type="object" icon="gtk-select-color"/>
+                                </group>
+                                <field name="image_large" widget='image'/>                             
+                            </form>
+                        </field>
+                    </page>
+                </page>
+                <xpath expr="/form/sheet/notebook/page[@string='Sales']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+                <page string="Information" position="after">
+                    <page string="Details" class="zeeva_ind_products_page">
+                        <!-- <group string="">
+                            <group string="Characteristics" class="zeeva_ind_products">
+                                <label for="headphone_band_primary" string="Headband Materials"/>
+                                <div colspan="1">
+                                    <field name="headphone_band_primary" class="oe_inline" placeholder="Primary mat."/>-
+                                    <field name="headphone_band_secondary" class="oe_inline" placeholder="Secondary mat."/>
+                                </div>
+                                <label for="headphone_joint_primary" string="Joints Materials" />
+                                <div colspan="1">
+                                    <field name="headphone_joint_primary" class="oe_inline" placeholder="Primary mat."/>-
+                                    <field name="headphone_joint_secondary" class="oe_inline" placeholder="Secondary mat."/>
+                                </div>
+                                <label for="headphone_shell_primary" string="Shells Materials"/>
+                                <div colspan="1">
+                                    <field name="headphone_shell_primary" class="oe_inline" placeholder="Primary mat."/>-
+                                    <field name="headphone_shell_secondary" class="oe_inline" placeholder="Secondary mat."/>
+                                </div>
+                                <field name="headphone_impedance"/>
+                                <field name="headphone_sensitivity"/>
+                                <label for="headphone_freq_min" string="Frequency Range"/>
+                                <div>
+                                    <field name="headphone_freq_min" class="oe_inline"/>
+                                    <field name="headphone_freq_min_dimensions" class="oe_inline" readonly="1"/>
+                                    <field name="headphone_freq_max" class="oe_inline"/>
+                                    <field name="headphone_freq_max_dimensions" class="oe_inline" readonly="1"/>
+                                </div>
+                            </group>
+                            <group string="Cord" class="zeeva_ind_products">
+                                <field name="headphone_cord_addons"/>
+                                <field name="headphone_cord_type"/>
+                                <label for="headphone_cord_length"/>
+                                <div>
+                                    <field name="headphone_cord_length" class="oe_inline"/>
+                                    <field name="headphone_cord_length_dimensions" class="oe_inline" readonly="1"/>
+                                </div>
+                            </group>
+                            
+                            <group string="Driver" class="zeeva_ind_products">
+                                <field name="headphone_driver_diameter"/>
+                                <field name="headphone_driver_type"/>
+                            </group>
+                            <group string="Plug" class="zeeva_ind_products">
+                                <field name="headphone_plug_plating"/>
+                                <field name="headphone_plug_type"/>
+                            </group>
+                            <group string="Bluetooth" class="zeeva_ind_products" attrs="{'invisible':[('bluetooth_section_visible','=',False)]}">
+                                        <field name="headphone_bt"/>
+                                        <field name="headphone_bt_callerid"/>
+                                        <field name="headphone_bt_version"/>
+                                        <field name="headphone_bt_range"/>
+                                        <field name="bluetooth_section_visible" invisible="1"/>
+                            </group>
+                        </group> -->
+                        <!-- Fields for the Power Bank -->
+                        <group string="">
+                                    <group string="Characteristics" class="zeeva_ind_products" attrs="{'invisible':[('powerbank_section_visible','=',False)]}" col="2" colspan="1">
+                                        <field name="pb_microusb"/>
+                                        <field name="fast_charging"/>
+                                        <field name="led_flash_light"/>
+                                        <field name="overcharge_protection"/>
+                                        <field name="power_capacity_display"/>
+                                        <field name="powerbank_section_visible" invisible="1"/>
+                                    </group>
+                                    <group string="Specifications" class="zeeva_ind_products" attrs="{'invisible':[('powerbank_section_visible','=',False)]}" col="2" colspan="1">
+                                        <field name="pb_capacity"/>
+                                        <label for="pb_unit_size_l" string="Unit Size"/>
+                                        <div colspan="1">
+                                            <field name="pb_unit_size_l" class="oe_inline" placeholder="L"/>*
+                                            <field name="pb_unit_size_w" class="oe_inline" placeholder="W"/>*
+                                            <field name="pb_unit_size_h" class="oe_inline" placeholder="H"/>mm
+                                        </div>
+                                        <field name="pb_input"/>
+                                        <field name="pb_output_type"/>
+                                        <field name="pb_output1"/>
+                                        <field name="pb_output2" string="Output 2"/>
+                                        <field name="pb_output3" string="Output 3"/>
+                                    </group>
+                        </group>
+                        <group string="">
+                                    <group string="Battery" class="zeeva_ind_products" attrs="{'invisible':[('batteries_section_visible','=',False)]}" col="2" colspan="1">
+                                        <field name="batteries_section_visible" invisible="1"/>
+                                        <label for="battery_capacity"/>
+                                        <div colspan="1">
+                                            <field name="battery_capacity" class="oe_inline"/>mAh
+                                        </div>
+                                        <field name="battery_brand"/>
+                                        <field name="model_no"/>
+                                    </group>
+                                    <group>
+                                    </group>
+                        </group>
+                        <group string="Other Features" class="zeeva_ind_products">
+                            <field name="description1" nolabel="1" placeholder="Other special features or details here..." colspan="8" attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                    </page>
+                </page>
+                <page string="Details" position="after">
+                    <page string="Packing &amp; Volume" class="zeeva_ind_products_page">
+                        <group attrs="{'invisible':['|',('packaging_information','=',False),('packaging_information','=','withpackaging')]}">
+                            <group>
+                                <field name="no_of_items" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Product Section 1" class="zeeva_ind_products">
+                            <group attrs="{'invisible':['|',('packaging_information','=',False),('packaging_information','=','withpackaging')]}">
+                                <field name="product_id_section1" on_change="onchange_product_id_section1(product_id_section1)" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                            <newline/>
+                            <group string="Unit Measurements" class="zeeva_ind_products">
+                                <label for="unit_gross" string="Net Weight"/>
+                                <div colspan="1">
+                                    <field name="unit_net" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="unit_l" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="unit_l" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="unit_w" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="unit_h" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="unit_cbm" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="unit_cbm" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="unit_cuft" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                            </group>
+                                
+                            <group string="Unit + Packaging" class="zeeva_ind_products">
+                                <label for="pack_gross" string="Gross Weight"/>
+                                <div colspan="1">
+                                    <field name="pack_gross" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+<!--                                             <field name="pack_net" class="oe_inline"/> kg -->
+                                </div>
+                                <label for="pack_l" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="pack_l" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="pack_w" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="pack_h" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="pack_cbm" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="pack_cbm" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="pack_cuft" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                            </group>
+                                
+                            <group string="Inner Carton" class="zeeva_ind_products">
+                                <label for="inner_gross" string="Gross / Net Weight"/>
+                                <div colspan="1">
+                                    <field name="inner_gross" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                    <field name="inner_net" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="inner_l" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="inner_l" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="inner_w" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="inner_h" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="inner_cbm" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="inner_cbm" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="inner_cuft" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                                <label for="pack_inner" string="Pack Size of Inner Pack"/>
+                                <div colspan="1">
+                                    <field name="pack_inner" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                </div>
+                                <field name="pack_inner_barcode" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                                
+                            <group string="Master Carton" class="zeeva_ind_products">
+                                <label for="export_gross" string="Gross / Net Weight"/>
+                                <div colspan="1">
+                                    <field name="export_gross" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                    <field name="export_net" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="export_l" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="export_l" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="export_w" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="export_h" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="export_cbm" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="export_cbm" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="export_cuft" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                                <label for="pack_export" string="Pack Size of Master Carton"/>
+                                <div colspan="1">
+                                    <field name="pack_export" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                </div>
+                                <field name="pack_export_barcode" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        </group>
+                        <group class="zeeva_ind_products">
+                            <field name="pack_remarks" nolabel="1" colspan="6" placeholder="Additional Packing Information..." attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+
+                        <!--Packaging Information Section 2-->
+                        <group attrs="{'invisible':[('no_of_items','=',False)]}">
+                            <group string="Product Section 2" class="zeeva_ind_products">
+                            <group>
+                                <field name="product_id_section2" on_change="onchange_product_id_section2(product_id_section2)" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                            <newline/>
+                            <group string="Unit Measurements" class="zeeva_ind_products">
+                                <label for="unit_gross_section2" string="Net Weight"/>
+                                <div colspan="1">
+                                    <field name="unit_net_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="unit_l_section2" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="unit_l_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="unit_w_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="unit_h_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="unit_cbm_section2" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="unit_cbm_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="unit_cuft_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                            </group>
+                                
+                            <group string="Unit + Packaging" class="zeeva_ind_products">
+                                <label for="pack_gross_section2" string="Gross Weight"/>
+                                <div colspan="1">
+                                    <field name="pack_gross_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+<!--                                             <field name="pack_net" class="oe_inline"/> kg -->
+                                </div>
+                                <label for="pack_l_section2" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="pack_l_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="pack_w_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="pack_h_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="pack_cbm_section2" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="pack_cbm_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="pack_cuft_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                            </group>
+
+                            <group string="Inner Carton" class="zeeva_ind_products">
+                                <label for="inner_gross_section2" string="Gross / Net Weight"/>
+                                <div colspan="1">
+                                    <field name="inner_gross_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                    <field name="inner_net_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="inner_l_section2" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="inner_l_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="inner_w_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="inner_h_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="inner_cbm_section2" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="inner_cbm_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="inner_cuft_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                                <label for="pack_inner_section2" string="Quantity"/>
+                                <div colspan="1">
+                                    <field name="pack_inner_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                </div>
+                                <field name="pack_inner_barcode_section2" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                                
+                            <group string="Master Carton" class="zeeva_ind_products">
+                                <label for="export_gross_section2" string="Gross / Net Weight"/>
+                                <div colspan="1">
+                                    <field name="export_gross_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                    <field name="export_net_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                </div>
+                                <label for="export_l_section2" string="L * W * H"/>
+                                <div colspan="1">
+                                    <field name="export_l_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="export_w_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                    <field name="export_h_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                </div>
+                                <label for="export_cbm_section2" string="Volume"/>
+                                <div colspan="1">
+                                    <field name="export_cbm_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                    <field name="export_cuft_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                </div>
+                                <label for="pack_export_section2" string="Quantity"/>
+                                <div colspan="1">
+                                    <field name="pack_export_section2" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                </div>
+                                <field name="pack_export_barcode_section2" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                            </group>
+                        </group>
+                        </group>
+                        <group class="zeeva_ind_products" attrs="{'invisible':[('no_of_items','=',False)]}">
+                                <field name="pack_remarks_section2" nolabel="1" colspan="6" placeholder="Additional Packing Information..." attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                            <!--Packaging Information Section 3-->
+                           <group attrs="{'invisible':[('no_of_items','!=','3')]}">
+                                <group string="Product Section 3" class="zeeva_ind_products">
+                                <group>
+                                    <field name="product_id_section3" on_change="onchange_product_id_section3(product_id_section3)" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                </group>
+                                <newline/>
+                                <group string="Unit Measurements" class="zeeva_ind_products">
+                                    <label for="unit_gross_section3" string="Net Weight"/>
+                                    <div colspan="1">
+                                        <field name="unit_net_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                    </div>
+                                    <label for="unit_l_section3" string="L * W * H"/>
+                                    <div colspan="1">
+                                        <field name="unit_l_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="unit_w_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="unit_h_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                    </div>
+                                    <label for="unit_cbm_section3" string="Volume"/>
+                                    <div colspan="1">
+                                        <field name="unit_cbm_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                        <field name="unit_cuft_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                    </div>
+                                </group>
+                                    
+                                <group string="Unit + Packaging" class="zeeva_ind_products">
+                                    <label for="pack_gross_section3" string="Gross Weight"/>
+                                    <div colspan="1">
+                                        <field name="pack_gross_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+    <!--                                             <field name="pack_net" class="oe_inline"/> kg -->
+                                    </div>
+                                    <label for="pack_l_section3" string="L * W * H"/>
+                                    <div colspan="1">
+                                        <field name="pack_l_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="pack_w_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="pack_h_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                    </div>
+                                    <label for="pack_cbm_section3" string="Volume"/>
+                                    <div colspan="1">
+                                        <field name="pack_cbm_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                        <field name="pack_cuft_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                    </div>
+                                </group>
+
+                                <group string="Inner Carton" class="zeeva_ind_products">
+                                    <label for="inner_gross_section3" string="Gross / Net Weight"/>
+                                    <div colspan="1">
+                                        <field name="inner_gross_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                        <field name="inner_net_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                    </div>
+                                    <label for="inner_l_section3" string="L * W * H"/>
+                                    <div colspan="1">
+                                        <field name="inner_l_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="inner_w_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="inner_h_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                    </div>
+                                    <label for="inner_cbm_section3" string="Volume"/>
+                                    <div colspan="1">
+                                        <field name="inner_cbm_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                        <field name="inner_cuft_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                    </div>
+                                    <label for="pack_inner_section3" string="Quantity"/>
+                                    <div colspan="1">
+                                        <field name="pack_inner_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                    </div>
+                                    <field name="pack_inner_barcode_section3" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                </group>
+                                    
+                                <group string="Master Carton" class="zeeva_ind_products">
+                                    <label for="export_gross_section3" string="Gross / Net Weight"/>
+                                    <div colspan="1">
+                                        <field name="export_gross_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg / 
+                                        <field name="export_net_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> kg
+                                    </div>
+                                    <label for="export_l_section3" string="L * W * H"/>
+                                    <div colspan="1">
+                                        <field name="export_l_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="export_w_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm *
+                                        <field name="export_h_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/>cm
+                                    </div>
+                                    <label for="export_cbm_section3" string="Volume"/>
+                                    <div colspan="1">
+                                        <field name="export_cbm_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CBM or
+                                        <field name="export_cuft_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> CUFT
+                                    </div>
+                                    <label for="pack_export_section3" string="Quantity"/>
+                                    <div colspan="1">
+                                        <field name="pack_export_section3" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> pcs/carton
+                                    </div>
+                                    <field name="pack_export_barcode_section3" string="Barcode" attrs="{'readonly':[('state','!=','draft')]}"/>
+                                </group>
+                        </group>
+                        </group>
+                        <group class="zeeva_ind_products" attrs="{'invisible':[('no_of_items','!=','3')]}">
+                            <field name="pack_remarks_section3" nolabel="1" colspan="6" placeholder="Additional Packing Information..." attrs="{'readonly':[('state','!=','draft')]}"/>
+                        </group>
+                    </page>
+                </page>
+                <page string="Packing &amp; Volume" position="after">
+                    <page string="Combo Products" attrs="{'invisible':[('combo_product','=',False)]}">
+                        <group>
+                            <field name="combo_productline_id" nolabel="1" colspan="4">
+                            <tree string="Products For Combo" editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="shipped_quantity"/>
+                                    <field name="billed_quantity"/>
+                            </tree>
+                            <form string="Products For Combo">
+                                <field name="product_id"/>
+                                <field name="shipped_quantity"/>
+                                <field name="billed_quantity"/>
+                            </form>
+                        </field>
+                        
+                        </group>
+                        <group col="7" colspan="2">
+                                <label string=""/>
+                                <label string=""/>
+                                <label string=""/>
+                                <label string=""/>
+                                <label string=""/>
+                                <label for="total_pieces" string="1 set=" class="oe_inline oe_right"/>
+                                <div colspan="1">
+                                  <field name="total_pieces" widget='monetary' class="oe_inline"/> no of pieces
+                                </div>
+                        </group>
+                    </page>
+                    <page string="History">
+                        <group>
+                            <group string="Customer">
+                                <field name="customer_id" class="oe_inline" on_change="onchange_from_date(customer_id,from_date,to_date)" domain="[('customer','=',True)]"/> <!-- on_change="onchange_month_id(customer_id,month_id,year_id)"/> -->
+                                <!--  <field name="year_id" on_change="onchange_month_id(customer_id,month_id,year_id)" widget="selection"/> -->
+                            </group>
+                        </group>
+                        <group string="Period">
+                            <group>
+                                <field name="from_date" on_change="onchange_from_date(customer_id,from_date,to_date)"/>
+                            </group>
+                            <group>
+                                <field name="to_date" on_change="onchange_from_date(customer_id,from_date,to_date)"/>
+                            </group>
+                           <!--  <group>
+                                <field name="month_id" on_change="onchange_month_id(customer_id,month_id,year_id)"/>
+                            </group> -->
+                    </group>
+                        <field name="saleorderline_ids">
+                        <tree string="Sales Order Lines">
+                                    <field name="order_id"/>
+                                    <field name="create_date" string="Order Date"/>
+                                    <field name="create_uid"/>
+                                    <field name="write_date"/>
+                                    <field name="write_uid"/>
+                                    <field name="order_partner_id"/>
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_billed_qty"/>
+                                    <field name="price_unit"/>
+                                    <field name="price_subtotal"/>
+                                    <field name="state"/>
+                                    <field name="invoiced"/>
+                        </tree>
+                    </field>
+                    </page>
+                </page>
+                <xpath expr="/form/sheet/notebook/page/group/group[@name='Weights']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="view_normal_procurement_locations_form_inherit" model="ir.ui.view">
+            <field name="name">product.normal.procurement.locations.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/group/group[@name='store']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group/group/div/button" position="replace">
+                    <button name="%(stock.action_view_change_product_quantity)d" states="draft" string="update" type="action" class="oe_link"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group/group[@name='delay']" position="replace">
+                    <group name="delay" string="Delays">
+                        <label for="produce_delay" attrs="{'invisible':[('type','=','service')],'readonly':[('state','!=','draft')]}"/>
+                        <div attrs="{'invisible':[('type','=','service')]}">
+                            <field name="produce_delay" class="oe_inline" attrs="{'readonly':[('state','!=','draft')]}"/> days
+                        </div>
+                        <field name="active" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_product_standard_price_form_inherit" model="ir.ui.view">
+            <field name="name">product.product.standard.price.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="stock.view_product_standard_price_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='standard_price']" position="replace">
+                        <field name="standard_price" attrs="{'readonly':[('state','!=','draft')]}" nolabel="1"/>
+                </xpath>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="product_kanban_view_inherit">
+            <field name="name">Product Kanban</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
+            <field name="arch" type="xml">
+                <field name="list_price" position="after">
+                    <field name="raw_approval_flag"/>
+                </field>
+                <xpath expr="//kanban/templates/t/div/div/h4/a[@type='open']" position="replace">
+                    <a t-attf-href="#model=product.product&amp;id=#{record.id.value}" target="_blank">
+                        <t t-if="record.code.raw_value">[<field name="code"/>]</t> <field name="name"/>
+                    </a>
+                </xpath>
+                <xpath expr="//kanban/templates/t/div/div/ul" position="replace">
+                    <ul>
+                        <li>MRP: <field name="lst_price"></field></li>
+                    </ul>
+                    <ul>
+                        <li t-if="record.raw_approval_flag.raw_value">Product is <b>approved</b></li>
+                        <li t-if="! record.raw_approval_flag.raw_value">Product is <b>not approved</b></li>
+                    </ul>
+                </xpath>
+                
+            </field>
+        </record>
+
+        <record id="product_search_form_view_inherit" model="ir.ui.view">
+            <field name="name">product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                   <field name="categ_id" position="after">
+                        <filter string="Active" name="active" icon="terp-accessories-archiver-minus" domain="[('active','=',1)]"/>
+                        <filter string="Inactive" name="active" icon="terp-accessories-archiver-minus" domain="[('active','=',0)]"/>
+                   </field>
+            </field>
+        </record>
+
+        <record id="product_normal_action_sell1" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="view_type">form</field>
+            <!-- <field name="context">{"search_default_expense_category":1}</field> -->
+            <field name="domain">['|',('active','=',True),('active','=',False),('expense_category','=',False)]</field>
+            <field name="view_id" ref="product.product_kanban_view"/>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new product.
+              </p><p>
+                You must define a product for everything you sell, whether it's
+                a physical product, a consumable or a service you offer to
+                customers.
+              </p><p>
+                The product form contains information to simplify the sale
+                process: price, notes in the quotation, accounting data,
+                procurement methods, etc.
+              </p>
+            </field>
+        </record>
+
+        <record id="product.product_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+            <field name="domain">['|',('active','=',True),('active','=',False),('expense_category','=',False)]</field>
+        </record>
+
+        <menuitem name="Products" id="zeeva_ind_menu_product" sequence="21" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem id="base.menu_product" name="Products" parent="zeeva_ind_menu_product" sequence="1"/>
+
+        <menuitem action="product_normal_action_sell1" id="product.menu_products" parent="base.menu_product" sequence="0"/>
+
+        <menuitem action="product.product_category_action_form" id="product.menu_product_category_action_form" parent="base.menu_base_config" sequence="1"/>
+
+
+        <menuitem id="base.menu_base_config" name="Configuration" parent="zeeva_ind_menu_product" sequence="2" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem action="product_customer_form_action" id="product_customer_menu" name="Product Sale Price" parent="base.menu_base_config" sequence="15"/>
+
+         <menuitem action="product_customer_form_action" id="product_sale_customer_menu" parent="base.menu_sales" sequence="2"/>
+
+        <menuitem action="product_analysis_form_action" id="product_analysis_menu" name="Product Analysis" parent="base.menu_base_config" sequence="41"/>
+
+         <menuitem action="product_brand_action" id="product_brand_menu" name="Product Brands" parent="base.menu_base_config" sequence="44"/>
+
+        <menuitem name="Customer" id="zeeva_ind_menu_customer" sequence="22" groups="zeeva_ind_products.group_product_user,zeeva_ind_products.group_product_manager"/>
+
+        <menuitem id="menu_customer" name="Customer" parent="zeeva_ind_menu_customer" sequence="1"/>
+
+        <menuitem id="base.menu_partner_form" parent="menu_customer" action="base.action_partner_form" sequence="1"/>
+
+        <menuitem id="base.menu_config_address_book" parent="zeeva_ind_menu_customer" name="Address Book" sequence="40"/>
+
+        <!-- <menuitem action="base.action_partner_title_partner" id="base.menu_partner_title_partner" parent="base.menu_config_address_book" sequence="2"/>
+ -->
+
+        <!-- Inherited the Sale Order form view for Drp down for the Sales Price -->
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">sale.order.form</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom_qty']" position="after">
+                    <field name="product_billed_qty" widget='integer' sum="Total"/>
+                    <!-- <field name="invisible_comboproducts" invisible="1"/> -->
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_unit']" position="after">
+                    <field name="sale_price" on_change="onchange_sale_price(sale_price)" domain="[('product_id','=',product_id),('customer_id','=',parent.partner_id)]" options="{'create': true, 'create_edit': true, 'search_more':true'}"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- <record id="view_move_picking_tree_inherit" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field eval="4" name="priority"/>
+            <field name="inherit_id" ref="stock.view_move_picking_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="/tree/field[@name='state']" position="after">
+                    <field name="invisible_products"/>
+                </xpath>
+            </field>
+        </record> -->
+
+        <record model="ir.ui.view" id="product_form_view_procurement_button_inherit">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="replace">
+                    <xpath expr="//div[@name='buttons']" position="inside">
+                    </xpath>
+                </xpath>
+                <field name="procure_method" position="replace">
+                </field>
+                <field name="supply_method" position="replace">
+                </field>
+                <xpath expr="//field[@name='cost_method']" position="replace">
+                    <field name="procure_method" attrs="{'readonly':[('state','!=','draft')]}"/>
+                    <field name="supply_method" attrs="{'readonly':[('state','!=','draft')]}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_category_form_view_inherit1" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/sheet/group/group/field[@name='type']" position="after">
+                    <field name="sequence" readonly="1"/>
+                    <newline/>
+                </xpath>
+            </field>
+        </record>
+
+       
+
+    </data>
+</openerp>
+
+
+
+        
+        
+        
+        
+        
+        
+        

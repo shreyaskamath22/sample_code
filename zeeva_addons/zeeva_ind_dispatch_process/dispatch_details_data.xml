@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+
+    <data>
+        <!-- EDI related Email Templates menu -->
+        <record model="ir.actions.act_window" id="action_email_templates_p">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template.email_template_tree" />
+            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="context" eval="{'search_default_model_id': ref('account.model_account_invoice')}"/>
+        </record>
+       
+    </data>
+    
+<data>
+    
+<record id="dispatch_email_template" model="email.template">
+    <field name="name">Dispatch Request</field>
+    <field name="email_from">admin@zeeva.com</field>
+    <field name="email_to">${object.shipping_person.email}</field>
+    <field name="subject">Regarding Products Dispatch for ${object.partner_id.name}: Invoice ${object.number}</field>
+    <field name="lang">${object.partner_id.lang}</field>
+    <field name="model_id" ref="account.model_account_invoice"/>
+    
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.shipping_person.name},
+<p>
+
+
+The Products in the Sales Order ${object.suppliers_ref} Delivery Order ${object.delivery_note} Invoice ${object.number} are ready to be dispatched.
+<p>
+You are kindly requested to begin the Dispatch Process ${object.current_date_time}.
+<ul><li><a href="${object.current_url}">View Delivery Order</a></li></ul>
+<p> Regards,
+<p> ${object.current_user.name}
+            ]]></field>
+</record>   
+
+</data>
+
+
+<data>
+    
+<record id="email_template_edi_dispatch" model="email.template">
+    <field name="name">Dispatch Request</field>
+    <field name="email_from">${object.consignor.email}</field>
+    <field name="email_to">${object.shipping_email_id}</field>
+    <field name="subject">Regarding Products Delivery for Invoice ${object.invoice_no.number} Sale Order ${object.so_no.name} </field>
+    <field name="lang">Delivered To Customer</field>
+    <field name="model_id" ref="zeeva_ind_dispatch_process.model_shipment_dispatch"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.shipping_contact_person.name}/${object.customer.name},
+<p>
+The Products in the Invoice ${object.invoice_no.number} Sale Order ${object.so_no.name} have been delivered on date ${'-'.join(object.delivered_date.split('-')[::-1])}.
+
+<p> Regards,
+<p> Zeeva Electronics Pvt Ltd.
+            ]]></field>
+</record>   
+
+</data>
+
+<!--Scheduler -->
+<data>
+<record id="dispatch_scheduler" model="ir.cron">
+    <field name="name">Dispatch</field>
+    <field eval="True" name="active"/>
+    <field eval="False" name="doall"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field eval="'shipment.dispatch'" name="model"></field>
+    <field eval="'reminder_pending_dispatch_order'" name="function"/>
+    <field eval="'()'" name="args"/>
+</record>
+
+<record id="dispatch_etd_crossed" model="ir.cron">
+    <field name="name">Dispatch ETD Crossed</field>
+    <field eval="True" name="active"/>
+    <field eval="False" name="doall"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field eval="'shipment.dispatch'" name="model"></field>
+    <field eval="'reminder_etd_crossed'" name="function"/>
+    <field eval="'()'" name="args"/>
+</record>
+
+<record id="reminder_pending_grn" model="ir.cron">
+    <field name="name">Pending GRN</field>
+    <field eval="True" name="active"/>
+    <field eval="False" name="doall"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">days</field>
+    <field name="numbercall">-1</field>
+    <field eval="'shipment.dispatch'" name="model"></field>
+    <field eval="'reminder_pending_grn'" name="function"/>
+    <field eval="'()'" name="args"/>
+</record>
+
+<record id="check_dispatch_scheduler" model="ir.cron">
+    <field name="name">Check Dispatch</field>
+    <field eval="True" name="active"/>
+    <field eval="False" name="doall"/>
+    <field name="interval_number">1</field>
+    <field name="interval_type">minutes</field>
+    <field name="numbercall">-1</field>
+    <field eval="'shipment.dispatch'" name="model"></field>
+    <field eval="'check_pending_dispatch_order'" name="function"/>
+    <field eval="'()'" name="args"/>
+</record>
+
+</data>
+
+<data>
+<record id="dispatch_in_transit_email_template" model="email.template">
+    <field name="name">Dispatch Status</field>
+    <field name="email_from">admin@zeeva.com</field>
+    <field name="email_to">${object.shipping_person.email}</field>
+    <field name="subject">Regarding Products Dispatch Status of ${object.customer.name}</field>
+    <field name="lang">Dispatch Status</field>
+    <field name="model_id" ref="zeeva_ind_dispatch_process.model_shipment_dispatch"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.shipping_person.name},
+<p>The ETA for Dispatch No ${object.name}, Customer <b>${object.customer.name}</b> is today and status is in transit.
+
+<p>Please update the status if the Delivery is successful.
+
+<p>From,
+<p>OpenERP Reminder
+            ]]></field>
+    
+</record>   
+
+
+<record id="pending_grn_email_template" model="email.template">
+    <field name="name">Dispatch Status</field>
+    <field name="email_from">admin@zeeva.com</field>
+    <field name="email_to">${object.shipping_person.email}</field>
+    <field name="subject">Regarding GRN of ${object.customer.name}</field>
+    <field name="lang">Pending GRN</field>
+    <!-- <field name="model_id" ref="zeeva_ind_dispatch_process.model_shipment_dispatch"/>
+    <field name="report_template" ref="zeeva_ind_dispatch_process.shipment_dispatches"/> -->
+    <field name="report_name">Pending GRN</field>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.shipping_person.name},
+
+<p>Please attach the GRN for the customer, if its received.
+
+<p>From,
+<p>OpenERP Reminder
+            ]]></field>
+    
+</record> 
+
+
+<record id="etd_crossed_email_template" model="email.template">
+    <field name="name">ETD crossed</field>
+    <field name="email_from">admin@zeeva.com</field>
+    <field name="email_to">${object.shipping_person.email}</field>
+    <field name="subject">Regarding Products Delivery for ${object.customer.name}</field>
+    <field name="lang">ETD crossed</field>
+    <field name="model_id" ref="zeeva_ind_dispatch_process.model_shipment_dispatch"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.shipping_person.name},
+
+<p>ETD has been crossed for the customer: ${object.customer.name}.
+<p>You are kindly requested to add the reason for delay in the remarks column and add a new ETD.
+<ul><li><a href="${object.current_url}">View Dispatch Record</a></li></ul>
+<p>From,
+<p>OpenERP Reminder
+            ]]></field>
+    
+</record>  
+
+
+</data>
+</openerp>

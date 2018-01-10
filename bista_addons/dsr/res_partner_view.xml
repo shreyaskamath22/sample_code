@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="view_users_form_wirelessvision">
+            <field name="name">view.users.form.wirelessvision</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <label for="login" position="replace">
+                    <label for="login" class="oe_edit_only" string="Login"/>
+                </label>
+                <xpath expr="/form/sheet/div[2]/h2/field[@name='login']" position="after">
+                    <label for="email_id"/>
+                    <h2><field name="email_id"/></h2>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
+

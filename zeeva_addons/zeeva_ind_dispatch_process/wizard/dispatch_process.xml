@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<record model="ir.ui.view" id="refusal_form_view">
+            <field name="name">reason.refusal.form</field>
+            <field name="model">reason.refusal</field>
+            <field name="arch" type="xml">
+                <form string="Reason for Refusal" version="7.0">
+                    
+                    <group>
+                      <field name="name"/>
+                      <field name="refusal_reason"/>
+                      
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_reason_refusal" model="ir.actions.act_window">
+            <field name="name">Reason for Refusal</field>
+            <field name="res_model">reason.refusal</field>
+            <field name="src_model">reason.refusal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="auto_refresh" eval="1" />
+            <field name="target">new</field>
+            <field name="context">{'template_id':active_id}</field>
+        </record>
+
+
+        <record id="view_shipment_dispatch_wizard" model="ir.ui.view">
+            <field name="name">Shipment Dispatch Wizard</field>
+            <field name="model">dispatch.process.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Dispatch Process Wizard" version="7.0">
+            
+                    <group>
+                        <label string="This Delivery order is already been dispatched. Are you sure you want to Dispatch this Delivery Order again?"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="No" class="oe_link" special="cancel" />
+                    </footer>
+            
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_shipment_dispatch_wizard" model="ir.actions.act_window">
+             <field name="name">Shipment Dispatch Process Wizard</field>
+             <field name="res_model">dispatch.process.wizard</field>
+             <field name="src_model">dispatch.process.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_shipment_dispatch_wizard"/>
+             <field name="target">new</field>
+       </record>
+
+       <record id="view_shipment_dispatch_wizard1" model="ir.ui.view">
+            <field name="name">Shipment Dispatch Wizard</field>
+            <field name="model">dispatch.process.wizard1</field>
+            <field name="arch" type="xml">
+                <form string="Dispatch Process Wizard" version="7.0">
+            
+                    <group>
+                        <label string="This Delivery order is already been dispatched. Are you sure you want to Dispatch this Delivery Order again?"/>
+            
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="No" class="oe_link" special="cancel" />
+                    </footer>
+            
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_shipment_dispatch_wizard1" model="ir.actions.act_window">
+             <field name="name">Shipment Dispatch Process Wizard</field>
+             <field name="res_model">dispatch.process.wizard1</field>
+             <field name="src_model">dispatch.process.wizard1</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_shipment_dispatch_wizard1"/>
+             <field name="target">new</field>
+       </record>
+
+
+<!-- Dispatch partial picking wizard -->
+
+
+
+<record id="action_dispatch_partial_picking" model="ir.actions.act_window">
+            <field name="name">Dispatch Process Picking</field>
+            <field name="res_model">dispatch.partial.picking</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
+        <record id="dispatch_partial_picking_form" model="ir.ui.view">
+            <field name="name">dispatch.partial.picking.form</field>
+            <field name="model">dispatch.partial.picking</field>
+            <field name="arch" type="xml">
+                <form string="Dispatch partial Picking" version="7.0">      
+                    <separator string="Dispatch Products" name="product_separator"/>
+                    <!-- <field name="dispatch_id"/> -->
+                    <field name="dispatch_move_ids">
+                        <tree editable="bottom" string="Dispatch Product Moves">
+                            <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                            <field name="quantity" />
+                            <field name="product_uom" />
+                        </tree>
+                    </field>
+                    <group>
+                        <field name="partial_picking" on_change="onchange_partial_picking(partial_picking,partial_date)"/>
+                    </group>
+                    <group string="Details of Backorder Dispatch" attrs="{'invisible':[('partial_picking','=',False)]}">
+                        <field name="partial_date" />
+                    </group>
+                    <footer>
+                        <button name="do_dispatch_partial" string="_Dispatch" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="dispatch_partial_picking_line_list" model="ir.ui.view">
+            <field name="name">dispatch.partial.picking.line.list</field>
+            <field name="model">dispatch.partial.picking.line</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                </tree>
+            </field>
+        </record>
+
+        <!-- <record id="stock_partial_picking_line_form" model="ir.ui.view">
+            <field name="name">stock.partial.picking.line.form</field>
+            <field name="model">stock.partial.picking.line</field>
+            <field name="arch" type="xml">
+                <form string="Stock Picking Line" version="7.0">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="quantity" />
+                        <field name="product_uom" />
+                        <field name="location_id" />
+                        <field name="location_dest_id" />
+                        <field name="tracking" invisible="1"/>
+                        <field name="prodlot_id" domain="[('product_id', '=', product_id)]" attrs="{'required':[('tracking','=',True)]}"/>
+                        <field name="update_cost" invisible="1"/>
+                        <field name="cost" attrs="{'invisible': [('update_cost','=', False)]}"/>
+                        <field name="currency" attrs="{'invisible': [('update_cost','=', False)]}" groups="base.group_multi_currency"/>
+                    </group>
+                 </form>
+            </field>
+        </record> -->
+
+
+
+
+
+
+    </data>
+</openerp>

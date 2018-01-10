@@ -1,0 +1,2108 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="1">
+    <!--=======================================================================================
+    PRODUCT TEMPLATE - SEQUENCE RECORD
+    =======================================================================================-->
+    
+        <record id="seq_type_product_template_earphones" model="ir.sequence.type">
+            <field name="name">Raw Product - Earphones</field>
+            <field name="code">product.template.earphones</field>
+        </record>
+        
+        <record id="seq_type_product_template_headphones" model="ir.sequence.type">
+            <field name="name">Raw Product - Headphones</field>
+            <field name="code">product.template.headphones</field>
+        </record>
+        
+        <record id="seq_type_product_template_speakers" model="ir.sequence.type">
+            <field name="name">Raw Product - Speakers</field>
+            <field name="code">product.template.speakers</field>
+        </record>
+        
+        <record id="seq_type_product_template_chargers" model="ir.sequence.type">
+            <field name="name">Raw Product - Chargers</field>
+            <field name="code">product.template.chargers</field>
+        </record>
+        
+        <record id="seq_type_product_template_others" model="ir.sequence.type">
+            <field name="name">Raw Product - Others</field>
+            <field name="code">product.template.others</field>
+        </record>
+
+        <record id="seq_product_template_earphones" model="ir.sequence">
+            <field name="name">Raw Product - Earphones</field>
+            <field name="code">product.template.earphones</field>
+            <field name="prefix">EP-</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        
+        <record id="seq_product_template_headphones" model="ir.sequence">
+            <field name="name">Raw Product - Headphones</field>
+            <field name="code">product.template.headphones</field>
+            <field name="prefix">HP-</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        
+        <record id="seq_product_template_speakers" model="ir.sequence">
+            <field name="name">Raw Product - Speakers</field>
+            <field name="code">product.template.speakers</field>
+            <field name="prefix">SP-</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        
+        <record id="seq_product_template_chargers" model="ir.sequence">
+            <field name="name">Raw Product - Chargers</field>
+            <field name="code">product.template.chargers</field>
+            <field name="prefix">CH-</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+        </record>
+        
+        <record id="seq_product_template_others" model="ir.sequence">
+            <field name="name">Raw Product - Others</field>
+            <field name="code">product.template.others</field>
+            <field name="prefix">XX-</field>
+            <field name="padding">4</field>
+            <field name="implementation">no_gap</field>
+        </record>
+
+    </data>
+    
+    <data>
+    <!--=======================================================================================
+    PRODUCT CATEGORY - VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Product Category Form View  -->
+        <record id="zeeva_product_category_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.category.form.view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="sequence" readonly="1"/>
+                    <newline/>
+                </field>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Product Category Tree View  -->
+        <record id="zeeva_product_category_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.product.category.tree.view</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_list_view"/>
+            <field name="arch" type="xml">
+                <field name="complete_name" position="after">
+                    <field name="sequence"/>
+                    <field name="type"/>
+                </field>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    PRODUCT TEMPLATE - VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Product Template Search View  -->
+        <record id="zeeva_product_template_search_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.search.view</field>
+            <field name="model">product.template</field>
+            <field name="type">search</field>
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+                <search string=" Raw Product">
+                    <filter string="Earphones" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',100),('zeeva_categ_seq','&lt;=',199)]"/>
+                    <filter string="Headphones" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',200),('zeeva_categ_seq','&lt;=',299)]"/>
+                    <filter string="Speakers" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',300),('zeeva_categ_seq','&lt;=',399)]"/>
+                    <filter string="Other products" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',400),('zeeva_categ_seq','&lt;=',999)]"/>
+<!--                     <filter string="Services" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',1000),('zeeva_categ_seq','&lt;=',1049)]"/> -->
+                    <separator orientation="vertical"/>
+                    <filter string='Approved' icon="gtk-yes" domain="[('raw_approval_flag','=',True)]" context="" />
+                    <filter string='Non-approved' icon="gtk-no" domain="[('raw_approval_flag','=',False)]" context="" />
+                    <field name="name" string="Raw product code"/>
+                    <field name="state" string="Product status"/>
+                    <field name="earphone_driver_diam" filter_domain="[('earphone_driver_diam','ilike',self)]" string="Driver Diameter"/>
+                    <field name="headphone_driver_diam" filter_domain="[('headphone_driver_diam','ilike',self)]" string="Driver Diameter"/>
+                    <field name="earphone_material" filter_domain="['|',('earphone_material','ilike',self),('headphone_material','ilike',self)]" string="Material"/>
+                    <field name="categ_id" widget="selection" operator="child_of" string="Specific category"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                        <filter string='Product status' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Product Template Kanban View  -->
+        <record id="zeeva_product_template_kanban_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.kanban.view</field>
+            <field name="model">product.template</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="name_categ"/>
+                    <field name="image_small"/>
+                    <field name="state"/>
+                    <field name="raw_approval_flag"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('product.template', 'image_small', record.id.value)" class="oe_kanban_image_zeeva"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4><a type="open"><field name="name"/></a></h4>
+                                    <ul>
+                                        <li><field name="name_categ"/></li>
+                                        <li>Status: <field name="state"/></li>
+                                        <li t-if="record.raw_approval_flag.raw_value">Product is <b>approved</b></li>
+                                        <li t-if="! record.raw_approval_flag.raw_value">Product is <b>not approved</b></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Product Template Tree View  -->
+        <record id="zeeva_product_template_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.tree.view</field>
+            <field name="model">product.template</field>
+            <field name="type">tree</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Raw Products" colors="grey:state in ('obsolete'); blue:raw_approval_flag==False; green:state=='sellable'">
+                    <field name="name" string="Raw product code"/>
+                    <field name="categ_id" string="Category"/>
+                    <field name="state" string="Product status"/>
+                    <field name="raw_approval_flag" string="Approved" invisible="1"/>
+                    <field name="raw_reqapproval_flag" string="Approval requested" invisible="1"/>
+                    <button name="dummy" string="Green light if approval is requested" type="object" icon="gtk-yes"
+                        attrs="{'invisible':['|',('raw_reqapproval_flag','=',False),('raw_approval_flag','=',True)]}" groups="product.group_mrp_properties"/>
+                    <button name="zeeva_approve_raw" string="Approve this raw product" type="object" icon="gtk-apply"
+                        attrs="{'invisible':[('raw_approval_flag','=',True)]}" groups="product.group_mrp_properties"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Predef for button in form  -->
+        <record id="zeeva_action_product_finished_create" model="ir.actions.act_window">
+            <field name="name">Finished Product Create</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can create a Finished Product.</field>
+        </record>
+        <record id="zeeva_action_product_finished" model="ir.actions.act_window">
+            <field name="name">Finished Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can see all Customer Variants.</field>
+        </record>
+        
+    <!-- ZEEVA Product Template Form View  -->
+        <record id="zeeva_product_template_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.form.view</field>
+            <field name="model">product.template</field>
+            <field eval="15" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <header>
+                        <!--<button name="prev_status" string="Previous" type="object" icon="gtk-go-back" help="Change to previous status"
+                                attrs="{'invisible':[('state','=','obsolete')]}"/>
+                        <button name="next_status" string="Next" type="object" icon="gtk-go-forward" help="Change to next status"
+                                attrs="{'invisible':[('state','=','obsolete')]}"/>
+                        <button name="set_obsolete" string="Set obsolete" type="object" icon="gtk-no" help="Set product status as obsolete"
+                                attrs="{'invisible':[('state','=','obsolete')]}"/>
+                        <button name="reset_obsolete" string="Reset status" type="object" icon="gtk-undo" help="Set product status as obsolete"
+                                attrs="{'invisible':[('state','!=','obsolete')]}"/>-->
+                        <button name="zeeva_reqapprove_raw" string="Request for approval" type="object" icon="gtk-yes"
+                                attrs="{'invisible':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}" groups=""/>
+                        <button name="zeeva_unreqapprove_raw" string="Cancel request for approval" type="object" icon="gtk-no"
+                                attrs="{'invisible':['|',('raw_reqapproval_flag','=',False),('raw_approval_flag','=',True)]}" groups=""/>
+                        <button name="zeeva_approve_raw" string="Approve" type="object" icon="gtk-apply"
+                                attrs="{'invisible':[('raw_approval_flag','=',True)]}" groups="product.group_mrp_properties"/>
+                        <button name="zeeva_unapprove_raw" string="Unapprove" type="object" icon="gtk-cancel"
+                                attrs="{'invisible':[('raw_approval_flag','=',False)]}" groups="product.group_mrp_properties"/>
+<!--                         <field name="state" widget="statusbar" statusbar_visible="design,prototype,tooling,sellable"/> -->
+                        <field name="state" string="Product status"
+                            widget="statusbar" statusbar_visible="design,prototype,tooling,sellable" clickable="True"
+                            statusbar_colors='{"design":"blue", "sellable":"green", "obsolete":"grey"}'/>
+                    </header>
+                    <sheet>
+                        <field name="image_small" widget="image" class="oe_avatar oe_left" readonly="1"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Raw product code"/>
+                            </div>
+                            <h2>
+                                <field name="name" style="width: 75%%" attrs="{'readonly':[('zeeva_categ_seq','!=',1000)]}"/>
+                            </h2>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <field name="categ_id" widget="selection" domain="[('type','!=','view'),('sequence','&lt;',1000)]" on_change="onchange_ref(categ_id)"
+                                placeholder="Select a category..." attrs="{'readonly':[('name','!=','/'),('zeeva_categ_seq','!=',1000)]}"/>
+                            <field name="raw_reqapproval_flag" class="oe_inline" invisible="1"/>
+                            <field name="raw_approval_flag" class="oe_inline" readonly="1"/>
+                            <label for="raw_approval_flag" string="Is approved"/>
+                            <field name="sale_ok" class="oe_inline"/>
+                            <label for="sale_ok"/>
+                            <field name="purchase_ok" class="oe_inline"/>
+                            <label for="purchase_ok"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button name="zeeva_customs.zeeva_action_product_finished_create" string="Create Finished Product" type="action"
+                                icon="terp-stock_effects-object-colorize" attrs="{'invisible':[('raw_approval_flag','=',False)]}"
+                                context="{  'default_product_tmpl_id': active_id,
+                                            'default_zeeva_categ_seq': zeeva_categ_seq,
+                                            
+                                            'default_earphone_impedance': earphone_impedance,
+                                            'default_earphone_freq_min': earphone_freq_min,
+                                            'default_earphone_freq_max': earphone_freq_max,
+                                            'default_earphone_sensitivity': earphone_sensitivity,
+                                            'default_earphone_material': earphone_material,
+                                            'default_earphone_driver_diam': earphone_driver_diam,
+                                            'default_earphone_driver_type': earphone_driver_type,
+                                            'default_earphone_cord_length': earphone_cord_length,
+                                            'default_earphone_cord_type': earphone_cord_type,
+                                            'default_earphone_cord_addons': earphone_cord_addons,
+                                            'default_earphone_plug_type': earphone_plug_type,
+                                            'default_earphone_plug_plating': earphone_plug_plating,
+                                            
+                                            'default_headphone_impedance': headphone_impedance,
+                                            'default_headphone_freq_min': headphone_freq_min,
+                                            'default_headphone_freq_max': headphone_freq_max,
+                                            'default_headphone_sensitivity': headphone_sensitivity,
+                                            'default_headphone_band_mat1': headphone_band_mat1,
+                                            'default_headphone_band_mat2': headphone_band_mat2,
+                                            'default_headphone_joint_mat1': headphone_joint_mat1,
+                                            'default_headphone_joint_mat2': headphone_joint_mat2,
+                                            'default_headphone_shell_mat1': headphone_shell_mat1,
+                                            'default_headphone_shell_mat2': headphone_shell_mat2,
+                                            'default_headphone_driver_diam': headphone_driver_diam,
+                                            'default_headphone_driver_type': headphone_driver_type,
+                                            'default_headphone_cord_length': headphone_cord_length,
+                                            'default_headphone_cord_type': headphone_cord_type,
+                                            'default_headphone_cord_addons': headphone_cord_addons,
+                                            'default_headphone_plug_type': headphone_plug_type,
+                                            'default_headphone_plug_plating': headphone_plug_plating,
+                                            
+                                            'default_speaker_material_body': speaker_material_body,
+                                            'default_speaker_material_grill': speaker_material_grill,
+                                            'default_speaker_driver_diam': speaker_driver_diam,
+                                            'default_speaker_driver_type': speaker_driver_type,
+                                            'default_speaker_type': speaker_type,
+                                            'default_speaker_output_power': speaker_output_power,
+                                            'default_speaker_output_nb': speaker_output_nb,
+                                            'default_speaker_led_indicator': speaker_led_indicator,
+                                            'default_speaker_battery': speaker_battery,
+                                            'default_speaker_battery_nb': speaker_battery_nb,
+                                            'default_speaker_battery_capacity': speaker_battery_capacity,
+                                            'default_speaker_battery_rechargeable': speaker_battery_rechargeable,
+                                            'default_speaker_battery_rechargeable_type': speaker_battery_rechargeable_type,
+                                            'default_speaker_ac_adaptor': speaker_ac_adaptor,
+                                            'default_speaker_impedance': speaker_impedance,
+                                            'default_speaker_bt': speaker_bt,
+                                            'default_speaker_bt_version': speaker_bt_version,
+                                            'default_speaker_bt_range': speaker_bt_range,
+                                            'default_speaker_bt_supplier': speaker_bt_supplier,
+                                            'default_speaker_aux_connector': speaker_aux_connector,
+                                            'default_speaker_aux_cable_length': speaker_aux_cable_length,
+                                            'default_speaker_aux_cable_type': speaker_aux_cable_type,
+                                            'default_speaker_mic': speaker_mic,
+                                            'default_speaker_call_answer_button': speaker_call_answer_button,
+                                            
+                                            'default_protec_phone_device': protec_phone_device,
+                                            'default_protec_phone_material': protec_phone_material,
+                                            'default_protec_phone_bumper': protec_phone_bumper,
+                                            'default_protec_phone_camhole': protec_phone_camhole,
+                                            'default_protec_phone_camhole_type': protec_phone_camhole_type,
+                                            'default_protec_phone_volume_type': protec_phone_volume_type,
+                                            'default_protec_phone_on_type': protec_phone_on_type,
+                                            'default_protec_music_device': protec_music_device,
+                                            'default_folio_size': folio_size,
+                                            'default_folio_device': folio_device,
+                                            'default_folio_material': folio_material,
+                                            'default_folio_attach': folio_attach,
+                                            'default_folio_protection': folio_protection,
+                                            'default_folio_camhole': folio_camhole,
+                                            'default_folio_stylus': folio_stylus,
+                                            'default_folio_functionalities': folio_functionalities,
+                                            'default_sleeve_size': sleeve_size,
+                                            'default_sleeve_device': sleeve_device,
+                                            'default_sleeve_material': sleeve_material,
+                                            'default_sleeve_zipper': sleeve_zipper,
+                                            'default_sleeve_zipper_type': sleeve_zipper_type,
+                                            'default_sleeve_pocket': sleeve_pocket,
+                                            'default_sleeve_pocket_type': sleeve_pocket_type,
+                                            
+                                            'default_zeeva_others': description,
+        
+                                            }"/>
+                            <button name="zeeva_customs.zeeva_action_product_finished" string="See Finished Products" type="action" icon="terp-stock_symbol-selection"
+                                attrs="{'invisible':[('raw_approval_flag','=',False)]}" context="{'search_default_product_tmpl_id': active_id}"/>
+<!--                             <button name="dummy3" string="Create Admin Project" type="action" icon="terp-stock_effects-object-colorize" -->
+<!--                                 attrs="{'invisible':[('raw_approval_flag','=',False)]}" context="{'default_raw_product_id': active_id}"/> -->
+<!--                             <button name="dummy2" string="Create R&amp;D Project" type="action" icon="terp-stock_effects-object-colorize" -->
+<!--                                 attrs="{'invisible':[('raw_approval_flag','=',False)]}" context="{'default_raw_product_id': active_id}"/> -->
+                            
+                        </div>
+                        <group>
+                            <group>
+                                <!--<field name="state" string="Product status" required="1"/>-->
+<!--                                 <button name="print_size" string="Print sizes" type="object" icon="gtk-yes"/> -->
+                            </group>
+                            <group>
+<!--                                 <field name="raw_approval_flag" readonly="1" string="Is approved"/> -->
+                            </group>
+                        </group>
+                        
+                        <notebook colspan="4">
+                            <page string="Images">
+                                <field name="image_ids" mode="kanban" context="{'default_product_tmpl_seq': zeeva_categ_seq}"
+                                    attrs="{'invisible':[('zeeva_categ_seq','&lt;',100)]}">
+                                    <kanban>
+                                        <field name="name"/>
+                                        <field name="view_type_other"/>
+                                        <field name="view_type"/>
+                                        <field name="comment"/>
+                                        <field name="product_tmpl_id"/>
+                                        <field name="image_medium"/>
+                                        <field name="color"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                                <div t-att-class="color" style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                    <a type="open">
+                                                        <img t-att-src="kanban_image('product.zeemage', 'image_medium', record.id.value, {'preview_image': 'image_medium'})" class="oe_avatar"/>
+<!--                                                         <field name="view_type"/> -->
+                                                    </a>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <form string="Image" version="7.0">
+                                        <field name="product_tmpl_seq" invisible="1"/>
+                                        <group col="8">
+                                            <field name="view_type_earphone" 
+                                                attrs="{'invisible':['|',('product_tmpl_seq','&lt;',100),('product_tmpl_seq','&gt;',199)],
+                                                        'required':[('product_tmpl_seq','&gt;=',100),('product_tmpl_seq','&lt;=',199)]}"/>
+                                            <field name="view_type_headphone"
+                                                attrs="{ 'invisible':['|',('product_tmpl_seq','&lt;',200),('product_tmpl_seq','&gt;',299)],
+                                                        'required':[('product_tmpl_seq','&gt;=',200),('product_tmpl_seq','&lt;=',299)]}"/>
+                                            <field name="view_type_speaker" 
+                                                attrs="{'invisible':['|',('product_tmpl_seq','&lt;',300),('product_tmpl_seq','&gt;',399)],
+                                                        'required':[('product_tmpl_seq','&gt;=',300),('product_tmpl_seq','&lt;=',399)]}"/>
+                                            <field name="view_type_other" nolabel="1" placeholder="Other type" 
+                                                attrs="{'invisible':[('view_type_earphone','!=','z1_other'),
+                                                                    ('view_type_headphone','!=','z1_other'),
+                                                                    ('view_type_speaker','!=','z1_other')]}"/>
+                                            <button name="make_thumbnail" string="Use this image for thumbnails" type="object" icon="gtk-select-color"/>
+                                        </group>
+                                        <field name="image_large" widget='image' />
+<!--                                         <button name="print_size" string="Print sizes" type="object" icon="gtk-yes"/> -->
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Specification">
+                                
+<!--                        Specifications: Raw Earphones -->
+                                <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',100),('zeeva_categ_seq','&gt;',199)]}">
+                                    <group string="Characteristics">
+                                        <field name="earphone_material" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="earphone_impedance" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="earphone_sensitivity" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="earphone_freq_min" string="Frequency range"/>
+                                        <div colspan="1">
+                                            <field name="earphone_freq_min" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> Hz - 
+                                            <field name="earphone_freq_max" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> kHz
+                                        </div>
+                                    </group>
+                                    <group string="Cord">
+                                        <field name="earphone_cord_addons" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="earphone_cord_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="earphone_cord_length"/>
+                                        <div colspan="1">
+                                            <field name="earphone_cord_length" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> m
+                                        </div>
+                                    </group>
+                                    
+                                    <group string="Driver">
+                                        <field name="earphone_driver_diam" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="earphone_driver_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Plug">
+                                        <field name="earphone_plug_plating" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="earphone_plug_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+<!--                        Specifications: Raw Headphones -->
+                                <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',200),('zeeva_categ_seq','&gt;',299)]}">
+                                    <group string="Characteristics">
+                                        <label for="headphone_band_mat1" string="Headband Materials"/>
+                                        <div colspan="1">
+                                            <field name="headphone_band_mat1" class="oe_inline" placeholder="Primary mat."
+                                                attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>-
+                                            <field name="headphone_band_mat2" class="oe_inline" placeholder="Secondary mat."
+                                                attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        </div>
+                                        <label for="headphone_joint_mat1" string="Joints Materials"/>
+                                        <div colspan="1">
+                                            <field name="headphone_joint_mat1" class="oe_inline" placeholder="Primary mat."
+                                            attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>-
+                                            <field name="headphone_joint_mat2" class="oe_inline" placeholder="Secondary mat."
+                                            attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        </div>
+                                        <label for="headphone_shell_mat1" string="Shells Materials"/>
+                                        <div colspan="1">
+                                            <field name="headphone_shell_mat1" class="oe_inline" placeholder="Primary mat."
+                                            attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>-
+                                            <field name="headphone_shell_mat2" class="oe_inline" placeholder="Secondary mat."
+                                            attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        </div>
+                                        <field name="headphone_impedance" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="headphone_sensitivity" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="headphone_freq_min" string="Frequency Range"/>
+                                        <div colspan="1">
+                                            <field name="headphone_freq_min" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> Hz - 
+                                            <field name="headphone_freq_max" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> kHz
+                                        </div>
+                                    </group>
+                                    <group string="Cord">
+                                        <field name="headphone_cord_addons" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="headphone_cord_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="headphone_cord_length"/>
+                                        <div colspan="1">
+                                            <field name="headphone_cord_length" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> m
+                                        </div>
+                                    </group>
+                                    
+                                    <group string="Driver">
+                                        <field name="headphone_driver_diam" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="headphone_driver_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Plug">
+                                        <field name="headphone_plug_plating" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="headphone_plug_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+<!--                        Specifications: Raw Speakers -->
+                                <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',300),('zeeva_categ_seq','&gt;',399)]}">
+                                    <group string="Characteristics">
+                                        <field name="speaker_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_material_body" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_material_grill" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_driver_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="speaker_driver_diam"/>
+                                        <div colspan="1">
+                                            <field name="speaker_driver_diam" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> mm
+                                        </div>
+                                        <label for="speaker_impedance"/>
+                                        <div colspan="1">
+                                            <field name="speaker_impedance" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> Ohms
+                                        </div>
+                                        <label for="speaker_output_power"/>
+                                        <div colspan="1">
+                                            <field name="speaker_output_nb" class="oe_inline" placeholder="Quantity"
+                                                attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> x 
+                                            <field name="speaker_output_power" class="oe_inline" placeholder="Power"
+                                                attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> Watts RMS
+                                        </div>
+                                    </group>
+                                    <group string="Options">
+                                        <field name="speaker_mic" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_call_answer_button" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_led_indicator" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_aux_connector" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_aux_cable_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="speaker_aux_cable_length"/>
+                                        <div colspan="1">
+                                            <field name="speaker_aux_cable_length" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> m
+                                        </div>
+                                    </group>
+                                    <group string="Battery &amp; AC Adaptor">
+                                        <field name="speaker_battery" string="Type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_battery_nb" attrs="{'invisible': [('speaker_battery','not in',['3a','2a'])],
+                                                                                'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <label for="speaker_battery_capacity" attrs="{'invisible': [('speaker_battery','not in',['liion'])]}"/>
+                                        <div colspan="1" attrs="{'invisible': [('speaker_battery','not in',['liion'])]}">
+                                            <field name="speaker_battery_capacity" class="oe_inline" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/> mAh
+                                        </div>
+                                        <field name="speaker_battery_rechargeable" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_battery_rechargeable_type" attrs="{'invisible': [('speaker_battery_rechargeable','not in',['yes'])],
+                                                                                                'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_ac_adaptor" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Bluetooth" attrs="{'invisible':[('zeeva_categ_seq','not in',[303])]}">
+                                        <field name="speaker_bt" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_bt_version" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_bt_range" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="speaker_bt_supplier" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+<!--                        Specifications: Raw Protection Casing -->
+                                <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[401,402])]}">
+                                    <group string="Characteristics">
+                                        <field name="protec_phone_device" attrs="{'invisible':[('zeeva_categ_seq','not in',[401])],
+                                                                                'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_music_device" attrs="{'invisible':[('zeeva_categ_seq','not in',[402])],
+                                                                                'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_phone_material" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Options">
+                                        <field name="protec_phone_bumper" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_phone_camhole" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_phone_camhole_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_phone_volume_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="protec_phone_on_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+<!--                        Specifications: Raw Protection Folio -->
+                                <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[403])]}">
+                                    <group string="Characteristics">
+                                        <field name="folio_size" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_device" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_material" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_functionalities" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Options">
+                                        <field name="folio_attach" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_protection" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_camhole" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="folio_stylus" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+<!--                        Specifications: Raw Protection Sleeve -->
+                                <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[404])]}">
+                                    <group string="Characteristics">
+                                        <field name="sleeve_size" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="sleeve_device" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="sleeve_material" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                    <group string="Options">
+                                        <field name="sleeve_zipper" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="sleeve_zipper_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="sleeve_pocket" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                        <field name="sleeve_pocket_type" attrs="{'readonly':['|',('raw_reqapproval_flag','=',True),('raw_approval_flag','=',True)]}"/>
+                                    </group>
+                                </group>
+                                
+                                <group string="Other Features">
+                                    <field name="description" nolabel="1" placeholder="Other special features or details here..." colspan="8"/>
+                                </group>
+                            </page>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <!--<group string="Product Type" groups="base.group_user">
+                                            <field name="sale_ok"/>
+                                            <field name="purchase_ok"/>
+                                        </group>-->
+                                        <newline/>
+                                        <group string="Procurement">
+                                            <field name="type"/>
+                                            <field name="procure_method" groups="base.group_user"/>
+                                            <field name="supply_method"/>
+                                        </group>
+                                        <newline/>
+                                        <group string="Base Prices" groups="base.group_user">
+                                            <field name="list_price" readonly="1"/>
+                                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" readonly="1"/>
+                                            <field name="cost_method" readonly="1"/>
+                                        </group>
+                                        <newline/>
+                                        <group string="Weights" groups="base.group_user">
+                                            <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}" readonly="1"/>
+                                            <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}" readonly="1"/>
+                                            <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}" readonly="1"/>
+                                        </group>
+                                        <newline/>
+                                        <group name="delay" string="Delays">
+                                            <label for="produce_delay"/>
+                                            <div>
+                                                <field name="produce_delay" class="oe_inline" readonly="1"/> days
+                                            </div>
+                                            <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}" readonly="1"/>
+                                            <field name="warranty" readonly="1"/>
+                                        </group>
+                                        <newline/>
+                                        <group name="uom" string="Unit of Measure">
+                                            <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" options='{"no_open": True}' readonly="1"/>
+                                            <field name="uom_po_id" groups="base.group_user" options='{"no_open": True}' readonly="1"/>
+                                        </group>
+                                        <newline/>
+                                        <!--<group name="status" string="Status">
+                                            <field name="product_manager"/>
+                                        </group>-->
+                                        <newline/>
+                                        <!--<group name="uos" groups="base.group_user" string="Second Unit of Measure">
+                                            <field name="uos_id"/>
+                                            <field name="uos_coeff"/>
+                                            <field name="mes_type"/>
+                                        </group>-->
+                                        <newline/>
+                                        <!--<group name="store" string="Storage Location">
+                                            <field name="loc_rack"/>
+                                            <field name="loc_row"/>
+                                            <field name="loc_case"/>
+                                        </group>-->
+                                        <newline/>
+                                        <group string="Counter-Part Locations Properties" groups="stock.group_locations">
+                                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                                        </group>
+                                        <newline/>
+                                        <field name="zeeva_categ_seq" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Log" colspan="2"/>
+                                        <field name="raw_creation_user" readonly="1"/>
+                                        <field name="raw_creation_date" readonly="1"/>
+                                        <field name="raw_reqapproval_user" readonly="1"/>
+                                        <field name="raw_reqapproval_date" readonly="1"/>
+                                        <field name="raw_approval_user" readonly="1"/>
+                                        <field name="raw_approval_date" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Suppliers">
+                                <field name="seller_ids" context="{'default_product_uom': 1}"/>
+                            </page>
+                            <page string="History">
+                                <separator string="Sales price history"/>
+                                <label string="TODO"/>
+                                <separator string="Purchase price history"/>
+                                <label string="TODO"/>
+                            </page>
+                            <page string="Accounting" groups="base.group_no_one">
+                                <group>
+                                    <group>
+                                        <separator string="Sales Properties" colspan="2"/>
+                                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Purchase Properties" colspan="2"/>
+                                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    </group>
+                                </group>
+                                <field name="taxes_id"/>
+                                <field name="supplier_taxes_id"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Product Template Supplierinfo Form View  -->
+        <record id="zeeva_product_template_supplierinfo_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.supplierinfo.form.view</field>
+            <field name="model">product.supplierinfo</field>
+            <field eval="15" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Supplier Information" version="7.0">
+<!--                     <sheet> -->
+                        <group>
+                            <group>
+                                <field name="name" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1,
+                                        'default_is_company': 1}"
+                                        options='{"quick_create": False, "no_open": True}' />
+                                <newline/>
+                                <field name="product_name"/>
+                                <field name="product_code"/>
+                            </group>
+                            <group>
+<!--                                 <field name="sequence" groups="base.group_user"/> -->
+                                <label for="min_qty" string="MOQ"/>
+                                <div colspan="1">
+                                    <field name="min_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline" readonly="0" widget="selection"/>
+                                </div>
+                                <field name="delay" string="Lead Time"/>
+                            </group>
+                            <newline/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field colspan="4" name="pricelist_ids" nolabel="1" widget="one2many_list">
+                                <tree editable="bottom" string="Pricelist">
+                                    <field name="zeeva_date"/>
+                                    <field name="min_quantity"/>
+                                    <field name="price"/>
+                                    <field name="zeeva_speaker_quality"/>
+                                    <field name="name"/>
+                                </tree>
+                                <form>
+                                    <field name="zeeva_date"/>
+                                    <field name="min_quantity"/>
+                                    <field name="price"/>
+                                    <field name="zeeva_speaker_quality"/>
+                                    <field name="name"/>
+                                </form>
+                            </field>
+                        </group>
+<!--                     </sheet> -->
+                </form>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Product Template Supplierinfo Tree View  -->
+        <record id="zeeva_product_template_supplierinfo_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.product.template.supplierinfo.tree.view</field>
+            <field name="model">product.supplierinfo</field>
+            <field eval="15" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Supplier Information">
+<!--                     <field name="sequence" string="Seq" groups="base.group_user"/> -->
+                    <field name="sup_code" string="Supplier code"/>
+                    <field name="name" string="Supplier name"/>
+                    <field name="min_qty" string="MOQ"/>
+                    <field name="delay" string="Lead Time"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                </tree>
+            </field>
+        </record>
+    
+    <!--=======================================================================================
+    PRODUCT FINISHED - VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Product Finished Search View  -->
+        <record id="zeeva_product_finished_search_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.search.view</field>
+            <field name="model">product.product</field>
+            <field name="type">search</field>
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+                <search string=" Finished Product">
+                    <filter string="Earphones" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',100),('zeeva_categ_seq','&lt;=',199)]"/>
+                    <filter string="Headphones" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',200),('zeeva_categ_seq','&lt;=',299)]"/>
+                    <filter string="Speakers" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',300),('zeeva_categ_seq','&lt;=',399)]"/>
+                    <filter string="Other products" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',400),('zeeva_categ_seq','&lt;=',999)]"/>
+<!--                     <filter string="Services" icon="terp-accessories-archiver" domain="[('zeeva_categ_seq','&gt;=',1000),('zeeva_categ_seq','&lt;=',1049)]"/> -->
+                    <field name="default_code" string="Product code" />
+                    <field name="name" string="Product name" />
+                    <field name="zeeva_partner_id"/>
+                    <field name="product_tmpl_id" string="Raw product"/>
+                    <field name="categ_id" widget="selection" string="Specific category"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Customer' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'zeeva_partner_id'}" />
+                        <filter string='Raw Product' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'product_tmpl_id'}" />
+                        <filter string='Category' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'categ_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Product Finished Kanban View  -->
+        <record id="zeeva_product_finished_kanban_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.kanban.view</field>
+            <field name="model">product.product</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="image_small"/>
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="color_variant"/>
+                    <field name="name_categ"/>
+                    <field name="zeeva_partner_id"/>
+                    <field name="product_tmpl_id"/>
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_vignette oe_semantic_html_override">
+                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image_zeeva"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                            <t t-if="record.default_code.raw_value">[<field name="default_code"/>]</t> <field name="name"/> - <field name="variants"/>
+                                        </a>
+                                    </h4>
+                                    <div name="tags">
+                                        <a name="%(stock.action_receive_move)d" type="action" t-if="record.reception_count.raw_value>0">
+                                            <t t-esc="record.reception_count.value"/> Receptions
+                                        </a>
+                                        <a name="%(stock.action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value>0">
+                                            <t t-esc="record.delivery_count.value"/> Deliveries
+                                        </a>
+                                    </div>
+                                    <ul>
+                                        <li><field name="name_categ"/></li>
+                                        <li>Customer: <field name="zeeva_partner_id"/></li>
+                                        <li>Raw product: <field name="product_tmpl_id"/></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Product Finished Tree View  -->
+        <record id="zeeva_product_finished_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.tree.view</field>
+            <field name="model">product.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Finished Product">
+                    <field name="default_code" string="Product code"/>
+                    <field name="name" string="Product name"/>
+                    <field name="variants"/>
+                    <field name="zeeva_partner_id"/>
+                    <field name="product_tmpl_id" string="Related raw product"/>
+                    <field name="categ_id"/>
+<!--                     <field name="variants"/> -->
+<!--                     <field name="price_extra"/> -->
+<!--                     <field name="cost_price_extra"/> -->
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Product Finished Form View  -->
+        <record id="zeeva_product_finished_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.form.view</field>
+            <field name="model">product.product</field>
+            <field name="type">tree</field>
+            <field name="priority" eval="6"/>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <field name="image_small" widget="image" class="oe_avatar oe_left" readonly="1"/>
+                        <div class="oe_title">
+                            <label for="default_code" string="Product Code" class="oe_edit_only"/>
+                            <h2>
+                                <field name="default_code" required="1"/>
+                            </h2>
+                            <label for="name" string="Product Name" class="oe_edit_only"/>
+                            <h2>
+                                <field name="name" required="1"/>
+                            </h2>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+<!--                             <button name="dummy2" string="Create Admin Project" colspan="1" -->
+<!--                                     type="action" icon="terp-stock_effects-object-colorize" attrs="{}" groups=""  -->
+<!--                                     context="{'default_raw_product_id': product_tmpl_id,  -->
+<!--                                             'default_finished_product_id': active_id, -->
+<!--                                             'default_customer_id': zeeva_partner_id}"/> -->
+<!--                             <button name="dummy1" string="Create R&amp;D Project" colspan="1" -->
+<!--                                     type="action" icon="terp-stock_effects-object-colorize" attrs="{}" groups=""  -->
+<!--                                     context="{'default_raw_product_id': product_tmpl_id,  -->
+<!--                                             'default_finished_product_id': active_id, -->
+<!--                                             'default_customer_id': zeeva_partner_id}"/> -->
+<!--                             <button string="Request Procurement" name="%(procurement.act_make_procurement)d" type="action"/> -->
+<!--                             <button string="Orderpoints" name="%(procurement.product_open_orderpoint)d" type="action"/> -->
+                        </div>
+                        
+                        <group>
+                            <group>
+                                <field name="variants" string="Color Variant"/>
+                                <label for="product_barcode"/>
+                                <div>
+                                    <field name="product_barcode" class="oe_inline"/>-
+                                    <field name="product_barcode2" class="oe_inline"/>
+                                </div>
+<!--                                 <button name="print_size" string="Print sizes" type="object" icon="gtk-yes"/> -->
+                            </group>
+                            <group>
+                                <field name="product_tmpl_id" string="Raw Product" domain="[('raw_approval_flag','=',True)]" options=''
+                                    on_change="onchange_tmpl(product_tmpl_id)"/>
+                                <field name="zeeva_partner_id" required="1" domain="[('customer','=',True),('is_company','=',True)]" options=''/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Images">
+                                <field name="zeeva_categ_seq" groups="base.group_no_one"/>
+                                <field name="image_ids" mode="kanban" context="{'default_product_product_seq': zeeva_categ_seq}">
+                                    <kanban>
+                                        <field name="name"/>
+                                        <field name="comment"/>
+                                        <field name="product_tmpl_id"/>
+                                        <field name="image_medium"/>
+                                        <field name="color"/>
+                                        <templates>
+                                            <t t-name="kanban-box">
+                                                <t t-set="color" t-value="kanban_color(record.color.raw_value)"/>
+                                                <div t-att-class="color" style="position: relative">
+                                                    <a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>
+                                                    <div class="oe_module_vignette">
+                                                    <a type="open">
+                                                        <img t-att-src="kanban_image('product.zeemage', 'image_medium', record.id.value, {'preview_image': 'image_medium'})" class="oe_avatar"/>
+                                                    </a>
+                                                    </div>
+                                                </div>
+                                            </t>
+                                        </templates>
+                                    </kanban>
+                                    <form string="Image" version="7.0">
+                                        <field name="product_product_seq" groups="base.group_no_one"/>
+                                        <group col="8">
+                                            <!--<group>
+                                                <field name="name" nolabel="1" placeholder="Image name..."/>
+                                            </group>-->
+                                            <field name="view_type_earphone_finished" 
+                                                attrs="{'invisible':['|',('product_product_seq','&lt;',100),('product_product_seq','&gt;',199)],
+                                                        'required':[('product_product_seq','&gt;=',100),('product_product_seq','&lt;=',199)]}"/>
+                                            <field name="view_type_headphone_finished"
+                                                attrs="{ 'invisible':['|',('product_product_seq','&lt;',200),('product_product_seq','&gt;',299)],
+                                                        'required':[('product_product_seq','&gt;=',200),('product_product_seq','&lt;=',299)]}"/>
+                                            <field name="view_type_speaker_finished" 
+                                                attrs="{'invisible':['|',('product_product_seq','&lt;',300),('product_product_seq','&gt;',399)],
+                                                        'required':[('product_product_seq','&gt;=',300),('product_product_seq','&lt;=',399)]}"/>
+                                            <field name="view_type_other" nolabel="1" placeholder="Other type" 
+                                                attrs="{'invisible':[('view_type_earphone_finished','!=','z1_other'),
+                                                                    ('view_type_headphone_finished','!=','z1_other'),
+                                                                    ('view_type_speaker_finished','!=','z1_other')]}"/>
+                                            <button name="make_thumbnail" string="Use this image for thumbnails" type="object" icon="gtk-select-color"/>
+                                        </group>
+                                        <field name="image_large" widget='image'/>
+<!--                                         <button name="print_size" string="Print sizes" type="object" icon="gtk-yes"/> -->                                 
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Details">
+                                <group>
+                                    
+    <!--                        Specifications: Raw Protection Earphones -->
+                                    <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',100),('zeeva_categ_seq','&gt;',199)]}">
+                                        <group string="Characteristics">
+                                            <field name="earphone_material"/>
+                                            <field name="earphone_impedance"/>
+                                            <field name="earphone_sensitivity"/>
+                                            <label for="earphone_freq_min" string="Frequency range"/>
+                                            <div colspan="1">
+                                                <field name="earphone_freq_min" class="oe_inline"/> Hz - 
+                                                <field name="earphone_freq_max" class="oe_inline"/> kHz
+                                            </div>
+                                        </group>
+                                        <group string="Cord">
+                                            <field name="earphone_cord_addons"/>
+                                            <field name="earphone_cord_type"/>
+                                            <label for="earphone_cord_length"/>
+                                            <div colspan="1">
+                                                <field name="earphone_cord_length" class="oe_inline"/> m
+                                            </div>
+                                        </group>
+                                        
+                                        <group string="Driver">
+                                            <field name="earphone_driver_diam"/>
+                                            <field name="earphone_driver_type"/>
+                                        </group>
+                                        <group string="Plug">
+                                            <field name="earphone_plug_plating"/>
+                                            <field name="earphone_plug_type"/>
+                                        </group>
+                                    </group>
+                                    <newline/>
+                                    
+    <!--                        Specifications: Raw Protection Headphones -->
+                                    <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',200),('zeeva_categ_seq','&gt;',299)]}">
+                                        <group string="Characteristics">
+                                            <label for="headphone_band_mat1" string="Headband Materials"/>
+                                            <div colspan="1">
+                                                <field name="headphone_band_mat1" class="oe_inline" placeholder="Primary mat."/>-
+                                                <field name="headphone_band_mat2" class="oe_inline" placeholder="Secondary mat."/>
+                                            </div>
+                                            <label for="headphone_joint_mat1" string="Joints Materials"/>
+                                            <div colspan="1">
+                                                <field name="headphone_joint_mat1" class="oe_inline" placeholder="Primary mat."/>-
+                                                <field name="headphone_joint_mat2" class="oe_inline" placeholder="Secondary mat."/>
+                                            </div>
+                                            <label for="headphone_shell_mat1" string="Shells Materials"/>
+                                            <div colspan="1">
+                                                <field name="headphone_shell_mat1" class="oe_inline" placeholder="Primary mat."/>-
+                                                <field name="headphone_shell_mat2" class="oe_inline" placeholder="Secondary mat."/>
+                                            </div>
+                                            <field name="headphone_impedance"/>
+                                            <field name="headphone_sensitivity"/>
+                                            <label for="headphone_freq_min" string="Frequency range"/>
+                                            <div colspan="1">
+                                                <field name="headphone_freq_min" class="oe_inline"/> Hz - 
+                                                <field name="headphone_freq_max" class="oe_inline"/> kHz
+                                            </div>
+                                        </group>
+                                        <group string="Driver">
+                                            <field name="headphone_driver_diam"/>
+                                            <field name="headphone_driver_type"/>
+                                        </group>
+                                        
+                                        <group string="Cord">
+                                            <field name="headphone_cord_addons"/>
+                                            <field name="headphone_cord_type"/>
+                                            <label for="headphone_cord_length"/>
+                                            <div colspan="1">
+                                                <field name="headphone_cord_length" class="oe_inline"/> m
+                                            </div>
+                                        </group>
+                                        <group string="Plug">
+                                            <field name="headphone_plug_plating"/>
+                                            <field name="headphone_plug_type"/>
+                                        </group>
+                                    </group>
+                                    <newline/>
+                                    
+    <!--                        Specifications: Raw Protection Speakers -->
+                                    <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',300),('zeeva_categ_seq','&gt;',399)]}">
+                                        <group string="Characteristics">
+                                            <field name="speaker_type" />
+                                            <field name="speaker_material_body" />
+                                            <field name="speaker_material_grill" />
+                                            <field name="speaker_driver_type" />
+                                            <label for="speaker_driver_diam"/>
+                                            <div colspan="1">
+                                                <field name="speaker_driver_diam" class="oe_inline" /> mm
+                                            </div>
+                                            <label for="speaker_impedance"/>
+                                            <div colspan="1">
+                                                <field name="speaker_impedance" class="oe_inline" /> Ohms
+                                            </div>
+                                            <label for="speaker_output_power"/>
+                                            <div colspan="1">
+                                                <field name="speaker_output_nb" class="oe_inline" placeholder="Quantity"/> x 
+                                                <field name="speaker_output_power" class="oe_inline" placeholder="Power"/> Watts RMS
+                                            </div>
+                                        </group>
+                                        <group string="Options">
+                                            <field name="speaker_mic" />
+                                            <field name="speaker_call_answer_button" />
+                                            <field name="speaker_led_indicator" />
+                                            <field name="speaker_aux_connector" />
+                                            <field name="speaker_aux_cable_type" />
+                                            <label for="speaker_aux_cable_length"/>
+                                            <div colspan="1">
+                                                <field name="speaker_aux_cable_length" class="oe_inline" /> m
+                                            </div>
+                                        </group>
+                                        <group string="Battery &amp; AC Adaptor">
+                                            <field name="speaker_battery" string="Type" />
+                                            <field name="speaker_battery_nb" attrs="{'invisible': [('speaker_battery','not in',['3a','2a'])]}"/>
+                                            <label for="speaker_battery_capacity" attrs="{'invisible': [('speaker_battery','not in',['liion'])]}"/>
+                                            <div colspan="1" attrs="{'invisible': [('speaker_battery','not in',['liion'])]}">
+                                                <field name="speaker_battery_capacity" class="oe_inline" /> mAh
+                                            </div>
+                                            <field name="speaker_battery_rechargeable" />
+                                            <field name="speaker_battery_rechargeable_type" attrs="{'invisible': [('speaker_battery_rechargeable','not in',['yes'])]}"/>
+                                            <field name="speaker_ac_adaptor" />
+                                        </group>
+                                        <group string="Bluetooth" attrs="{'invisible':[('zeeva_categ_seq','not in',[303])]}">
+                                            <field name="speaker_bt" />
+                                            <field name="speaker_bt_version" />
+                                            <field name="speaker_bt_range" />
+                                            <field name="speaker_bt_supplier" />
+                                        </group>
+                                    </group>
+                                    <newline/>
+                                        
+    <!--                        Specifications: Raw Protection Casing -->
+                                    <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[401,402])]}">
+                                        <group string="Characteristics">
+                                            <field name="protec_phone_device" attrs="{'invisible':[('zeeva_categ_seq','not in',[401])]}"/>
+                                            <field name="protec_music_device" attrs="{'invisible':[('zeeva_categ_seq','not in',[402])]}"/>
+                                            <field name="protec_phone_material" />
+                                        </group>
+                                        <group string="Options">
+                                            <field name="protec_phone_bumper" />
+                                            <field name="protec_phone_camhole" />
+                                            <field name="protec_phone_camhole_type" />
+                                            <field name="protec_phone_volume_type" />
+                                            <field name="protec_phone_on_type" />
+                                        </group>
+                                    </group>
+                                    
+    <!--                        Specifications: Raw Protection Folio -->
+                                    <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[403])]}">
+                                        <group string="Characteristics">
+                                            <field name="folio_size" />
+                                            <field name="folio_device" />
+                                            <field name="folio_material" />
+                                            <field name="folio_functionalities" />
+                                        </group>
+                                        <group string="Options">
+                                            <field name="folio_attach" />
+                                            <field name="folio_protection" />
+                                            <field name="folio_camhole" />
+                                            <field name="folio_stylus" />
+                                        </group>
+                                    </group>
+                                    
+    <!--                        Specifications: Raw Protection Sleeve -->
+                                    <group string="" attrs="{'invisible':[('zeeva_categ_seq','not in',[404])]}">
+                                        <group string="Characteristics">
+                                            <field name="sleeve_size" />
+                                            <field name="sleeve_device" />
+                                            <field name="sleeve_material" />
+                                        </group>
+                                        <group string="Options">
+                                            <field name="sleeve_zipper" />
+                                            <field name="sleeve_zipper_type" />
+                                            <field name="sleeve_pocket" />
+                                            <field name="sleeve_pocket_type" />
+                                        </group>
+                                    </group>
+                                
+                                </group>
+                                <separator string="Other Details &amp; Features" colspan="4"/>
+                                <field name="zeeva_others" placeholder="Describe other details or special features..."/>
+                            </page>
+                            <page string="Cosmetics">
+                                <group>
+                                    <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',100),('zeeva_categ_seq','&gt;',199)]}" col="3">
+                                        <group string="Options">
+                                            <field name="ep_housing_finish"/>
+                                            <field name="ep_logo"/>
+                                            <field name="ep_logo_name" attrs="{'invisible':[('ep_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="ep_logo_position" attrs="{'invisible':[('ep_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="ep_printing"/>
+                                            <field name="ep_printing_type" attrs="{'invisible':[('ep_printing','&lt;&gt;','yes')]}"/>
+                                            <field name="ep_printing_desc" attrs="{'invisible':[('ep_printing','&lt;&gt;','yes')]}"/>
+                                            <field name="ep_packaging_type"/>
+                                            <field name="ep_packaging_remarks" colspan="2" nolabel="1" placeholder="Packaging remarks..."/>
+                                        </group>
+                                        <group string="Color Description">
+                                            <label for="ep_color_ext_name" string="Exterior"/>
+                                            <div>
+                                                <field name="ep_color_ext_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="ep_color_ext_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="ep_color_int_name" string="Interior"/>
+                                            <div>
+                                                <field name="ep_color_int_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="ep_color_int_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="ep_color_cab_name" string="Cable"/>
+                                            <div>
+                                                <field name="ep_color_cab_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="ep_color_cab_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="ep_color_plu_name" string="Plug"/>
+                                            <div>
+                                                <field name="ep_color_plu_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="ep_color_plu_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="ep_color_cus_name" string="Cushion"/>
+                                            <div>
+                                                <field name="ep_color_cus_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="ep_color_cus_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                        </group>
+                                        
+                                    </group>
+                                    <newline/>
+                                    <group string="" attrs="{'invisible':['|',('zeeva_categ_seq','&lt;',200),('zeeva_categ_seq','&gt;',299)]}">
+                                        <group string="Options">
+                                            <field name="hp_housing_finish"/>
+                                            <field name="hp_logo"/>
+                                            <field name="hp_logo_name" attrs="{'invisible':[('hp_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_logo_position" attrs="{'invisible':[('hp_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_logo_name2" attrs="{'invisible':[('hp_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_logo_position2" attrs="{'invisible':[('hp_logo','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_printing"/>
+                                            <field name="hp_printing_type" attrs="{'invisible':[('hp_printing','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_printing_desc" attrs="{'invisible':[('hp_printing','&lt;&gt;','yes')]}"/>
+                                            <field name="hp_accent_stitching"/>
+                                            <field name="hp_deco_addons"/>
+                                            <field name="hp_packaging_type"/>
+                                            <field name="hp_packaging_remarks" colspan="2" nolabel="1" placeholder="Packaging remarks..."/>
+                                        </group>
+                                        <group string="Color Description">
+                                            <label for="hp_color_band_upper_name" string="Upper Headband"/>
+                                            <div>
+                                                <field name="hp_color_band_upper_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_band_upper_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_band_down_name" string="Underside Headband"/>
+                                            <div>
+                                                <field name="hp_color_band_down_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_band_down_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_joint_name" string="Joints"/>
+                                            <div>
+                                                <field name="hp_color_joint_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_joint_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_shell_name" string="Shells"/>
+                                            <div>
+                                                <field name="hp_color_shell_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_shell_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_cab_name" string="Cable"/>
+                                            <div>
+                                                <field name="hp_color_cab_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_cab_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_plu_name" string="Plug"/>
+                                            <div>
+                                                <field name="hp_color_plu_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_plu_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                            <newline/>
+                                            <label for="hp_color_cus_name" string="Cushion"/>
+                                            <div>
+                                                <field name="hp_color_cus_name" class="oe_inline" placeholder="Name..."/><br/>
+                                                <field name="hp_color_cus_pant" class="oe_inline" placeholder="Pantone..."/>
+                                            </div>
+                                        </group>
+                                    </group>
+                                </group>
+                                <separator string="Special Cosmetics Features" colspan="4"/>
+                                <field name="zeeva_cosmetics" placeholder="Describe other details..."/>
+                            </page>
+                            <page string="Packing &amp; Volume">
+                                <group>
+                                    <group string="Unit Measurements">
+                                        <label for="unit_gross" string="Net Weight"/>
+                                        <div colspan="1">
+<!--                                             <field name="unit_gross" class="oe_inline"/> kg /  -->
+                                            <field name="unit_net" class="oe_inline"/> kg
+                                        </div>
+                                        <label for="unit_l" string="L * W * H"/>
+                                        <div colspan="1">
+                                            <field name="unit_l" class="oe_inline"/> cm *
+                                            <field name="unit_w" class="oe_inline"/> cm *
+                                            <field name="unit_h" class="oe_inline"/> cm
+                                        </div>
+                                        <label for="unit_cbm" string="Volume"/>
+                                        <div colspan="1">
+                                            <field name="unit_cbm" class="oe_inline"/> CBM or
+                                            <field name="unit_cuft" class="oe_inline"/> CUFT
+                                        </div>
+                                    </group>
+                                        
+                                    <group string="Unit + Packaging">
+                                        <label for="pack_gross" string="Gross Weight"/>
+                                        <div colspan="1">
+                                            <field name="pack_gross" class="oe_inline"/> kg
+<!--                                             <field name="pack_net" class="oe_inline"/> kg -->
+                                        </div>
+                                        <label for="pack_l" string="L * W * H"/>
+                                        <div colspan="1">
+                                            <field name="pack_l" class="oe_inline"/> cm *
+                                            <field name="pack_w" class="oe_inline"/> cm *
+                                            <field name="pack_h" class="oe_inline"/> cm
+                                        </div>
+                                        <label for="pack_cbm" string="Volume"/>
+                                        <div colspan="1">
+                                            <field name="pack_cbm" class="oe_inline"/> CBM or
+                                            <field name="pack_cuft" class="oe_inline"/> CUFT
+                                        </div>
+                                    </group>
+                                        
+                                    <group string="Inner Carton">
+                                        <label for="inner_gross" string="Gross / Net Weight"/>
+                                        <div colspan="1">
+                                            <field name="inner_gross" class="oe_inline"/> kg / 
+                                            <field name="inner_net" class="oe_inline"/> kg
+                                        </div>
+                                        <label for="inner_l" string="L * W * H"/>
+                                        <div colspan="1">
+                                            <field name="inner_l" class="oe_inline"/> cm *
+                                            <field name="inner_w" class="oe_inline"/> cm *
+                                            <field name="inner_h" class="oe_inline"/> cm
+                                        </div>
+                                        <label for="inner_cbm" string="Volume"/>
+                                        <div colspan="1">
+                                            <field name="inner_cbm" class="oe_inline"/> CBM or
+                                            <field name="inner_cuft" class="oe_inline"/> CUFT
+                                        </div>
+                                        <label for="pack_inner" string="Quantity"/>
+                                        <div colspan="1">
+                                            <field name="pack_inner" class="oe_inline"/> pcs/carton
+                                        </div>
+                                        <field name="pack_inner_barcode" string="Barcode"/>
+                                    </group>
+                                        
+                                    <group string="Export Carton">
+                                        <label for="export_gross" string="Gross / Net Weight"/>
+                                        <div colspan="1">
+                                            <field name="export_gross" class="oe_inline"/> kg / 
+                                            <field name="export_net" class="oe_inline"/> kg
+                                        </div>
+                                        <label for="export_l" string="L * W * H"/>
+                                        <div colspan="1">
+                                            <field name="export_l" class="oe_inline"/> cm *
+                                            <field name="export_w" class="oe_inline"/> cm *
+                                            <field name="export_h" class="oe_inline"/> cm
+                                        </div>
+                                        <label for="export_cbm" string="Volume"/>
+                                        <div colspan="1">
+                                            <field name="export_cbm" class="oe_inline"/> CBM or
+                                            <field name="export_cuft" class="oe_inline"/> CUFT
+                                        </div>
+                                        <label for="pack_export" string="Quantity"/>
+                                        <div colspan="1">
+                                            <field name="pack_export" class="oe_inline"/> pcs/carton
+                                        </div>
+                                        <field name="pack_export_barcode" string="Barcode"/>
+                                    </group>
+                                    <field name="pack_remarks" nolabel="1" colspan="4" placeholder="Additional Packing Information..."/>
+                                </group>
+                            </page>
+                            <page string="Quality Levels">
+                                <group>
+                                    <group string="Material Standards">
+                                        <div>
+                                            <field name="mat_astm"/><label for="mat_astm"/><br/>
+                                            <field name="mat_cpsia"/><label for="mat_cpsia"/><br/>
+                                            <field name="mat_en71"/><label for="mat_en71"/><br/>
+                                            <field name="mat_pahs"/><label for="mat_pahs"/><br/>
+                                        </div>
+                                        <div>
+                                            <field name="mat_prop65"/><label for="mat_prop65"/><br/>
+                                            <field name="mat_reach"/><label for="mat_reach"/><br/>
+                                            <field name="mat_rohs"/><label for="mat_rohs"/><br/>
+                                            <field name="mat_others"/><label for="mat_others"/><br/>
+                                        </div>
+                                        <field name="mat_remarks" nolabel="1" colspan="2" placeholder="Material standards remarks..."/>
+                                    </group>
+                                    <group string="Inspection Standard">
+                                        <field name="inspection_std" placeholder="Major / Minor"/>
+                                        <field name="inspection_remarks" nolabel="1" colspan="2" placeholder="Inspection standard remarks..."/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <separator string="Product Type" colspan="2"/>
+                                        <field name="type"/>
+                                        <field name="sale_ok" readonly="1"/>
+                                        <field name="purchase_ok" readonly="1"/>
+<!--                                         <field name="hr_expense_ok"/> -->
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="list_price"/>
+                                        
+<!--                                         <field name="variants" groups="product.group_product_variant" /> -->
+                                        <field name="price_margin" groups="product.group_product_variant"/>
+                                        <field name="price_extra" groups="product.group_product_variant"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Log" colspan="2"/>
+                                        <field name="finished_creation_user" readonly="1"/>
+                                        <field name="finished_creation_date" readonly="1"/>
+                                    </group>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."  readonly="1"/>
+                            </page>
+                            <page string="History">
+                                <separator string="Sales price history"/>
+                                <field name="saleorderline_ids" readonly="1">
+                                    <tree>
+                                        <field name="date_order" string="Date of Creation"/>
+                                        <field name="order_id" string="SC Number"/>
+                                        <field name="custo_code" string="Customer"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="price_unit"/>
+                                        <field name="currency_id"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                    <form>
+                                        <field name="date_order" string="Date of Creation"/>
+                                        <field name="order_id" string="SC Number"/>
+                                        <field name="custo_code" string="Customer"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="price_unit"/>
+                                        <field name="currency_id"/>
+                                        <field name="state" invisible="1"/>
+                                    </form>
+                                </field>
+                                
+                                <separator string="Purchase price history"/>
+                                <field name="purchaseorderline_ids" readonly="1">
+                                    <tree>
+                                        <field name="date_order" string="Date of Creation"/>
+                                        <field name="order_id" string="PO Number"/>
+                                        <field name="sup_code" string="Supplier"/>
+                                        <field name="product_qty"/>
+                                        <field name="price_unit"/>
+                                        <field name="currency_id"/>
+                                        <field name="state" invisible="1"/>
+                                    </tree>
+                                    <form>
+                                        <field name="date_order" string="Date of Creation"/>
+                                        <field name="order_id" string="PO Number"/>
+                                        <field name="sup_code" string="Supplier"/>
+                                        <field name="product_qty"/>
+                                        <field name="price_unit"/>
+                                        <field name="currency_id"/>
+                                        <field name="state" invisible="1"/>
+                                    </form>
+                                </field>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <separator string="Suppliers"/>
+                                <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                                <separator string="Description for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                                <group name="procurement">
+                                    <group name="general">
+                                        <field name="procure_method" groups="base.group_user" readonly="1"/>
+                                        <field name="supply_method" groups="base.group_user" readonly="1"/>
+                                        <field name="cost_method" groups="product.group_costing_method" readonly="1"/>
+                                        <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                                        <div groups="base.group_user">
+                                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1" readonly="1"/>
+                                            <button name="%(stock.action_view_change_standard_price)d" string="- update"
+                                                type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                                                class="oe_link" groups="product.group_costing_method"/>
+                                        </div>
+                                    </group>
+                                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this service, nothing special will be triggered
+                                            to deliver the customer, as you set the procurement method as
+                                            'Make to Stock'.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, OpenERP will <b>use the available
+                                            inventory</b> for the delivery order.
+                                            <br/><br/>
+                                            If there are not enough quantities available, the delivery order
+                                            will wait for new products. To fulfill the inventory, you should
+                                            create others rules like orderpoints.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, a delivery order will be created.
+                                            OpenERP will consider that the <b>required quantities are always
+                                            available</b> as it's a consumable (as a result of this, the quantity
+                                            on hand may become negative).
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this service to a customer, <b>a draft purchase order</b>
+                                            will be created in order to subcontract the job 
+                                            <i attrs="{'invisible': [('seller_id','=',False)]}">to 
+                                            <field name="seller_id" class="oe_inline"/></i>.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this product, OpenERP will trigger <b>a draft
+                                            purchase order</b> to buy the required quantities to the supplier.
+                                            The delivery order will be ready after having received the
+                                            products.
+                                        </p>
+                                    </group>
+                                    <group name="delay" string="Delays">
+                                        <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <div attrs="{'invisible':[('type','=','service')]}">
+                                            <field name="produce_delay" class="oe_inline" readonly="1"/> days
+                                        </div>
+                                        <field name="active" readonly="1"/>
+                                    </group>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Inventory" groups="base.group_no_one">
+                                <group name="inventory">
+                                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                                        <label for="qty_available"/>
+                                            <div>
+                                                <field name="qty_available" class="oe_inline"/>
+                                                <button name="%(stock.action_view_change_product_quantity)d" string="update"
+                                                type="action"
+                                                class="oe_link"/>
+                                            </div>
+                                            <field name="incoming_qty" class="oe_inline"/>
+                                            <field name="outgoing_qty" class="oe_inline"/>
+                                            <field name="virtual_available" class="oe_inline"/>
+                                    </group>
+                                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
+                                        <field name="track_production" groups="stock.group_production_lot"/>
+                                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
+                                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                                    </group>
+                                    <group name="store" string="Storage Location">
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
+                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+<!--                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/> -->
+<!--                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/> -->
+                                    </group>
+                                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
+                                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+                                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+                                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}" groups="base.group_no_one">
+                                <group name="sale">
+                                    <group string="Sale Conditions">
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline"/> months
+                                        </div>
+                                        <label for="sale_delay"/>
+                                        <div>
+                                            <field name="sale_delay" class="oe_inline"/> days
+                                        </div>
+                                    </group>
+                                    <group groups="product.group_uos" string="Unit of Measure">
+                                        <field name="uos_id"/>
+                                        <field name="uos_coeff"/>
+                                        <field name="mes_type"/>
+                                    </group>
+                                </group>
+                                <field name="packaging" groups="product.group_stock_packaging">
+                                    <form string="Packaging" version="7.0">
+                                        <group col="4">
+                                            <field name="ean"/>
+                                            <field name="sequence" invisible="1"/>
+                                            <newline/>
+                                            <field name="qty"/>
+                                            <field name="ul"/>
+                                            <field name="weight_ul"/>
+                                            <separator colspan="4" string="Palletization"/>
+                                            <field name="ul_qty"/>
+                                            <field name="rows"/>
+                                            <field name="weight"/>
+                                            <separator colspan="4" string="Pallet Dimension"/>
+                                            <field name="height"/>
+                                            <field name="width"/>
+                                            <field name="length"/>
+                                        </group>
+                                        <separator colspan="4" string="Description"/>
+                                        <field name="name"/>
+                                    </form>
+                                </field>
+                                <separator string="Description for Quotations"/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
+                            </page>
+                            <page string="Accounting" groups="account.group_account_invoice">
+                                <group groups="stock.group_inventory_valuation">
+                                    <separator string="Inventory Valuation" colspan="4"/>
+                                    <group colspan="2" col="2">
+                                        <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    </group>
+                                </group>
+                                <newline/>
+                                <group name="properties">
+                                    <group>
+                                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+                                        <field name="taxes_id" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
+                                        <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    SERVICES & OTHERS - PRODUCTS VIEWS
+    =======================================================================================-->
+    
+    <!-- ZEEVA Product Finished Form View  -->
+        <record id="zeeva_product_finished_service_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.service.form.view</field>
+            <field name="model">product.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" string="Expense Name" required="1"/>
+                            </group>
+                            <group>
+                                <field name="product_tmpl_id" string="Raw Product" 
+                                    domain="[('type','=','service')]" 
+                                    options="{'no_open':1}"
+                                    on_change="onchange_tmpl(product_tmpl_id)"/>
+                                <field name="zeeva_categ_seq" groups="base.group_no_one"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <separator string="Product Type" colspan="2"/>
+                                        <field name="type"/>
+                                        <field name="sale_ok" readonly="1"/>
+                                        <field name="purchase_ok" readonly="1"/>
+                                        <field name="hr_expense_ok" readonly="1"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="list_price"/>
+                                        
+<!--                                         <field name="variants" groups="product.group_product_variant" /> -->
+                                        <field name="price_margin" groups="product.group_product_variant"/>
+                                        <field name="price_extra" groups="product.group_product_variant"/>
+                                    </group>
+                                    <group>
+                                        <separator string="Log" colspan="2"/>
+                                        <field name="finished_creation_user" readonly="1"/>
+                                        <field name="finished_creation_date" readonly="1"/>
+                                    </group>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."  readonly="1"/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <separator string="Suppliers"/>
+                                <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                                <separator string="Description for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                                <group name="procurement">
+                                    <group name="general">
+                                        <field name="procure_method" groups="base.group_user" readonly="1"/>
+                                        <field name="supply_method" groups="base.group_user" readonly="1"/>
+                                        <field name="cost_method" groups="product.group_costing_method" readonly="1"/>
+                                        <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                                        <div groups="base.group_user">
+                                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1" readonly="1"/>
+                                            <button name="%(stock.action_view_change_standard_price)d" string="- update"
+                                                type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                                                class="oe_link" groups="product.group_costing_method"/>
+                                        </div>
+                                    </group>
+                                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this service, nothing special will be triggered
+                                            to deliver the customer, as you set the procurement method as
+                                            'Make to Stock'.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, OpenERP will <b>use the available
+                                            inventory</b> for the delivery order.
+                                            <br/><br/>
+                                            If there are not enough quantities available, the delivery order
+                                            will wait for new products. To fulfill the inventory, you should
+                                            create others rules like orderpoints.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, a delivery order will be created.
+                                            OpenERP will consider that the <b>required quantities are always
+                                            available</b> as it's a consumable (as a result of this, the quantity
+                                            on hand may become negative).
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this service to a customer, <b>a draft purchase order</b>
+                                            will be created in order to subcontract the job 
+                                            <i attrs="{'invisible': [('seller_id','=',False)]}">to 
+                                            <field name="seller_id" class="oe_inline"/></i>.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this product, OpenERP will trigger <b>a draft
+                                            purchase order</b> to buy the required quantities to the supplier.
+                                            The delivery order will be ready after having received the
+                                            products.
+                                        </p>
+                                    </group>
+                                    <group name="delay" string="Delays">
+                                        <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <div attrs="{'invisible':[('type','=','service')]}">
+                                            <field name="produce_delay" class="oe_inline" readonly="1"/> days
+                                        </div>
+                                        <field name="active" readonly="1"/>
+                                    </group>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Inventory" groups="base.group_no_one">
+                                <group name="inventory">
+                                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                                        <label for="qty_available"/>
+                                            <div>
+                                                <field name="qty_available" class="oe_inline"/>
+                                                <button name="%(stock.action_view_change_product_quantity)d" string="update"
+                                                type="action"
+                                                class="oe_link"/>
+                                            </div>
+                                            <field name="incoming_qty" class="oe_inline"/>
+                                            <field name="outgoing_qty" class="oe_inline"/>
+                                            <field name="virtual_available" class="oe_inline"/>
+                                    </group>
+                                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
+                                        <field name="track_production" groups="stock.group_production_lot"/>
+                                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
+                                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                                    </group>
+                                    <group name="store" string="Storage Location">
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
+                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+<!--                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/> -->
+<!--                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/> -->
+                                    </group>
+                                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
+                                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+                                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+                                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}" groups="base.group_no_one">
+                                <group name="sale">
+                                    <group string="Sale Conditions">
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline"/> months
+                                        </div>
+                                        <label for="sale_delay"/>
+                                        <div>
+                                            <field name="sale_delay" class="oe_inline"/> days
+                                        </div>
+                                    </group>
+                                    <group groups="product.group_uos" string="Unit of Measure">
+                                        <field name="uos_id"/>
+                                        <field name="uos_coeff"/>
+                                        <field name="mes_type"/>
+                                    </group>
+                                </group>
+                                <field name="packaging" groups="product.group_stock_packaging">
+                                    <form string="Packaging" version="7.0">
+                                        <group col="4">
+                                            <field name="ean"/>
+                                            <field name="sequence" invisible="1"/>
+                                            <newline/>
+                                            <field name="qty"/>
+                                            <field name="ul"/>
+                                            <field name="weight_ul"/>
+                                            <separator colspan="4" string="Palletization"/>
+                                            <field name="ul_qty"/>
+                                            <field name="rows"/>
+                                            <field name="weight"/>
+                                            <separator colspan="4" string="Pallet Dimension"/>
+                                            <field name="height"/>
+                                            <field name="width"/>
+                                            <field name="length"/>
+                                        </group>
+                                        <separator colspan="4" string="Description"/>
+                                        <field name="name"/>
+                                    </form>
+                                </field>
+                                <separator string="Description for Quotations"/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
+                            </page>
+                            <page string="Accounting" groups="account.group_account_invoice">
+                                <group groups="stock.group_inventory_valuation">
+                                    <separator string="Inventory Valuation" colspan="4"/>
+                                    <group colspan="2" col="2">
+                                        <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    </group>
+                                </group>
+                                <newline/>
+                                <group name="properties">
+                                    <group>
+                                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+                                        <field name="taxes_id" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
+                                        <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    <!--=======================================================================================
+    PRODUCT TEMPLATE - ACTIONS
+    =======================================================================================-->
+    
+        <record id="zeeva_action_product_template" model="ir.actions.act_window">
+            <field name="name">Raw Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('name','!=','/'),('type','!=','service')]</field>
+            <field name="context">{'default_type': 'consu'}</field>
+            <field name="search_view_id" ref="zeeva_product_template_search_view"/>
+            <field name="help">Here you can see all Raw Products.</field>
+        </record>
+        <record id="zeeva_action_product_template_kanban_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_template"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_product_template_kanban_view"/>
+            <field name="view_mode">kanban</field>
+        </record>
+        <record id="zeeva_action_product_template_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_template"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_product_template_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_product_template_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_template"/>
+            <field name="sequence" eval="3" />
+            <field name="view_id" ref="zeeva_product_template_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!--=======================================================================================
+    PRODUCT FINISHED - ACTIONS
+    =======================================================================================-->
+    
+        <record id="zeeva_action_product_finished" model="ir.actions.act_window">
+            <field name="name">Finished Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('hr_expense_ok','=',False),('product_tmpl_id.type','!=','service')]</field>
+            <field name="search_view_id" ref="zeeva_product_finished_search_view"/>
+            <field name="help">Here you can see all Customer Variants.</field>
+        </record>
+        <record id="zeeva_action_product_finished_kanban_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_finished"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_product_finished_kanban_view"/>
+            <field name="view_mode">kanban</field>
+        </record>
+        <record id="zeeva_action_product_finished_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_finished"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_product_finished_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_product_finished_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_finished"/>
+            <field name="sequence" eval="3" />
+            <field name="view_id" ref="zeeva_product_finished_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+        <record id="zeeva_action_product_finished_create" model="ir.actions.act_window">
+            <field name="name">Finished Product Create</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="search_view_id" ref="zeeva_product_finished_search_view"/>
+            <field name="help">Here you can create a Finished Product.</field>
+        </record>
+        <record id="zeeva_action_product_finished_create_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_finished_create"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_product_finished_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+        <record id="zeeva_action_product_configuration_form_view" model="ir.actions.act_window">
+            <field name="name">Product Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="product.product_category_search_view"/>
+            <field name="view_id" ref="product.product_category_list_view"/>
+        </record>
+        
+    <!--=======================================================================================
+    SERVICES & OTHERS - TEMPLATES ACTIONS
+    =======================================================================================-->
+    
+        <record id="zeeva_action_product_others_sub1" model="ir.actions.act_window">
+            <field name="name">Raw Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="domain">[('type','=','service')]</field>
+            <field name="search_view_id" ref="zeeva_product_template_search_view"/>
+            <field name="help">Here you can see all Raw Products.</field>
+        </record>
+        <record id="zeeva_action_product_others_sub1_kanban_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub1"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_product_template_kanban_view"/>
+            <field name="view_mode">kanban</field>
+        </record>
+        <record id="zeeva_action_product_others_sub1_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub1"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_product_template_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_product_others_sub1_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub1"/>
+            <field name="sequence" eval="3" />
+            <field name="view_id" ref="zeeva_product_template_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!--=======================================================================================
+    SERVICES & OTHERS - PRODUCTS ACTIONS
+    =======================================================================================-->
+    
+        <record id="zeeva_action_product_others_sub2" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="domain">[('hr_expense_ok','=',True),('product_tmpl_id.type','=','service')]</field>
+            <field name="context">{ "default_product_tmpl_id": 1,
+                                    "default_hr_expense_ok": 1,
+                                    "default_sale_ok": 0,
+                                    "default_purchase_ok": 0}</field>
+            <field name="search_view_id" ref="zeeva_product_finished_search_view"/>
+            <field name="help">Here you can see all Customer Variants.</field>
+        </record>
+        <record id="zeeva_action_product_others_sub2_kanban_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub2"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_product_finished_kanban_view"/>
+            <field name="view_mode">kanban</field>
+        </record>
+        <record id="zeeva_action_product_others_sub2_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub2"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_product_finished_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_product_others_sub2_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_action_product_others_sub2"/>
+            <field name="sequence" eval="3" />
+            <field name="view_id" ref="zeeva_product_finished_service_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!--=======================================================================================
+    PRODUCTS - MENU
+    =======================================================================================-->
+    
+        <menuitem id="zeeva_menu_product"
+            name="Products"
+            web_icon="images/Headphones2.png"
+            web_icon_hover="images/Headphones2-over.png"
+            action="zeeva_action_product_template" 
+            sequence="11"/>
+    
+        <!-- Raw Products submenu -->
+        <menuitem id="zeeva_menu_product_template"
+            name="Raw Products"
+            action="zeeva_action_product_template" 
+            parent="zeeva_menu_product"
+            sequence="1" />
+            
+            <menuitem id="zeeva_menu_product_template_sub1"
+                name="Raw Products"
+                action="zeeva_action_product_template" 
+                parent="zeeva_menu_product_template"
+                sequence="1" />
+        
+        <!-- Finished Products submenu -->
+        <menuitem id="zeeva_menu_product_finished"
+            name="Finished Products"
+            action="zeeva_action_product_finished" 
+            parent="zeeva_menu_product"
+            sequence="2" />
+            
+            <menuitem id="zeeva_menu_product_finished_sub1"
+                name="Finished Products"
+                action="zeeva_action_product_finished" 
+                parent="zeeva_menu_product_finished"
+                sequence="1" />
+                
+        <!-- Services & Others submenu -->
+        <menuitem id="zeeva_menu_product_others"
+            name="Services &amp; Others"
+            action="zeeva_action_product_others_sub1" 
+            parent="zeeva_menu_product"
+            groups="base.group_hr_manager"
+            sequence="3" />
+            
+            <menuitem id="zeeva_menu_product_others_sub1"
+                name="Templates"
+                action="zeeva_action_product_others_sub1" 
+                parent="zeeva_menu_product_others"
+                sequence="1" />
+            <menuitem id="zeeva_menu_product_others_sub2"
+                name="Products"
+                action="zeeva_action_product_others_sub2" 
+                parent="zeeva_menu_product_others"
+                sequence="2" />
+            
+        <!-- Reporting submenu -->
+        <menuitem id="zeeva_menu_product_reports"
+            name="Reporting"
+            action="zeeva_action_product_template" 
+            parent="zeeva_menu_product"
+            sequence="4" />
+            
+        <!-- Configuration submenu -->
+        <menuitem id="zeeva_menu_product_configuration"
+            name="Configuration"
+            action="zeeva_action_product_configuration_form_view" 
+            parent="zeeva_menu_product"
+            groups="base.group_no_one"
+            sequence="5" />
+            
+            <menuitem id="zeeva_menu_product_configuration_sub1"
+                name="Product Categories"
+                action="zeeva_action_product_configuration_form_view" 
+                parent="zeeva_menu_product_configuration"
+                sequence="1" />
+                
+    </data>
+</openerp>

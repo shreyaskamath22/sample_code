@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+    <record id="view_invoice_form_inherit_account_invoice" model="ir.ui.view">
+            <field name="name">account.invoice.form.view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml"> 
+            	
+                <field name="date_invoice" position="replace">
+            		<field name="date_invoice" required="1" on_change="onchange_date_invoice(date_invoice,payment_term,partner_id)"/>
+            	</field>
+            	<field name="fiscal_position" position="attributes">
+            		<attribute name="invisible">True</attribute>
+            	</field>
+                
+            	<!-- <field name="journal_id" groups="account.group_account_user" on_change="onchange_journal_id(journal_id, context)" widget="selection" position="attributes">
+            		<attribute name="invisible">True</attribute>
+            	</field> -->
+            	<!-- <field name="account_id" position="attributes">
+            		<attribute name="invisible">True</attribute>
+            	</field> -->
+            	<field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' domain="[('customer', '=', True)]" position="replace">
+                    <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" options='{"always_reload": True}'/>
+                </field>
+                <field name="payment_term" position="replace">
+               	</field>
+               	<field name="date_due" position="replace">
+               	</field>
+                <group>
+                <group>
+                    <label for="billing_street" string="Billing Address"/>
+                    <div>
+                        <field name="billing_street" placeholder="Street..."/>
+                        <field name="billing_street2"/>
+                        <div class="address_format">
+                            <field name="billing_destination" placeholder="Billing Destination" style="width: 37%%"/>
+                            <field name="billing_city" placeholder="City" style="width: 40%%" options="{'create': false, 'create_edit': false, 'search_more':true'}"/>
+                            <field name="billing_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>
+                            <field name="billing_zip" placeholder="Pincode" style="width: 20%%"/>
+                        </div>
+                            <field name="billing_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                            <field name="billing_contact_person" placeholder="Billing Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_billing_contact_person(billing_contact_person)"/>
+                            <field name="billing_contact_mobile_no" placeholder="Mobile Number"/>
+                            <field name="billing_contact_landline_no" placeholder="Landline Number"/>
+                            <field name="billing_email_id" placeholder="Email ID"/>
+                    </div>
+                    </group>
+                    <group>
+                    <label for="shipping_street" string="Shipping Address"/>
+                    <div>
+                        <field name="shipping_street" placeholder="Street..."/>
+                        <field name="shipping_street2"/>
+                        <div class="address_format">
+                            <field name="shipping_destination" placeholder="Shipping Destination" style="width: 37%%"/>
+                            <field name="shipping_city" placeholder="City" style="width: 37%%" options="{'create': false, 'create_edit': false, 'search_more':true'}"/>
+                            <field name="shipping_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>
+                            <field name="shipping_zip" placeholder="Pincode" style="width: 20%%"/>
+                        </div>
+                            <field name="shipping_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
+                            <field name="shipping_contact_person" placeholder="Shipping Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_shipping_contact_person(shipping_contact_person)"/>
+                            <field name="shipping_contact_mobile_no" placeholder="Mobile Number"/>
+                            <field name="shipping_contact_landline_no" placeholder="Landline Number"/>
+                            <field name="shipping_email_id" placeholder="Email ID"/>
+                    </div>
+                </group>
+            	</group>
+
+                <group>
+                <group>
+                    <field name="client_order_ref" required="1"/>
+                    <field name="delivery_note" required="1"/>
+                    <field name="suppliers_ref" required="1"/>
+                    <field name="dispatch_source"/>
+					<field name="payment_term" string="Payment Term" on_change="onchange_date_invoice(date_invoice,payment_term,partner_id)"/>
+                    
+                </group>
+                <group>
+                    <field name="po_date" required="1"/>                                        
+                    <field name="date_due"/>
+                    <field name="order_date"/>
+                    <field name="destination"/>
+                    <field name="financial_year"/>
+                    <!-- field name="order_policy"/> -->
+                    <field name="amount_total_in_words" invisible="1"/>
+                    <field name="total_shipped_quantity" invisible="1"/>
+                    <field name="total_billed_quantity" invisible="1"/>
+                    <field name="cForm" bgcolor="green" fgcolor="yellow"/>
+                </group>
+            	</group>
+            	<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_id']" position="after">
+                    <field name="product_code"/>
+                    <field name="product_category_id" invisible="1"/>
+                </xpath>
+            	<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='quantity']" position="after">
+                    <field name="product_billed_qty"/>
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+
+            	<xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_unit']" position="after">
+                    <field name="sale_price" on_change="onchange_sale_price(sale_price)"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_unit']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='invoice_line_tax_id']" position="attributes">
+                            <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_subtotal']" position="before">
+                        <field name="tax_applied_id"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group" position="before">
+                        <group colspan="2" col="2">
+                            <field name="invoice_tax_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="tax_id" invisible="1"/>
+                                <field name="tx_name"/>
+                                <field name="tax_rate"/>
+                                <field name="total_amount"/>        
+                            </tree>
+                            </field>
+                        </group>
+                </xpath>
+                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}" position="after">
+                    <field name="apply_discount" on_change="onchange_apply_discount(apply_discount)"/>
+                    <field name="discount_value" attrs="{'invisible': [('apply_discount','=',False)]}"/>
+                    <field name="discounted_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('apply_discount','=',False)]}"/>
+                    <field name="grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    <field name="roundoff_grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                </field>
+                <field name="residual" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </field>
+                <!-- <field name="name" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </field> -->
+                <xpath expr="/form/sheet/notebook/page/group/group/field[@name='name']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+                <field name="move_id" position="after">
+                    <field name="road_permit_attachment"/>
+                    <field name="po_attachment"/>                     
+                </field>
+                <xpath expr='//page[@string="Payments"]' position="replace">
+                    <page string="Receipts" groups="base.group_user">
+                            <field name="payment_ids">
+                                <tree string="Payments">
+                                    <field name="date"/>
+                                    <field name="move_id" string="Receipt No"/>
+                                    <field name="bank_name"/>
+                                    <field name="ref" string="NEFT/RTGS/Cheque No."/>
+                                    <field name="name" string="Invoice Reference No"/>
+                                    <field name="journal_id" invisible="1" groups="base.group_user"/>
+                                    <field name="debit"/>
+                                    <field name="credit"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
+                                </tree>
+                            </field>
+                             <group>
+                               
+                                
+                                <group class="oe_subtotal_footer1 oe_right">
+                                    <field name="residual" string="Balance Receivable" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                </group>
+                            </group>
+                        </page>
+                       
+                </xpath>
+
+                <xpath expr="/form/sheet/notebook/page/field[@name='tax_line']" position="attributes">
+                    <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+    </record>
+
+
+    <record id="view_invoice_customer_copy" model="ir.ui.view">
+            <field name="name">account.invoice.customer.pay</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account_voucher.view_invoice_customer"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='invoice_pay_customer']" position="replace">
+                    <button name="invoice_pay_customer" type="object" string="Receipt Details"
+                        attrs="{'invisible': ['|', ('state','!=','open'), ('sent','=',True)]}" groups="base.group_user"/>
+                    <!-- <button name="invoice_pay_customer" type="object" string="Receipt Details"
+                        attrs="{'invisible': ['|', ('state','!=','open'), ('sent','=',False)]}" class="oe_highlight" groups="base.group_user"/> -->
+                </xpath>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="account_voucher.view_vendor_receipt_dialog_form">
+            <field name="name">account.voucher.receipt.dialog.form</field>
+            <field name="model">account.voucher</field>
+            <field name="priority">30</field>
+            <field name="arch" type="xml">
+                <form string="Payment" version="7.0">
+                    <group>
+                        <group>
+                            <field name="state" invisible="1"/>
+                            <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount" class="oe_inline"
+                                string="Paid Amount"
+                                widget='monetary' options='{"currency_field": "currency_id"}'
+                                invisible="context.get('line_type', False)"
+                                on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                            <field name="journal_id"
+                                domain="[('type','in',['bank', 'cash'])]"
+                                invisible="context.get('line_type', False)"
+                                widget="selection"
+                                on_change="onchange_journal(journal_id, line_cr_ids, False, partner_id, date, amount, type, company_id, context)"
+                                string="Payment Method"/>
+                        </group>
+                        
+                        <group>
+                            <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
+                            <field name="period_id" invisible="1"/>
+                            <field name="reference" invisible="context.get('line_type', False)" string="NEFT/RTGS/Cheque No." placeholder="e.g. 003/10" required="1"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+
+                            <field name="account_id"
+                                widget="selection"
+                                invisible="True"/>
+                            <field name="pre_line" invisible="1"/>
+                            <field name="bank_name"/>
+                            <field name="type" invisible="True"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                                <field name="writeoff_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="payment_option" required="1" attrs="{'invisible':[('writeoff_amount','=',0)]}"/>
+                                <field name="writeoff_acc_id"
+                                        attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)], 'required':[('payment_option','=','with_writeoff')]}"
+                                        domain="[('type','=','other')]"/>
+                                <field name="comment"
+                                        attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)]}"/>
+                                <field name="analytic_id"
+                                        groups="analytic.group_analytic_accounting"
+                                        attrs="{'invisible':['|', ('payment_option','!=','with_writeoff'), ('writeoff_amount','=',0)]}"/>
+                            </group>
+                            <group>
+                        </group>
+                    </group>
+                    <notebook invisible="1">
+                        <page string="Payment Information" groups="base.group_user">
+                            <label for="line_cr_ids"/>
+                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
+                                <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"
+                                        groups="account.group_account_user"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" readonly="1" groups="account.group_account_user"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)" groups="account.group_account_user"/>
+                                    <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
+                                </tree>
+                            </field>
+                            <label for="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}"/>
+                            <field name="line_dr_ids" attrs="{'invisible': [('pre_line','=',False)]}" context="{'journal_id':journal_id, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
+                                <tree string="Credits" editable="bottom" colors="gray:amount==0">
+                                    <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
+                                        on_change="onchange_move_line_id(move_line_id)"
+                                        domain="[('account_id.type','in',('receivable','payable')), ('reconcile_id','=', False), ('partner_id','=',parent.partner_id)]"
+                                        required="1"/>
+                                    <field name="account_id"  groups="base.group_no_one" domain="[('type','=','receivable')]"/>
+                                    <field name="date_original" readonly="1"/>
+                                    <field name="date_due" readonly="1"/>
+                                    <field name="amount_original" readonly="1"/>
+                                    <field name="amount_unreconciled" readonly="1"/>
+                                    <field name="reconcile" on_change="onchange_reconcile(reconcile, amount, amount_unreconciled, context)"/>
+                                    <field name="amount" sum="Total Allocation" on_change="onchange_amount(amount, amount_unreconciled, context)" string="Allocation"/>
+                                </tree>
+                            </field>
+                            <group col="3">
+                                <group>
+                                    <field name="narration" colspan="2" nolabel="1"/>
+                                </group>
+                                <group col="4" attrs="{'invisible':[('is_multi_currency','=',False)]}">
+                                    <field name="is_multi_currency" invisible="1"/>
+                                    <field name="payment_rate" required="1" colspan="3" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)"/>
+                                    <field name="payment_rate_currency_id" colspan="1" nolabel="1" on_change="onchange_payment_rate_currency(currency_id, payment_rate, payment_rate_currency_id, date, amount, company_id, context)" groups="base.group_multi_currency"/>
+                                    <field name="paid_amount_in_company_currency" colspan="4" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                    <footer>
+                        <button name="button_proforma_voucher" string="Add" class="oe_highlight" type="object"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+</data>
+</openerp>

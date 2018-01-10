@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        
+        <!-- Resource: product.uom.categ -->
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Expenses</field>
+        </record>
+
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_payment_received" model="mail.message.subtype">
+            <field name="name">Received</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Payment Received</field>
+        </record>
+        
+        <record id="mt_expense_confirmed_by_manager" model="mail.message.subtype">
+            <field name="name">Approved By Manager</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Approved By Manager, Waiting Accounts Approval</field>
+        </record>
+        
+        <record id="mt_expense_submitted" model="mail.message.subtype">
+            <field name="name">Waiting Manager Approval</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Submitted, Waiting Manager Approval</field>
+        </record>
+        
+        <record id="mt_expense_confirmed_by_accounts" model="mail.message.subtype">
+            <field name="name">Waiting Mgmt Approval</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Approved By Accounts, Waiting Mgmt Approval</field>
+        </record>
+        
+        <record id="mt_expense_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Refused</field>
+        </record>
+        <record id="mt_expense_confirmed_by_mgmt" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense confirmed, Approved By Mgmt. Please, Proceed with the Payments</field>
+        </record>
+
+    <!--=======================================================================================
+    HR EXPENSES PRODUCT SERVICES
+    =======================================================================================-->
+
+		<record id="service_staff_welfare" model="product.product">
+            <field name="name">Staff Welfare</field>            
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_local_conveyance" model="product.product">
+            <field name="name">Conveyance</field>
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_mobile_expe" model="product.product">
+            <field name="name">Mobile Reimbursement</field>
+            <field name="sale_ok">False</field>         
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_office_exp" model="product.product">
+            <field name="name">Office Expenses</field>
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_repairs_main" model="product.product">
+            <field name="name">Repairs &amp; Maintenance</field>
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_sundry_expe" model="product.product">
+            <field name="name">Sundry/Miscellaneous</field>
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+        
+        <record id="service_printing_stat" model="product.product">
+            <field name="name">Printing, Stationary &amp; Xerox</field>
+            <field name="sale_ok">False</field>
+            <field name="hr_expense_ok">True</field>
+            <field name="type">service</field>
+        </record>
+           
+
+    </data>
+</openerp>

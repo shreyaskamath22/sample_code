@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+,,,,,,,
+access_hr_employee_compensatory_leaves,compensatory.leaves,model_compensatory_leaves,base.group_user,1,0,0,0
+access_hr_employee_edu,hr.employee.edu,hr_employee_educational_details.model_hr_employee_edu,base.group_user,1,0,0,0
+access_hr_employee_family,hr.employee.children,hr_family.model_hr_employee_children,base.group_user,1,0,0,0
+access_hr_employee_history,hr.employee.history,hr_employee_educational_details.model_hr_employee_history,base.group_user,1,0,0,0
+,,,,,,,
+access_hr_medical_certificate,medical.certificate,model_medical_certificate,base.group_user,1,1,1,1
+,,,,,,,
+access_hr_employee_records,hr.employee,hr.model_hr_employee,base.group_user,1,1,0,0

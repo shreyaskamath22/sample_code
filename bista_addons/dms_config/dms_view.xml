@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!-- Form View Of DMS Config Object -->
+        <record id="view_dms_config_form" model="ir.ui.view">
+            <field name="name">dms.config.form</field>
+            <field name="model">dms.config</field>
+            <field name="arch" type="xml">
+                <form string="DMS Config">
+                    <div name="dms_config">
+                        <group>
+                            <field name="directory_name" required ='1' />
+                            <field name="file_path" required ='1'/>
+                            <field name="active" />
+                            <field name="attachment_path" required ='1'/>                            
+                        </group>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    <!-- Tree View Of DMS Config Object -->
+        <record id="view_dms_config_tree" model="ir.ui.view">
+            <field name="name">dms.config.tree</field>
+            <field name="model">dms.config</field>
+            <field name="arch" type="xml">
+                <tree string="DMS Config">
+                    <field name="directory_name"/>
+                    <field name="file_path"/>
+                    <field name="attachment_path"/>
+                    <field name="active" />
+                </tree>
+            </field>
+        </record>
+
+    <!-- Action For DMS Config Object -->
+        <record id="action_dms_config_form" model="ir.actions.act_window">
+            <field name="name">DMS Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dms.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('active', '=', True)]</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to configure a file path for DMS.
+                </p>
+            </field>
+        </record>
+
+    <!-- menus in settings - technical feature required -->
+        <menuitem id="dms_config_menu" name="DMS Configuration" parent="base.menu_administration" groups="base.group_no_one" />
+        <menuitem id="dms_config_child_menu" name="File Path Configuration" parent="dms_config_menu" action="action_dms_config_form" sequence="0"/>
+
+    </data>
+</openerp>

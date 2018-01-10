@@ -1,0 +1,249 @@
+<?xml version="1.0" ?>
+<openerp>
+	<data>
+		      <record id="view_picking_out_form_id" model="ir.ui.view">
+            <field name="name">stock.picking.out.form</field>
+            <field name="model">stock.picking.out</field>
+            <field name="inherit_id" ref="stock.view_picking_out_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
+                    <xpath expr="/form/header//button[@name='draft_validate']" position="replace">
+                        <button name="draft_validate" states="draft" string="Partial Delivery" type="object" class="oe_highlight"/>
+                        <button name="%(stock.action_stock_invoice_onshipping)d" string="Create Invoice/Refund" states='draft' type="action" class="oe_highlight" groups="base.group_user"/>
+                    </xpath>
+                </xpath> 
+               
+                <xpath expr="/form/header/button[@name='draft_force_assign']" position="replace">
+                </xpath>
+                
+                <xpath expr="/form/header//field[@name='state']" position="replace">
+                    <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,invoiced,ready_to_dispatch,dispatched,delivered" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
+                </xpath>
+                <field name="date" position="replace">
+                </field>
+                <field name="date_done" groups="base.group_no_one" position="replace">
+                     <group col="3" colspan="1">
+                        <label for="date_done" string="Shipment Date" attrs="{'invisible': [('partial_picking','=',True)]}"/>
+                        <label for="date_done" string="Partial Shipment Date" attrs="{'invisible': [('partial_picking','=',False)]}"/>
+                        <div class="address_format">
+                            <field name="date_done" groups="base.group_no_one" widget="date" nolabel="1"/>
+                        </div>
+                </group>
+                </field>
+                <field name="min_date" readonly="1" attrs="{'invisible': [('min_date','=',False)]}" position="replace">
+                </field>
+                <field name="origin" placeholder="e.g. PO0032" class="oe_inline" position="replace">
+                </field>
+                <field name="stock_journal_id" position="replace">
+                </field>
+                <xpath expr="/form/sheet/group/group" position="after">
+                    <newline/>
+                    <group>
+                    <label for="billing_street" string="Billing Address"/>
+                    <div>
+                        <field name="billing_street" placeholder="Street..." attrs="{'readonly': [('state','=','done')]}"/>
+                        <field name="billing_street2" attrs="{'readonly': [('state','=','done')]}"/>
+                        <div class="address_format">
+                            <field name="billing_destination" placeholder="Billing Destination" style="width: 37%%" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_city" placeholder="City" style="width: 40%%" options="{'create': false, 'create_edit': false, 'search_more':true'}" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly': [('state','=','done')]}"/>
+                        </div>
+                            <field name="billing_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_contact_person" placeholder="Billing Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_billing_contact_person(billing_contact_person)" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_contact_mobile_no" placeholder="Mobile Number" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_contact_landline_no" placeholder="Landline Number" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="billing_email_id" placeholder="Email ID" attrs="{'readonly': [('state','=','done')]}"/>
+                    </div>
+                    </group>
+                    <group>
+                    <label for="shipping_street" string="Shipping Address"/>
+                    <div>
+                        <field name="shipping_street" placeholder="Street..." attrs="{'readonly': [('state','=','done')]}"/>
+                        <field name="shipping_street2" attrs="{'readonly': [('state','=','done')]}"/>
+                        <div class="address_format">
+                            <field name="shipping_destination" placeholder="Shipping Destination" style="width: 37%%" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_city" placeholder="City" style="width: 37%%" options="{'create': false, 'create_edit': false, 'search_more':true'}" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly': [('state','=','done')]}"/>
+                        </div>
+                            <field name="shipping_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_contact_person" placeholder="Shipping Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_shipping_contact_person(shipping_contact_person)" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_contact_mobile_no" placeholder="Mobile Number" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_contact_landline_no" placeholder="Landline Number" attrs="{'readonly': [('state','=','done')]}"/>
+                            <field name="shipping_email_id" placeholder="Email ID" attrs="{'readonly': [('state','=','done')]}"/>
+                    </div>
+                </group>
+                <group>
+                    <field name="user_id" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="delivery_order_ref" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="payment_term" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="dispatch_source" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="origin" string="Sales Order No." attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="partial_picking" invisible="1"/>
+                    <field name="shipping_person" invisible="1"/>
+<!--                     <field name="financial_year"/>
+ -->                </group>
+                <group>
+                    <field name="date" widget="date" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="po_date" required="1" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="due_date" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="destination" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="so_date" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="po_attachment" attrs="{'readonly': [('state','=','done')]}"/>
+                    <field name="amount_total_in_words" invisible="1"/>
+                    <field name="total_shipped_quantity" invisible="1"/>
+                    <field name="total_billed_quantity" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="current_creation_date" invisible="1"/>
+                    <field name="pricelist_id" on_change="onchange_pricelist_id(pricelist_id,order_line)" invisible="1"/>
+                </group>
+                </xpath>
+                 <field name="note" placeholder="Add an internal note..." class="oe_inline" position="replace">
+                     <!-- <field name="note" placeholder="Terms of Delivery..."/> -->
+                 </field>
+                <xpath expr="/form/sheet/notebook/page[@string='Products']" position="inside">
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                ₹<field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total" />
+                                    <button name="button_dummy"
+                                        states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                ₹<field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            <field name="apply_discount" on_change="onchange_apply_discount(apply_discount)" readonly="1"/>
+                                <field name="discount_value" attrs="{'invisible': [('apply_discount','=',False)]}" readonly="1"/>
+								<field name="discounted_amount" widget='monetary' attrs="{'invisible': [('apply_discount','=',False)]}" options="{'currency_field': 'currency_id'}" readonly="1"/>
+                                <field name="grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                <field name="roundoff_grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <div class="oe_clear"/>
+                            <field name="note" placeholder="Terms of Delivery..." attrs="{'readonly': [('state','=','done')]}"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/group[@name='sale_total']" position="before">
+                        <group colspan="2" col="2">
+                            <field name="stock_tax_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="tax_id" invisible="1"/>
+                                <field name="tx_name"/>
+                                <field name="tax_rate"/>
+                                <field name="total_amount"/>        
+                            </tree>
+                            </field>
+                        </group>
+                    </xpath>
+            </field>
+        </record>
+
+        <record id="stock.view_move_picking_tree" model="ir.ui.view">
+            <field name="name">stock.move.tree</field>
+            <field name="model">stock.move</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="grey:scrapped == True" string="Stock Moves">
+                    <field name="product_id"/>
+                    <field name="product_code"/>
+                    <field name="name"/>
+                    <field name="product_category_id" invisible="1"/>
+                    <field name="delivery_warehouse_id"/>
+                    <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
+                    <field name="product_billed_qty"/>
+                    <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="sale_price"/>
+					<field name="price_unit" invisible="1"/>
+					<field name="tax_applied_id"/>
+                    <field name="product_uos_qty" groups="product.group_uos"/>
+                    <field name="product_uos" groups="product.group_uos"/>
+                    <field name="location_id" groups="stock.group_locations" invisible="1"/>
+                    <field name="picking_id" invisible="1" />
+                    <field name="create_date" invisible="1" />
+                    <field name="date_expected" invisible="1" />
+                    <button name="%(stock.move_scrap)d"
+                       string="Scrap Products" type="action"
+                       icon="terp-gtk-jump-to-ltr" context="{'scrap': True}"
+                       states="draft,waiting,confirmed,assigned"
+                       groups="base.group_user"/>
+                    <field name="scrapped" invisible="1"/>
+                    <field name="prodlot_id" groups="stock.group_production_lot"/>
+                    <button
+                       name="%(stock.track_line)d"
+                       string="Split in Serial Number"
+                       groups="stock.group_production_lot"
+                       type="action" icon="gtk-justify-fill"
+                       states="draft,waiting,confirmed,assigned"/>
+                     <field groups="stock.group_tracking_lot" name="tracking_id" invisible="1"/>
+                     <button name="setlast_tracking" string="Put in current pack" type="object"
+                        attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
+                        icon="terp-accessories-archiver"
+                        groups="stock.group_tracking_lot"
+                        states="draft,assigned,confirmed"/>
+                     <button name="%(stock.split_into)d" string="Put in a new pack" type="action"
+                        groups="stock.group_tracking_lot"
+                        icon="terp-accessories-archiver+"
+                        states="draft,assigned,confirmed"/>
+                      <field name="location_dest_id" groups="stock.group_locations" invisible="1"/>
+                      <field name="state"/>
+                      <field name="price_subtotal"/>
+                </tree>
+            </field>
+        </record>
+<!-- context="{'partner_id':parent.partner_id -->
+        <record id="view_move_form_id" model="ir.ui.view">
+            <field name="name">stock.move.form</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form"/>
+            <field name="arch" type="xml">
+            	<field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)" position="replace">
+            		 <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, parent.partner_id)"/>
+            		 <field name="product_category_id"/>
+           		</field>
+            	<field name="product_id" position="after">
+					<field name="product_billed_qty"/>
+				</field>
+				<field name="name" position="after">
+					<field name="delivery_warehouse_id"/>
+                    <field name="product_code"/>
+					<field name="sale_price" on_change="onchange_sale_price(sale_price)" domain="[('product_id','=',product_id),('customer_id','=',parent.partner_id)]"/>
+					<field name="price_unit" invisible="1"/>
+					<field name="tax_applied_id"/>
+					<field name="price_subtotal" invisible="1"/>
+				</field>
+            </field>
+        </record>
+
+
+        <record id="open_view_no_backorder" model="ir.actions.act_window">
+            <field name="name">Main Orders</field>
+            <field name="res_model">stock.picking.out</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('backorder_id','=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock.view_picking_out_tree"/>
+        </record>
+
+        <record id="open_view_backorder_yes" model="ir.actions.act_window">
+            <field name="name">Back Orders</field>
+            <field name="res_model">stock.picking.out</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('backorder_id','!=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="stock.view_picking_out_tree"/>
+        </record>
+
+
+        <menuitem action="open_view_no_backorder" id="delivery_order_tree_menuitem_new" parent="stock.menu_action_picking_tree" sequence="1"/>
+        <menuitem action="open_view_backorder_yes" id="back_order_tree_menuitem_new" parent="stock.menu_action_picking_tree" sequence="2"/>
+
+    </data>
+</openerp>
+
+
+
+        
+        
+        
+        
+        
+        
+        

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+##############################################################################
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+-->
+
+<openerp>
+    <data>
+        
+        <record id="view_employee_form_inherit_education" model="ir.ui.view">
+        	<field name="name">view.employee.form.inherit.education</field>
+      		<field name="model">hr.employee</field>
+      		<field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//page[@string="Personal Information"]' position="after">
+                    <page string="Education &amp; Previous Job History">
+                        <group string="Employee Education Records">
+                          	 <field name="edu_employee_id" nolabel="1"/>                         
+                        </group>
+                        <group string="Employee Job History">
+                          	 <field name="job_employee_id" nolabel="1"/>                         
+                        </group>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+        <record id="hr_education_view_tree" model="ir.ui.view">
+            <field name="name">hr.edu.view.tree</field>
+            <field name="model">hr.employee.edu</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Education Records">
+                    <field name="school_university"/>
+                    <field name="qualification"/>
+                    <field name="level"/>
+                    <field name="year_of_passing"/>
+                    <field name="class_percentage"/>
+                    <field name="major_subjects"/>
+                    <field name="skill_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hr_education_view_form" model="ir.ui.view">
+            <field name="name">hr.edu.view.form</field>
+            <field name="model">hr.employee.edu</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Education Records">
+                    <field name="school_university"/>
+                    <field name="qualification"/>
+                    <field name="level"/>
+                    <field name="year_of_passing"/>
+                    <field name="class_percentage"/>
+                    <field name="major_subjects"/>
+                    <field name="skill_id"/>
+                </form>
+            </field>
+        </record>
+                
+        <record id="hr_history_view_tree" model="ir.ui.view">
+            <field name="name">hr.history.view.tree</field>
+            <field name="model">hr.employee.history</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Job History">
+                    <field name="company"/>
+                    <field name="designation"/>
+                    <field name="address"/>
+                    <field name="contact"/>
+                    <field name="total_exp"/>
+                </tree>
+            </field>
+        </record>
+        <record id="hr_history_view_form" model="ir.ui.view">
+            <field name="name">hr.history.view.form</field>
+            <field name="model">hr.employee.history</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Job History">
+                    <field name="company"/>
+                    <field name="designation"/>
+                    <field name="address"/>
+                    <field name="contact"/>
+                    <field name="total_exp"/>
+                </form>
+            </field>
+        </record>
+                
+    </data>
+</openerp>

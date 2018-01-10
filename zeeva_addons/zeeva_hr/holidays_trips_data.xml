@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+    	
+    	<record id="trips_send_email_template" model="email.template">
+            <field name="name">Send Trips Mail to HR</field>
+            <field name="email_from">${object.employee_id.work_email}</field>
+            <field name="subject">Notification of the Trip Planned</field>
+            <field name="email_to">${object.employee_id.hro.email}</field>
+            <field name="email_cc">${object.employee_id.parent_id.work_email}</field>
+            <field name="lang">trip submit</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.hro.name},
+<p>
+You are kindly requested to approve my trip planned.
+</p>
+
+Regards,
+<p>
+${object.employee_id.name}
+</p>
+
+            ]]></field>
+        </record>	
+        
+        <record id="trips_approve_by_hr_email_template" model="email.template">
+            <field name="name">Approval of Trips Mail by HR</field>
+            <field name="email_from">${object.employee_id.hro.email}</field>
+            <field name="subject">Approval of the Trip by HR</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.parent_id.work_email}</field>
+            <field name="lang">trip approve by HR</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is validated from the HRO's side.
+</p>
+
+Regards,
+<p>
+${object.employee_id.hro.name}
+</p>
+
+            ]]></field>
+        </record>	
+    	
+    	<record id="trips_approve_by_mgmt_email_template" model="email.template">
+            <field name="name">Approval of Trips Mail by Mgmt</field>
+            <field name="email_from">${object.employee_id.parent_id.work_email}</field>
+            <field name="subject">Approval of the Trip by Mgmt</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.hro.work_email}</field>
+            <field name="lang">trip approve by Mgmt</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is approved.
+</p>
+
+Regards,
+<p>
+${object.employee_id.parent_id.name}
+</p>
+
+            ]]></field>
+        </record>	
+        
+        <record id="trips_refuse_by_HRO_email_template" model="email.template">
+            <field name="name">Refusal of the Trip by HRO</field>
+            <field name="email_from">${object.employee_id.hro.email}</field>
+            <field name="subject">Refusal of the Trip by HRO</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.parent_id.work_email}</field>
+            <field name="lang">trip refuse by HRO</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is refused.
+</p>
+
+Regards,
+<p>
+${object.employee_id.hro.name}
+</p>
+
+            ]]></field>
+        </record>	
+        
+        <record id="trips_refuse_by_Mgmt_email_template" model="email.template">
+            <field name="name">Refusal of the Trip by Mgmt</field>
+            <field name="email_from">${object.employee_id.parent_id.work_email}</field>
+            <field name="subject">Refusal of the Trip by Mgmt</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.hro.email}</field>
+            <field name="lang">trip refuse by Mgmt</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is refused.
+</p>
+
+Regards,
+<p>
+${object.employee_id.parent_id.work_email}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="leaves_refuse_by_HRO_email_template" model="email.template">
+            <field name="name">Refusal of the Leave by HRO</field>
+            <field name="email_from">${object.employee_id.hro.email}</field>
+            <field name="subject">Refusal of the Leave by HRO</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.parent_id.work_email}</field>
+            <field name="lang">leave refuse by HRO</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is refused.
+</p>
+
+Regards,
+<p>
+${object.employee_id.hro.name}
+</p>
+
+            ]]></field>
+        </record>	
+        
+        <record id="leaves_refuse_by_Mgmt_email_template" model="email.template">
+            <field name="name">Refusal of the Leave by Mgmt</field>
+            <field name="email_from">${object.employee_id.parent_id.work_email}</field>
+            <field name="subject">Refusal of the Leave by Mgmt</field>
+            <field name="email_to">${object.employee_id.work_email}</field>
+            <field name="email_cc">${object.employee_id.hro.email}</field>
+            <field name="lang">leave refuse by Mgmt</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.name},
+<p>
+Your trip is refused.
+</p>
+
+Regards,
+<p>
+${object.employee_id.parent_id.work_email}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="leaves_send_email_template" model="email.template">
+            <field name="name">Send Leave Request Mail to HR</field>
+            <field name="email_from">${object.employee_id.work_email}</field>
+            <field name="subject">Request for Leave</field>
+            <field name="email_to">${object.employee_id.hro.email}</field>
+            <field name="email_cc">${object.employee_id.parent_id.work_email}</field>
+            <field name="lang">leave submit</field>
+            <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.hro.name},
+<p>
+You are kindly requested to approve my leave.
+</p>
+
+Regards,
+<p>
+${object.employee_id.name}
+</p>
+
+            ]]></field>
+        </record>		
+        	
+    </data>
+</openerp>

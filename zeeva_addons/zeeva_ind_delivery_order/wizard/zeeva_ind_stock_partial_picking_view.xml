@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
+        <record id="stock_partial_picking_form_id" model="ir.ui.view">
+            <field name="name">stock.partial.picking.form</field>
+            <field name="model">stock.partial.picking</field>
+             <field name="inherit_id" ref="stock.stock_partial_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/field/tree/field[@name='quantity']" position="replace">
+                    <field name="quantity" string="Shipped Quantity" widget="integer"/>
+                    <field name="product_billed_qty" string="Billed Quantity" widget="integer"/>
+                </xpath>
+                <field name="move_ids" position="after">
+                    <group>
+                        <field name="partial_picking" on_change="onchange_partial_picking(partial_picking,partial_date)"/>
+                    </group>
+                    <group string="Details of Backorder Delivery" attrs="{'invisible':[('partial_picking','=',False)]}">
+                        <field name="partial_date"/>
+                    </group>
+                </field>
+            </field>
+        </record>
+
+        
+            </data>
+</openerp>

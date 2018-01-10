@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="view_document_directory_inherit_tree">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="inherit_id" ref="document.view_document_directory_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="parent_id"/>
+                <field name="dir_intranet_check"/>
+            </xpath>                        
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='create_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='write_date']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="view_document_directory_inherit_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="inherit_id" ref="document.view_document_directory_form"/>
+        <field name="arch" type="xml">
+    <!-- Field added by shreyas for the Directory Name assigned to project -->
+        <field name="user_id" context="{'default_groups_ref': ['base.group_user', 'base.group_partner_manager', 'base.group_document_user']}" position="after">
+           <!--<field name="model_id"/>-->
+            <field name="dir_intranet_check"/>
+        </field>
+
+    <!-- Create new pages according to create/write/delete/edit  -->
+            <page string="Security"  position="after">
+                <page string="Read Access">
+                <separator string="If User, Group and Job Position are not added then directory will visible for administrator only" colspan="4"/>
+                    <notebook>
+                        <page string="Groups">
+                            <label colspan="4" string="Members of these groups will have access to read directory files." />
+                            <field name="group_ids"/>
+                        </page>  
+                        <page string="Users">
+                            <label colspan="4" string="These users will have access to read directory files." />
+                            <field name="re_users_dir_rel"/>
+                        </page>
+                        <page string="Job Position">
+                            <label colspan="4" string="Following job position will have access to read directory files." />
+                            <field name="re_job_dir_rel">
+                                <tree string="Job Position" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="department_id" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+                <page string="Create Access">
+                <separator string="If User, Group and Job Position are not added then all users (who have a read acces of this directory) can create new document in this directory" colspan="4"/>
+                    <notebook>
+                        <page string="Groups">
+                            <label colspan="4" string="Members of these groups will have access to Create directory files." />
+                            <field name="cr_groups_dir_rel"/>
+                        </page>  
+                        <page string="Users">
+                            <label colspan="4" string="These users will have access to Create directory files." />
+                            <field name="cr_users_dir_rel"/>
+                        </page>
+                        <page string="Job Position">
+                            <label colspan="4" string="Following job position will have access to Create directory files." />
+                            <field name="cr_job_dir_rel">
+                                <tree string="Job Position" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="department_id" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+                <page string="Edit Access">
+                <separator string="If User, Group and Job Position are not added then all users (who have a read acces of this directory) can edit the document in this directory" colspan="4"/>
+                    <notebook>
+                        <page string="Groups">
+                            <label colspan="4" string="Members of these groups will have access to write directory files." />
+                            <field name="wr_groups_dir_rel"/>
+                        </page>  
+                        <page string="Users">
+                            <label colspan="4" string="These Users will have access to write directory files." />
+                            <field name="wr_users_dir_rel"/>
+                        </page>
+                        <page string="Job Position">
+                            <label colspan="4" string="Following job position will have access to write directory files." />
+                            <field name="wr_job_dir_rel">
+                                <tree string="Job Position" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="department_id" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+                <page string="Delete Access">
+                <separator string="If User, Group and Job Position are not added then all users (who have a read acces of this directory) can delete the document in this directory" colspan="4"/>
+                    <notebook>
+                        <page string="Groups">
+                            <label colspan="4" string="Members of these groups will have access to delete directory files." />
+                            <field name="un_groups_dir_rel"/>
+                        </page>  
+                        <page string="Users">
+                            <label colspan="4" string="These users will have access to delete directory files." />
+                            <field name="un_users_dir_rel"/>
+                        </page>
+                        <page string="Job Position">
+                            <label colspan="4" string="Following job position will have access to delete directory files." />
+                            <field name="un_job_dir_rel">
+                                <tree string="Job Position" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="department_id" readonly="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </page>
+            </page>            
+
+    <!-- Hide default pages -->
+            <xpath expr="//page[@string='Definition']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@string='Generated Files']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@string='Dynamic context']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//page[@string='Security']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_document_directory_inherit2_form">
+        <field name="name">document.directory</field>
+        <field name="model">document.directory</field>
+        <field name="inherit_id" ref="view_document_directory_inherit_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('base.group_system')])]"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="attributes">
+                <attribute name="readonly">0</attribute>
+            </field>
+        </field>
+    </record>
+
+
+<!-- Filter For Search in Directory-->
+    <record model="ir.actions.act_window" id="document.action_document_directory_form">
+        <field name="domain">['|',('user_id','=',uid),('admin_access','=',uid)]</field>
+    </record>        
+  
+    <record model="ir.actions.act_window" id="document.action_document_file_directory_form">
+        <field name="domain">[('parent_id','child_of',active_id)]</field>        
+    </record>       
+<!--     <record model="ir.actions.act_window" id="document.action_document_file_directory_form">
+        <field name="domain">['&amp;',('parent_id','child_of',active_id),'|','|','|',('re_groups_doc_rel','in',['68',]),('re_users_doc_rel','in',[uid]),('user_id', '=', uid),('admin_doc_access', '=', uid)]</field>        
+    </record>       
+ -->
+
+     <record model="ir.ui.view" id="view_document_file_form_inherit">
+        <field name="name">ir.attachment</field>
+        <field name="model">ir.attachment</field>
+        <field name="priority" eval="1"/>
+        <field name="inherit_id" ref="document.view_document_file_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>            
+        </field>
+    </record>
+
+    </data>
+</openerp>

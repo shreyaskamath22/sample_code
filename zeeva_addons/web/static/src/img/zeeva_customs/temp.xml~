@@ -1,0 +1,415 @@
+####################################################################################################NORMAL
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form</field>
+            <field name="model">product.product</field>
+            <field eval="7" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
+                        <div class="oe_title">
+                            <div class="oe_edit_only">
+                                <label for="name" string="Product Name"/>
+                            </div>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="categ_id" class="oe_edit_only"/>
+                            <h2><field name="categ_id"/></h2>
+                            <div name="options" groups="base.group_user">
+                                <field name="sale_ok"/>
+                                <label for="sale_ok"/>
+                                <field name="purchase_ok"/>
+                                <label for="purchase_ok"/>
+                                <field name="hr_expense_ok"/>
+                                <label for="hr_expense_ok"/>
+                            </div>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <button string="Request Procurement" name="%(act_make_procurement)d" type="action"/>
+                            <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action"/>
+                        </div>
+                        <notebook>
+                            <page string="Information">
+                                <group>
+                                    <group>
+                                        <field name="type"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field name="list_price"/>
+                                    </group>
+                                    <group>
+                                        <field name="default_code"/>
+                                        <label for="ean13"/>
+                                        <div name="ean">
+                                            <field name="ean13" placeholder="e.g. 5901234123457"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field groups="product.group_product_variant" name="variants"/>
+                                        <field name="price_margin" groups="product.group_product_variant"/>
+                                        <field name="price_extra" groups="product.group_product_variant"/>
+                                    </group>
+                                </group>
+                                <field name="description" placeholder="describe the product characteristics..."/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <group name="procurement">
+                                    <group name="general">
+                                        <field name="procure_method" groups="base.group_user"/>
+                                        <field name="supply_method" groups="base.group_user"/>
+                                        <field name="cost_method" groups="product.group_costing_method"/>
+                                        <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                                        <div groups="base.group_user">
+                                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
+                                            <button name="%(action_view_change_standard_price)d" string="- update"
+                                                type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                                                class="oe_link" groups="product.group_costing_method"/>
+                                        </div>
+                                    </group>
+                                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this service, nothing special will be triggered
+                                            to deliver the customer, as you set the procurement method as
+                                            'Make to Stock'.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, OpenERP will <b>use the available
+                                            inventory</b> for the delivery order.
+                                            <br/><br/>
+                                            If there are not enough quantities available, the delivery order
+                                            will wait for new products. To fulfill the inventory, you should
+                                            create others rules like orderpoints.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, a delivery order will be created.
+                                            OpenERP will consider that the <b>required quantities are always
+                                            available</b> as it's a consumable (as a result of this, the quantity
+                                            on hand may become negative).
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this service to a customer, <b>a draft purchase order</b>
+                                            will be created in order to subcontract the job 
+                                            <i attrs="{'invisible': [('seller_id','=',False)]}">to 
+                                            <field name="seller_id" class="oe_inline"/></i>.
+                                        </p>
+                                        <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                                            When you sell this product, OpenERP will trigger <b>a draft
+                                            purchase order</b> to buy the required quantities to the supplier.
+                                            The delivery order will be ready after having received the
+                                            products.
+                                        </p>
+                                    </group>
+                                    <group name="delay" string="Delays">
+                                        <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <div attrs="{'invisible':[('type','=','service')]}">
+                                            <field name="produce_delay" class="oe_inline"/> days
+                                        </div>
+                                        <field name="active"/>
+                                    </group>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
+                                    </group>
+                                </group>
+                                <separator string="Suppliers"/>
+                                <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                                <separator string="Description for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                            </page>
+                            <page string="Inventory" groups="base.group_user">
+                                <group name="inventory">
+                                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                                        <label for="qty_available"/>
+                                            <div>
+                                                <field name="qty_available" class="oe_inline"/>
+                                                <button name="%(action_view_change_product_quantity)d" string="update"
+                                                type="action"
+                                                class="oe_link"/>
+                                            </div>
+                                            <field name="incoming_qty" class="oe_inline"/>
+                                            <field name="outgoing_qty" class="oe_inline"/>
+                                            <field name="virtual_available" class="oe_inline"/>
+                                    </group>
+                                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
+                                        <field name="track_production" groups="stock.group_production_lot"/>
+                                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
+                                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                                    </group>
+                                    <group name="status" string="Status">
+                                        <field name="state"/>
+                                        <field name="product_manager"/>
+                                    </group>
+                                    <group name="store" string="Storage Location">
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
+                                        <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
+                                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+                                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+                                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
+                                <group name="sale">
+                                    <group string="Sale Conditions">
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline"/> months
+                                        </div>
+                                        <label for="sale_delay"/>
+                                        <div>
+                                            <field name="sale_delay" class="oe_inline"/> days
+                                        </div>
+                                    </group>
+                                    <group groups="product.group_uos" string="Unit of Measure">
+                                        <field name="uos_id"/>
+                                        <field name="uos_coeff"/>
+                                        <field name="mes_type"/>
+                                    </group>
+                                </group>
+                                <field name="packaging" groups="product.group_stock_packaging">
+                                    <form string="Packaging" version="7.0">
+                                        <group col="4">
+                                            <field name="ean"/>
+                                            <field name="sequence" invisible="1"/>
+                                            <newline/>
+                                            <field name="qty"/>
+                                            <field name="ul"/>
+                                            <field name="weight_ul"/>
+                                            <separator colspan="4" string="Palletization"/>
+                                            <field name="ul_qty"/>
+                                            <field name="rows"/>
+                                            <field name="weight"/>
+                                            <separator colspan="4" string="Pallet Dimension"/>
+                                            <field name="height"/>
+                                            <field name="width"/>
+                                            <field name="length"/>
+                                        </group>
+                                        <separator colspan="4" string="Description"/>
+                                        <field name="name"/>
+                                    </form>
+                                </field>
+                                <separator string="Description for Quotations"/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
+                            </page>
+                            <page string="Accounting" groups="account.group_account_invoice">
+                                <group groups="stock.group_inventory_valuation">
+                                    <separator string="Inventory Valuation" colspan="4"/>
+                                    <group colspan="2" col="2">
+                                        <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
+                                    </group>
+                                    <group colspan="2" col="2">
+                                        <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
+                                            domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    </group>
+                                </group>
+                                <newline/>
+                                <group name="properties">
+                                    <group>
+                                        <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" groups="account.group_account_user"/>
+                                        <field name="taxes_id" colspan="2" attrs="{'readonly':[('sale_ok','=',0)]}" widget="many2many_tags"/>
+                                    </group>
+                                    <group>
+                                        <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" groups="account.group_account_user"/>
+                                        <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+        
+#################################################################################################### ZEEVA
+    <!-- ZEEVA Product Finished Form View  -->
+        <record id="zeeva_product_finished_form_view" model="ir.ui.view">
+            <field name="name">zeeva.product.finished.form.view</field>
+            <field name="model">product.product</field>
+            <field name="type">form</field>
+            <field eval="15" name="priority"/>
+            <field name="arch" type="xml">
+                <form string="Product Variant" version="7.0">
+                    <sheet>
+                        <group colspan="2" col="4" >
+                            <separator string="Description" colspan="4"/>
+                            <field name="product_tmpl_id" string="Raw Product" colspan="2" options='{"quick_create": False}' domain="[('raw_approval_flag','=',True)]"/>
+                            <field name="zeeva_partner_id" colspan="2" required="1" domain="[('customer','=',True)]"/>
+                            <newline/>
+                            <field name="default_code" string="Product Code" colspan="2" required="1" />
+                            <field name="name" string="Product Name" colspan="2" required="1"/>
+                            <field name="active" groups="base.group_extended"/>
+                        </group>
+                        <group colspan="1" col="1" >
+                            <separator string="Thumbnail picture" colspan="1"/>
+<!--                             <field name="product_image" widget='image' nolabel="1" height="80"/> -->
+                        </group>
+                        <group colspan="1" col="2" >
+                            <separator string="Log" colspan="4"/>
+                            <field name="finished_creation_user" readonly="1"/>
+                            <field name="finished_creation_date" readonly="1"/>
+                        </group>
+                        
+                        <notebook colspan="4">
+                            <page string="Details">
+                                <separator string="Product Cometics" colspan="4"/>
+                                <field name="zeeva_cosmetics" colspan="4" nolabel="1"/>
+                                <separator string="Other Details" colspan="4"/>
+                                <field name="zeeva_others" colspan="4" nolabel="1"/>
+                            </page>
+                            <page string="Transactions history">
+                                <separator string="Relates Projects"/>
+                                <separator string="Relates Sales"/>
+                                <separator string="Related Purchases"/>
+                            </page>
+                            <page string="Dimensions" groups="base.group_extended">
+                                <separator string="Dimension Values" colspan="4"/>
+<!--                                 <field name="dimension_value_ids" context="{'product_tmpl_id':product_tmpl_id}" nolabel="1" colspan="4"/> -->
+                            </page>
+                            <page string="Price" groups="base.group_extended">
+                                <field name="list_price" string="Template Sale Price" readonly="1"/>
+                                <field name="price_margin" select="1"/>
+                                <field name="price_extra" select="1"/>
+<!--                                 <field name="cost_price_extra"/> -->
+                            </page>
+                            <page string="Lots" groups="base.group_extended">
+                                <field name="track_production" />
+                                <field name="track_incoming" />
+                                <field name="track_outgoing" />
+                            </page>
+                        </notebook>
+                        
+                        <button name="dummy1" string="Create R&amp;D Project" colspan="1"
+                                type="action" icon="terp-stock_effects-object-colorize" attrs="{}" groups="" 
+                                context="{'default_raw_product_id': product_tmpl_id, 
+                                        'default_finished_product_id': active_id,
+                                        'default_customer_id': zeeva_partner_id}"/>
+                        <button name="dummy2" string="Create Admin Project" colspan="1"
+                                type="action" icon="terp-stock_effects-object-colorize" attrs="{}" groups="" 
+                                context="{'default_raw_product_id': product_tmpl_id, 
+                                        'default_finished_product_id': active_id,
+                                        'default_customer_id': zeeva_partner_id}"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+#############################################################################################################################################
+
+<filter string="Headphones" icon="terp-accessories-archiver" 
+                            domain="[('zeeva_categ_seq','in',[  200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 
+                                                                210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 
+                                                                220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 
+                                                                230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 
+                                                                240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 
+                                                                250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 
+                                                                260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 
+                                                                270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 
+                                                                280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 
+                                                                290, 291, 292, 293, 294, 295, 296, 297, 298, 299])]"/>
+                    <filter string="Speakers" icon="terp-accessories-archiver" 
+                            domain="[('zeeva_categ_seq','in',[  300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 
+                                                                310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 
+                                                                320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 
+                                                                330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 
+                                                                340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 
+                                                                350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 
+                                                                360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 
+                                                                370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 
+                                                                380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 
+                                                                390, 391, 392, 393, 394, 395, 396, 397, 398, 399])]"/>
+                    <filter string="Other products" icon="terp-accessories-archiver" 
+                            domain="[('zeeva_categ_seq','not in',[  100, 101, 102, 103, 104, 105, 106, 107, 108, 109,
+                                                                    110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
+                                                                    120, 121, 122, 123, 124, 125, 126, 127, 128, 129,
+                                                                    130, 131, 132, 133, 134, 135, 136, 137, 138, 139,
+                                                                    140, 141, 142, 143, 144, 145, 146, 147, 148, 149,
+                                                                    150, 151, 152, 153, 154, 155, 156, 157, 158, 159,
+                                                                    160, 161, 162, 163, 164, 165, 166, 167, 168, 169,
+                                                                    170, 171, 172, 173, 174, 175, 176, 177, 178, 179,
+                                                                    180, 181, 182, 183, 184, 185, 186, 187, 188, 189,
+                                                                    190, 191, 192, 193, 194, 195, 196, 197, 198, 199,
+                                                                    200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 
+                                                                    210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 
+                                                                    220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 
+                                                                    230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 
+                                                                    240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 
+                                                                    250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 
+                                                                    260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 
+                                                                    270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 
+                                                                    280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 
+                                                                    290, 291, 292, 293, 294, 295, 296, 297, 298, 299,
+                                                                    300, 301, 302, 303, 304, 305, 306, 307, 308, 309, 
+                                                                    310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 
+                                                                    320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 
+                                                                    330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 
+                                                                    340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 
+                                                                    350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 
+                                                                    360, 361, 362, 363, 364, 365, 366, 367, 368, 369, 
+                                                                    370, 371, 372, 373, 374, 375, 376, 377, 378, 379, 
+                                                                    380, 381, 382, 383, 384, 385, 386, 387, 388, 389, 
+                                                                    390, 391, 392, 393, 394, 395, 396, 397, 398, 399,
+                                                                    1000, 1001, 1002, 1003, 1004, 1005, 1006, 1007, 1008, 1009, 
+                                                                    1010, 1011, 1012, 1013, 1014, 1015, 1016, 1017, 1018, 1019, 
+                                                                    1020, 1021, 1022, 1023, 1024, 1025, 1026, 1027, 1028, 1029, 
+                                                                    1030, 1031, 1032, 1033, 1034, 1035, 1036, 1037, 1038, 1039,
+                                                                    1040, 1041, 1042, 1043, 1044, 1045, 1046, 1047, 1048, 1049])]"/>
+                                                                    
+                                                                    
+                                                                    
+                                                                    
+RML 
+
+
+<header>
+    <pageTemplate>
+        <frame id="first" x1="1.3cm" y1="3.0cm" height="21.7cm" width="19.0cm"/>
+         <stylesheet>
+            <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
+            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+         </stylesheet>
+        <pageGraphics>
+            <!-- You Logo - Change X,Y,Width and Height -->
+            <image x="1.3cm" y="27.7cm" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
+            <setFont name="DejaVu Sans" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+
+            <!-- page header -->
+            <lines>1.3cm 27.6cm 20cm 27.6cm</lines>
+            <drawRightString x="20cm" y="27.8cm">[[ company.rml_header1 ]]</drawRightString>
+            <drawString x="1.3cm" y="27.3cm">[[ company.partner_id.name ]]</drawString>
+            <place x="1.3cm" y="25.3cm" height="1.8cm" width="15.0cm">
+                <para style="main_header">[[ display_address(company.partner_id) or  '' ]]</para>
+            </place>
+            <lines>1.3cm 26cm 7cm 26cm</lines>
+
+            <!-- left margin -->
+            <rotate degrees="90"/>
+            <fill color="grey"/>
+            <drawString x="2.65cm" y="-0.4cm">Zeeva International Limited - Plugged in</drawString>
+            <fill color="black"/>
+            <rotate degrees="-90"/>
+
+            <!--page bottom-->
+            <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
+            <place x="1.3cm" y="0cm" height="2.55cm" width="19.0cm">
+                <para style="main_footer">[[ company.rml_footer ]]</para>
+                <para style="main_footer">Contact : [[ user.name ]] - Page: <pageNumber/> / <pageCount/></para>
+            </place>
+        </pageGraphics>
+    </pageTemplate>
+</header>   

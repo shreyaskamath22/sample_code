@@ -1,0 +1,401 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+
+        
+        <!-- Travel Policies -->
+        <record model="travel.policies.rules" id="travel_policies_rules_id">
+            <field name="name">Travel Policies/Eligibilities</field>
+            
+        </record>
+
+        <record model="travel.policies.lodging" id="lodging_01">
+            <field name="grade">A1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">1000</field>
+            <field name="expense_high">1250</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_02">
+            <field name="grade">A1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">750</field>
+            <field name="expense_high">1000</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_03">
+            <field name="grade">A1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">700</field>
+            <field name="expense_high">750</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_04">
+            <field name="grade">A1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">700</field>
+            <field name="expense_high">750</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_05">
+            <field name="grade">B1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">1250</field>
+            <field name="expense_high">1500</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_06">
+            <field name="grade">B1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">1100</field>
+            <field name="expense_high">1300</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_07">
+            <field name="grade">B1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">1000</field>
+            <field name="expense_high">1250</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_08">
+            <field name="grade">B1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">1000</field>
+            <field name="expense_high">1100</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_09">
+            <field name="grade">B2</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">2000</field>
+            <field name="expense_high">2500</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_10">
+            <field name="grade">B2</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">1300</field>
+            <field name="expense_high">1600</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_11">
+            <field name="grade">B2</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">1250</field>
+            <field name="expense_high">1500</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_12">
+            <field name="grade">B2</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">1250</field>
+            <field name="expense_high">1400</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_13">
+            <field name="grade">C1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">2750</field>
+            <field name="expense_high">3500</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_14">
+            <field name="grade">C1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">1600</field>
+            <field name="expense_high">2350</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_15">
+            <field name="grade">C1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">1500</field>
+            <field name="expense_high">1950</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_16">
+            <field name="grade">C1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">1500</field>
+            <field name="expense_high">1800</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_17">
+            <field name="grade">C2</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">3500</field>
+            <field name="expense_high">4200</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_18">
+            <field name="grade">C2</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">2350</field>
+            <field name="expense_high">2850</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_19">
+            <field name="grade">C2</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">1950</field>
+            <field name="expense_high">2500</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_20">
+            <field name="grade">C2</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">1750</field>
+            <field name="expense_high">2250</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_21">
+            <field name="grade">C3</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">4200</field>
+            <field name="expense_high">5000</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_22">
+            <field name="grade">C3</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">2850</field>
+            <field name="expense_high">3800</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_23">
+            <field name="grade">C3</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">2500</field>
+            <field name="expense_high">3450</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.lodging" id="lodging_24">
+            <field name="grade">C3</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">2250</field>
+            <field name="expense_high">2800</field>
+            <field name="lodging_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_29">
+            <field name="grade">A1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">350</field>
+            <field name="expense_high">400</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_30">
+            <field name="grade">A1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">300</field>
+            <field name="expense_high">350</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_31">
+            <field name="grade">A1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">225</field>
+            <field name="expense_high">275</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_32">
+            <field name="grade">A1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">200</field>
+            <field name="expense_high">250</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_33">
+            <field name="grade">B1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">400</field>
+            <field name="expense_high">450</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_34">
+            <field name="grade">B1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">350</field>
+            <field name="expense_high">400</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_35">
+            <field name="grade">B1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">275</field>
+            <field name="expense_high">375</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_36">
+            <field name="grade">B1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">250</field>
+            <field name="expense_high">300</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+		
+		<record model="travel.policies.boarding" id="lodging_37">
+            <field name="grade">B2</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">450</field>
+            <field name="expense_high">550</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_38">
+            <field name="grade">B2</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">400</field>
+            <field name="expense_high">500</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_39">
+            <field name="grade">B2</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">375</field>
+            <field name="expense_high">475</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_40">
+            <field name="grade">B2</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">300</field>
+            <field name="expense_high">350</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_41">
+            <field name="grade">C1</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">550</field>
+            <field name="expense_high">700</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_42">
+            <field name="grade">C1</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">450</field>
+            <field name="expense_high">650</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_43">
+            <field name="grade">C1</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">475</field>
+            <field name="expense_high">575</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_44">
+            <field name="grade">C1</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">350</field>
+            <field name="expense_high">450</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_45">
+            <field name="grade">C2</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">775</field>
+            <field name="expense_high">850</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_46">
+            <field name="grade">C2</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">675</field>
+            <field name="expense_high">700</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_47">
+            <field name="grade">C2</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">575</field>
+            <field name="expense_high">675</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_48">
+            <field name="grade">C2</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">525</field>
+            <field name="expense_high">600</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_49">
+            <field name="grade">C3</field>
+            <field name="classification_level">Metros</field>
+            <field name="expense_low">850</field>
+            <field name="expense_high">1000</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_50">
+            <field name="grade">C3</field>
+            <field name="classification_level">Tier1</field>
+            <field name="expense_low">750</field>
+            <field name="expense_high">900</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_51">
+            <field name="grade">C3</field>
+            <field name="classification_level">Tier2</field>
+            <field name="expense_low">675</field>
+            <field name="expense_high">850</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+        
+        <record model="travel.policies.boarding" id="lodging_52">
+            <field name="grade">C3</field>
+            <field name="classification_level">Other cities</field>
+            <field name="expense_low">600</field>
+            <field name="expense_high">800</field>
+            <field name="boarding_id" ref="travel_policies_rules_id"/>
+        </record>
+
+
+		
+    </data>
+</openerp>

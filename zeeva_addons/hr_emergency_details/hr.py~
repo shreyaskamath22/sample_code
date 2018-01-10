@@ -1,0 +1,202 @@
+
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    This module copyright (C) 2013 Savoir-faire Linux
+#    (<http://www.savoirfairelinux.com>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp.osv import fields, osv
+from datetime import datetime,date,timedelta
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT as OE_DFORMAT
+from bsddb.dbtables import _columns
+
+blood_group_selection = [
+    ('a+', 'A+'),
+    ('a-', 'A-'),
+    ('b+', 'B+'),
+    ('b-', 'B-'),
+    ('ab+', 'AB+'),
+    ('ab-', 'AB-'),
+    ('o+', 'O+'),
+    ('o-', 'O-'),
+]
+
+class res_partner_bank(osv.osv):
+    _inherit = 'res.partner.bank'
+    
+    def _bank_type_get(self, cr, uid, context=None):
+        bank_type_obj = self.pool.get('res.partner.bank.type')
+
+        result = []
+        type_ids = bank_type_obj.search(cr, uid, [])
+        bank_types = bank_type_obj.browse(cr, uid, type_ids, context=context)
+        for bank_type in bank_types:
+            result.append((bank_type.code, bank_type.name))
+        return result
+    
+    
+    
+    _columns = {
+    
+    'state': fields.selection(_bank_type_get, 'Bank Account Type',
+            change_default=True),
+            
+    'partner_id': fields.many2one('res.partner', 'Account Owner',
+            ondelete='cascade', select=True),
+    }
+
+
+class hr_employee(osv.osv):
+    _inherit = 'hr.employee'
+    
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+#         for x in self.browse(cr,uid,id,default=None, context=None):
+#             department_id = x.department_id
+#         print department_id, "oooooooooooooooooooooooooooooooooooo"
+        if not default:
+            default = {}
+        default.update({
+            'auto_emp_code': self.pool.get('ir.sequence').get(cr, uid, 'hr.employee'),
+            #'auto_emp_code_same': self.pool.get('ir.sequence').get(cr, uid, 'hr.employee'),
+        })
+        return super(hr_employee, self).copy(cr, uid, id, default, context=context)
+    
+    def _calculate_age(self, cr, uid, ids, birthday, arg, context=None):
+
+        res = dict.fromkeys(ids, False)
+        for ee in self.browse(cr, uid, ids, context=context):
+            if ee.birthday:
+                dBday = datetime.strptime(ee.birthday, OE_DFORMAT).date()
+                dToday = datetime.now().date()
+                res[ee.id] = (dToday - dBday).days / 365
+        return res
+        
+    def _compute_day(self, cr, uid, ids, fields, arg, context=None):
+        res = {}
+        for statement in self.browse(cr, uid, ids, context=context):
+            res[statement.id] = statement.auto_emp_code
+            #for line in statement.line_ids:
+             #   res[statement.id] += line.amount
+        return res
+
+    _columns = {
+        'company_id':fields.many2one('res.company','Company'),
+        'same_as_above':fields.boolean('Same As Above'),
+        'auto_emp_code': fields.char('Employee Code', size=64),
+        'auto_emp_code_same': fields.function(_compute_day, string='Employee Code',type="char"),
+        'home_address_new': fields.text('Home Address'),
+        'permanent_address_new': fields.text('Permanent Address'),
+        'blood_group': fields.selection(blood_group_selection, 'Blood Group', help='Blood Group Of The Employee'),
+        'age': fields.function(_calculate_age, type='integer', method=True, string='Age'),
+        'no_of_dependents': fields.integer(string='No Of Dependents'),
+        'pan_card_no': fields.char('PAN Card No.'), 
+        'emergency_contact': fields.char('Emergency Contact Person', help="Name of the Emergency contact Person"),
+        'permanent_address': fields.many2one('res.partner', 'Permanent Address', domain="[('name','=','abcd')]"),
+        'personal_emailid': fields.char('Personal Email ID', size=240),
+        'relation': fields.char('Relation', help='Relation with Employee'),
+        'emergency_phone': fields.char('Emergency Phone', size = 12, help='Emergency Phone Number'),
+        'employee_id': fields.many2one('hr.employee', 'Employee'),
+    }
+    
+    _defaults = {
+        'auto_emp_code': lambda obj, cr, uid, context: '/',
+        #'auto_emp_code_same': lambda obj, cr, uid, context: '/',
+    }
+    _sql_constraints = [
+        ('name_auto_emp_code_uniq', 'unique(auto_emp_code, company_id)', 'Employee Code must be unique per Company!'),
+        #('name_auto_emp_code_same_uniq', 'unique(auto_emp_code_same, company_id)', 'Employee Code must be unique per Company!'),
+    ]
+    
+    def onchange_same_as_above(self,cr, uid, ids,same_as_above,home_address_new,context=None):
+        value={}
+        if same_as_above and home_address_new:
+            print "ooooooooooooooooooooooooooooooooooooooooooo"
+            if same_as_above == True:   
+                print "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"             
+                value = {'permanent_address_new':home_address_new}
+            #elif same_as_above == False:
+            #    value = {'permanent_address_new':''}
+        else:
+                #print "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+                value = {'permanent_address_new':''}
+        
+        return {'value':value}
+    
+    def create(self, cr, uid, vals, context=None):
+        print vals['department_id'], "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+        department_id = vals['department_id']
+        print department_id, "cccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        search_dept = self.pool.get('hr.department').search(cr,uid,[('id','=',department_id)], context=context)
+        
+        for g in self.pool.get('hr.department').browse(cr,uid,search_dept):
+            dept_code = g.code
+            dept_name = g.name
+            print dept_code, "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        
+        print search_dept, "lllllllllllllllllllllllllllllllllllllllllllllllllll"
+        
+        
+        if dept_name in ('Human Resources','Sales & Marketing','Accounts & Finance','ERP Department','Shipping & Distribution','Artwork & Development','Sales Support'):
+            print "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+            
+            search_sequence_record = self.pool.get('ir.sequence').search(cr,uid,[('code','=','hr.employee')], context=context)
+            
+            print search_sequence_record, "ttttttttttttttttttttttttttttttttttttttttttt"
+            
+            write_dept_code = self.pool.get('ir.sequence').write(cr, uid, search_sequence_record, {'prefix': dept_code})
+            
+        
+        
+        if vals.get('auto_emp_code','/')=='/':
+            vals['auto_emp_code'] = self.pool.get('ir.sequence').get(cr, uid, 'hr.employee') or '/'
+            
+        employee_id_created = super(hr_employee, self).create(cr, uid, vals, context=context)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','hr.employee')], context=context)
+        
+        print employee_id_created, search_template, "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
+        
+        if search_template:
+            
+                send_welcome_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], employee_id_created, force_send=True, context=context)
+        
+        return employee_id_created
+    
+
+class res_partner_bank(osv.osv):
+
+    _inherit = 'res.partner.bank'
+    
+    _columns = {
+        'bank_ifsc_code': fields.char('Bank IFSC Code'),
+        'bank_account_id': fields.many2one('res.partner.bank', 'Bank Account Number'),  
+    }
+    
+class hr_department(osv.osv):
+
+    _inherit = 'hr.department'
+    
+    _columns = {
+        'code': fields.char('Code'),
+    }
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_wireless_update_acc_qty" model="ir.ui.view">
+            <field name="name">Update Accessory Quantity</field>
+            <field name="model">wireless.update.acc.qty</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Update Accessory Quantity" version="7.0">
+                	<p>Do you really want to calculate quantity based on mrc and revenue of accessory transactions which contains discounts?</p>
+                	<p>Delete feature lines containing SC2HDAT1B, SC2HDAT1, B2HDAT1B, B2HDAT1 and update attached postpaid or upgrade transactions accordingly.</p>
+                	<footer>
+                		<button name="upgrade_acc" string="Update Accessory Records" type="object"
+                		 class="oe_highlight"/>
+                		 <button name="update_dsr_delete_soc" string="Update Transactions for deleted SOC" type="object"
+                		 class="oe_highlight"/>
+	                    or
+	                    <button string="Cancel" class="oe_link" special="cancel" />
+                	</footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wireless_update_acc_qty" model="ir.actions.act_window">
+            <field name="name">Upgrade Accessory Quantity</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.update.acc.qty</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_wireless_update_acc_qty"/>
+            <field name="target">new</field>
+        </record>
+
+       	<menuitem action="action_wireless_update_acc_qty" id="menu_action_wireless_update_acc_qty" parent="wireless_dsr_config_menu" sequence="100" groups="base.group_system"/>
+
+    </data>
+</openerp>

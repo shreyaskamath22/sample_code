@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wireless_maintenance,wireless.maintenance,model_wireless_maintenance,base.group_erp_manager,1,1,0,0
+access_wireless_maintenance_links,wireless.maintenance.links,model_wireless_maintenance_links,base.group_erp_manager,1,1,1,1
+access_wireless_link_type,wireless.link.type,model_wireless_link_type,base.group_erp_manager,1,1,0,0
+access_wireless_maintenance_manager,wireless.maintenance,model_wireless_maintenance,base.group_user,1,1,0,0
+access_wireless_maintenance_links_manager,wireless.maintenance.links,model_wireless_maintenance_links,base.group_user,1,1,0,0
+access_wireless_link_type_manager,wireless.link.type,model_wireless_link_type,base.group_user,1,1,0,0

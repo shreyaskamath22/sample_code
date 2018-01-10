@@ -1,0 +1,15 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_account_invoice_dispatch_salesman,shipment.dispatch,model_shipment_dispatch,account.group_account_invoice,1,1,1,1
+access_account_invoice_remarks_salesman,remarks.dispatch,model_remarks_dispatch,account.group_account_invoice,1,1,1,1
+access_account_invoice_wizard_salesman,dispatch.process.wizard,model_dispatch_process_wizard,account.group_account_invoice,1,1,1,1
+access_account_invoice_wizard1_salesman,dispatch.process.wizard1,model_dispatch_process_wizard1,account.group_account_invoice,1,1,1,1
+
+access_stock_dispatch_user,shipment.dispatch,model_shipment_dispatch,stock.group_stock_user,1,1,1,1
+access_stock_dispatch_remarks_user,remarks.dispatch,model_remarks_dispatch,stock.group_stock_user,1,1,1,1
+access_stock_dispatch_wizard_user,dispatch.process.wizard,model_dispatch_process_wizard,stock.group_stock_user,1,1,1,1
+access_stock_dispatch_wizard1_user,dispatch.process.wizard1,model_dispatch_process_wizard1,stock.group_stock_user,1,1,1,1
+
+access_sale_dispatch_user,shipment.dispatch,model_shipment_dispatch,base.group_sale_salesman_all_leads,1,1,1,1
+access_sale_dispatch_remarks_user,remarks.dispatch,model_remarks_dispatch,base.group_sale_salesman_all_leads,1,1,1,1
+access_sale_dispatch_wizard_user,dispatch.process.wizard,model_dispatch_process_wizard,base.group_sale_salesman_all_leads,1,1,1,1
+access_sale_dispatch_wizard1_user,dispatch.process.wizard1,model_dispatch_process_wizard1,base.group_sale_salesman_all_leads,1,1,1,1

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <record id="view_wireless_dsr_search_transactions" model="ir.ui.view">
+        <field name="name">wireless.dsr.search.transactions.form</field>
+        <field name="model">wireless.dsr.search.transactions</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Sales Entry Advance Search" version="7.0">
+                <group>
+                    <label for="from_trans_date" string="Transaction Date"/>
+                    <div>
+                        <field name="from_trans_date" class="oe_inline" required="1"/>-
+                        <field name="end_trans_date" class="oe_inline" required="1"/>
+                    </div>
+                </group>
+                <group>
+                    <group>
+                        <field name="is_postpaid"/>
+                        <field name="is_prepaid"/>
+                        <field name="is_acc"/>
+                    </group>
+                    <group>
+                        <field name="is_upgrade"/>
+                        <field name="is_feature"/>
+                    </group>
+                </group>
+                <group>
+                    <group>
+                        <field name="dealer_code"/>
+                        <field name="sim_no"/>
+                        <field name="ban_no"/>
+                    </group>
+                    <group>
+                        <field name="imei_no"/>
+                        <field name="phone_no"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="fetch_transactions_dsr" string="View Sales Entries" class="oe_highlight" type="object"/>
+                        or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+     <record id="action_wireless_dsr_search_transactions" model="ir.actions.act_window">
+        <field name="name">Search Sales Entry Transactions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">wireless.dsr.search.transactions</field>
+        <field name="view_type">form</field>
+        <field name="view_id" ref="view_wireless_dsr_search_transactions"/>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="wireless_trans_menu" name="Sales Process Transactions" parent="wirelessvision_dsr.wireless_dsr_menu" sequence="2" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one"/>
+    <menuitem action="action_wireless_dsr_search_transactions" id="menu_report_wv_trans_all" parent="wireless_trans_menu" sequence="10"/>
+
+    <record id="view_wireless_transactions_tree" model="ir.ui.view">
+        <field eval="1" name="priority"/>
+        <field name="name">wireless.transactions.report.tree</field>
+        <field name="model">wireless.transactions.report</field>
+        <field name="arch" type="xml">
+            <tree string="Transactions Analysis" create="false">
+                <field name="dsr_entry_no"/>
+                <field name="dsr_trans_type"/>
+                <field name="dsr_date"/>
+                <field name="sales_employee_id"/>
+                <field name="dsr_store_id"/>
+                <field name="dsr_prod_type"/>
+                <field name="dsr_soc_code"/>
+                <field name="dsr_rev_gen"/>
+            	<field name="dsr_phone_no"/>
+            	<field name="dsr_sim_no"/>
+            	<field name="dsr_imei_no"/>
+                <field name="dsr_monthly_access"/>
+                <field name="dsr_contract_term" invisible="1"/>
+                <field name="dsr_cust_ban_no"/>
+                <field name="state"/>
+                <field name="pseudo_date"/>
+				<field name="customer_name"/>
+				<field name="dealer_code"/>
+                <field name="dsr_temp_no"/>
+                <field name="dsr_transaction_id"/>
+                <field name="dsr_phone_purchase_type"/>
+                <field name="dsr_comm_amnt"/>
+                <field name="dsr_phone_spiff"/>
+                <field name="dsr_comm_added"/>
+            	<field name="credit_class"/>
+                <field name="dsr_eip_no"/>
+                <field name="dsr_disc_percent"/>
+                <field name="dsr_mob_port"/>
+                <field name="dsr_port_comp"/>
+                <field name="dsr_ship_to"/>
+                <field name="dsr_trade_inn"/>
+                <field name="prm_dsr_smd"/>
+                <field name="prm_dsr_pmd"/>
+                <field name="noncommissionable"/>
+                <field name="comments"/>
+            </tree>
+        </field>
+    </record>
+
+<!--     <record id="view_wireless_transactions_report_search" model="ir.ui.view">
+        <field name="name">wireless.transactions.report.search</field>
+        <field name="model">wireless.transactions.report</field>
+        <field name="arch" type="xml">
+            <search string="Transactions Analysis">
+				<field name="dsr_phone_no"/>
+				<field name="dsr_sim_no"/>
+                <field name="dsr_imei_no"/>
+                <group expand="1" string="Group By...">
+                    <filter string="Product Type" icon="terp-personal" name="Product Type" context="{'group_by':'dsr_prod_type'}"/>
+                    <filter string="Sales Rep." icon="terp-partner"  name="Sales Rep." context="{'group_by':'sales_employee_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record> -->
+
+    <record id="action_wireless_transactions_all" model="ir.actions.act_window">
+        <field name="name">Transactions</field>
+        <field name="res_model">wireless.transactions.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,graph</field>
+        <!-- <field name="search_view_id" ref="view_wireless_transactions_report_search"/> -->
+        <field name="view_id" ref="view_wireless_transactions_tree"/>
+    </record>
+
+    <record id="view_materialized_view_refresh_log_form" model="ir.ui.view">
+            <field name="name">view.materialized.view.refresh.log.form</field>
+            <field name="model">materialized.view.refresh.log</field>
+            <field name="arch" type="xml">
+                <form string="Materialized View Refresh Log" version="7.0">
+                    <group>
+                        <field name="date"/>
+                        <field name="user_id"/>
+                        <field name="status"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_materialized_view_refresh_log_tree" model="ir.ui.view">
+            <field name="name">view.materialized.view.refresh.log.tree</field>
+            <field name="model">materialized.view.refresh.log</field>
+            <field name="arch" type="xml">
+                <tree string="Materialized View Refresh Log">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_materialized_view_refresh_log_tree" model="ir.actions.act_window">
+            <field name="name">Materialized View Refresh</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">materialized.view.refresh.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_materialized_view_refresh_log_tree"/>
+        </record>
+
+        <menuitem action="action_materialized_view_refresh_log_tree" id="menu_materialized_view_refresh_log" parent="base.menu_administration" sequence="11"/>
+
+</data>
+</openerp>

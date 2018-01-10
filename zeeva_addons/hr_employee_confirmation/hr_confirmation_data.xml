@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+       
+
+
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_confirmation_submitted_manager" model="mail.message.subtype">
+            <field name="name">Submitted to Reporting Manager</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Employee Confirmation form Submitted to Reporting Manager</field>
+        </record>
+        
+        <record id="mt_confirmation_confirmed_by_reporting_manager" model="mail.message.subtype">
+            <field name="name">Confirmed By Manager</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Confirmed by Reporting Manager, waiting HRO validation</field>
+        </record>
+        
+        <record id="mt_validated_by_hro" model="mail.message.subtype">
+            <field name="name">Validated By HRO</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Confirmation validated by HRO</field>
+        </record>
+        
+        <record id="mt_confirmation_rejected" model="mail.message.subtype">
+            <field name="name">Confirmation Rejected</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Confirmation Rejected by Reporting Manager and has been kept on hold</field>
+        </record>
+        
+        <record id="mt_confirmation_warning" model="mail.message.subtype">
+            <field name="name">Warning</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Employee confirmation has been put in the Warning state</field>
+        </record>
+        
+        <record id="mt_confirmation_terminated" model="mail.message.subtype">
+            <field name="name">Terminated</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="description">Employee has been Terminated</field>
+        </record>
+
+    </data>
+</openerp>

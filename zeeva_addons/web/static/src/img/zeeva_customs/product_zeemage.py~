@@ -1,0 +1,280 @@
+# -*- coding: utf-8 -*-
+
+#import datetime
+#from lxml import etree
+#import math
+#import pytz
+#import re
+
+import openerp
+#from openerp import SUPERUSER_ID
+from openerp import pooler, tools
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+
+import io
+import StringIO
+
+from PIL import Image
+from PIL import ImageOps
+from random import random
+
+def image_resize_image(base64_source, size=(800, 800), encoding='base64', filetype='PNG', avoid_if_small=False):
+    
+    if not base64_source:
+        return False
+    if size == (None, None):
+        return base64_source
+    image_stream = io.BytesIO(base64_source.decode(encoding))
+    image = Image.open(image_stream)
+
+    asked_width, asked_height = size
+
+    # check image size: do not create a thumbnail if avoiding smaller images
+    if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
+        return base64_source
+
+    if image.size <> size:
+        
+        # Save large image zeemage with a fixed width of 800px
+        if asked_width == 800:
+            if image.size[0] <= asked_width:
+                return base64_source
+                
+            else:
+                temp_width = 800
+                temp_height = int(temp_width * image.size[1] / image.size[0])
+                size = temp_width, temp_height
+                
+        # Save a medium image zeemage with a fixed height of 128px
+        elif asked_height == 128:
+            temp_height = 128
+            temp_width = int(temp_height * image.size[0] / image.size[1])
+            size = temp_width, temp_height
+            
+        # Save a product spec image with a fixed size 90px*70px
+        elif asked_height == 70:
+            size = 140, 140
+        
+        # Save a product thumbnail image with a fixed width of 64px
+        elif asked_width == 64:
+            temp_width = 64
+            temp_height = int(temp_width * image.size[1] / image.size[0])
+            size = temp_width, temp_height
+        
+        # Return a product image with a fixed width of 170px
+        elif asked_width == 170:
+            temp_width = 170
+            temp_height = int(temp_width * image.size[1] / image.size[0])
+            size = temp_width, temp_height
+            
+        else:
+            return base64_source
+        
+        # If you need faster thumbnails you may use use Image.NEAREST
+        image = ImageOps.fit(image, size, Image.ANTIALIAS)
+    if image.mode not in ["1", "L", "P", "RGB", "RGBA"]:
+        image = image.convert("RGB")
+
+    background_stream = StringIO.StringIO()
+    image.save(background_stream, filetype)
+    return background_stream.getvalue().encode(encoding)
+
+def image_resize_zeemage_large(base64_source, size=(800, None), encoding='base64', filetype='PNG', avoid_if_small=True):
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    
+def image_resize_zeemage_medium(base64_source, size=(None, 128), encoding='base64', filetype='PNG', avoid_if_small=True):
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+
+def image_resize_prod_spec(base64_source, size=(70, 70), encoding='base64', filetype='PNG', avoid_if_small=True):
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+
+def image_resize_prod_thumbnail(base64_source, size=(64, None), encoding='base64', filetype='PNG', avoid_if_small=True):
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    
+def image_resize_prod_offer_sheet_lead(base64_source, size=(170, None), encoding='base64', filetype='PNG', avoid_if_small=True):
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
+    
+def image_get_resized_images(base64_source):
+    return {'image_large': base64_source}
+
+class product_zeemage(osv.osv):
+    _description = 'Product Images'
+    _name = "product.zeemage"
+
+    # Read image
+    def _get_image_large(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {'image_large': obj.image}
+        return result
+        
+    # Read image for Offer Sheet Leads Customer
+    def _get_image_lead_sheet(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = {'image_lead_sheet': image_resize_prod_offer_sheet_lead(obj.image)}
+        return result
+
+    # Save 800px image and 128px image 
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {  'image': image_resize_zeemage_large(value), 'image_medium': image_resize_zeemage_medium(value)}, context=context)
+
+    _order = "  view_type,\
+                view_type_earphone,\
+                view_type_headphone,\
+                view_type_speaker,\
+                view_type_earphone_finished,\
+                view_type_headphone_finished,\
+                view_type_speaker_finished,\
+                name"
+    
+    _columns = {
+        'name': fields.char('Name', size=128),
+        #'date': fields.date('Date', select=1),
+        'view_type': fields.selection([ ('a1_catalog','Catalog image'),
+                                        ('b1_front','Front view'),
+                                        ('b2_back','Back view'),
+                                        ('c1_left','Left side view'),
+                                        ('c2_right','Right side view'),
+                                        ('c3_side','Side view'),
+                                        ('d1_top','Top view'),
+                                        ('d2_bottom','Bottom view'),
+                                        ('e1_three','Three-quarter view'),
+                                        ('f1_plug','Plug view'),
+                                        ('f2_cable','Cable view'),
+                                        ('f3_button','Buttons view'),
+                                        ('f4_grill','Grill view'),
+                                        ('g1_addons','Add-ons view'),
+                                        ('h1_access','Product accessories view'),
+                                        ('i1_pos','Product position in package view'),
+                                        ('j1_pfront','Package front view'),
+                                        ('j2_pback','Package back view'),
+                                        ('z1_other','Other view')], 'View type'),
+                                        
+        'view_type_earphone': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Front view'),
+                                                ('b2_back','Back view'),
+                                                ('c3_side','Side view'),
+                                                ('f1_plug','Plug view'),
+                                                ('g1_addons','Add-ons view'),
+                                                ('z1_other','Other view')], 'View type'),
+        
+        'view_type_headphone': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Front view'),
+                                                ('b2_back','Back view'),
+                                                ('c3_side','Side view'),
+                                                ('f1_plug','Plug view'),
+                                                ('g1_addons','Add-ons view'),
+                                                ('z1_other','Other view')], 'View type'),
+                                                
+        'view_type_speaker': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Front view'),
+                                                ('b2_back','Back view'),
+                                                ('c3_side','Side view'),
+                                                ('d1_top','Top view'),
+                                                ('d2_bottom','Bottom view'),
+                                                ('f1_plug','Plug view'),
+                                                ('f2_cable','Cable view'),
+                                                ('f3_button','Buttons view'),
+                                                ('f4_grill','Grill view'),
+                                                ('h1_access','Product accessories view'),
+                                                ('z1_other','Other view')], 'View type'),
+                                                
+        'view_type_earphone_finished': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Product front view'),
+                                                ('b2_back','Product back view'),
+                                                ('c3_side','Product side view'),
+                                                ('f1_plug','Product plug view'),
+                                                ('g1_addons','Product add-ons view'),
+                                                ('h1_access','Product accessories view'),
+                                                ('i1_pos','Product position in package view'),
+                                                ('j1_pfront','Package front view'),
+                                                ('j2_pback','Package back view'),
+                                                ('z1_other','Other view')], 'View type'),
+        
+        'view_type_headphone_finished': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Front view'),
+                                                ('b2_back','Back view'),
+                                                ('c3_side','Side view'),
+                                                ('f1_plug','Plug view'),
+                                                ('g1_addons','Add-ons view'),
+                                                ('h1_access','Product accessories view'),
+                                                ('i1_pos','Product position in package view'),
+                                                ('j1_pfront','Package front view'),
+                                                ('j2_pback','Package back view'),
+                                                ('z1_other','Other view')], 'View type'),
+        
+        'view_type_speaker_finished': fields.selection([('a1_catalog','Catalog image'),
+                                                ('b1_front','Front view'),
+                                                ('b2_back','Back view'),
+                                                ('c3_side','Side view'),
+                                                ('d1_top','Top view'),
+                                                ('d2_bottom','Bottom view'),
+                                                ('f1_plug','Plug view'),
+                                                ('f2_cable','Cable view'),
+                                                ('f3_button','Buttons view'),
+                                                ('f4_grill','Grill view'),
+                                                ('h1_access','Product accessories view'),
+                                                ('i1_pos','Product position in package view'),
+                                                ('j1_pfront','Package front view'),
+                                                ('j2_pback','Package back view'),
+                                                ('z1_other','Other view')], 'View type'),
+                                                
+        'view_type_other': fields.char('Other', size=128),
+        'comment': fields.text('Notes'),
+        'product_tmpl_id': fields.many2one('product.template','Raw product'),
+        'product_tmpl_seq': fields.related('product_tmpl_id', 'zeeva_categ_seq', string="Cat. seq. nb", type='integer'),
+        
+        'product_product_id': fields.many2one('product.product','Finished product'),
+        'product_product_seq': fields.related('product_product_id', 'zeeva_categ_seq', string="Cat. seq. nb", type='integer'),
+        
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Image", help="Large-size image with a width of 800px max"),
+        'image_medium': fields.binary("Thumbnail", help="Medium-size image with a height of 128px max"),
+        'image_large': fields.function(_get_image_large, fnct_inv=_set_image,
+            string="Large-size image", type="binary", multi="_get_image_large",
+            #store={'product.zeemage': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10)},
+            help="Large-size image with a width of 800px max"),
+        'image_lead_sheet': fields.function(_get_image_lead_sheet, fnct_inv=_set_image,
+            string="Leads Offer Sheet Image", type="binary", multi="_get_image_lead_sheet",
+            #store={'product.zeemage': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10)},
+            help=""),
+        'color': fields.integer('Color Index'),
+    }
+    
+    def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
+        img_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
+        
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        return tools.image_resize_zeemage_large(image.encode('base64'))
+    
+    _defaults = {
+        'color': 0,
+        'image': False,
+    }
+    
+    def make_thumbnail(self, cr, uid, ids, context=None):
+        
+        for obj in self.browse(cr, uid, ids, context=context):
+            
+            if obj.product_tmpl_id:  # it is a raw product
+                obj.product_tmpl_id.write({'image_medium': image_resize_prod_spec(obj.image),
+                                           'image_small': image_resize_prod_thumbnail(obj.image)}, context=context)
+            
+            elif obj.product_product_id:  # it is a finished product
+                obj.product_product_id.write({'image_medium': image_resize_prod_spec(obj.image), 
+                                              'image_small': image_resize_prod_thumbnail(obj.image)}, context=context)
+    
+    #def print_size(self, cr, uid, ids, context=None):
+        
+        #for obj in self.browse(cr, uid, ids, context=context):
+            #print "Image: ", len(obj.image or '')
+            #print "Image large: ", len(obj.image_large or '')
+            #print "Image medium: ", len(obj.image_medium or '')
+            
+        #return True
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+##############################################################################
+#
+#    Copyright (C) 2014 Ujwala Pawade <ujwalahpawade@gmail.com>.
+#    All Rights Reserved.
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+-->
+
+
+
+
+<openerp>
+    <data>
+        
+        <record id="view_employee_form_inherit_exit" model="ir.ui.view">
+        	<field name="name">view.employee.form.inherit.exit</field>
+      		<field name="model">hr.employee</field>
+      		<field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//page[@string="HR Settings"]' position="after">
+                    <page string="Exit Information">
+                        <group>
+                            <group string="Exit Details 1">
+                                <field name="resignation_letter_date"/>
+                                <field name="relieving_date"/>
+                                <field name="reason_for_leaving"/>
+                                <field name="leave_encashed"/>
+								<field name="encashment_date"/>                             
+                            </group>
+                            <group string="Exit Details 2">
+                                <field name="held_on_date"/>
+                                <field name="reason_for_resignation"/>
+                                <field name="new_workplace"/>
+                                <field name="feedback"/>
+                            </group>
+                        </group>
+                       
+                    </page>
+                </xpath>
+            </field>
+        </record>
+        
+      
+	<record id="view_employee_form_inherit_extension2" model="ir.ui.view">
+      <field name="name">view.employee.form.inherit.extension</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr_employee_phone_extension.view_employee_form_inherit_extension"/>
+      <field name="arch" type="xml">
+		       
+        <field name="join_date"  position="after">
+          <field name="tenure_till_date" />
+        </field>
+        
+				
+      </field>
+    </record>
+
+	
+        
+    </data>
+</openerp>

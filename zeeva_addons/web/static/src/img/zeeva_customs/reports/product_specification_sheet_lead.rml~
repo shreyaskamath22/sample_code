@@ -1,0 +1,340 @@
+<?xml version="1.0"?>
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="42.0" y1="42.0" width="511" height="758"/>
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#004586" start="0,-1" stop="0,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table14">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table11">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#004586" start="0,-1" stop="0,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="2.0" leading="3"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0" textColor="#004586"/>
+    <paraStyle name="P3" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P4" rightIndent="-42.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P5" rightIndent="-343.0" leftIndent="0.0" fontName="Helvetica-Bold" fontSize="16.0" leading="20" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P6" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P7" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P8" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P9" fontName="Helvetica" fontSize="16.0" leading="20" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P10" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P11" rightIndent="-101.0" leftIndent="-0.0" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Standard" fontName="Helvetica"/>
+    <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
+    <paraStyle name="Caption" fontName="Helvetica" fontSize="12.0" leading="15" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="Index" fontName="Helvetica"/>
+    <paraStyle name="terp_header" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="LEFT" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="Table Contents" fontName="Helvetica"/>
+    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER"/>
+    <images/>
+  </stylesheet>
+  <story>
+    <para style="P7">[[repeatIn(objects,'o')]]</para>
+    <blockTable colWidths="94.0,94.0,323.0" style="Table2">
+      <tr>
+        <td>
+          <para style="P6">[[ o.image_medium and setTag('para','image',{'width':'70','height':'70'}) ]] [[ o.image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P5">[[ o.name or '/' ]] Specification Sheet</para>
+          <para style="P3">Product category</para>
+          <para style="P3">Offer Sheet N°</para>
+          <para style="P3">Customer</para>
+        </td>
+        <td>
+          <para style="P9">
+            <font color="white"> </font>
+          </para>
+          <para style="P11">[[ o.categ_id.name or '/' ]]</para>
+          <para style="P6">[[ so_name ]]</para>
+          <para style="P11">[[ customer_name or '/' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="510.0" style="Table1">
+      <tr>
+        <td>
+          <para style="P2">DETAILS</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="94.0,161.0,94.0,162.0" style="Table6">
+      <tr>
+        <td>
+          <para style="P3">Material</para>
+          <para style="P3">Impedance</para>
+          <para style="P3">Sensitivity</para>
+          <para style="P3">Frequency range</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.earphone_material == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_material == 'plastic' and 'Plastic' ]]</para>
+          <para style="P6">[[ o.earphone_material == 'metal' and 'Metal']]</para>
+          <para style="P6">[[ o.earphone_impedance == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_impedance == '16' and '16 Ohms' ]]</para>
+          <para style="P6">[[ o.earphone_impedance == '32' and '32 Ohms' ]]</para>
+          <para style="P6">[[ o.earphone_sensitivity == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_sensitivity == '96' and '96 dB' ]]</para>
+          <para style="P6">[[ o.earphone_sensitivity == '100' and '100 dB' ]]</para>
+          <para style="P6">[[ o.earphone_sensitivity == '102' and '102 dB' ]]</para>
+          <para style="P6">[[ o.earphone_sensitivity == '110' and '110 dB' ]]</para>
+          <para style="P6">[[ o.earphone_freq_min or '' ]] Hz - [[ o.earphone_freq_max or '' ]] kHz</para>
+        </td>
+        <td>
+          <para style="P3">Cord add-ons</para>
+          <para style="P3">Cord type</para>
+          <para style="P3">Cord length</para>
+          <para style="P3">[[ o.zeeva_categ_seq &gt;= 200 and removeParentNode('blockTable') ]]</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.earphone_cord_addons == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_cord_addons == 'no' and 'None' ]]</para>
+          <para style="P6">[[ o.earphone_cord_addons == 'mic' and 'Microphone' ]]</para>
+          <para style="P6">[[ o.earphone_cord_addons == 'vol' and 'Volume control' ]]</para>
+          <para style="P6">[[ o.earphone_cord_addons == 'both' and 'Volume control + Mic.' ]]</para>
+          <para style="P6">[[ o.earphone_cord_type or '/' ]]</para>
+          <para style="P6">[[ o.earphone_cord_length or '' ]] m</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="94.0,161.0,94.0,162.0" style="Table14">
+      <tr>
+        <td>
+          <para style="P4">Headband material</para>
+          <para style="P3">Joint materials</para>
+          <para style="P3">Shell materials</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.headphone_band_mat1 == False and '/' ]][[ o.headphone_band_mat1 == 'plastic' and 'Plastic' ]][[ o.headphone_band_mat1 == 'metal' and 'Metal']][[ o.headphone_band_mat1 == 'leather' and 'Leather']][[ o.headphone_band_mat1 == 'pu' and 'PU Leather']] - [[ o.headphone_band_mat2 == False and '/' ]][[ o.headphone_band_mat2 == 'plastic' and 'Plastic' ]][[ o.headphone_band_mat2 == 'metal' and 'Metal']][[ o.headphone_band_mat2 == 'leather' and 'Leather']][[ o.headphone_band_mat2 == 'pu' and 'PU Leather']]</para>
+          <para style="P6">[[ o.headphone_joint_mat1 == False and '/' ]][[ o.headphone_joint_mat1 == 'plastic' and 'Plastic' ]][[ o.headphone_joint_mat1 == 'metal' and 'Metal']][[ o.headphone_joint_mat1 == 'leather' and 'Leather']][[ o.headphone_joint_mat1 == 'pu' and 'PU Leather']] - [[ o.headphone_joint_mat2 == False and '/' ]][[ o.headphone_joint_mat2 == 'plastic' and 'Plastic' ]][[ o.headphone_joint_mat2 == 'metal' and 'Metal']][[ o.headphone_joint_mat2 == 'leather' and 'Leather']][[ o.headphone_joint_mat2 == 'pu' and 'PU Leather']]</para>
+          <para style="P6">[[ o.headphone_shell_mat1 == False and '/' ]][[ o.headphone_shell_mat1 == 'plastic' and 'Plastic' ]][[ o.headphone_shell_mat1 == 'metal' and 'Metal']][[ o.headphone_shell_mat1 == 'leather' and 'Leather']][[ o.headphone_shell_mat1 == 'pu' and 'PU Leather']] - [[ o.headphone_shell_mat2 == False and '/' ]][[ o.headphone_shell_mat2 == 'plastic' and 'Plastic' ]][[ o.headphone_shell_mat2 == 'metal' and 'Metal']][[ o.headphone_shell_mat2 == 'leather' and 'Leather']][[ o.headphone_shell_mat2 == 'pu' and 'PU Leather']]</para>
+        </td>
+        <td>
+          <para style="P3">Cord add-ons</para>
+          <para style="P3">Cord type</para>
+          <para style="P3">Cord length</para>
+          <para style="P3">[[ (o.zeeva_categ_seq &gt;= 300 or o.zeeva_categ_seq &lt; 200) and removeParentNode('blockTable') ]]</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.headphone_cord_addons == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_cord_addons == 'no' and 'None' ]]</para>
+          <para style="P6">[[ o.headphone_cord_addons == 'mic' and 'Microphone' ]]</para>
+          <para style="P6">[[ o.headphone_cord_addons == 'vol' and 'Volume control' ]]</para>
+          <para style="P6">[[ o.headphone_cord_addons == 'both' and 'Volume control + Mic.' ]]</para>
+          <para style="P6">[[ o.headphone_cord_type or '/' ]]</para>
+          <para style="P6">[[ o.headphone_cord_length or '' ]] m</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="94.0,161.0,94.0,162.0" style="Table7">
+      <tr>
+        <td>
+          <para style="P3">Driver diameter</para>
+          <para style="P3">Driver type</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.earphone_driver_diam == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '6' and '6 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '7' and '7 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '8' and '8 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '9' and '9 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '10' and '10 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '13' and '13 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_diam == '15' and '15 mm' ]]</para>
+          <para style="P6">[[ o.earphone_driver_type == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_driver_type == 'dynamic' and 'Dynamic' ]]</para>
+        </td>
+        <td>
+          <para style="P3">Plug plating</para>
+          <para style="P3">Plug type</para>
+          <para style="P3">[[ o.zeeva_categ_seq &gt;= 200 and removeParentNode('blockTable') ]]</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.earphone_plug_plating == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_plug_plating == 'gplated' and 'Gold plated' ]]</para>
+          <para style="P6">[[ o.earphone_plug_plating == 'gcoated' and 'Gold coated' ]]</para>
+          <para style="P6">[[ o.earphone_plug_plating == 'nplated' and 'Nickel plated' ]]</para>
+          <para style="P6">[[ o.earphone_plug_type == False and '/' ]]</para>
+          <para style="P6">[[ o.earphone_plug_type == 'no' and 'None' ]]</para>
+          <para style="P6">[[ o.earphone_plug_type == 'lsh' and 'L-shaped' ]]</para>
+          <para style="P6">[[ o.earphone_plug_type == 'ssh' and 'Straight-shaped' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="94.0,161.0,94.0,162.0" style="Table11">
+      <tr>
+        <td>
+          <para style="P3">Driver diameter</para>
+          <para style="P3">Driver type</para>
+          <para style="P3">Impedance</para>
+          <para style="P3">Sensitivity</para>
+          <para style="P3">Frequency range</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.headphone_driver_diam == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_driver_diam == '30' and '30 mm' ]]</para>
+          <para style="P6">[[ o.headphone_driver_diam == '40' and '40 mm' ]]</para>
+          <para style="P6">[[ o.headphone_driver_diam == '50' and '50 mm' ]]</para>
+          <para style="P6">[[ o.headphone_driver_diam == '57' and '57 mm' ]]</para>
+          <para style="P6">[[ o.headphone_driver_type == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_driver_type == 'dynamic' and 'Dynamic' ]]</para>
+          <para style="P6">[[ o.headphone_impedance == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_impedance == '16' and '16 Ohms' ]]</para>
+          <para style="P6">[[ o.headphone_impedance == '32' and '32 Ohms' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == '85' and '85 dB' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == '96' and '96 dB' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == '100' and '100 dB' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == '102' and '102 dB' ]]</para>
+          <para style="P6">[[ o.headphone_sensitivity == '110' and '110 dB' ]]</para>
+          <para style="P6">[[ o.headphone_freq_min or '' ]] Hz - [[ o.headphone_freq_max or '' ]] kHz</para>
+        </td>
+        <td>
+          <para style="P3">Plug plating</para>
+          <para style="P3">Plug type</para>
+          <para style="P3">[[ (o.zeeva_categ_seq &gt;= 300 or o.zeeva_categ_seq &lt; 200) and removeParentNode('blockTable') ]]</para>
+        </td>
+        <td>
+          <para style="P6">[[ o.headphone_plug_plating == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_plug_plating == 'gplated' and 'Gold plated' ]]</para>
+          <para style="P6">[[ o.headphone_plug_plating == 'gcoated' and 'Gold coated' ]]</para>
+          <para style="P6">[[ o.headphone_plug_plating == 'nplated' and 'Nickel plated' ]]</para>
+          <para style="P6">[[ o.headphone_plug_type == False and '/' ]]</para>
+          <para style="P6">[[ o.headphone_plug_type == 'no' and 'None' ]]</para>
+          <para style="P6">[[ o.headphone_plug_type == 'lsh' and 'L-shaped' ]]</para>
+          <para style="P6">[[ o.headphone_plug_type == 'ssh' and 'Straight-shaped' ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <para style="P6">[[ o.description or '' ]]</para>
+    <para style="P8">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="510.0" style="Table3">
+      <tr>
+        <td>
+          <para style="P2">IMAGES</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="170.0,170.0,170.0" style="Table5">
+      <tr>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 1 and setTag('para','image',{'maxWidth':'128','maxHeight':'128'}) or setTag('image','para')]] [[ len(o.image_ids) &gt;= 1 and o.image_ids[0].image ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 2 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 2 and o.image_ids[1].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 3 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 3 and o.image_ids[2].image_medium ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 4 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 4 and o.image_ids[3].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 5 and setTag('para','image') or setTag('image','para')]][[ len(o.image_ids) &gt;= 5 and o.image_ids[4].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 6 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 6 and o.image_ids[5].image_medium ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 7 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 7 and o.image_ids[6].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 8 and setTag('para','image') or setTag('image','para')]][[ len(o.image_ids) &gt;= 8 and o.image_ids[7].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 9 and setTag('para','image') or setTag('image','para')]] [[ len(o.image_ids) &gt;= 9 and o.image_ids[8].image_medium ]]</para>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 10 and setTag('para','image') or setTag('image','para') ]] [[ len(o.image_ids) &gt;= 10 and o.image_ids[9].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 11 and setTag('para','image') or setTag('image','para') ]][[ len(o.image_ids) &gt;= 11 and o.image_ids[10].image_medium ]]</para>
+        </td>
+        <td>
+          <para style="P10">[[ len(o.image_ids) &gt;= 12 and setTag('para','image') or setTag('image','para') ]] [[ len(o.image_ids) &gt;= 12 and o.image_ids[11].image_medium ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+    <para style="P1">
+      <font color="white"> </font>
+    </para>
+  </story>
+</document>

@@ -1,0 +1,401 @@
+<?xml version="1.0" ?>
+<openerp>
+    
+    <!--=======================================================================================
+    SALES ORDER - SEQUENCE RECORD
+    =======================================================================================-->
+    <data noupdate="1">    
+        <record id="sale.seq_sale_order" model="ir.sequence">
+            <field name="name">Sales Order</field>
+            <field name="code">sale.order</field>
+            <field name="prefix">SC</field>
+            <field name="padding">6</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+    
+    <!--=======================================================================================
+    SALES ORDER - SO VIEWS
+    =======================================================================================-->
+    <data>
+    <!-- ZEEVA Sales Order Tree View -->
+        <record id="zeeva_sales_order_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.sale.order.tree.view</field>
+            <field name="model">sale.order</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Draft SC" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="SC Number"/>
+                    <field name="partner_id"/>
+                    <field name="date_order" string="Date of Creation"/>
+                    <field name="ready_date"/>
+                    <field name="user_id" string="Account Manager"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Sales Order Form View -->
+        <record id="zeeva_sales_order_form_view" model="ir.ui.view">
+            <field name="name">zeeva.sale.order.form.view</field>
+            <field name="model">sale.order</field>
+            <field name="priority" eval="15"/>
+            <field name="groups_id" eval="[(6, 0, [ref('product.group_uos'), ref('product.group_stock_packaging'), ref('sale.group_mrp_properties')])]"/>
+            <field name="arch" type="xml">
+                <form string="Sales Order" version="7.0">
+                    <header>
+                        <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" groups="base.group_user"/>
+                        <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" groups="base.group_user"/>
+                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
+                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
+<!--                         <button name="action_quotation_send" string="Send by Email" type="object" states="draft" class="oe_highlight" groups="base.group_user"/> -->
+<!--                         <button name="action_quotation_send" string="Send by Email" type="object" states="sent" groups="base.group_user"/> -->
+                        <button name="print_quotation" string="Print SC" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                        <button name="print_quotation" string="Print SC" type="object" states="sent" groups="base.group_user"/>
+                        <button name="print_specification" string="Print Spec" type="object" groups="base.group_user"/>
+                        <button name="action_button_confirm" states="draft" string="Confirm Sale" type="object" groups="base.group_sale_manager"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm Sale" class="oe_highlight" type="object" groups="base.group_sale_manager"/>
+                        <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
+                            attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
+                        <field name="picking_ids" invisible="1"/>
+                        <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
+                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}" groups="base.group_user"/>
+                        <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                            type="action" states="manual" class="oe_highlight" groups="base.group_user"/>
+                        <button name="copy_quotation" states="cancel" string="New Copy of SC" type="object"/>
+                        <button name="action_reset" states="cancel" string="Reset SC to Draft" type="object"/>
+                        <button name="cancel" states="draft,sent" string="Cancel Quotation" groups="base.group_user"/>
+                        <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" groups="base.group_user"/>
+                        <button name="ship_cancel" states="shipping_except" string="Cancel Order"/>
+                        <button name="invoice_cancel" states="invoice_except" string="Cancel Order" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Draft SC: " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Confirmed SC: " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" 
+                                    domain="[('customer','=',True),('is_company','=',True)]"
+                                    context="{'search_default_type_company':1, 'search_default_customer':1, 
+                                            'default_supplier':0,'default_customer':1,'default_is_company':1,
+                                            'show_address': 0}" 
+                                    options='{"always_reload": True}'/>
+                                <field name="partner_invoice_id" groups="sale.group_delivery_invoice_address" 
+                                    domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]"
+                                    context="{'default_type':'invoice', 'show_address': 1}"
+                                    options='{"always_reload": True, "no_open": True}'/>
+                                <field name="partner_shipping_id" groups="sale.group_delivery_invoice_address" 
+                                    domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]"
+                                    context="{'default_type':'delivery', 'show_address': 1}"
+                                    options="{'always_reload': True, 'no_open': True}"/>
+                            </group>
+                            <group>
+                                <field name="date_order" string="Date of Creation"/>
+                                <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="client_order_ref" string="Customer PO ref."/>
+                                <field name="project_project_id" readonly="1"/>
+                                <field name="project_id" context="{'partner_id':partner_id, 'default_pricelist_id':pricelist_id, 'default_name':name, 'default_type': 'contract'}"
+                                    groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
+                                <field name="pricelist_id" domain="[('type','=','sale')]" string="Pricelist (currency)" options='{"no_open": True}'
+                                    on_change="onchange_pricelist_id(pricelist_id,order_line)" />
+                                <field name="currency_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <field name="portal_payment_options" groups="portal_sale.group_payment_options"/>
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="order_line">
+                                    <form string="Sales Order Lines" version="7.0">
+                                        <header groups="base.group_user">
+                                            <button name="%(sale.action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
+                                            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
+                                        </header>
+                                        <group>
+                                            <group>
+                                                <field name="state" invisible="1" />
+                                                <field name="product_id"
+                                                    context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                                    groups="base.group_user" 
+                                                    on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, True, parent.date_order, product_packaging, parent.fiscal_position, False, context)"/>
+                                                <label for="product_uom_qty"/>
+                                                <div>
+                                                    <field context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                                        name="product_uom_qty" class="oe_inline"
+                                                        on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
+                                                    <field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button"
+
+                                                        on_change="product_uom_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, context)"/>
+                                                </div>
+                                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                                <div groups="product.group_uos">
+                                                    <field name="product_uos_qty" class="oe_inline"/>
+                                                    <field name="product_uos" options='{"no_open": True}' class="oe_inline"/>
+                                                </div>
+                                                <field name="price_unit"/>
+                                                <label for="discount" groups="sale.group_discount_per_so_line"/>
+                                                <div name="discount" groups="sale.group_discount_per_so_line">
+                                                    <field name="discount" class="oe_inline"/> %%
+                                                </div>
+                                            </group>
+                                            <group>
+                                                <field name="product_packaging" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                                    on_change="product_packaging_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, parent.partner_id, product_packaging, True, context)"
+                                                    domain="[('product_id','=',product_id)]"
+                                                    groups="product.group_stock_packaging"  />
+                                                <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
+                                                <label for="delay"/>
+                                                <div>
+                                                    <field name="delay" class="oe_inline"/> days
+                                                </div>
+                                                <field name="type"/>
+                                                <field name="th_weight"/>
+                                                <!-- we should put a config wizard for these two fields -->
+                                                <field name="address_allotment_id"/>
+                                                <field name="property_ids" widget="many2many_tags" groups="sale.group_mrp_properties"/>
+                                            </group>
+                                        </group>
+                                        <label for="name"/>
+                                        <field name="name"/>
+                                        <div groups="base.group_no_one">
+                                            <label for="invoice_lines"/>
+                                            <field name="invoice_lines"/>
+                                            <label for="move_ids"/>
+                                            <field name="move_ids" widget="many2many"/>
+                                        </div>
+                                    </form>
+                                    <tree string="Sales Order Lines" editable="bottom">
+                                        <field name="sequence" widget="handle"/>
+                                        <field name="delay" invisible="1"/>
+                                        <field name="state" invisible="1"/>
+                                        <field name="th_weight" invisible="1"/>
+                                        <field name="product_packaging" invisible="1"/>
+                                        <field name="product_id"
+                                            domain="[('hr_expense_ok','=',False)]"
+                                            context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom,
+                                            'form_view_ref': 'zeeva_customs.zeeva_product_finished_form_view' }"
+                                            groups="base.group_user" 
+                                            on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                                        <field name="name"/>
+                                        <field name="product_uom_qty"
+                                            context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
+                                            on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
+                                        <field name="product_uom" string="UoM"
+                                            on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
+                                            groups="product.group_uom" options='{"no_open": True}'/>
+                                        <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
+                                        <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>
+    <!--                                     <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/> -->
+                                        <field name="type" invisible="1"/>
+                                        <field name="price_unit"/>
+                                        <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                        <field name="price_subtotal"/>
+                                    </tree>
+                                </field>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="amount_untaxed" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <field name="amount_tax" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                    <div class="oe_subtotal_footer_separator oe_inline">
+                                        <label for="amount_total" />
+                                        <button name="button_dummy"
+                                            states="draft,sent" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                    </div>
+                                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                                </group>
+                                <div class="oe_clear"/>
+                                
+                            </page>
+                            <page string="Order Information" groups="base.group_user">
+                                <group>
+                                    <group name="shipping" string="Shipping">
+                                        <field name="port_of_loading"/>
+                                        <field name="port_of_discharge"/>
+                                        <field name="shipment_mode"/>
+                                        <field name="ready_date" on_change="onchange_dates(ready_date,fct_inspection_date,pac_inspection_date,etd,eta,1)"/>
+                                        <field name="fct_inspection_date" on_change="onchange_dates(ready_date,fct_inspection_date,pac_inspection_date,etd,eta,2)"/>
+                                        <field name="pac_inspection_date" on_change="onchange_dates(ready_date,fct_inspection_date,pac_inspection_date,etd,eta,3)"/>
+                                        <field name="etd" on_change="onchange_dates(ready_date,fct_inspection_date,pac_inspection_date,etd,eta,4)"/>
+                                        <field name="eta" on_change="onchange_dates(ready_date,fct_inspection_date,pac_inspection_date,etd,eta,5)"/>
+                                    </group>
+                                    
+                                    <group name="terms" string="Sales Terms">
+                                        <field name="incoterm" widget="selection"/>
+                                        <field name="payment_term" widget="selection"/>
+                                        <field name="fiscal_position" widget="selection" invisible="1"/>
+                                        <field name="picking_policy" required="True"/>
+                                        <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
+                                        <field name="invoice_quantity" invisible="True"/>
+                                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                                        <field name="user_id" string="Account Manager"/>
+                                        <field name="section_id" widget="selection"/>
+                                        <field name="origin" readonly="1"/>
+                                        <field name="invoiced" invisible="1"/>
+                                        <field name="shipped" invisible="1"/>
+                                        <field name="invoice_exists" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Order Remarks" groups="base.group_user">
+                                <group>
+                                    <div>
+                                        <field name="remark1"/> All prices confirmed are based on present exchange rates and any change in exchange rate will be on buyers's account.
+                                        <br/>
+                                        <field name="remark2"/> We take pleasure in confirming the above order with your goodselves for the merchandise on the terms and conditions 
+                                        as stated herein and on the back hereof. <br/>
+                                        <field name="remark3"/> If you find anything herein not in order, please let us know immediately bu fax/e-mail.
+                                    </div>
+                                    <field name="note" nolabel="1" colspan="2" placeholder="Additional Remarks..."/>
+                                </group>
+                            </page>
+                            <page string="Packing Lists" groups="base.group_user">
+                                <group>
+                                    <field name="zeeva_picking_ids" nolabel="1" readonly="1" colspan="4"/>
+                                    <!--<group string="Packing Information">
+                                        <field name="pack_export_qty"/>
+                                        <label for="pack_net"/>
+                                        <div colspan="1">
+                                            <field name="pack_net" class="oe_inline"/> kg
+                                        </div>
+                                        <label for="pack_gross"/>
+                                        <div colspan="1">
+                                            <field name="pack_gross" class="oe_inline"/> kg
+                                        </div>
+                                        <label for="pack_total"/>
+                                        <div colspan="1">
+                                            <field name="pack_total" class="oe_inline"/> cbm
+                                        </div>
+                                    </group>-->
+                                    <group>
+                                        <field name="ship_remarks" nolabel="1" placeholder="Additional Shipping Instructions..." colspan="4"/>
+                                    </group>
+                                    
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+    <!--=======================================================================================
+    SALES ORDER - SO ACTIONS
+    =======================================================================================-->
+    
+        <record id="sale.action_quotations" model="ir.actions.act_window">
+            <field name="name">Draft SC</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref=""/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{}</field>
+            <field name="domain">[('state','in',('draft','sent','cancel'))]</field>
+            <field name="search_view_id" ref="sale.view_sales_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation, the first step of a new sale.
+              </p><p>
+                OpenERP will help you handle efficiently the complete sale flow:
+                from the quotation to the sales order, the
+                delivery, the invoicing and the payment collection.
+              </p><p>
+                The social feature helps you organize discussions on each sales
+                order, and allow your customers to keep track of the evolution
+                of the sales order.
+              </p>
+            </field>
+        </record>
+        <record id="zeeva_action_so_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale.action_quotations"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_sales_order_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_so_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale.action_quotations"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_sales_order_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+    <!--=======================================================================================
+    STOCK PORT - PORT VIEWS
+    =======================================================================================-->
+    
+    <!-- ZEEVA Stock Port Form View -->
+        <record id="stock_port_form_view" model="ir.ui.view">
+            <field name="name">stock.port.form.view</field>
+            <field name="model">stock.port</field>
+            <field name="arch" type="xml">
+                <form string="Port of loading/discharge" version="7.0">
+                    <sheet string="Port of Loading/Discharge">
+                        <group>
+                            <group>
+                                <field name="country_id" options='{"no_open": True}'/>
+                            </group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <field name="note" colspan="4" placeholder="Remarks..." nolabel="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Stock Port Tree View -->
+        <record id="stock_port_tree_view" model="ir.ui.view">
+            <field name="name">stock.port.tree.view</field>
+            <field name="model">stock.port</field>
+            <field name="arch" type="xml">
+                <tree string="Port of loading/discharge">
+                    <field name="country_id" options='{"no_open": True}'/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    STOCK PORT - PORT ACTION & MENU
+    =======================================================================================-->
+    
+    <!-- ZEEVA Stock Port Action -->
+        <record id="stock_port_action" model="ir.actions.act_window">
+            <field name="name">Ports of Loading / Discharge</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.port</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain"></field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can see all ports of loading/discharge</field>
+        </record>
+        <record id="stock_port_action_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="stock_port_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="stock_port_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="stock_port_action_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="stock_port_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="stock_port_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+        <menuitem id="stock_port_menu"
+            name="Ports of Loading / Discharge"
+            action="stock_port_action" 
+            parent="base.menu_base_config"
+            sequence="2" />
+        
+    </data>
+</openerp>

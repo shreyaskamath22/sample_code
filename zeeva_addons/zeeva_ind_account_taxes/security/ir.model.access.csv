@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_tax_summary_report,tax.summary.report,model_tax_summary_report,zeeva_ind_products.group_product_manager,1,1,1,1
+
+
+access_tax_summary_report_user,tax.summary.report,model_tax_summary_report,zeeva_ind_products.group_product_user,1,1,1,0
+
+
+
+

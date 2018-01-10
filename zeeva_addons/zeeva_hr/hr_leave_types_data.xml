@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+
+        <!-- Privilege leave -->
+        <!--record model="hr.holidays.status" id="holiday_status_ple">
+            <field name="name">Privilege Leave (PL)</field>
+            <field name="color_name">black</field>
+        </record-->
+
+        <!-- Sick leave -->
+        <record model="hr.holidays.status" id="holiday_status_sle">
+            <field name="name">Sick Leave (SL)</field>
+            <field name="limit">True</field>
+            <field name="color_name">red</field>
+        </record>
+
+        <!-- Compensatory Off -->
+        <record model="hr.holidays.status" id="holiday_status_cmpe">
+            <field name="name">Compensatory-Off (CO)</field>
+            <field name="limit">True</field>
+            <field name="color_name">lavender</field>
+        </record>
+
+        <!--Leave Without Pay -->
+        <record model="hr.holidays.status" id="holiday_status_lwpe">
+            <field name="name">Leave Without Pay (LWP)</field>
+            <field name="limit">True</field>
+            <field name="color_name">brown</field>
+        </record>
+
+	<!--Casual Leave -->
+	<record model="hr.holidays.status" id="holiday_status_cle">
+            <field name="name">Casual Leave (CL)</field>
+            <field name="limit">True</field>
+            <field name="color_name">wheat</field>
+        </record>
+
+	<!--Maternity Leave -->
+	<record model="hr.holidays.status" id="holiday_status_mle">
+            <field name="name">Maternity Leave (ML)</field>
+            <field name="limit">True</field>
+            <field name="color_name">brown</field>
+        </record>
+
+	<!--Paternity Leave -->
+	<record model="hr.holidays.status" id="holiday_status_pale">
+            <field name="name">Paternity Leave (PAL)</field>
+            <field name="limit">True</field>
+            <field name="color_name">magenta</field>
+        </record>
+
+	<!--Wedding Leave -->
+	<record model="hr.holidays.status" id="holiday_status_wle">
+            <field name="name">Wedding Leave (WL)</field>
+            <field name="limit">True</field>
+            <field name="color_name">blue</field>
+        </record>
+
+	<!--Bereavement Leave -->
+	<record model="hr.holidays.status" id="holiday_status_ble">
+            <field name="name">Bereavement Leave (BL)</field>
+            <field name="limit">True</field>
+            <field name="color_name">wheat</field>
+        </record>
+
+	<!--Restricted Holidays -->
+	<record model="hr.holidays.status" id="holiday_status_rh">
+            <field name="name">Restricted Holidays (RH)</field>
+            <field name="limit">True</field>
+            <field name="color_name">wheat</field>
+        </record>
+        
+    <!--Short Duration Business Trip -->
+	<record model="hr.holidays.status" id="holiday_status_sd">
+            <field name="name">Short Duration Business Trip</field>
+            <field name="limit">True</field>
+            <field name="double_validation">True</field>
+            <field name="business_trip">True</field>
+            <field name="color_name">wheat</field>
+        </record>
+        
+    <!--Long Duration Business Trip -->
+	<record model="hr.holidays.status" id="holiday_status_ld">
+            <field name="name">Long Duration Business Trip</field>
+            <field name="limit">True</field>
+            <field name="double_validation">True</field>
+            <field name="business_trip">True</field>
+            <field name="color_name">wheat</field>
+        </record>
+        
+
+    </data>
+</openerp>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+        <record id="group_dms_corporate_knowledge" model="res.groups">
+            <field name="name">Corporate Knowledge</field>
+            <field name="category_id" ref="base.module_category_knowledge_management"/>
+        </record>
+
+        <record id="group_dms_manager" model="res.groups">
+            <field name="name">DMS Manager</field>
+            <field name="category_id" ref="base.module_category_knowledge_management"/>
+        </record>
+<!--     <record id="base.group_document_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="base.module_category_knowledge_management"/>
+        <field name="users" eval="[(4, ref('base.group_user'))]"/>
+    </record> -->
+<!-- in active previous rules-->     
+
+<!-- create new rule for reading the directory-->
+<!-- Added one condition in domain ('re_users_dir_rel','in',[user.id]), -->
+        <record id="ir_rule_readpublicdirectories_new" model="ir.rule">
+            <field name="model_id" ref="document.model_document_directory"/>
+            <field name="domain_force">['|','|','|','|',('group_ids','in',[g.id for g in user.groups_id]),('re_users_dir_rel','in',[user.id]),('re_job_dir_rel','in',[user.employee_ids[0].job_id.id]), ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('group_ids','=',False),  '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+            <field name="name">Read public directories newly created</field>
+            <field eval="0" name="global"/>
+            <field eval="[(6,0,[ref('base.group_user')])]" name="groups"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+<!-- Added one condition in domain ('re_users_dir_rel','in',[user.id]), -->
+        <record id="ir_rule_readpublicdocuments_new" model="ir.rule">
+            <field name="model_id" ref="base.model_ir_attachment"/>
+            <field name="domain_force">['|','|','|',('re_users_doc_rel','in',[user.id]),('user_id', '=', user.id),('re_groups_doc_rel','in',[g.id for g in user.groups_id]),('re_job_doc_rel','in',[user.employee_ids[0].job_id.id])]</field>
+            <field name="name">Read public documents created</field>
+            <field eval="0" name="global"/>
+            <field eval="[(6,0,[ref('base.group_user')])]" name="groups"/>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="1" name="perm_read"/>
+            <field eval="0" name="perm_create"/>
+        </record>
+
+    </data>
+</openerp>

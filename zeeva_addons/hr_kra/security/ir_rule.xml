@@ -1,0 +1,80 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <!-- KRA Interview access rule -->
+	<record id="employee_inetrview_records" model="ir.rule">
+        <field name="name">Employees</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_kra_interview"/>
+        <field name="domain_force">[('user_to_review_id.user_id','=',user.id),('state','in',('waiting_answer','done'))]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+    
+    <record id="interview_request_hr_officer" model="ir.rule">
+        <field name="name">HR Officer</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_kra_interview"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+
+    <record id="reporting_manager_for_review_requests" model="ir.rule">
+        <field name="name">Reporting Manager Rule for Review Requests</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_kra_interview"/>
+        <field name="domain_force">['|',('user_to_review_id.user_id','=',user.id),('user_to_review_id.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+    
+    <!-- ############# BSSSSSSSC  ######### -->
+    
+    <record id="property_rule_employee_bsc" model="ir.rule">
+        <field name="name">Employee BSC</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+        <field name="domain_force">[('emp_name.user_id','=',user.id),('state','in',('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Publish'))]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_rule_hr_officer_bsc" model="ir.rule">
+        <field name="name">HR Officer BSC</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+
+    <record id="reporting_manager_for_bsc" model="ir.rule">
+        <field name="name">Reporting Manager Rule BSC</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+        <field name="domain_force">['|',('emp_name.user_id','=',user.id),('emp_name.parent_id.user_id','=',user.id),('state','in',('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+
+    <!-- ############# addd new kra  ######### -->
+    
+    
+    <record id="property_rule_employee_new_kra" model="ir.rule">
+        <field name="name">Employee Rule for Adding new KRA</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_request_new_kra"/>
+        <field name="domain_force">[('emp_name.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
+    <record id="property_rule_hr_officer_new_kra" model="ir.rule">
+        <field name="name">HR Officer Rule for Adding new KRA</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_request_new_kra"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+    
+    <record id="reporting_manager_for_new_kra" model="ir.rule">
+        <field name="name">Reporting Manager Rule for Adding new KRA</field>
+        <field model="ir.model" name="model_id" ref="hr_kra.model_request_new_kra"/>
+        <field name="domain_force">['|',('emp_name.user_id','=',user.id),('emp_name.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+    
+    ########## New Group ##########
+
+    <record id="new_group_employee_view" model="res.groups">
+        <field name="name">KRA employee new rule</field>
+    </record>
+
+  </data>
+</openerp>

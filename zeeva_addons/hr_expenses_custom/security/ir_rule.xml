@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    
+    
+    <record id="property_rule_expenses_accounts_officer" model="ir.rule">
+        <field name="name">Accounts Manager Rule for Expenses</field>
+        <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('account.group_account_manager'))]"/>
+    </record>
+    
+    <record id="hr_expense.property_rule_expense_manager" model="ir.rule">
+            <field name="name">Manager Expense</field>
+            <field model="ir.model" name="model_id" ref="model_hr_expense_expense"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+        </record>
+    
+    <record id="employees_rule_reporting_manager_for_expenses" model="ir.rule">
+        <field name="name">Reporting Manager Rule for Expenses</field>
+        <field model="ir.model" name="model_id" ref="hr_expenses_custom.model_hr_expense_expense"/>
+        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+    
+  </data>
+</openerp>

@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+    <!-- XML tags for Master Links-->
+        <record id="view_wireless_maintenance_links_form" model="ir.ui.view">
+            <field name="name">wireless.maintenance.links.form</field>
+            <field name="model">wireless.maintenance.links</field>
+            <field name="arch" type="xml">
+                <form string="Links Master Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Links Name"/>
+                            <field name="department_access" widget="many2many_tags" invisible="1"/>
+                            <field name="wireless_links" string="Links URL"/>
+                            <field name="link_type" string="Link Type"/>
+                            <field name="groups_access_links"/> 
+                            <field name="comments"/>                     
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_wireless_maintenance_links_tree" model="ir.ui.view">
+            <field name="name">wireless.maintenance.links.tree</field>
+            <field name="model">wireless.maintenance.links</field>
+            <field name="arch" type="xml">
+                <tree string="Links Master Tree">
+                        <field name="name"/>
+                        <field name="wireless_links"/>
+                        <field name="link_type"/>
+                        <field name="comments"/> 
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_wireless_maintenance_links" model="ir.actions.act_window">
+            <field name="name">Links Master</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.maintenance.links</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wireless_maintenance_links_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Master Links.
+                </p>
+            </field>
+        </record>
+
+    <menuitem name="Quick Links" id="menu_wireless_maintenance" sequence="191"/>
+
+    <menuitem id="menu_maintenance_tab" name="Maintenance Links" parent="menu_wireless_maintenance" sequence="1"/>
+
+    <menuitem action="action_wireless_maintenance_links" name="Links Master" id="menu_wireless_master_links" parent="menu_maintenance_tab" sequence="1" groups="base.group_erp_manager"/>
+
+        <record id="view_wireless_maintenance_tree" model="ir.ui.view">
+            <field name="name">wireless.maintenance.tree</field>
+            <field name="model">wireless.maintenance</field>
+            <field name="arch" type="xml">
+                <tree string="Links" create="false" edit="false" delete="false">
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_wireless_maintenance" model="ir.ui.view">
+            <field name="name">Wireless Maintenance Links</field>
+            <field name="model">wireless.maintenance</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Wireless Maintenance Links" version="7.0" create="false" edit="false">
+                        <!-- <label string="Emergency Support" for="emergency_support"/>
+                        <h3><field name="emergency_support" widget="url" readonly="1"/></h3> -->
+<!--                         <field name="name"/>
+ -->                        <field name="links_line" string="Quick Links">
+                            <tree string="Quick Links Line" create="false" editable="bottom" delete="false">
+                                <field name="name" readonly="1"/>
+                                <field name="wireless_links" widget="url" readonly="1" class="oe_inline oe_bold"/>
+                                <field name="link_type" widget="selection" readonly="1"/>
+                                <field name="comments" readonly="1"/> 
+                            </tree>
+                            <form>
+                                <field name="name" readonly="1"/>
+                                <field name="wireless_links" widget="url" readonly="1"/>
+                                <field name="link_type" widget="selection" readonly="1"/>
+                                <field name="comments" readonly="1"/> 
+<!--                                 <field name="link_id" invisible="1"/>
+ -->                            </form>
+                        </field>
+                </form>
+            </field>
+        </record>
+
+     <record id="action_view_wireless_maintenance" model="ir.actions.act_window">
+            <field name="name">Links</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.maintenance</field>
+            <field name="view_type">form</field>
+            <field name="target">inline</field>
+            <!-- <field name="view_mode">tree,form</field> -->
+            <field name="view_id" ref="view_wireless_maintenance"/>
+            <!-- <field name="target">current</field> -->
+        </record>
+
+    <menuitem action="action_view_wireless_maintenance" id="menu_wireless_maintenance_links" 
+        parent="menu_maintenance_tab" sequence="2" groups="base.group_erp_manager,base.group_user"/>
+
+
+    <!-- XML tags for Master Links-->
+        <record id="view_wireless_link_type_form" model="ir.ui.view">
+            <field name="name">wireless.link.type.form</field>
+            <field name="model">wireless.link.type</field>
+            <field name="arch" type="xml">
+                <form string="Links Type Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name" string="Links Name" required="1"/>                    
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_wireless_link_type_tree" model="ir.ui.view">
+            <field name="name">wireless.link.type.tree</field>
+            <field name="model">wireless.link.type</field>
+            <field name="arch" type="xml">
+                <tree string="Links Type Tree">
+                        <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_wireless_link_type" model="ir.actions.act_window">
+            <field name="name">Links Type Master</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.link.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wireless_link_type_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Link Type.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_wireless_link_type" id="menu_wireless_link_type" 
+        parent="menu_maintenance_tab" sequence="3" groups="base.group_erp_manager"/>
+
+
+        <record id="view_export_form" model="ir.ui.view">
+            <field name="name">export.table.form</field>
+            <field name="model">export.table</field>
+            <field name="arch" type="xml">
+                <form string="Export Form" version="7.0">
+                    <header>
+                        <button name="export_data" string="Export Data" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="model_name" string="Export Name"/>
+                            <field name="fields_access" domain="[('model_id','=',model_name)]"/>
+                            <field name="export_file" filename="file_name"/>
+                            <field name="file_name" invisible="1" class="oe_inline oe_right"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_export_tree" model="ir.ui.view">
+            <field name="name">export.table.tree</field>
+            <field name="model">export.table</field>
+            <field name="arch" type="xml">
+                <tree string="Export Tree">
+                    <field name="model_name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_export_data" model="ir.actions.act_window">
+            <field name="name">Export Data</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">export.table</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_export_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create Export data.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_export_data" id="menu_export_data" name="Export data" parent="menu_maintenance_tab" sequence="4"/>
+
+        <record id="view_export_table_config_form" model="ir.ui.view">
+            <field name="name">export.table.config.form</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <form string="Export File Path" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="path"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_export_table_config_tree" model="ir.ui.view">
+            <field name="name">export.table.config.tree</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <tree string="Export File Path">
+                    <field name="path"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_export_table_config_data" model="ir.actions.act_window">
+            <field name="name">Export File Path</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">export.table.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_export_table_config_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create Export File Path.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_export_table_config_data" id="menu_export_table_config_data" name="Export File Path" parent="menu_maintenance_tab" sequence="5"/>
+
+ 	</data>
+</openerp>

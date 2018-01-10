@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+       
+
+        <!-- HR-KRA-related subtypes for messaging / Chatter -->
+        <!-- <record id="mt_kra_submitted_to_employee" model="mail.message.subtype">
+            <field name="name">Waiting for Self Rate</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="description">KRA form submitted to Employee for Self Rating</field>
+        </record> -->
+        
+        <!-- <record id="mt_kra_submitted_to_manager" model="mail.message.subtype">
+            <field name="name">Submitted To Manager</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="description">Self Rating Given By Employee, Waiting Manager Approval</field>
+        </record> 
+        
+        <record id="mt_kra_submitted_to_mgmt" model="mail.message.subtype">
+            <field name="name">Submitted To Mgmt</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="description">Reviewed By Manager, Submitted to Management</field>
+        </record> -->
+		
+		<record id="mt_kra_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="description">KRA Refused</field>
+        </record>
+
+           
+
+    </data>
+</openerp>

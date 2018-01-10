@@ -1,0 +1,169 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_employee_form_inherit_emergency" model="ir.ui.view">
+      <field name="name">view.employee.form.inherit.emergency</field>
+      <field name="model">hr.employee</field>
+      <field name="inherit_id" ref="hr.view_employee_form"/>
+      <field name="arch" type="xml">
+        <field name="address_home_id" position = "replace">
+        	<field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}' invisible="1"/>
+        	<field name="home_address_new"/>
+        	<field name="same_as_above" on_change="onchange_same_as_above(same_as_above, home_address_new)"/>
+        	<field name="permanent_address"/>
+        </field>
+        <field name="permanent_address" position="replace">
+          <field name="permanent_address_new" />	
+          <field name="personal_emailid" />
+        </field>
+        <field name="bank_account_id" position="after">
+          <field name="pan_card_no" />
+        </field>
+        <field name="address_id" position="after">
+          <field name="company_id" />
+        </field>			
+        <field name="birthday" position="after">
+          <field name="age" />
+        </field>
+        <field name="age" position="after">
+          <field name="blood_group"/>
+        </field>
+        <field name="pan_card_no" position="after">
+          <field name="no_of_dependents"/>
+        </field>
+        <field name="identification_id" position="replace">
+        	<field name="identification_id" groups="base.group_hr_user" invisible="1"/>
+          <field name="auto_emp_code" required="1"/>
+        </field>
+        <xpath expr="//group[@string='Birth']" position="after">
+                        <group string="Emergency Contact Details">
+                        	<field name="emergency_contact"/>
+                            <field name="relation"/>
+                            <field name="emergency_phone"/>
+                        </group>
+        </xpath>
+        
+        <xpath expr="/form/sheet/div[@class='oe_title']" position="replace">
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                            <label for="category_ids" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time" groups="base.group_hr_user"/>
+                            <label for="auto_emp_code_same" class="oe_edit_only" groups="base.group_hr_user"/>
+                            <field name="auto_emp_code_same" groups="base.group_hr_user"/>
+                        </div>
+        </xpath>
+        
+      </field>
+    </record>
+
+	<!--record id="view_partner_bank_form_inherited" model="ir.ui.view">
+      <field name="name">view.partner.bank.form.inherit</field>
+      <field name="model">res.partner.bank</field>
+      <field name="inherit_id" ref="base.view_partner_bank_form"/>
+      <field name="arch" type="xml">
+      
+      
+      
+      </field>
+      </record-->
+
+	<record id="view_partner_bank_form_inherited" model="ir.ui.view">
+      <field name="name">view.partner.bank.form.inherit</field>
+      <field name="model">res.partner.bank</field>
+      <field name="inherit_id" ref="base.view_partner_bank_form"/>
+      <field name="arch" type="xml">
+		
+		<field name="bank" position="replace"> 
+    		<field name="bank" string="Bank Name"/>
+		</field>
+		<field name="bank_name" position="replace"> 
+    		<field name="bank_name" string="Branch Name"/>
+		</field>
+		<field name="bank_bic" position="after">
+          <field name="bank_ifsc_code" />
+        </field>
+        
+        <field name="state" position="replace">
+          <field name="state" invisible="1"/>
+        </field>
+        
+        <field name="partner_id" position="replace">
+          <field name="partner_id" invisible="1"/>
+        </field>
+        
+        		
+      </field>
+    </record>
+    
+    <record id="view_partner_zip_form_inherited" model="ir.ui.view">
+      <field name="name">view.partner.zip.form.inherit</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="base.view_partner_form"/>
+      <field name="arch" type="xml">
+		
+		<field name="zip" position="replace">
+			<field name="zip" placeholder="PIN" style="width: 20%%" attrs="{'readonly': [('use_parent_address','=',True)]}"/>
+		</field>	
+      </field>
+    </record>
+    
+    
+    
+    <record id="view_employee_tree_inherited" model="ir.ui.view">
+            <field name="name">hr.employee.tree.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                	<field name="name" position="before">
+			          <field name="auto_emp_code" string = "Employee No"/>
+			        </field>
+			        <field name="name" position="after">
+			          <field name="age"/>
+			          <field name="birthday"/>
+			          <field name="blood_group"/>
+			          <field name="marital"/>
+			          <field name="passport_id"/>
+			          <field name="pan_card_no"/>
+			          <field name="bank_account_id"/>
+			          <field name="personal_emailid"/>
+			          <field name="home_address_new"/>
+			          <field name="permanent_address"/>
+			        </field>
+			        
+            </field>
+	</record>
+
+	
+	
+	<record id="view_employee_dep_inherited" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                	<field name="manager_id" position="after">
+			          <field name="code" required="1"/>
+			        </field>
+			        
+			        
+            </field>
+	</record>
+	
+	<record id="view_employee_form_inherited" model="ir.ui.view">
+            <field name="name">hr.employee.form.inherited</field>
+            <field name="model">hr.employee</field>
+	    <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+		<field name="department_id" position="replace">
+		    	<field name="department_id" on_change="onchange_department_id(department_id)" required="1"/>
+		    </field>
+		    </field>
+		    </record>
+		    
+		    
+  </data>
+</openerp>
+

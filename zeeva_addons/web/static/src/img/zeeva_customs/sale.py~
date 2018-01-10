@@ -1,0 +1,557 @@
+# -*- coding: utf-8 -*-
+
+from osv import fields,osv
+import tools
+import pooler
+from tools.translate import _
+
+from datetime import datetime,date
+from openerp import netsvc
+
+from openerp.tools.amount_to_text_en import amount_to_text
+
+
+class stock_port(osv.osv):
+    _description = 'Ports of loading/discharge'
+    _name = "stock.port"
+    
+    _order = "country_id,name"
+    
+    _columns = {
+        'name': fields.char('City / Port', size=128, required=True),
+        'country_id': fields.many2one('res.country', 'Country', required=True),
+        'note': fields.text('Remarks'),
+    }
+    
+    _defaults = {
+    }
+    
+    def name_get(self, cr, uid, ids, context=None):
+        # function to show the port in the format "Country name, port name"
+        
+        if context is None:
+            context = {}
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+            
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.country_id.name + ', ' + record.name 
+            res.append((record.id, name))
+        return res
+        
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        ##function to search on both country and city/port name
+        
+        if not args:
+            args = []
+        if not context:
+            context = {}
+
+        ids = []
+        
+        ids = self.search(cr, user, [('country_id', 'ilike', name)] + args, limit=limit, context=context)
+
+        search_domain = [('name', operator, name)]
+        
+        if ids: search_domain.append(('id', 'not in', ids))
+        
+        ids.extend(self.search(cr, user, search_domain + args, limit=limit, context=context))
+
+        locations = self.name_get(cr, user, ids, context)
+        return sorted(locations, key=lambda (id, name): ids.index(id))
+    
+stock_port()
+
+class sale_order(osv.osv):
+    _inherit = 'sale.order'
+    
+    def _amount_in_words(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for so in self.browse(cr, uid, ids, context=context):
+            temp_text = amount_to_text(so.amount_total, currency=so.currency_id.name)
+            #cut = temp_text.find('euro')
+            #temp_text = temp_text[0:cut]
+            #temp_text += 'Cartons Only'
+            res[so.id] = temp_text
+        return res
+    
+    _columns = {
+        'project_project_id': fields.many2one('project.project', 'Project Number'),
+        
+        'ready_date': fields.date('Merchandise Ready Date', help=""),
+        'fct_inspection_date': fields.date('Functional Inspection Date', help=""),
+        'pac_inspection_date': fields.date('Packing Inspection Date', help=""),
+        'etd': fields.date('ETD', help=""),
+        'eta': fields.date('ETA', help=""),
+        'port_of_loading': fields.many2one('stock.port', 'Port of Loading'),
+        'port_of_discharge': fields.many2one('stock.port', 'Port of Discharge'),
+        'shipment_mode': fields.selection([('sea','Sea'),('air','Air')], 'Mode of Shipment'),
+        
+        'pack_export_qty': fields.integer('Export Carton Qty'),
+        'pack_net': fields.float('Net Weight'),
+        'pack_gross': fields.float('Gross Weight'),
+        'pack_total': fields.float('Total Shipment Volume'),
+        
+        'ship_remarks': fields.text('Additional Shipping Instructions'),
+        
+        'remark1': fields.boolean('All prices confirmed are based on present exchange rates and any change in exchange rate will be on buyers\'s account.'),
+        'remark2': fields.boolean('We take pleasure in confirming the above order with your goodselves for the merchandise on the terms & conditions as stated herein and on the back hereof.'),
+        'remark3': fields.boolean('If you find anything herein not in order, please let us know immediately bu fax/e-mail.'),
+        
+        'zeeva_picking_ids': fields.many2many('stock.picking.out', 'sale_order_picking_out_rel', 'sale_id', 'picking_id', 'Related Picking',
+            help="This is a list of delivery orders that has been generated for this sales order."),
+
+        'amount_total_in_words': fields.function(_amount_in_words, string='Total amount in word', type='char', size=128),
+        
+        }
+    
+    _defaults = {
+        'remark1': True,
+        'remark2': True,
+        'remark3': True,
+    }
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'shipped': False,
+            'picking_ids': [],
+            'zeeva_picking_ids': [],
+        })
+        return super(sale_order, self).copy(cr, uid, id, default, context=context)
+    
+    def _create_pickings_and_procurements(self, cr, uid, order, order_lines, picking_id=False, context=None):
+        """Create the required procurements to supply sales order lines, also connecting
+        the procurements to appropriate stock moves in order to bring the goods to the
+        sales order's requested location.
+
+        If ``picking_id`` is provided, the stock moves will be added to it, otherwise
+        a standard outgoing picking will be created to wrap the stock moves, as returned
+        by :meth:`~._prepare_order_picking`.
+
+        Modules that wish to customize the procurements or partition the stock moves over
+        multiple stock pickings may override this method and call ``super()`` with
+        different subsets of ``order_lines`` and/or preset ``picking_id`` values.
+
+        :param browse_record order: sales order to which the order lines belong
+        :param list(browse_record) order_lines: sales order line records to procure
+        :param int picking_id: optional ID of a stock picking to which the created stock moves
+                               will be added. A new picking will be created if ommitted.
+        :return: True
+        """
+        move_obj = self.pool.get('stock.move')
+        picking_obj = self.pool.get('stock.picking')
+        procurement_obj = self.pool.get('procurement.order')
+        proc_ids = []
+        
+        for line in order_lines:
+            if line.state == 'done':
+                continue
+
+            date_planned = self._get_date_planned(cr, uid, order, line, order.date_order, context=context)
+
+            if line.product_id:
+                if line.product_id.type in ('product', 'consu'):
+                    if not picking_id:
+                        picking_id = picking_obj.create(cr, uid, self._prepare_order_picking(cr, uid, order, context=context))
+                    move_id = move_obj.create(cr, uid, self._prepare_order_line_move(cr, uid, order, line, picking_id, date_planned, context=context))
+                else:
+                    # a service has no stock move
+                    move_id = False
+
+                proc_id = procurement_obj.create(cr, uid, self._prepare_order_line_procurement(cr, uid, order, line, move_id, date_planned, context=context))
+                proc_ids.append(proc_id)
+                line.write({'procurement_id': proc_id})
+                self.ship_recreate(cr, uid, order, line, move_id, proc_id)
+
+        wf_service = netsvc.LocalService("workflow")
+        if picking_id:
+            self.write(cr,uid,order.id,{'zeeva_picking_ids':[(4,picking_id)]})
+            wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+        for proc_id in proc_ids:
+            wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
+
+        val = {}
+        if order.state == 'shipping_except':
+            val['state'] = 'progress'
+            val['shipped'] = False
+
+            if (order.order_policy == 'manual'):
+                for line in order.order_line:
+                    if (not line.invoiced) and (line.state not in ('cancel', 'draft')):
+                        val['state'] = 'manual'
+                        break
+        order.write(val)
+        return True
+    
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        if not part:
+            return {'value': {  'partner_invoice_id': False, 
+                                'partner_shipping_id': False,  
+                                'payment_term': False, 
+                                'incoterm': False,
+                                'port_of_discharge': False,
+                                'port_of_loading': False,
+                                'fiscal_position': False}}
+
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
+        pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
+        payment_term = part.property_payment_term and part.property_payment_term.id or False
+        ###
+        incoterm = part.incoterm and part.incoterm.id or False
+        port_of_discharge = part.port_of_discharge and part.port_of_discharge.id or False
+        port_of_loading = part.port_of_loading and part.port_of_loading.id or False
+        ###
+        fiscal_position = part.property_account_position and part.property_account_position.id or False
+        dedicated_salesman = part.user_id and part.user_id.id or uid
+        val = {
+            'partner_invoice_id': addr['invoice'],
+            'partner_shipping_id': addr['delivery'],
+            'payment_term': payment_term,
+            'incoterm': incoterm,
+            'port_of_discharge': port_of_discharge,
+            'port_of_loading': port_of_loading,
+            'fiscal_position': fiscal_position,
+            'user_id': dedicated_salesman,
+        }
+        if pricelist:
+            val['pricelist_id'] = pricelist
+        return {'value': val}
+    
+    def onchange_dates(self, cr, uid, ids , ready_date, fct_inspection_date, pac_inspection_date, etd, eta, choice):
+        #print ready_date,fct_inspection_date,pac_inspection_date,etd,eta,choice
+        warning = {}
+        value = {}
+        
+        if not choice:
+            return True
+            
+        if choice == 1: # Check validity of the Merchandise date
+            if ready_date and pac_inspection_date and (pac_inspection_date < ready_date):
+                warning = {
+                    'title': _('Error Ready date!'),
+                    'message' : _('Ready date cannot be after Packing inspection date.\n')
+                }
+                
+                value = {
+                    'ready_date': '',
+                }
+            
+            if ready_date and etd and (etd < ready_date):
+                warning = {
+                    'title': _('Error Ready date!'),
+                    'message' : _('Ready date cannot be after ETD.\n')
+                }
+                
+                value = {
+                    'ready_date': '',
+                }
+            
+            if ready_date and eta and (eta < ready_date):
+                warning = {
+                    'title': _('Error Ready date!'),
+                    'message' : _('Ready date cannot be after ETA.\n')
+                }
+                
+                value = {
+                    'ready_date': '',
+                }
+        
+        elif choice == 2: # Check validity of the Functional inspection date
+            if fct_inspection_date and pac_inspection_date and (pac_inspection_date < fct_inspection_date):
+                warning = {
+                    'title': _('Error Functional inspection date!'),
+                    'message' : _('Functional inspection date cannot be after Packing inspection date.\n')
+                }
+                
+                value = {
+                    'fct_inspection_date': '',
+                }
+            
+        elif choice == 3: # Check validity of the Packing inspection date
+            if ready_date and pac_inspection_date and (pac_inspection_date < ready_date):
+                warning = {
+                    'title': _('Error Packing inspection date!'),
+                    'message' : _('Packing inspection date cannot be before Merchandise ready date.\n')
+                }
+                
+                value = {
+                    'pac_inspection_date': '',
+                }
+                
+            if fct_inspection_date and pac_inspection_date and (pac_inspection_date < fct_inspection_date):
+                warning = {
+                    'title': _('Error Packing inspection date!'),
+                    'message' : _('Packing inspection date cannot be before Functional inspection date.\n')
+                }
+                
+                value = {
+                    'pac_inspection_date': '',
+                }
+            
+        elif choice == 4: # Check validity of the ETD
+            if etd and eta and (etd > eta):
+                warning = {
+                    'title': _('Error ETD date!'),
+                    'message' : _('ETD cannot be after ETA.\n')
+                }
+                
+                value = {
+                    'etd': '',
+                }
+            
+            if ready_date and etd and (etd < ready_date):
+                warning = {
+                    'title': _('Error ETD!'),
+                    'message' : _('ETD cannot be before Merchandise ready date.\n')
+                }
+                
+                value = {
+                    'etd': '',
+                }
+            
+        elif choice == 5: # Check validity of the ETA
+            if etd and eta and (eta < etd):
+                warning = {
+                    'title': _('Error ETA date!'),
+                    'message' : _('ETA cannot be before ETD.\n')
+                }
+                
+                value = {
+                    'eta': '',
+                }
+            if ready_date and eta and (eta < ready_date):
+                warning = {
+                    'title': _('Error ETA!'),
+                    'message' : _('ETA cannot be before Merchandise ready date.\n')
+                }
+                
+                value = {
+                    'eta': '',
+                }
+            
+        return {'value': value, 'warning': warning,}
+
+    def print_specification(self, cr, uid, ids, context=None):
+        '''
+        This function prints all the Specification Sheets
+        '''
+        #assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        #wf_service = netsvc.LocalService("workflow")
+        #wf_service.trg_validate(uid, 'sale.order', ids[0], 'quotation_sent', cr)
+        
+        
+        
+        sale_obj = self.browse(cr, uid, ids[0],context=context)
+        product_ids = []
+        product_ids += [line.product_id.id for line in sale_obj.order_line]
+        
+        ### CHECK THAT PRODUCT FIELDS ARE NOT EMPTY
+        missing_fields = ""
+        product_obj = self.pool.get("product.product")
+        
+        for p in product_ids:
+            print "HERE"
+            name, message = product_obj.product_spec_check(cr, uid, ids, p)
+            print name, message
+            
+            
+            if message != "":    
+                
+                raise osv.except_osv(   _('Missing data for %s') % name,
+                                        _('%s') % message)
+                return True
+            
+        
+        context.update({
+            'so_name': sale_obj.name,
+            'po_name': '',
+        })
+        datas = {
+                 'model': 'product.product',
+                 'ids': product_ids,
+                 'form': self.read(cr, uid, ids[0], context=context),
+        }
+        
+        return {'type': 'ir.actions.report.xml', 'report_name': 'product.specification.sheet', 'datas': datas, 'context': context, 'nodestroy': True}
+        
+    def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
+        location_id = order.shop_id.warehouse_id.lot_stock_id.id
+        output_id = order.shop_id.warehouse_id.lot_output_id.id
+        name_res = line.product_id.name_get
+        return {
+            'name': line.name,
+            'picking_id': picking_id,
+            'product_id': line.product_id.id,
+            'date': date_planned,
+            'date_expected': date_planned,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty) or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'product_packaging': line.product_packaging.id,
+            'partner_id': line.address_allotment_id.id or order.partner_shipping_id.id,
+            'location_id': location_id,
+            'location_dest_id': output_id,
+            'sale_line_id': line.id,
+            'tracking_id': False,
+            'state': 'draft',
+            #'state': 'waiting',
+            'company_id': order.company_id.id,
+            'price_unit': line.product_id.standard_price or 0.0
+        }
+    
+    def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):
+        name_res = line.product_id.name_get()
+        print name_res
+        return {
+            'name': name_res,
+            'origin': order.name,
+            'date_planned': date_planned,
+            'product_id': line.product_id.id,
+            'product_qty': line.product_uom_qty,
+            'product_uom': line.product_uom.id,
+            'product_uos_qty': (line.product_uos and line.product_uos_qty)\
+                    or line.product_uom_qty,
+            'product_uos': (line.product_uos and line.product_uos.id)\
+                    or line.product_uom.id,
+            'location_id': order.shop_id.warehouse_id.lot_stock_id.id,
+            'procure_method': line.type,
+            'move_id': move_id,
+            'company_id': order.company_id.id,
+            'note': line.name,
+            
+            #'port_of_loading': line.port_of_loading and line.port_of_loading.id,
+            #'port_of_discharge': line.port_of_discharge and line.port_of_discharge.id,
+            #'shipment_mode': line.shipment_mode,
+        }
+        
+    def action_button_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
+
+        # redisplay the record as a sales order
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'zeeva_customs', 'zeeva_sales_order_form_view')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+    
+    def action_reset(self, cr, uid, ids, context=None):
+        if not context:
+            context = {}
+            
+        
+        for id in ids:
+            for line in self.browse(cr, uid, id, context).order_line:
+                line.write({'state': 'draft'})
+        return self.write(cr, uid, ids, {'state': 'draft'})
+        
+sale_order()
+
+
+class sale_order_line(osv.osv):
+    _inherit = 'sale.order.line'
+    
+    _columns={
+        'name': fields.text('Description', required=False, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'date_order': fields.related('order_id','date_order', string='Date', readonly=True, type='date'),
+        'custo_code': fields.related('order_id','partner_id', 'ref', string="Customer Code", type='char', size=64, readonly=True,),
+        'currency_id': fields.related('order_id','currency_id', string='Currency', relation="res.currency", type='many2one', readonly=True),
+
+    }
+    
+    def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
+            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+                
+        context = context or {}
+        product_obj = self.pool.get('product.product')
+        
+        res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
+            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
+
+        #update of result obtained in super function
+        product_obj = product_obj.browse(cr, uid, product, context=context)
+        res['value']['name'] = name or ''
+        
+        return res
+    
+    def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
+        """Prepare the dict of values to create the new invoice line for a
+           sales order line. This method may be overridden to implement custom
+           invoice generation (making sure to call super() to establish
+           a clean extension chain).
+
+           :param browse_record line: sale.order.line record to invoice
+           :param int account_id: optional ID of a G/L account to force
+               (this is used for returning products including service)
+           :return: dict of values to create() the invoice line
+        """
+        res = {}
+        if not line.invoiced:
+            if not account_id:
+                if line.product_id:
+                    account_id = line.product_id.property_account_income.id
+                    if not account_id:
+                        account_id = line.product_id.categ_id.property_account_income_categ.id
+                    if not account_id:
+                        raise osv.except_osv(_('Error!'),
+                                _('Please define income account for this product: "%s" (id:%d).') % \
+                                    (line.product_id.name, line.product_id.id,))
+                else:
+                    prop = self.pool.get('ir.property').get(cr, uid,
+                            'property_account_income_categ', 'product.category',
+                            context=context)
+                    account_id = prop and prop.id or False
+            uosqty = self._get_line_qty(cr, uid, line, context=context)
+            uos_id = self._get_line_uom(cr, uid, line, context=context)
+            pu = 0.0
+            if uosqty:
+                pu = round(line.price_unit * line.product_uom_qty / uosqty,
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Price'))
+            fpos = line.order_id.fiscal_position or False
+            account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, fpos, account_id)
+            if not account_id:
+                raise osv.except_osv(_('Error!'),
+                            _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
+                            
+            var_name = ''
+            if line.product_id:
+                var_name = '[' + line.product_id.default_code + '] '+ line.product_id.name
+                
+                if line.product_id.variants:
+                    var_name += ' - ' + line.product_id.variants
+            
+            res = {
+                'name': var_name,
+                'sequence': line.sequence,
+                'origin': line.order_id.name,
+                'account_id': account_id,
+                'price_unit': pu,
+                'quantity': uosqty,
+                'discount': line.discount,
+                'uos_id': uos_id,
+                'product_id': line.product_id.id or False,
+                'invoice_line_tax_id': [(6, 0, [x.id for x in line.tax_id])],
+                'account_analytic_id': line.order_id.project_id and line.order_id.project_id.id or False,
+            }
+
+        return res
+
+sale_order_line()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

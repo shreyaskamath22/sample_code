@@ -1,0 +1,20 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_employee_category_emp,hr.employee.category.emp,hr.model_hr_employee_category,base.group_user,1,1,0,0
+access_hr_employee_system_user,hr.employee system user,hr.model_hr_employee,base.group_user,1,1,0,0
+access_hr_department_employee,hr.department.employee,hr.model_hr_department,base.group_user,1,1,0,0
+
+access_hr_job_user,hr.job user,hr.model_hr_job,base.group_hr_user,1,1,0,0
+access_hr_department_user,hr.department.user,hr.model_hr_department,base.group_hr_user,1,1,0,0
+access_hr_employee_resource_user,resource.resource.user,resource.model_resource_resource,base.group_hr_user,1,1,0,0
+access_hr_employee_user,hr.employee user,hr.model_hr_employee,base.group_hr_user,1,1,0,0
+access_hr_employee_category_user,hr.employee.category.user,hr.model_hr_employee_category,base.group_hr_user,1,1,0,0
+
+access_hr_job_manager,hr.job manager,hr.model_hr_job,base.group_hr_manager,1,1,1,1
+access_hr_department_manager,hr.department.manager,hr.model_hr_department,base.group_hr_manager,1,1,1,1
+access_hr_employee_resource_manager,resource.resource.manager,resource.model_resource_resource,base.group_hr_manager,1,1,1,1
+access_hr_employee_manager,hr.employee manager,hr.model_hr_employee,base.group_hr_manager,1,1,1,1
+access_hr_employee_category_manager,hr.employee.category.manager,hr.model_hr_employee_category,base.group_hr_manager,1,1,1,1
+
+
+

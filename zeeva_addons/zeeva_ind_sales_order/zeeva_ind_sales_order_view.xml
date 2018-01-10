@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+
+     <record id="zeeva_view_company_form" model="ir.ui.view">
+            <field name="name">zeeva.res.company.form</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <label for="rml_header" position="before">
+                    <group>
+                        <field name="logo_header" widget="image" nolabel="1" options='{"preview_image": "logo_header", "size": [400, ]}'/>
+                    </group>
+                </label>
+            </field>
+    </record>
+
+    <record id="view_order_form_inherit_sale_order" model="ir.ui.view">
+            <field name="name">sale.view.form3</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/header/button[@name='action_quotation_send']" position="replace">
+                    <!-- <button name="action_quotation_send" string="Send by Email" type="object" states="progress" class="oe_highlight" groups="base.group_user"/> -->
+                    <button name="create_delivery_order" string="Create Delivery Order" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': ['|',('state','!=','progress'),('created_delivery_order','=',True)]}"/>
+                </xpath>
+                    <field name="client_order_ref" position="replace">
+                </field>
+                <field name="payment_term" position="replace">
+                </field>
+                <field name="date_order" position="replace">
+                </field>
+                <field name="user_id" position="replace">
+                </field>
+                <label string="Quotation " attrs="{'invisible': [('state','not in',('draft','sent'))]}" position="replace">
+                </label>
+                <label string="Sales Order " attrs="{'invisible': [('state','in',('draft','sent'))]}" position="replace">
+                    <label string="Sales Order"/>
+                </label>
+                <xpath expr="//field[@name='shop_id']" position="replace">
+                        <field name="shop_id" groups="base.group_no_one" on_change="onchange_shop_id(shop_id, context)" widget="selection" invisible="1"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='name']" position="after">
+                            <field name="sale_warehouse_id"/>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='Other Information']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+                <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}' position="replace">
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id, context)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" options='{"always_reload": True}'/>
+                </field>
+                 <xpath expr="/form/sheet/group/group" position="after">
+                    <newline/>
+                    <group>
+                    <label for="billing_street" string="Billing Address"/>
+                    <div>
+                        <field name="billing_street" placeholder="Street..." attrs="{'readonly': [('state','=','progress')]}"/>
+                        <field name="billing_street2" attrs="{'readonly': [('state','=','progress')]}"/>
+                        <div class="address_format">
+                            <field name="billing_destination" placeholder="Billing Destination" style="width: 37%%" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_city" placeholder="City" style="width: 40%%" options="{'create': false, 'create_edit': false, 'search_more':true'}" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly': [('state','=','progress')]}"/>
+                        </div>
+                            <field name="billing_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_contact_person" placeholder="Billing Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_billing_contact_person(billing_contact_person)" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_contact_mobile_no" placeholder="Mobile Number" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_contact_landline_no" placeholder="Landline Number" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="billing_email_id" placeholder="Email ID" attrs="{'readonly': [('state','=','progress')]}"/>
+                    </div>
+                    </group>
+                    <group>
+                    <label for="shipping_street" string="Shipping Address"/>
+                    <div>
+                        <field name="shipping_street" placeholder="Street..." attrs="{'readonly': [('state','=','progress')]}"/>
+                        <field name="shipping_street2" attrs="{'readonly': [('state','=','progress')]}"/>
+                        <div class="address_format">
+                            <field name="shipping_destination" placeholder="Shipping Destination" style="width: 37%%" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_city" placeholder="City" style="width: 37%%" options="{'create': false, 'create_edit': false, 'search_more':true'}" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_zip" placeholder="Pincode" style="width: 20%%" attrs="{'readonly': [('state','=','progress')]}"/>
+                        </div>
+                            <field name="shipping_country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}' attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_contact_person" placeholder="Shipping Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',partner_id)]" on_change="onchange_shipping_contact_person(shipping_contact_person)" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_contact_mobile_no" placeholder="Mobile Number" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_contact_landline_no" placeholder="Landline Number" attrs="{'readonly': [('state','=','progress')]}"/>
+                            <field name="shipping_email_id" placeholder="Email ID" attrs="{'readonly': [('state','=','progress')]}"/>
+                    </div>
+                </group>
+                <group>
+                    <field name="user_id" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="client_order_ref" required="1" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="payment_term" on_change="onchange_date_order(date_order,payment_term,partner_id)" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="dispatch_source" required="1" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="financial_year"/>
+                </group>
+                <group>
+                    <field name="date_order" string="Order Date" on_change="onchange_date_order(date_order,payment_term,partner_id)" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="po_date" required="1" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="due_date" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="destination" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="po_attachment" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="order_policy" invisible="1"/>
+                    <field name="amount_total_in_words" invisible="1"/>
+                    <field name="total_shipped_quantity" invisible="1"/>
+                    <field name="total_billed_quantity" invisible="1"/>
+                    <field name="created_delivery_order" invisible="1"/>
+                </group>
+                </xpath>
+            </field>
+        </record>
+
+         <record id="sale.view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">2</field>
+            <field name="arch" type="xml">
+                <tree string="Sales Orders" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Order Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="financial_year"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="sale.view_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Quotation" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Quotation Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="financial_year"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="sale_view_crm_inherit">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_crm.sale_view_inherit123"/>
+            <field name="arch" type="xml">
+                    <field name="section_id" widget="selection" position="replace">
+                    </field>
+                    <field name="categ_ids" widget="many2many_tags" position="replace">           
+                    </field>
+            </field>
+        </record>
+
+        <menuitem name="Draft Sales Order" id="sale.menu_sale_quotations" action="sale.action_quotations" parent="base.menu_sales" sequence="4"/>
+
+        <menuitem name="Confirmed Sales Order" action="sale.action_orders" id="sale.menu_sale_order" parent="base.menu_sales" sequence="5" groups="base.group_sale_salesman,base.group_sale_manager"/>
+
+         <record id="dispatch_through_tree_view" model="ir.ui.view">
+            <field name="name">dispatch.through.tree</field>
+            <field name="model">dispatch.through</field>
+            <field name="arch" type="xml">
+                <tree string="Dispatch Process" version="7.0">
+                    <field name="name" string="Medium of Dispatch"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="dispatch_through_form_view" model="ir.ui.view">
+            <field name="name">dispatch.through.form</field>
+            <field name="model">dispatch.through</field>
+            <field name="arch" type="xml">
+                <form string="Dispatch Process" version="7.0">
+                    <sheet>
+                      <group>
+                         <field name="name" string="Medium of Dispatch"/>
+                      </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="dispatch_through_form_action" model="ir.actions.act_window">
+            <field name="name">Medium of Dispatch</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dispatch.through</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="dispatch_through_tree_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a new Dispatch Process.
+              </p><p>
+                You can define a Dispatch Source Name.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_base_config_id" parent="base.menu_base_partner" name="Configuration" sequence="35"/>
+        
+        <menuitem action="dispatch_through_form_action" id="dispatch_process_menu" name="Medium of Dispatch" parent="menu_base_config_id" sequence="1"/>
+
+
+        
+    </data>
+</openerp>

@@ -1,0 +1,4 @@
+1. SCNC Postpaid Lines can only select Deposit credit class and not Prime.
+2. For 0 accessory sku, total revenue would be 0 except ship_to_accessory.
+3. SAP tracker to be moved and data to be imported in system as per procedure mailed by Pratik, subject as Steps of Importing RSM in Designation Tracker.
+

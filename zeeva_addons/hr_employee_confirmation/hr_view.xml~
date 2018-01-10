@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <record id="view_confirmation_form" model="ir.ui.view">
+            <field name="name">hr.employee.confirmation.form</field>
+            <field name="model">hr.employee.confirmation</field>
+            <field name="arch" type="xml">
+                <form string="Employee Confirmation" version="7.0">
+                <header>
+                	<button string="Submit" name="action_employee_confirm" type="object" states="Draft"/>
+					<button string="Confirm" name="action_employee_confirm_by_mgmt" type="object" states="Submitted to Mgmt" groups="base.group_hr_manager"/>
+					<button string="Reject" name="action_employee_reject_by_mgmt" type="object" states="Submitted to Mgmt" groups="base.group_hr_manager"/>
+					<button string="Validate Confirmation" name="action_confirm_validate" type="object" states="Confirmed by Mgmt"/>
+					<button string="Confirm" name="action_employee_confirm_in_warning" type="object" states="Warning"/>
+					<button string="Warning" name="action_employee_warn" type="object" states="On Hold"/>
+					<button string="Confirm" name="action_employee_confirm" type="object" states="On Hold"/>
+					<button string="Alert" name="action_employee_tobe_confirm" type="object" states="On Hold"/>
+					<button string="Terminated" name="action_employee_terminate" type="object" states="On Hold"/>
+					<button string="Print" name="print_confirmation_letter" type="object" states="Confirmation validated by HRO" color="red"/>
+                	<!--button string="Approve" name="action_employee_approved" type="object" states="confirmed"/-->
+                	<!--button string="Employee Probation Period Completion" name="send_notification_of_tenure_completion" type="object" states="Draft"/-->
+                	<field name="state" widget="statusbar" statusbar_visible="Draft,Submitted to Mgmt,Confirmed by Mgmt,On Hold,Warning,Terminated,Confirmation validated by HRO"/>
+                	
+                </header>
+                	<sheet>
+                		<group>
+                		<group>
+				    		<field name="name" on_change="onchange_date_of_joining(name)"/>
+		    		    	<field name="job_id"/>
+		                    <field name="identification_id"/>
+		                    <field name="review_by"/>
+		                    <field name="current_user"/>
+	                    </group>
+	                    <group>
+	                    	<field name="company_id"/>
+	                    	<field name="department_id"/>
+	                    	<field name="join_date" />
+	                    	<field name="manager_id"/>
+	                    	<field name="date_of_confirmation" />
+	                    	<field name="salutation" invisible="1"/>
+							<field name="on_hold_till_date" attrs="{'invisible':[('state', 'in',('Draft','Confirmed by Mgmt','Terminated','Warning','Confirmation validated by HRO'))]}"/>
+	                    </group>
+	                    <group colspan="2" col="2" string="Please select the points which are applicable to the Employee's Performance and rate them on a scale of 1 to 5, 5 being the Highest Rating">
+	                    <button string="Display" name="display_rating_points_for_employee" type="object"/>
+	                    <separator/>
+	                    <group colspan="2" col="2">
+                          	 <field name="points_ids" nolabel="1" domain="['point_id', '=', active_id]" context="{'point_id': active_id}" />                        
+                        </group> 
+                        </group>
+	                    </group>
+	                </sheet>
+	                <xpath expr="//form[@string='Employee Confirmation']/sheet" position="after">
+						<div class="oe_chatter">
+	                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    		<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+					</xpath>
+                </form>
+                
+            </field>
+            
+            
+    </record>
+    
+    <record id="view_confirmation_tree" model="ir.ui.view">
+            <field name="name">hr.employee.confirmation.tree</field>
+            <field name="model">hr.employee.confirmation</field>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'On Hold';violet:state == 'Submitted to Mgmt';green:state == 'Confirmation validated by HRO';blue:state == 'Confirmed by Mgmt'" string="Employee Confirmation">
+                    <field name="name"/>
+		    		<field name="job_id"/>
+		    		<field name="join_date"/>
+                    <field name="date_of_confirmation"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="hr_confirmation_view_tree" model="ir.ui.view">
+            <field name="name">hr.employee.points.tree</field>
+            <field name="model">hr.employee.points</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Please Select The Points which are applicable to Employee's Performance and Rate them on a scale of 1 to 5, 5 being the Highest Rating">
+	                	<field name="remarks"/>
+	                	<field name="rating"/>
+                </tree>
+            </field>
+        </record>
+    
+    <record id="open_view_employee_tree_new" model="ir.actions.act_window">
+            <field name="name">Employee Confirmation</field>
+            <field name="res_model">hr.employee.confirmation</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+    </record>
+
+	<menuitem action="open_view_employee_tree_new" id="employee_tree_menuitem_new" sequence="4" parent="hr.menu_hr_main" groups="base.group_hr_user"/>
+    
+    </data>
+</openerp>

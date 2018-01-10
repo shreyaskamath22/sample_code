@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<record model="ir.ui.view" id="refusal_form_view">
+            <field name="name">reason.refusal.form</field>
+            <field name="model">reason.refusal</field>
+            <field name="arch" type="xml">
+                <form string="Reason for Refusal" version="7.0">
+                    
+                    <group>
+                      <field name="name"/>
+                      <field name="refusal_reason"/>
+                      
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_reason_refusal" model="ir.actions.act_window">
+            <field name="name">Reason for Refusal</field>
+            <field name="res_model">reason.refusal</field>
+            <field name="src_model">reason.refusal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="auto_refresh" eval="1" />
+            <field name="target">new</field>
+            <field name="context">{'template_id':active_id}</field>
+        </record>
+
+
+        <record id="view_kra_refuse_wizard" model="ir.ui.view">
+            <field name="name">KRA refuse Wizard</field>
+            <field name="model">kra.refuse.wizard</field>
+            <field name="arch" type="xml">
+                <form string="KRA refuse Wizard" version="7.0">
+            
+                    <group>
+                        <label string="Are you sure you want to refuse the KRA points?"/>
+            
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="No" class="oe_link" special="cancel" />
+                    </footer>
+            
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_kra_refuse_wizard" model="ir.actions.act_window">
+             <field name="name">KRA refuse Wizard</field>
+             <field name="res_model">kra.refuse.wizard</field>
+             <field name="src_model">kra.refuse.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_kra_refuse_wizard"/>
+             <field name="target">new</field>
+       </record>
+
+
+    </data>
+</openerp>

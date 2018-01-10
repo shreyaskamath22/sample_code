@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_task_relation,task.relation,bista_project.model_task_relation,project.group_project_user,1,1,1,1
+access_task_relation,task.relation,bista_project.model_task_relation,project.group_project_manager,1,1,1,1
+access_project_state_type,project.state.type,bista_project.model_project_state_type,project.group_project_user,1,1,1,1
+access_project_state_type,project.state.type,bista_project.model_project_state_type,project.group_project_manager,1,1,1,1
+access_store_status,store.status,bista_project.model_store_status,project.group_project_user,1,1,1,1
+access_store_status,store.status,bista_project.model_store_status,project.group_project_manager,1,1,1,1
+project.access_project_project,project.project,project.model_project_project,project.group_project_user,1,1,0,0

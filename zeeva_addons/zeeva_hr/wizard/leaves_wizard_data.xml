@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+
+    <data>
+        <!-- EDI related Email Templates menu -->
+        <record model="ir.actions.act_window" id="action_email_templates">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template.email_template_tree" />
+            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="context">{'search_default_model_id':'hr.holidays'}</field>
+            <field name="context" eval="{'search_default_model_id': ref('zeeva_hr.model_hr_holidays')}"/>
+        </record>
+       
+    </data>
+    <data>
+    	
+
+<record id="edit_holiday_new" model="email.template">
+    <field name="name">Urgent Basis Leave Request</field>
+    <field name="email_from">${object.employee_id.work_email}</field>
+    <field name="subject"> ${object.holiday_status_id.name} request on an Urgent Basis</field>
+    <field name="email_to">${object.employee_id.hro.email}</field>
+    <field name="lang">Urgent Basis Leave Request</field>
+    <field name="model_id" ref="hr_holidays.model_hr_holidays"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.employee_id.hro.name},
+<p>
+<b> Please allow me to take a ${object.holiday_status_id.name} request on an Urgent Basis. </b>
+<p>
+<b> Reason: ${object.reason_for_leave or ''}
+</b>
+<p>
+<p>
+<p> Regards,
+<p> ${object.employee_id.name}
+            ]]></field>
+</record>	
+
+    </data>
+</openerp>

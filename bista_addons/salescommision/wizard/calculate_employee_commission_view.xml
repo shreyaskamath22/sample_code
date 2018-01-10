@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_wizard_employee_commission" model="ir.ui.view">
+            <field name="name">wizard.employee.commission.form</field>
+            <field name="model">wizard.employee.commission</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Employee Commission Tracker" version="7.0">
+                    <group>    
+                        <field name="emp_id"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="calculate_commission" string="Calculate Commission" class="oe_highlight" type="object"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_view_wizard_employee_commission" model="ir.actions.act_window">
+            <field name="name">Commission Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wizard.employee.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_wizard_employee_commission"/>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_view_wizard_employee_commission" id="menu_action_wizard_employee_commission" parent="wirelessvision_salescommision.menu_commission_tracker" sequence="1"/>
+    
+    </data>
+</openerp>

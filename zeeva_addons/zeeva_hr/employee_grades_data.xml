@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+
+	  <record id="job_ceo" model="hr.job">
+          <field name="name">Chief Executive Officer</field>
+          <field name="department_id" ref="dep_management"/>
+      </record>
+
+      <record id="job_cto" model="hr.job">
+          <field name="name">Chief Technical Officer</field>
+          <field name="department_id" ref="dep_rd"/>
+      </record>
+
+      <record id="job_consultant" model="hr.job">
+          <field name="name">Consultant</field>
+          <field name="department_id" ref="dep_ps"/>
+      </record>
+
+      <record id="job_developer" model="hr.job">
+          <field name="name">Developer</field>
+          <field name="department_id" ref="dep_rd"/>
+      </record>
+
+      <record id="job_hrm" model="hr.job">
+          <field name="name">Human Resources Manager</field>
+          <field name="department_id" ref="dep_administration"/>
+      </record>
+
+      <record id="job_marketing" model="hr.job">
+          <field name="name">Marketing and Community Manager</field>
+          <field name="department_id" ref="dep_sales"/>
+      </record>
+
+      <record id="job_trainee" model="hr.job">
+          <field name="name">Trainee</field>
+      </record>
+      
+	</data>
+</openerp>

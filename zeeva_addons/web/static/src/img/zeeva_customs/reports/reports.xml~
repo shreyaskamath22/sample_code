@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+    <!-- Specification Sheet -->
+        <report id="report_product_specification_sheet" model="product.product"
+                name="product.specification.sheet" auto="False"
+                rml="zeeva_customs/reports/product_specification_sheet.rml"
+                string="Product Specification Sheet"
+                usage="default"/>
+                
+    <!-- Sales Offer for Leads -->
+        <report id="report_sale_offer_lead" model="sale.offer"
+                name="sale.offer.lead" auto="False"
+                rml="zeeva_customs/reports/sale_offer_lead.rml"
+                string="Sales Offer Sheet for Leads"
+                multi="True"
+                usage="default"/>
+    
+    <!-- Specification Sheet for Offer Sheet Leads-->
+        <report id="report_product_specification_sheet_lead" model="product.template"
+                name="product.specification.sheet.lead" auto="False"
+                rml="zeeva_customs/reports/product_specification_sheet_lead.rml"
+                string="Product Specification Sheet for Leads"
+                usage="default"/>
+                
+    <!-- Sales Confirmation -->
+        <report id="sale.report_sale_order" model="sale.order" 
+                name="sale.order" auto="False" 
+                rml="zeeva_customs/reports/sale_order.rml" 
+                string="Sales Confirmation"
+                usage="default"/>
+
+    <!-- Purchase Order -->
+        <report id="purchase.report_purchase_quotation" model="purchase.order" 
+                name="purchase.quotation" auto="False" 
+                rml="zeeva_customs/reports/purchase_order.rml" 
+                string="Purchase Order"
+                usage="default"/>
+        <report id="purchase.report_purchase_order" model="purchase.order" 
+                name="purchase.order" auto="False" 
+                rml="zeeva_customs/reports/purchase_order.rml" 
+                string="Purchase Order"
+                usage="default"/>
+                
+    <!-- Packing List -->
+        <report id="stock.report_picking_list_out" model="stock.picking.out" 
+                name="stock.picking.list" auto="False" 
+                rml="zeeva_customs/reports/delivery_order.rml" 
+                string="Packing List"
+                usage="default"/>
+                
+    <!-- Commercial Invoice -->
+        <report id="account.account_invoices" model="account.invoice" 
+                name="account.invoice" auto="False" 
+                rml="zeeva_customs/reports/account_invoice.rml" 
+                string="Commercial Invoice"
+                usage="default"/>
+        
+    <!-- HR Expenses -->
+        <report id="hr_expense.hr_expenses" model="hr.expense.expense" 
+                name="hr.expense" auto="False" 
+                rml="zeeva_customs/reports/hr_expenses.rml" 
+                string="HR expenses"
+                usage="default"/>
+                
+    </data>
+</openerp>

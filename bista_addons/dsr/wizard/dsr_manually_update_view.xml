@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record id="view_wireless_dsr_manually_update" model="ir.ui.view">
+            <field name="name">Wireless DSR Manually Update</field>
+            <field name="model">wireless.dsr.manually.update</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="DSR Manually Update Records" version="7.0">
+                    <group string="Sales Entry Update Conditions">
+                        <group>
+                            <field name="start_date" required="1" readonly="1"/>
+                            <field name="emp_id" required="1" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="What to Update?">
+                        <group>
+                            <!-- <field name="emp_id_upg"/> -->
+                            <field name="dealer_code_upg" readonly="1"/>
+                            <field name="job_id_upg"/>
+                        </group>
+                        <group>
+                            <field name="sap_id_upg" readonly="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="dsr_update" string="Update" class="oe_highlight" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+	   <record id="action_wireless_dsr_manually_update" model="ir.actions.act_window">
+            <field name="name">Search Sales Entry Update Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.dsr.manually.update</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_wireless_dsr_manually_update"/>
+            <field name="target">new</field>
+        </record>
+
+        <record id="view_wireless_dsr_manually_update_entry" model="ir.ui.view">
+            <field name="name">Wireless DSR Manually Update</field>
+            <field name="model">wireless.dsr.manually.update</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="DSR Manually Update Records" version="7.0">
+                    <group string="Sales Entry Update Conditions">
+                        <group>
+                            <field name="start_date" required="1"/>
+                            <field name="emp_id" required="1"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                        </group>
+                    </group>
+                    <group string="What to Update?">
+                        <group>
+                            <!-- <field name="emp_id_upg"/> -->
+                            <field name="dealer_code_upg"/>
+                            <field name="job_id_upg"/>
+                        </group>
+                        <group>
+                            <field name="sap_id_upg"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="dsr_update" string="Update" class="oe_highlight" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wireless_dsr_manually_update_entry" model="ir.actions.act_window">
+            <field name="name">Sales Entry Update Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.dsr.manually.update</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_wireless_dsr_manually_update_entry"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem action="action_wireless_dsr_manually_update_entry" id="menu_action_wireless_dsr_manually_update" parent="wireless_dsr_config_menu" sequence="100"/>
+
+        <record id="view_dsr_manually_update_log_form" model="ir.ui.view">
+            <field name="name">dsr.manually.update.log.form</field>
+            <field name="model">dsr.manually.update.log</field>
+            <field name="arch" type="xml">
+                <form string="Manually Update Entry Log" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="update_wiz_id"/>
+                            <field name="employee_id"/>
+                            <field name="dealer_code_upg"/>
+                            <field name="job_id_upg"/>
+                            <field name="sap_id_upg"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="type"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_dsr_manually_update_log_tree" model="ir.ui.view">
+            <field name="name">dsr.manually.update.log.tree</field>
+            <field name="model">dsr.manually.update.log</field>
+            <field name="arch" type="xml">
+                <tree string="Manually Update Entry Log">
+                    <field name="user_id"/>
+                    <field name="update_wiz_id"/>
+                    <field name="employee_id"/>
+                    <field name="dealer_code_upg"/>
+                    <field name="job_id_upg"/>
+                    <field name="sap_id_upg"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_dsr_manually_update_log_form" model="ir.actions.act_window">
+            <field name="name">Manually Update Entry Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dsr.manually.update.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dsr_manually_update_log_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Update Entry Log.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_dsr_manually_update_log_form" id="menu_action_dsr_manually_update_log_form" 
+            parent="wireless_dsr_config_menu" sequence="10"/>
+
+    </data>
+</openerp>

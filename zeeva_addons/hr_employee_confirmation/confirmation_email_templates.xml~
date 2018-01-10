@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+    	
+    	<record id="employee_probation_period_completion_email_template" model="email.template">
+            <field name="name">Employee Probation Period Completion</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Probation Period Completion of an Employee</field>
+            <field name="email_to">${object.work_email}</field>
+            <field name="lang">Probation period completion</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi,
+
+${object.name} has completed his probation period.
+
+            ]]></field>
+        </record>	
+    	
+            <!--record id="employee_one_year_completion_email_template" model="email.template">
+            <field name="name">Employee One Year Completion</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">One Year Completion of an Employee</field>
+            <field name="email_to">${object.name.work_email}</field>
+            <field name="lang">one year completion</field>
+            <field name="model_id" ref="hr.model_hr_employee"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi,
+
+${object.name.name_related} has completed one year of tenure.
+
+            ]]></field>
+        </record>
+        
+        <record id="troubleshooting_solved_email_template" model="email.template">
+            <field name="name">Troubleshooting Solved Mail</field>
+            <field name="email_from">${object.raised_by_email_id}</field>
+            <field name="subject">Acknowledgement for Issue Solved</field>
+            <field name="email_to">${object.assigned_to_email_id}</field>
+            <field name="lang">solved</field>
+            <field name="model_id" ref="troubleshooting.model_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.user_id.name},
+<p>
+I acknowledge that the issue entitled ''${object.name}" has been solved.
+</p>
+
+Regards,
+<p>
+${object.raised_by.name}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="troubleshooting_cancelled_email_template" model="email.template">
+            <field name="name">Troubleshooting Cancelled Mail</field>
+            <field name="email_from">${object.raised_by_email_id}</field>
+            <field name="subject">Cancellation of Issue</field>
+            <field name="email_to">${object.assigned_to_email_id}</field>
+            <field name="lang">cancelled</field>
+            <field name="model_id" ref="troubleshooting.model_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.user_id.name},
+<p>
+The issue entitled ''${object.name}" has been cancelled.
+</p>
+
+Regards,
+<p>
+${object.raised_by.name}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="products_troubleshooting_create_issue_email_template" model="email.template">
+            <field name="name">Troubleshooting Issue Creation Mail for Products</field>
+            <field name="email_from">${object.raised_by_email_id}</field>
+            <field name="subject">Issue Creation Mail</field>
+            <field name="email_to">${object.assigned_to_email_id}</field>
+            <field name="lang">create for products</field>
+            <field name="model_id" ref="troubleshooting.model_products_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.user_id.name},
+<p>
+An Issue entitled '${object.name}' has been raised.
+</p>
+
+Regards,
+<p>
+${object.raised_by.name}
+</p>
+
+            ]]></field>
+        </record>	
+        
+        <record id="troubleshooting_test_email_template_products" model="email.template">
+            <field name="name">Troubleshooting Test Mail for Products</field>
+            <field name="email_from">${object.assigned_to_email_id}</field>
+            <field name="subject">Request for Testing the Products Issue</field>
+            <field name="email_to">${object.raised_by_email_id}</field>
+            <field name="lang">test for products</field>
+            <field name="model_id" ref="troubleshooting.model_products_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.raised_by.name},
+<p>
+The issue entitled ''${object.name}" has been solved. You are requested to test the issue.
+</p>
+
+Regards,
+<p>
+${object.user_id.name}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="troubleshooting_solved_email_template_products" model="email.template">
+            <field name="name">Troubleshooting Solved Mail for Products</field>
+            <field name="email_from">${object.raised_by_email_id}</field>
+            <field name="subject">Acknowledgement for Products Issue Solved</field>
+            <field name="email_to">${object.assigned_to_email_id}</field>
+            <field name="lang">solved for products</field>
+            <field name="model_id" ref="troubleshooting.model_products_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.user_id.name},
+<p>
+I acknowledge that the issue entitled ''${object.name}" has been solved.
+</p>
+
+Regards,
+<p>
+${object.raised_by.name}
+</p>
+
+            ]]></field>
+        </record>
+        
+        <record id="troubleshooting_cancelled_email_template_products" model="email.template">
+            <field name="name">Troubleshooting Cancelled Mail for Products</field>
+            <field name="email_from">${object.raised_by_email_id}</field>
+            <field name="subject">Cancellation of Products Issue</field>
+            <field name="email_to">${object.assigned_to_email_id}</field>
+            <field name="lang">cancelled for products</field>
+            <field name="model_id" ref="troubleshooting.model_products_issue_tracking_new"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+Hi ${object.user_id.name},
+<p>
+The issue entitled ''${object.name}" has been cancelled.
+</p>
+
+Regards,
+<p>
+${object.raised_by.name}
+</p>
+
+            ]]></field>
+        </record-->
+        
+    </data>
+</openerp>

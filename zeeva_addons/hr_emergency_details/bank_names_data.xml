@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="res.bank" id="bank1">
+            <field name="name">Allahabad Bank</field>
+        </record>
+
+       <record model="res.bank" id="bank2">
+            <field name="name">Axis Bank</field>
+        </record>
+
+       <record model="res.bank" id="bank3">
+            <field name="name">HDFC </field>
+        </record>
+
+       <record model="res.bank" id="bank4">
+            <field name="name">Bank of Baroda</field>
+        </record>
+
+		<record model="res.bank" id="bank5">
+            <field name="name">Bank Of India</field>
+        </record>
+
+       <record model="res.bank" id="bank6">
+            <field name="name">Bank Of Maharashtra</field>
+        </record>
+		
+		
+    </data>
+</openerp>

@@ -1,0 +1,133 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+
+        <!-- Public Holidays Calendar Year 2015-->
+        <record model="hr.holidays.public" id="public_holidays_calendar">
+            <field name="year">2015</field>
+        </record>
+
+        
+        <record model="hr.holidays.public.line" id="public_holiday_1">
+            <field name="sr_no">1</field>
+            <field name="name">New Year</field>
+            <field name="date">2015-01-01</field>
+	    <field name="day_of_week">3</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+        <record model="hr.holidays.public.line" id="public_holiday_2">
+            <field name="sr_no">2</field>
+            <field name="name">Republic Day</field>
+            <field name="date">2015-01-26</field>
+	    <field name="day_of_week">0</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_3">
+            <field name="sr_no">3</field>
+            <field name="name">Maha Shivratri</field>
+            <field name="date">2015-02-17</field>
+	    <field name="day_of_week">1</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_4">
+            <field name="sr_no">4</field>
+            <field name="name">Holi</field>
+            <field name="date">2015-03-06</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_5">
+            <field name="sr_no">5</field>
+            <field name="name">Good Friday</field>
+            <field name="date">2015-04-03</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_6">
+            <field name="sr_no">6</field>
+            <field name="name">Maharashtra Day</field>
+            <field name="date">2015-05-01</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_7">
+            <field name="sr_no">7</field>
+            <field name="name">Ganesh Chaturthi</field>
+            <field name="date">2015-09-17</field>
+	    <field name="day_of_week">3</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_8">
+            <field name="sr_no">8</field>
+            <field name="name">Mahatma Gandhi Jayanti</field>
+            <field name="date">2015-10-02</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_9">
+            <field name="sr_no">9</field>
+            <field name="name">Dussehra</field>
+            <field name="date">2015-10-22</field>
+	    <field name="day_of_week">3</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_10">
+            <field name="sr_no">10</field>
+            <field name="name">Diwali</field>
+            <field name="date">2015-11-11</field>
+	    <field name="day_of_week">2</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_11">
+            <field name="sr_no">11</field>
+            <field name="name">Diwali (New Year)</field>
+            <field name="date">2015-11-12</field>
+	    <field name="day_of_week">3</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_12">
+            <field name="sr_no">12</field>
+            <field name="name">Bhai Duj</field>
+            <field name="date">2015-11-13</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+
+	<record model="hr.holidays.public.line" id="public_holiday_13">
+            <field name="sr_no">13</field>
+            <field name="name">Christmas</field>
+            <field name="date">2015-12-25</field>
+	    <field name="day_of_week">4</field>
+	    <field name="holidays_id" ref="public_holidays_calendar"/>
+	    
+        </record>
+        
+        
+
+    </data>
+</openerp>

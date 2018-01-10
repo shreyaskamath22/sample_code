@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+        
+        <record id="view_attachment_inherit_form" model="ir.ui.view">
+            <field name="name">view.attachment.inherit.form</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="base.view_attachment_form"/>
+            <field name="arch" type="xml">
+
+    <!-- Create new pages according to create/write/delete/edit  -->
+            <group string="Description"  position="after">
+	            <group string="Intranet (If Checked then file consider for Json Feed)">
+	                <field name="intranet_check"/>
+                        <field name="publish_start_date" attrs="{'required':[('intranet_check','=',True)]}"/>
+                        <field name="publish_end_date" attrs="{'required':[('intranet_check','=',True)]}"/>
+	            </group>
+	            <separator/>
+                    <group string="Attachment URL">
+                        <field name="attachment_url" readonly="1" widget="url"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Share">
+                        <separator string="If User,Group and Job Position are not added then file will be visible for owner only" colspan="4"/>
+                            <notebook>
+                                <page string="Groups">
+                                    <label colspan="4" string="Members of these groups will have access to read this files." />
+                                    <field name="re_groups_doc_rel"/>
+                                </page>  
+                                <page string="Users">
+                                    <label colspan="4" string="These users will have access to read this files." />
+                                    <field name="re_users_doc_rel"/>
+                                </page>
+                                <page string="Job Position">
+                                    <label colspan="4" string="Users of this Job Position will have access to read this files." />
+                                    <field name="re_job_doc_rel">
+                                                                        <tree string="Job Position" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="department_id" readonly="1"/>
+                                </tree>
+                            </field>
+                                </page>
+                            </notebook>
+                        </page>
+                        <page string="Log" >
+                            <field name="log_ids" readonly="1">
+                                <tree string="Log Lines">
+                                    <field name="name"/>
+                                    <field name="user_id"/>
+                                    <field name="write_date"/>
+                                    <field name="ir_log_id"/>
+                                    <field name="download"/>
+                                </tree>
+                            </field>                        
+                        </page>
+
+<!--                     <page string="Write Access">
+                    <separator string="If User and Group is not added then all users (who have a read acces of this directory) can edit the document in this directory" colspan="4"/>
+                        <notebook>
+                            <page string="Groups">
+                                <label colspan="4" string="Members of these groups will have access to write directory files." />
+                                <field name="wr_groups_doc_rel"/>
+                            </page>  
+                            <page string="Users">
+                                <label colspan="4" string="These Users will have access to write directory files." />
+                                <field name="wr_users_doc_rel"/>
+                            </page>
+                        </notebook>
+                    </page>
+                    <page string="Delete Access">
+                    <separator string="If User and Group is not added then all users (who have a read acces of this directory) can delete the document in this directory" colspan="4"/>
+                        <notebook>
+                            <page string="Groups">
+                                <label colspan="4" string="Members of these groups will have access to delete directory files." />
+                                <field name="un_groups_doc_rel"/>
+                            </page>  
+                            <page string="Users">
+                                <label colspan="4" string="These users will have access to delete directory files." />
+                                <field name="un_users_doc_rel"/>
+                            </page>
+                        </notebook>
+                    </page> -->
+                </notebook>
+            </group>
+            <xpath expr="//group[@string='Attached To']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='type']" position="attributes">
+                <attribute name="readonly">1</attribute>
+            </xpath>
+
+            <xpath expr="//group[@string='Indexed Content']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+        </field>
+    </record>
+
+        <record id="view_document_file_tree_inherit" model="ir.ui.view">
+            <field name="name">view.attachment.inherit.tree</field>
+            <field name="model">ir.attachment</field>
+            <field name="inherit_id" ref="document.view_document_file_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+		    <field name="intranet_check"/>
+                </xpath>
+
+                <xpath expr="//field[@name='partner_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='company_id']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='type']" position="attributes">
+                    <attribute name="invisible">1</attribute>
+                </xpath>
+            </field>
+        </record>   
+
+        <menuitem name="Knowledge"
+              id="knowledge.menu_document"
+              groups="base.group_system,base.group_document_user,base.group_user"
+              sequence="116"/>    
+
+<!-- <menuitem name="Knowledge"
+              id="knowledge.menu_document"
+              groups="wirelessvision_dsr.group_wireless_comm_analyst,"
+              sequence="116"/> -->
+
+        <!--Start - change Directory wizard -->
+        <record id="change_directory_wizard_view" model="ir.ui.view">
+            <field name="name">Change Directory</field>
+            <field name="model">change.directory.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Change Directory">
+                    <separator string="Move All Into One Directory" colspan="4"/>
+                    <field name="move_all" string= 'Move All Into One Directory'/>
+                    <field name="directory_id" attrs="{'readonly': [('move_all', '=', False)],'required': [('move_all', '=', True)]}"/>
+                    <group string="Set Directory" attrs="{'invisible': [('move_all', '=', True)]}">
+                        <field name="document_ids"/>
+                    </group>
+                    <footer>
+                        <button string="Change Directory" name="change_directory_button" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="change_directory_wizard_tree_view" model="ir.ui.view">
+            <field name="name">Change Directory Wizard Document</field>
+            <field name="model">change.directory.document</field>
+            <field name="arch" type="xml">
+                <!-- the user list is editable, but one cannot add or delete rows -->
+                <tree string="Users" editable="bottom" create="false" delete="false">
+                    <field name="document_id"/>
+                    <field name="directory_name" />
+                </tree>
+            </field>
+        </record>
+
+        <act_window id="change_directory_wizard_action"
+            name="Change Directory"
+            src_model="ir.attachment"
+            res_model="change.directory.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            />
+<!-- End - change Directory wizard -->
+
+    </data>
+</openerp>

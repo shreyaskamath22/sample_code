@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+  
+    <!-- HR Expenses -->
+        <report id="hr_expense.hr_expenses" model="hr.expense.expense" 
+                name="hr.expense" auto="False" 
+                rml="hr_expenses_custom/report/expense.rml" 
+                string="HR expenses"
+                usage="default"/>
+                
+    </data>
+</openerp>

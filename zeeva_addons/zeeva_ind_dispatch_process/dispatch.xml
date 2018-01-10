@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+
+	<record id="account_invoice_form_inherit_dispatch" model="ir.ui.view">
+    <field name="name">account.invoice.form.dispatch</field>
+    <field name="model">account.invoice</field>
+    <field name="inherit_id" ref="account.invoice_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//button[@name='invoice_open']" position="after">
+        	<button name="invoice_to_dispatch" type="object" string="Ready to Dispatch" states="open"/>
+        </xpath>
+         <field name="move_id" position="after"> 
+            <field name="current_date_time" invisible="1"/> 
+        	<field name="shipping_person" invisible="1"/>
+            <field name="do_id" invisible="1"/>
+        	<field name="current_user" invisible="1"/>
+            <field name="current_url" widget="url" invisible="1"/>                    
+        </field>
+    </field>
+	</record>
+
+
+    <record id="view_picking_out_form_inherit_dispatch" model="ir.ui.view">
+    <field name="name">stock.picking.out.dispatch</field>
+    <field name="model">stock.picking.out</field>
+    <field name="inherit_id" ref="zeeva_ind_delivery_order.view_picking_out_form_id"/>
+    <field name="arch" type="xml">
+        <xpath expr="/form/header//button[@name='%(stock.action_stock_invoice_onshipping)d']" position="after">
+            <button name="delivery_order_to_dispatch1" type="object" attrs="{'invisible': ['|',('dispatch_button_invisible','=',True),('state','!=','ready_to_dispatch')]}" string="Dispatch Detail"/>
+        </xpath>
+        <field name="so_date" attrs="{'readonly': [('state','=','done')]}" position="after">
+            <field name="dispatch_button_invisible" invisible="1"/>
+        </field>
+       <!--  <xpath expr="/form/header" position="inside">
+            <button name="delivery_order_to_dispatch1" type="object" states="ready_to_dispatch" string="Dispatch Detail" states="ready_to_dispatch"/>
+        </xpath> -->
+       
+    </field>
+    </record>
+
+
+    
+
+
+	<record model="ir.ui.view" id="dispatch_form">
+            <field name="name">Dispatch</field>
+            <field name="model">shipment.dispatch</field>
+            <field name="arch" type="xml">
+            <form string="Dispatch Details" create="false" version="7.0">
+                    <header>
+                        <button string="Dispatch" name="ready_to_dispatch" type="object" groups="base.group_user" states="ready to dispatch"/>
+                        <!-- <button string="Reminder" name="reminder_pending_grn" type="object" groups="base.group_user"/> -->
+                        <button string="Delivered" name="in_transit" type="object" groups="base.group_user" states="in transit"/>
+                        <!-- <button string="Done" name="done" type="object" groups="base.group_user" states="delivered"/> -->
+                        <!-- <button string="check" name="reminder_etd_crossed" type="object" color="red" /> -->
+                        <button string="Cancel" name="cancelled" type="object" groups="base.group_user" states="ready to dispatch,in transit,delivered"/>
+                        <field name="state" widget="statusbar" statusbar_visible="ready to dispatch,in transit,delivered"/>
+                        
+                    </header>
+                    <sheet>
+                        <h1>
+                        <label string="Dispatch No " />
+                        <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group string="Customer Details">
+                            <group>
+                                <field name="customer" on_change="onchange_customer(customer, context)" readonly="1"/>
+                                <label for="shipping_street" string="Shipping Address"/>
+                        <div readonly="1">
+                        <field name="shipping_street" attrs="{'readonly':[('state','=','delivered')]}" placeholder="Street..." readonly="1"/>
+                        <field name="shipping_street2" attrs="{'readonly':[('state','=','delivered')]}" readonly="1"/>
+                        <div class="address_format" readonly="1">
+                            <field name="shipping_city" placeholder="City" style="width: 50%%" attrs="{'readonly':[('state','=','delivered')]}" invisible="1"/>
+                            <field name="shipping_destination" placeholder="Shipping Destination" readonly="1"/>
+                            <field name="shipping_city2" placeholder="City" readonly="1"/>
+                            <field name="shipping_state_id" class="oe_no_button" placeholder="State" readonly="1"/>
+                            <field name="shipping_zip" placeholder="Pincode" readonly="1" />
+                        </div>
+
+                            <field name="shipping_country_id" placeholder="Country" class="oe_no_button" readonly="1"/>
+                        </div>
+                            <label for="shipping_contact_person" string="Contact Person Details"/>
+                            <div>
+                            <field name="shipping_contact_person" placeholder="Shipping Contact Person" domain="['|',('active','=',True),('active','=',False),('customer','=',True),('parent_id','!=',False),('parent_id','=',customer)]" on_change="onchange_shipping_contact_person(shipping_contact_person)" readonly="1"/>
+                            <field name="shipping_contact_mobile_no" placeholder="Mobile Number" readonly="1"/>
+                            <field name="shipping_contact_landline_no" placeholder="Landline Number" readonly="1"/>
+                            <field name="shipping_email_id" placeholder="Email ID" readonly="1" />
+                        </div>
+                        
+                            </group>
+                            <group>
+                                <field name="date_creation" readonly="1"/>
+                                <field name="invoice_no" context="{'form_view_ref':'account.invoice_form'}" readonly="1"/>
+                                <field name="invoice_date" readonly="1"/>
+                                <field name="invoice_amt" invisible="1"/>
+                                <field name="do_no" readonly="1"/>
+                                <field name="so_no" readonly="1" /> 
+                                <field name="consignor" readonly="1"/>
+                                <field name="dispatch_backorder_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Dispatch Lines" colspan="1" col="1">
+                                <field name="dispatch_order_lines" readonly="1">
+                                <tree string="Dispatch Lines" editable="bottom" >
+                                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="warehouse"/>
+                                </tree>
+                                </field>
+                            </page>
+                            <page string="Delivery Details">
+                            <group>
+                        	<group>
+                        		<field name="partial_picking" invisible="1"/>
+                                <field name="shipping_person" invisible="1"/>
+                        		<field name="dispatch_date" required="1" on_change="onchange_dispatch(dispatch_date,delivered_date)" attrs="{'readonly':[('state','!=','ready to dispatch')]}"/>
+                                <field name="eta" required="1" attrs="{'readonly':[('state','!=','ready to dispatch')]}"/>
+                                <field name="delivered_date" on_change="onchange_dispatch(dispatch_date,delivered_date)" attrs="{'required':[('state','=','in transit')],'readonly':[('state','=','delivered')]}"/>
+                                <field name="total_transit_days"/>
+                                
+                        	</group>
+                        	<group>
+                                <field name="in_transit" invisible="1"/>
+                                <field name="xyz" invisible="1"/>
+                            	<field name="courier_name" required="1" attrs="{'readonly':[('state','!=','ready to dispatch')]}" on_change="onchange_courier(courier_name)"/>
+                                
+                            	<field name="waybill_no" attrs="{'readonly':[('state','!=','ready to dispatch')]}" required="1"/>
+                                <field name="box" attrs="{'readonly':[('state','!=','ready to dispatch')]}" required="1"/>
+                                <field name="weight" attrs="{'readonly':[('state','=','delivered')]}"/>
+                                <field name="flag" invisible="1"/>
+                                <field name="flag1" invisible="1"/>
+                                <field name="date_today" invisible="1"/>
+                                <field name="current_url" invisible="1"/>
+                                <!-- <field name="grn_no" attrs="{'readonly':[('state','=','delivered')]}"/> -->
+                            </group>
+                        </group>
+
+
+                        <group>
+                        	<group>
+                                <field name="road_permit" attrs="{'readonly':[('state','=','delivered')]}"/>
+                            	<field name="attachment_of_pod"  attrs="{'required':[('state','=','in transit')],'readonly':[('state','=','delivered')]}"/>
+                                <field name="grn" />
+                                <field name="po_attachment" attrs="{'readonly':[('state','=','delivered')]}"/>
+                            </group>
+                        </group>
+                        
+                        <group>                        	
+                        </group>
+                    </page>
+                    <page string="Remarks" >
+                        <group colspan="1" col="1">
+            		  </group>
+                    	<field name="remarks_dispatch_lines"/>
+                    </page>
+                    </notebook>
+                    </sheet>
+                    <xpath expr="//form[@string='Dispatch Details']/sheet" position="after">
+                        <div class="oe_chatter" >
+                                <field name="message_follower_ids" widget="mail_followers" />
+                                <field name="message_ids" widget="mail_thread" />
+                        </div>
+                </xpath> 
+
+                </form>
+            </field>
+        </record>
+
+        <record id="remarks_dispatch_tree" model="ir.ui.view">
+            <field name="name">remarks.dispatch.tree</field>
+            <field name="model">remarks.dispatch</field>
+            <field name="arch" type="xml">
+                <tree string="Remarks" editable="bottom">
+                    <field name="remarks_date"/>
+                    <field name="remarks_reason"/>
+                </tree>
+            </field>
+        </record>
+
+    <record id="remarks_dispatch_form" model="ir.ui.view">
+            <field name="name">remarks.dispatch.form</field>
+            <field name="model">remarks.dispatch</field>
+            <field name="arch" type="xml">
+                <form string="Remarks">
+                    <field name="remarks_date"/>
+                    <field name="remarks_reason"/>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="dispatch_tree_view" model="ir.ui.view">
+            <field name="name">Dispatch Details</field>
+            <field name="model">shipment.dispatch</field>
+            <field name="arch" type="xml">
+                    <tree string="Dispatch Details" colors="red:in_transit==True;blue:state in ('ready to dispatch','in transit');green:state=='delivered';grey:state=='cancelled';" create="false" version="7.0">
+                    <field name="name"/>
+                    <field name="customer"/>
+                    <field name="eta" />
+                    <field name="date_today" invisible="1"/>
+                    <field name="dispatch_date"/>
+                    <field name="delivered_date"/>
+                    <field name="total_transit_days"/>
+                    <field name="in_transit" invisible="1"/>
+                    <field name="xyz" invisible="1"/>
+                    <field name="shipping_destination"/>
+                    <field name="dispatch_backorder_id"/>
+                    <field name="state"/>              
+              </tree>
+            </field>
+        </record>
+
+
+        <record id="view_shipment_dispatch_filter" model="ir.ui.view">
+            <field name="name">Dispatch Filter</field>
+            <field name="model">shipment.dispatch</field>
+            <field name="arch" type="xml">
+                <search string="Search Shipment">
+                    <separator/>
+                    <field name="shipping_destination"/>
+                    <field name="customer"/>
+                    <field name="state"/>
+                    <field name="shipping_state_id"/>
+                    <field name="shipping_city2"/>
+                    <field name="courier_name"/>
+                    <field name="consignor"/>
+                    <field name="eta"/>
+                    <field name="dispatch_date"/>
+                    <field name="delivered_date"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Shipping Destination" icon="terp-personal" domain="[]" context="{'group_by':'shipping_destination'}"/>    
+                        <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'customer'}"/>
+                        <filter string="Status" name="stat" icon="terp-personal" domain="[('in_transit','=',True)]" context="{'group_by':'state'}"/>
+                        <filter string="State"  icon="terp-personal" domain="[]" context="{'group_by':'shipping_state_id'}"/>
+                        <filter string="City" icon="terp-personal" domain="[]" context="{'group_by':'shipping_city2'}"/>
+                        <filter string="Courier Name" icon="terp-personal" domain="[]" context="{'group_by':'courier_name'}"/>
+                        <filter string="Consignor" icon="terp-personal" domain="[]" context="{'group_by':'consignor'}"/>
+                        <filter string="ETA" icon="terp-personal" domain="[]" context="{'group_by':'eta'}"/>
+                        <filter string="Dispatch Date" icon="terp-personal" domain="[]" context="{'group_by':'dispatch_date'}"/>
+                        <filter string="Delivered Date" icon="terp-personal" domain="[]" context="{'group_by':'delivered_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+	<record id="action_dispatch_form" model="ir.actions.act_window">
+            <field name="name">Dispatch</field>
+            <field name="res_model">shipment.dispatch</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="dispatch_tree_view"/>
+            <field name="search_view_id" ref="view_shipment_dispatch_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an internal move request. 
+              </p><p>
+                Most operations are prepared automatically by OpenERP according
+                to your preconfigured logistics rules, but you can also record
+                manual stock movements.
+              </p>
+            </field>
+            <field name="domain">[('in_transit','!=',False)]</field>
+        </record>
+
+
+    <record id="shipment_dispatch_report_tree" model="ir.ui.view">
+            <field name="name">Dispatch Report</field>
+            <field name="model">shipment.dispatch</field>            
+            <field name="arch" type="xml">
+                <tree string="Dispatch Report">
+                    <field name="name"/>
+                    <!-- <field name="warehouse"/> -->
+                    <field name="courier_name" string="Mode"/>
+                    <field name="waybill_no" string="Docket No."/>
+                    <field name="consignor" />
+                    <field name="customer" string="Consignee"/>
+                    <field name="shipping_destination" string="Destination"/>
+                    <field name="shipping_city2" string="City"/>
+                    <field name="shipping_state_id" string="State"/>
+                    <field name="box" string="Box"/>
+                    <field name="so_no" string="SO No."/>
+                    <field name="do_no" string="DO No."/>
+                    <field name="invoice_no" string="Inv No."/>
+                    <field name="invoice_amt" string="Inv Value"/>
+                    <field name="eta" string="EDD" />
+                    <field name="dispatch_date"/>
+                    <field name="delivered_date"/>
+                    <field name="total_transit_days" string="Transit Days"/>
+                    <field name="state"/> 
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_view_no_grn_tree" model="ir.actions.act_window">
+            <field name="name">GRN Pending</field>
+            <field name="res_model">shipment.dispatch</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','delivered'),('customer.grn','=',True),('grn','=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="dispatch_tree_view"/>
+        </record>
+
+        <record id="shipment_dispatch_report_action" model="ir.actions.act_window">
+            <field name="name">Dispatch Report</field>
+            <field name="res_model">shipment.dispatch</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="shipment_dispatch_report_tree"/>
+            
+        </record>
+
+
+        <record id="open_view_dispatch_no_backorder" model="ir.actions.act_window">
+            <field name="name">Main Orders</field>
+            <field name="res_model">shipment.dispatch</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('dispatch_backorder_id','=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="dispatch_tree_view"/>
+        </record>
+
+        <record id="open_view_dispatch_backorder_yes" model="ir.actions.act_window">
+            <field name="name">Back Orders</field>
+            <field name="res_model">shipment.dispatch</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('dispatch_backorder_id','!=',None)]</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="dispatch_tree_view"/>
+        </record>
+	
+
+	<menuitem name="Dispatch" action="action_dispatch_form" id="menu_action_dispatch_form" parent="stock.menu_stock_warehouse_mgmt" sequence="4"/>
+
+    <menuitem action="open_view_dispatch_no_backorder" id="menu_open_view_dispatch_no_backorder" parent="menu_action_dispatch_form" sequence="1"/>
+
+    <menuitem action="open_view_dispatch_backorder_yes" id="menu_open_view_dispatch_backorder_yes" parent="menu_action_dispatch_form" sequence="2"/>
+
+    <menuitem name="Reports" id="menu_action_warehouse_reports" parent="menu_action_dispatch_form" sequence="3"/>
+
+    <menuitem name="Dispatch Details" action="shipment_dispatch_report_action" id="menu_action_dispatch_report" parent="menu_action_warehouse_reports" sequence="6"/>
+
+    <menuitem action="open_view_no_grn_tree" id="dispatch_grn_tree_menuitem_new" parent="menu_action_warehouse_reports" sequence="7"/>
+
+</data>
+</openerp>

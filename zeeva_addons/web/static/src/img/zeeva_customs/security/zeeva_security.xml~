@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    <!--===================
+    GROUP CATEGORIES
+    ====================-->
+        <!--<record model="ir.module.category" id="module_category_zeeva_hk">
+            <field name="name">Zeeva HK</field>
+            <field name="sequence">100</field>
+        </record>-->
+    
+    <!--===================
+    GROUPS
+    ====================-->
+        <!--<record model="res.groups" id="zeeva_top">
+            <field name="name">Zeeva directors</field>
+            <field name="category_id" ref="module_category_zeeva_hk"/>
+        </record>
+        <record model="res.groups" id="zeeva_ship" context="{'noadmin':True}">
+            <field name="name">Zeeva logistics &amp; shipments</field>
+            <field name="category_id" ref="module_category_zeeva_hk"/>
+        </record>
+        <record model="res.groups" id="zeeva_sales" context="{'noadmin':True}">
+            <field name="name">Zeeva sales</field>
+            <field name="category_id" ref="module_category_zeeva_hk"/>
+        </record>
+        <record model="res.groups" id="zeeva_art" context="{'noadmin':True}">
+            <field name="name">Zeeva artworks</field>
+            <field name="category_id" ref="module_category_zeeva_hk"/>
+        </record>-->
+        
+    <!--===================
+    RULES
+    ====================-->
+        <record id="user_modify_own_offer_sheet" model="ir.rule">
+            <field name="name">Sale_offer: don't modify others' offer sheets</field>
+            <field name="model_id" ref="model_sale_offer"/>
+            <field name="domain_force">[('user_ids', 'in', user_id.id)]</field>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+    </data>
+</openerp>

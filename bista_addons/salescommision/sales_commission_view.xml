@@ -1,0 +1,3566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem name="Sales Commission" id="menu_sales_commission" sequence="182"/>
+
+        <menuitem id="menu_commission_tracker" name="Commission Tracker" parent="menu_sales_commission" sequence="0" groups="base.group_no_one"/>
+
+        <menuitem id="menu_commission_formula" name="Commission Formula" parent="menu_sales_commission" sequence="1"
+            groups="base.group_no_one"/>
+            
+        <menuitem id="menu_spiff_formula" name="Spiff Formula" parent="menu_sales_commission" sequence="2"
+            groups="base.group_no_one"/>
+    	
+
+        <!-- Commission Tracker -->
+
+        <record id="view_commission_tracker_form" model="ir.ui.view">
+            <field name="name">commission.tracker.form</field>
+            <field name="model">commission.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Commission Tracker" version="7.0">
+                    <header>
+                        <button name="calculate_total_payout" string="Calculate Payout" type="object" class="oe_highlight"/>
+                    </header>
+                    <!-- <group id="base_invible_field">
+                        <field name="demo_field4_count" invisible="1" readonly="1"/>
+                        <field name="demo_field4_goals" invisible="1" readonly="1"/>
+                        <field name="demo_field4_percent" invisible="1" readonly="1"/>
+                        <field name="demo_field4_payout" invisible="1" readonly="1"/>
+                        <field name="demo_field5_count" invisible="1" readonly="1"/>
+                        <field name="demo_field5_goals" invisible="1" readonly="1"/>
+                        <field name="demo_field5_percent" invisible="1" readonly="1"/>
+                        <field name="demo_field5_payout" invisible="1" readonly="1"/>
+                        <field name="demo_field6_count" invisible="1" readonly="1"/>
+                        <field name="demo_field6_goals" invisible="1" readonly="1"/>
+                        <field name="demo_field6_percent" invisible="1" readonly="1"/>
+                        <field name="demo_field6_payout" invisible="1" readonly="1"/>
+                        <field name="demo_field7_count" invisible="1" readonly="1"/>
+                        <field name="demo_field7_goals" invisible="1" readonly="1"/>
+                        <field name="demo_field7_percent" invisible="1" readonly="1"/>
+                        <field name="demo_field7_payout" invisible="1" readonly="1"/>
+                        <field name="demo_field8_count" invisible="1" readonly="1"/>
+                        <field name="demo_field8_goals" invisible="1" readonly="1"/>
+                        <field name="demo_field8_percent" invisible="1" readonly="1"/>
+                        <field name="demo_field8_payout" invisible="1" readonly="1"/>
+                    </group> -->
+                    <sheet class="wireless_commission_tracker_sheet">
+                        <group class="wireless_commission_tracker_fields">
+                            <group>
+                                <field name="name" on_change="onchange_emp(name)" required="1" readonly="1"/>
+                                <field name="start_date" required="1" readonly="1" on_change="onchange_date(start_date,end_date,name)"/>
+                                <field name="model_id" invisible="1"/>
+                                <field name="comm_market_id" invisible="1"/>
+                                <field name="dealer_code" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="emp_des" readonly="1"/>
+                                <field name="end_date" required="1" readonly="1" on_change="onchange_date(start_date,end_date,name)"/>
+                                <field name="comm_store_id" invisible="1"/>
+                                <field name="comm_region_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <div class="wireless_commission_tracker_fields total" attrs="{'invisible':[('model_id','!=','stl'),('model_id','!=','rsa'),('model_id','!=','rsm'),('model_id','!=','mid'),('model_id','!=','mm'),('model_id','!=','dos')]}">
+                                <div class="colspan6 header-top">
+                                    <label string="Total Payout $:"/>
+                                </div>
+                                <div class="colspan6 border-left-none header-top">
+                                    <field name="gross_payout" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
+                            <newline/>
+                        </group>
+                        <div class="oe_clear"/>
+                        <group attrs="{'invisible':[('model_id','!=','stl'),('model_id','!=','rsa'),('model_id','!=','mm'),('model_id','!=','dos')]}">
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','stl'),('model_id','!=','rsa')]}">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Individual"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','mm')]}">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Market"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','dos')]}">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Region"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Gross Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="SMD Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="PMD Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="React Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="Net Revenue $"/>
+                                </div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5">
+                                    <field name="gross_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="smd_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="pmd_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="react_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="net_rev" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible':[('model_id','!=','stl'),('model_id','!=','rsa'),('model_id','!=','mm'),('model_id','!=','dos')]}">
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','stl'),('model_id','!=','rsa')]}">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Individual"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','mm')]}">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Market"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top" attrs="{'invisible':[('model_id','!=','dos')]}">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Region"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Gross Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="SMD Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="PMD Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="React Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="Net Boxes"/>
+                                </div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5">
+                                    <field name="gross_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="smd_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="pmd_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="react_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="net_box" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group 
+                            attrs="{'invisible':[('model_id','!=','mid'),('model_id','!=','rsm'),('model_id','!=','stl')]}">
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Store"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header">
+                                    <label string="Gross Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="SMD Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="PMD Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="React Revenue $"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header">
+                                    <label string="Net Revenue $"/>
+                                </div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5">
+                                    <field name="store_gross_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_smd_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_pmd_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_react_rev" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_net_rev" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible':[('model_id','!=','mid'),('model_id','!=','rsm'),('model_id','!=','stl')]}">
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Store"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                                <div class="colspan5 border-bottom-none border-left-none border-top-none border-right-none" style="background-color: white;"></div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5 border-bottom-none header2">
+                                    <label string="Gross Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="SMD Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="PMD Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="React Boxes"/>
+                                </div>
+                                <div class="colspan5 border-bottom-none border-left-none header2">
+                                    <label string="Net Boxes"/>
+                                </div>
+                            </div>
+                            <newline/>
+                            <div class="wireless_commission_tracker_fields top">
+                                <div class="colspan5">
+                                    <field name="store_gross_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_smd_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_pmd_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_react_box" nolabel="1" readonly="1"/>
+                                </div>
+                                <div class="colspan5 border-left-none">
+                                    <field name="store_net_box" nolabel="1" readonly="1"/>
+                                </div>
+                            </div>
+                        </group>
+                        <notebook>
+                            <page string="Commissions"></page>
+                            <page string="Spiffs"></page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_commission_tracker_form_wiz" model="ir.ui.view">
+            <field name="name">commission.tracker.form.wiz</field>
+            <field name="model">commission.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Commission Tracker" version="7.0">
+                    <header>
+                        <button name="calculate_total_payout" string="Calculate Payout" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet class="wireless_commission_tracker_sheet">
+                        <group class="wireless_commission_tracker_fields">
+                            <group>
+                                <field name="name" on_change="onchange_emp(name)" required="1"/>
+                                <field name="start_date" required="1" on_change="onchange_date(start_date,end_date,name)"/>
+                                <field name="model_id" invisible="1"/>
+                                <field name="comm_market_id" invisible="1"/>
+                                <field name="dealer_code" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="emp_des" readonly="1"/>
+                                <field name="end_date" required="1" on_change="onchange_date(start_date,end_date,name)"/>
+                                <field name="comm_store_id" invisible="1"/>
+                                <field name="comm_region_id" invisible="1"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_commission_tracker_tree" model="ir.ui.view">
+            <field name="name">commission.tracker.tree</field>
+            <field name="model">commission.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Tracker">
+                    <field name="name"/>
+                    <field name="emp_des"/>
+                    <field name="dealer_code"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="gross_payout"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_commission_tracker_filter" model="ir.ui.view">
+            <field name="name">Commission Tracker</field>
+            <field name="model">commission.tracker</field>
+            <field name="arch" type="xml">
+                <search string="Commission Tracker">
+                    <field name="name"/>
+                    <field name="emp_des"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_commission_tracker_form" model="ir.actions.act_window">
+            <field name="name">Commission Tracker Form</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+            <field name="view_id" ref="view_commission_tracker_form_wiz"/>
+            <field name="search_view_id" ref="view_commission_tracker_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Commission Tracker.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_commission_tracker_form" id="menu_action_commission_tracker" 
+            parent="menu_commission_tracker" sequence="10"/>
+
+         <!-- XML tags for Basic Commision formula-->
+        <record id="view_comm_basic_commission_formula_form" model="ir.ui.view">
+            <field name="name">comm.basic.commission.formula.form</field>
+            <field name="model">comm.basic.commission.formula</field>
+            <field name="arch" type="xml">
+                <form string="Basic Commission Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="comm_percent"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_flat_amount"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <!--<field name="sequence" required="True"/>-->
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_basic_commission_formula_tree" model="ir.ui.view">
+            <field name="name">comm.basic.commission.formula.tree</field>
+            <field name="model">comm.basic.commission.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Basic Sales Commission Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_basic_commission_formula_form" model="ir.actions.act_window">
+            <field name="name">Base Commission Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.basic.commission.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_basic_commission_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Creat Button to create new Base Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_basic_commission_formula_form" id="menu_action_basic_commission_formula" parent="menu_commission_formula" sequence="1"/>
+
+         <!-- XML tags for Base Box commision Formula-->
+        <record id="view_comm_base_box_commission_formula_form" model="ir.ui.view">
+            <field name="name">comm.base.box.commission.formula.form</field>
+            <field name="model">comm.base.box.commission.formula</field>
+            <field name="arch" type="xml">
+                <form string="Base Box Commission Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">    
+                                <group>
+                                    <group>
+                                        <field name="comm_box"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_percent"/>
+                                    </group>
+                                </group>
+                                <separator string="Business Rule Conditions"/>
+                                <newline/>
+                                <field name="spiff_business_class" nolabel="1">
+                                    <tree string="Business Rule Conditions" editable="bottom">
+                                        <field name="att_business_rule" 
+                                        domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="hit_goal_target"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_base_box_commission_formula_tree" model="ir.ui.view">
+            <field name="name">comm.base.box.commission.formula.tree</field>
+            <field name="model">comm.base.box.commission.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Base Box Commission Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_base_box_commission_formula_form" model="ir.actions.act_window">
+            <field name="name">Base Box Commission Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.base.box.commission.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_base_box_commission_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Base Box Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_base_box_commission_formula_form" id="menu_action_base_box_commission_formula" parent="menu_commission_formula" sequence="2"/>
+
+        <!-- XML tags for VOC Commision formula-->
+        <record id="view_comm_rph_commission_formula_form" model="ir.ui.view">
+            <field name="name">comm.rph.commission.form</field>
+            <field name="model">comm.rph.commission</field>
+            <field name="arch" type="xml">
+                <form string="Revenue Per Hour Commission Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="formula_type"/>
+                                <!--<field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>-->
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                    			<field name="comm_rph_multi_bracket">
+                    			    <tree string="Revenue Per Hour Commission" editable="bottom">
+                                    <field name="att_business_rule"/>
+                    				<field name="from_rph_value"/>
+                    				<field name="upto_rph_value"/>
+                                    <field name="from_labor_budget"/>
+                                    <field name="to_labor_budget"/>
+                                    <field name="hit_rph_target"/>
+                                    <field name="rph_target_percent" attrs="{'invisible':[('hit_rph_target','=',False)]}"/>
+                    				<field name="pay_percent_rev"/>
+                    				<field name="pay_flat_amnt"/>
+                    			    </tree>
+                    			</field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_rph_commission_tree" model="ir.ui.view">
+            <field name="name">comm.rph.commission.tree</field>
+            <field name="model">comm.rph.commission</field>
+            <field name="arch" type="xml">
+                <tree string="Revenue PEr Hour Commission">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_rph_commission_form" model="ir.actions.act_window">
+            <field name="name">Revenue Per Hour Commission</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.rph.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','comm'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_comm_rph_commission_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Creat Button to create new Revenue Per Hour Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_rph_commission_form" id="menu_action_comm_rph_commission_form" parent="menu_commission_formula" sequence="6"/>
+
+        <record id="action_comm_rph_commission_form_spiff" model="ir.actions.act_window">
+            <field name="name">Revenue Per Hour Commission</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.rph.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','spiff'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_comm_rph_commission_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Creat Button to create new Revenue Per Hour Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_rph_commission_form_spiff" name="Labor Productivity" id="menu_action_comm_rph_commission_form_spiff" parent="menu_spiff_formula" sequence="6"/>
+
+        <!-- XML tags for VOC Commision formula-->
+        <record id="view_comm_voc_commission_formula_form" model="ir.ui.view">
+            <field name="name">comm.voc.commission.form</field>
+            <field name="model">comm.voc.commission</field>
+            <field name="arch" type="xml">
+                <form string="VOC Commission Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+				                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="voc_multi_bracket">
+                                    <tree string="VOC Commission" editable="bottom">
+                                        <field name="from_voc_value"/>
+                                        <field name="to_voc_value"/>
+                                        <field name="pay_percent"/>
+                                        <field name="pay_flat"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+	     </field>
+	</record>
+
+        <record id="view_comm_voc_commission_tree" model="ir.ui.view">
+            <field name="name">comm.voc.commission.tree</field>
+            <field name="model">comm.voc.commission</field>
+            <field name="arch" type="xml">
+                <tree string="VOC Commission Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>                    
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_voc_commission_form" model="ir.actions.act_window">
+            <field name="name">VOC Commission Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.voc.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_voc_commission_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Creat Button to create new VOC Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_voc_commission_form" id="menu_action_comm_voc_commission_form" parent="menu_commission_formula" sequence="2"/>
+
+         <!-- XML tags for  Kicker commission formula-->
+        <record id="view_comm_kicker_commission_formula_form" model="ir.ui.view">
+            <field name="name">comm.kicker.commission.formula.form</field>
+            <field name="model">comm.kicker.commission.formula</field>
+            <field name="arch" type="xml">
+                <form string="Kicker Commission Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="comm_rev_goal_percent"/>
+                                        <field name="comm_box_goal_percent"/>
+                                        <field name="comm_store_rev_goal_percent"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_rev_goal_amount"/>
+                                        <field name="comm_box_goal_amount"/>
+                                        <field name="comm_store_rev_goal_amount"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_kicker_commission_formula_tree" model="ir.ui.view">
+            <field name="name">comm.kicker.commission.formula.tree</field>
+            <field name="model">comm.kicker.commission.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Kicker Commission Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_kicker_commission_formula_form" model="ir.actions.act_window">
+            <field name="name">Kicker Commission Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.kicker.commission.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_kicker_commission_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Kicker Commission Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_kicker_commission_formula_form" id="menu_action_kicker_commission_formula" parent="menu_commission_formula" sequence="3"/>
+
+
+        <record id="view_comm_revenue_goal_attainment_formula_form" model="ir.ui.view">
+            <field name="name">comm.revenue.goal.attainment.formula.form</field>
+            <field name="model">comm.revenue.goal.attainment.formula</field>
+            <field name="arch" type="xml">
+                <form string="Revenue Goal Attainment Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <!-- <group>
+                                    <group>
+                                        <field name="comm_fixed_amount_above_100"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_fixed_amount_100"/>
+                                    </group>
+                                </group> -->
+                                <group>
+                                    <separator string="Amount Commission on Percent Revenue Goal Attainment"/>
+                                    <newline/>
+                                    <field name="comm_fixed_amount_on_goal" nolabel="1">
+                                        <tree string="Amount Commission on Percent Revenue Goal Attainment" editable="bottom">
+                                            <field name="att_business_rule"/>
+                                            <field name="comm_min_percent"/>
+                                            <field name="comm_max_percent"/>
+                                            <field name="comm_amnt_goal_mul"/>
+                                            <field name="comm_fixed_amount"/>
+                                            <field name="pay_on_rev"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_revenue_goal_attainment_formula_tree" model="ir.ui.view">
+            <field name="name">comm.revenue.goal.attainment.formula.tree</field>
+            <field name="model">comm.revenue.goal.attainment.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Revenue Goal Attainment Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_revenue_goal_attainment_formula_form" model="ir.actions.act_window">
+            <field name="name">Revenue Goal Attainment Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.revenue.goal.attainment.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_revenue_goal_attainment_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Revenue Goal Attainment Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_revenue_goal_attainment_formula_form" id="menu_action_comm_revenue_goal_attainment_formula" parent="menu_commission_formula" sequence="4"/>
+
+        <record id="view_comm_turnover_formula_form" model="ir.ui.view">
+            <field name="name">comm.turnover.formula.form</field>
+            <field name="model">comm.turnover.formula</field>
+            <field name="arch" type="xml">
+                <form string="Commission Turnover Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                            </group>
+                            <group>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <separator string="Amount Commission on Turnover"/>
+                                    <newline/>
+                                    <field name="comm_fixed_amount_on_goal" nolabel="1">
+                                        <tree string="Amount Commission on Turnover" editable="bottom">
+                                            <field name="comm_min_percent" string="Min Turnover %"/>
+                                            <field name="comm_max_percent" string="Max Turnover %"/>
+                                            <field name="comm_fixed_amount"/>
+                                            <field name="pay_on_rev"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_turnover_formula_tree" model="ir.ui.view">
+            <field name="name">comm.turnover.formula.tree</field>
+            <field name="model">comm.turnover.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Turnover">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_turnover_formula_form" model="ir.actions.act_window">
+            <field name="name">Turnover Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.turnover.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_revenue_goal_attainment_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Turnover Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_turnover_formula_form" id="menu_action_comm_turnover_formula" parent="menu_commission_formula" sequence="4"/>
+
+        <record id="view_comm_top_box_psa_goal_attainment_formula_form" model="ir.ui.view">
+            <field name="name">comm.top.box.psa.goal.attainment.formula.form</field>
+            <field name="model">comm.top.box.psa.goal.attainment.formula</field>
+            <field name="arch" type="xml">
+                <form string="Top Box PSA Goal Attainment Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="comm_fixed_amount_above_100"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_fixed_amount_100"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <separator string="Amount Commission on Percent Top Box PSA Goal Attainment"/>
+                                    <newline/>
+                                    <field name="comm_fixed_amount_on_goal" nolabel="1">
+                                        <tree string="Amount Commission on Percent Top Box PSA Goal Attainment" editable="bottom">
+                                            <field name="comm_min_percent"/>
+                                            <field name="comm_max_percent"/>
+                                            <field name="comm_fixed_amount"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_top_box_psa_goal_attainment_formula_tree" model="ir.ui.view">
+            <field name="name">comm.top.box.psa.goal.attainment.formula.tree</field>
+            <field name="model">comm.top.box.psa.goal.attainment.formula</field>
+            <field name="arch" type="xml">
+                <tree string="Top Box PSA Goal Attainment Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_top_box_psa_goal_attainment_formula_form" model="ir.actions.act_window">
+            <field name="name">Top Box PSA Goal Attainment Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.top.box.psa.goal.attainment.formula</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_top_box_psa_goal_attainment_formula_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Top Box PSA Goal Attainment Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_top_box_psa_goal_attainment_formula_form" id="menu_action_comm_top_box_psa_goal_attainment_formula" parent="menu_commission_formula" sequence="5"/>       
+
+        <record id="view_comm_profitability_payout_form" model="ir.ui.view">
+            <field name="name">comm.profitability.payout.form</field>
+            <field name="model">comm.profitability.payout</field>
+            <field name="arch" type="xml">
+                <form string="Profitability Payout Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="formula_type"/>
+                                <!-- <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/> -->
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                    			<field name="comm_profit_multi_bracket">
+                    			    <tree string="Profitability Conditions" editable="bottom">
+                    				<field name="att_business_rule"/>
+                                    <field name="att_condition_percent"/>
+                                    <field name="to_condition_percent"/>
+                                    <field name="hit_goal_target"/>
+                    				<field name="payout_business_rule"/>
+                    				<field name="pay_on_rev" string="Profit Percent Payout"/>
+                    				<field name="pay_flat_amnt"/>
+                    			    </tree>
+                    			</field>                                
+                                <group>
+                                    <field name="is_voc"/>
+                                </group>
+                                <group colspan="8" col="4" attrs="{'invisible':[('is_voc','!=',True)]}">
+                                    <group>
+                                        <label for="voc_factor"/>
+                                        <div>
+                                           <field name="voc_operand" class="oe_inline"/>
+                                           <field name="voc_factor" class="oe_inline"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field name="percent_pay_effect"/>
+                                    </group>
+                                    <group>
+                                        <field name="flat_pay_effect"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                       <!-- <group>
+                            <field name="comm_profit_payout_percent"/>
+                        </group>-->
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_profitability_payout_tree" model="ir.ui.view">
+            <field name="name">comm.profitability.payout.tree</field>
+            <field name="model">comm.profitability.payout</field>
+            <field name="arch" type="xml">
+                <tree string="Profitability Payout Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_profitability_payout_form" model="ir.actions.act_window">
+            <field name="name">Profitability Payout Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.profitability.payout</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_profitability_payout_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Profitability Payout Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_profitability_payout_form" id="menu_action_profitability_payout_formula" parent="menu_commission_formula" sequence="6"/>
+
+        <record id="view_comm_market_share_profitability_payout_form" model="ir.ui.view">
+            <field name="name">comm.market.share.profitability.payout.form</field>
+            <field name="model">comm.market.share.profitability.payout</field>
+            <field name="arch" type="xml">
+                <form string="MArket Share Profitability Payout Formula Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>    
+                                    <label for="comm_start_percent_labour" string="Labour Budget Percentage"/>
+                                    <div>
+                                        <field name="comm_start_percent_labour" class="oe_inline"/>-
+                                        <field name="comm_end_percent_labour" class="oe_inline"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <group>
+                                        <field name="comm_percent_conversion" help="For Kiosk Store manager as Prime Application Conversion"/>
+                                        <field name="comm_percent_market_profit"/>
+                                    </group>
+                                    <group>
+                                        <field name="comm_voc"/>
+                                        <field name="comm_miss_metrics_percent"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_market_share_profitability_payout_tree" model="ir.ui.view">
+            <field name="name">comm.market.share.profitability.payout.tree</field>
+            <field name="model">comm.market.share.profitability.payout</field>
+            <field name="arch" type="xml">
+                <tree string="Market Share Profitability Payout Formula">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_market_share_profitability_payout_form" model="ir.actions.act_window">
+            <field name="name">Market Share Profitability Payout Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.market.share.profitability.payout</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_market_share_profitability_payout_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Market Share Profitability Payout Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_market_share_profitability_payout_form" id="menu_action_market_share_profitability_payout_formula" parent="menu_commission_formula" sequence="7"/>
+
+        <!-- XML tags for Vision Rewards Elite Bonus Form-->
+        <record id="view_comm_vision_rewards_elite_bonus_form" model="ir.ui.view">
+            <field name="name">comm.vision.rewards.elite.bonus.form</field>
+            <field name="model">comm.vision.rewards.elite.bonus</field>
+            <field name="arch" type="xml">
+                <form string="Vision Rewards Elite Bonus" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="emp_model_id" invisible="1"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="formula_multi_lines">
+                                    <tree string="Formula Lines" editable="bottom">
+                                        <field name="rank_base"/>
+                                        <field name="cal_level" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                        <field name="cal_type"/>
+                                        <field name="from_cond"/>
+                                        <field name="to_cond"/>
+                                        <field name="pay_rev"/>
+                                        <field name="flat_pay"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_vision_rewards_elite_bonus_tree" model="ir.ui.view">
+            <field name="name">comm.vision.rewards.elite.bonus.tree</field>
+            <field name="model">comm.vision.rewards.elite.bonus</field>
+            <field name="arch" type="xml">
+                <tree string="Vision Rewards Elite Bonus">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_vision_rewards_elite_bonus_form" model="ir.actions.act_window">
+            <field name="name">Vision Rewards Elite Bonus</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.vision.rewards.elite.bonus</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_vision_rewards_elite_bonus_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Vision Rewards Elite Bonus.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_vision_rewards_elite_bonus_form" name="Elite Bonus"
+            id="menu_action_comm_vision_rewards_elite_bonus" parent="menu_commission_formula" sequence="8"/>
+
+        <menuitem action="action_comm_vision_rewards_elite_bonus_form" name="Elite Bonus"
+            id="menu_action_comm_vision_rewards_elite_bonus_spiff" parent="menu_spiff_formula" sequence="8"/>
+
+        <!-- XML tags for Vision Rewards Elite Bonus Form-->
+        <record id="view_comm_ops_leader_ranking_master_form" model="ir.ui.view">
+            <field name="name">comm.ops.leader.ranking.master.form</field>
+            <field name="model">comm.ops.leader.ranking.master</field>
+            <field name="arch" type="xml">
+                <form string="Ops Leaderboard" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="comm_name"/>
+                                <field name="comm_start_date"/>
+                            </group>
+                            <group>
+                                <field name="comm_designation"/>
+                                <field name="emp_model_id" invisible="1"/>
+                                <field name="comm_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="comm_store_class"/>
+                                <field name="comm_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="formula_multi_lines">
+                                    <tree string="Formula Lines" editable="bottom">
+                                        <field name="rank_base"/>
+                                        <field name="cal_level" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]"/>
+                                        <field name="cal_type"/>
+                                        <field name="from_cond"/>
+                                        <field name="to_cond"/>
+                                        <field name="pay_rev"/>
+                                        <field name="flat_pay"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="comm_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_comm_ops_leader_ranking_master_tree" model="ir.ui.view">
+            <field name="name">comm.ops.leader.ranking.master.tree</field>
+            <field name="model">comm.ops.leader.ranking.master</field>
+            <field name="arch" type="xml">
+                <tree string="Ops Leaderboard">
+                    <field name="comm_name"/>
+                    <field name="comm_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="comm_start_date"/>
+                    <field name="comm_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_comm_ops_leader_ranking_master_form" model="ir.actions.act_window">
+            <field name="name">Ops Leaderboard</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">comm.ops.leader.ranking.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_comm_ops_leader_ranking_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Ops Leaderboard Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_comm_ops_leader_ranking_master_form" name="Ops Leaderboard"
+            id="menu_action_comm_ops_leader_ranking_master_form" parent="menu_commission_formula" sequence="9"/>
+        
+
+        <!-- Spiff JUMP Attachment -->
+
+        <record id="view_spiff_jump_attachment_form" model="ir.ui.view">
+            <field name="name">spiff.jump.attachment.form</field>
+            <field name="model">spiff.jump.attachment</field>
+            <field name="arch" type="xml">
+                <form string="JUMP Attachment" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                               <!-- <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]" required="1"/> -->
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                    			<field name="spiff_business_class">
+                    			    <tree string="Business Rules" editable="bottom">
+                    				<field name="att_business_rule" 
+                                        domain="[('comm_report_selection','=','commission')]"/>
+                    				<field name="att_condition_percent"/>
+                    				<field name="to_condition_percent"/>
+                    				<field name="payout_business_rule" 
+                                        domain="[('comm_report_selection','=','commission')]"/>
+                                    <field name="pay_on_rev"/>
+                    				<field name="pay_per_att"/>
+                    				<field name="pay_flat_amnt"/>
+                    			    </tree>
+                    			</field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_jump_attachment_tree" model="ir.ui.view">
+            <field name="name">spiff.jump.attachment.tree</field>
+            <field name="model">spiff.jump.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="JUMP Attachment">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_jump_attachment_form" model="ir.actions.act_window">
+            <field name="name">JUMP Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.jump.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','spiff'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_jump_attachment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new JUMP Attachment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_jump_attachment_form" id="menu_action_spiff_jump_attachment" 
+            parent="menu_spiff_formula" sequence="0"/>
+
+        <record id="action_spiff_jump_attachment_form_comm" model="ir.actions.act_window">
+            <field name="name">JUMP Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.jump.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','comm'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_jump_attachment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new JUMP Attachment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_jump_attachment_form_comm" id="menu_action_spiff_jump_attachment_comm" 
+            parent="menu_commission_formula" sequence="0"/>
+
+        <record id="view_spiff_prepaid_goal_form" model="ir.ui.view">
+            <field name="name">spiff.prepaid.goal.form</field>
+            <field name="model">spiff.prepaid.goal</field>
+            <field name="arch" type="xml">
+                <form string="Prepaid Goal" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                            <group>
+                                <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]" required="1"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="spiff_percent"/>
+                                    </group>
+                                    <group>
+                                        <field name="spiff_amount"/>
+                                        <field name="spiff_per_att"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_prepaid_goal_tree" model="ir.ui.view">
+            <field name="name">spiff.prepaid.goal.tree</field>
+            <field name="model">spiff.prepaid.goal</field>
+            <field name="arch" type="xml">
+                <tree string="Prepaid Goal">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_prepaid_goal_form" model="ir.actions.act_window">
+            <field name="name">Prepaid Goal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.prepaid.goal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_prepaid_goal_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Prepaid Goal.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_prepaid_goal_form" id="menu_action_spiff_prepaid_goal" 
+            parent="menu_spiff_formula" sequence="1"/>
+
+        <record id="view_spiff_feature_attachment_form" model="ir.ui.view">
+            <field name="name">spiff.feature.attachment.form</field>
+            <field name="model">spiff.feature.attachment</field>
+            <field name="arch" type="xml">
+                <form string="Feature Attachment" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                                <field name="spiff_designation"/>
+                            </group>
+                            <group>
+                                <field name="spiff_label"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_field_name" domain="['|',('name','=','mi_1gb_payout'),'|',('name','=','mi_3gb_payout'),'|',('name','=','mi_5gb_payout'),'|',('name','=','3gb_data_unl_att_payout'),'|',('name','=','3gb_data_smart_attach_payout'),'|',('name','=','demo_field1_payout'),'|',('name','=','demo_field2_payout'),'|',('name','=','demo_field4_payout'),'|',('name','=','demo_field5_payout'),'|',('name','=','demo_field6_payout'),'|',('name','=','demo_field7_payout'),'|',('name','=','demo_field8_payout'),('name','=','mi_conv_payout'),('model_id','=','commission.tracker')]" required="1"/>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                                <!-- <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]" required="1"/> -->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_feature_attachment_tree" model="ir.ui.view">
+            <field name="name">spiff.feature.attachment.tree</field>
+            <field name="model">spiff.feature.attachment</field>
+            <field name="arch" type="xml">
+                <tree string="Feature Attachment">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_feature_attachment_form" model="ir.actions.act_window">
+            <field name="name">Feature Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.feature.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','spiff'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_feature_attachment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Feature Attachment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_feature_attachment_form" id="menu_action_spiff_fetaure_attachment" 
+            parent="menu_spiff_formula" sequence="2"/>
+
+        <record id="action_spiff_feature_attachment_form_comm" model="ir.actions.act_window">
+            <field name="name">Feature Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.feature.attachment</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','comm'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_feature_attachment_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Feature Attachment.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_feature_attachment_form_comm" 
+            id="menu_action_spiff_fetaure_attachment_commission" 
+            parent="menu_commission_formula" sequence="3"/>
+
+        <record id="view_spiff_mobile_internet_form" model="ir.ui.view">
+            <field name="name">spiff.mobile.internet.form</field>
+            <field name="model">spiff.mobile.internet</field>
+            <field name="arch" type="xml">
+                <form string="Mobile Internet" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                                <field name="spiff_designation"/>
+                            </group>
+                            <group>
+                                <field name="spiff_label"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_field_name" domain="['|',('name','=','mi_1gb_payout'),'|',('name','=','mi_3gb_payout'),'|',('name','=','mi_5gb_payout'),'|',('name','=','3gb_data_unl_att_payout'),'|',('name','=','3gb_data_smart_attach_payout'),'|',('name','=','demo_field1_payout'),'|',('name','=','demo_field2_payout'),'|',('name','=','demo_field4_payout'),'|',('name','=','demo_field5_payout'),'|',('name','=','demo_field6_payout'),'|',('name','=','demo_field7_payout'),'|',('name','=','demo_field8_payout'),('name','=','mi_conv_payout'),('model_id','=','commission.tracker')]" required="1"/>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                                <!-- <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]" required="1"/> -->
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_mobile_internet_tree" model="ir.ui.view">
+            <field name="name">spiff.mobile.internet.tree</field>
+            <field name="model">spiff.mobile.internet</field>
+            <field name="arch" type="xml">
+                <tree string="Mobile Internet">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_mobile_internet_form" model="ir.actions.act_window">
+            <field name="name">Mobile Internet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.mobile.internet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_mobile_internet_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Mobile Internet.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_mobile_internet_form" id="menu_action_spiff_mobile_internet" 
+            parent="menu_spiff_formula" sequence="3"/>
+
+        <record id="view_spiff_apk_form" model="ir.ui.view">
+            <field name="name">spiff.apk.form</field>
+            <field name="model">spiff.apk</field>
+            <field name="arch" type="xml">
+                <form string="Spiff APK" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="apk_goal"/>
+                                        <field name="apk_count_goal"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_apk_tree" model="ir.ui.view">
+            <field name="name">spiff.apk.tree</field>
+            <field name="model">spiff.apk</field>
+            <field name="arch" type="xml">
+                <tree string="APK">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_apk_form" model="ir.actions.act_window">
+            <field name="name">APK Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.apk</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','spiff'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_apk_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new APK Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_apk_form" id="menu_action_spiff_apk" 
+            parent="menu_spiff_formula" sequence="5"/>
+
+
+        <record id="action_spiff_apk_form_comm" model="ir.actions.act_window">
+            <field name="name">APK Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.apk</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','comm'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_apk_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new APK Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_apk_form_comm" id="menu_action_spiff_apk_commission" 
+            parent="menu_commission_formula" sequence="5"/>
+
+        <record id="view_spiff_jod_php_att_form" model="ir.ui.view">
+            <field name="name">spiff.jod.php.att.form</field>
+            <field name="model">spiff.jod.php.att</field>
+            <field name="arch" type="xml">
+                <form string="JOD PHP Attachment" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_jod_php_att_tree" model="ir.ui.view">
+            <field name="name">spiff.jod.php.att.tree</field>
+            <field name="model">spiff.jod.php.att</field>
+            <field name="arch" type="xml">
+                <tree string="JOD PHP Attachment">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_jod_php_att_form" model="ir.actions.act_window">
+            <field name="name">JOD PHP Attachment</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.jod.php.att</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_jod_php_att_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new JOD PHP Attachment Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_jod_php_att_form" id="menu_action_spiff_jod_php_att" 
+            parent="menu_spiff_formula" sequence="6"/>
+
+        <record id="view_spiff_store_total_box_conversion_form" model="ir.ui.view">
+            <field name="name">spiff.store.total.box.conversion.form</field>
+            <field name="model">spiff.store.total.box.conversion</field>
+            <field name="arch" type="xml">
+                <form string="Store Total Box Conversion" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_store_total_box_conversion_tree" model="ir.ui.view">
+            <field name="name">spiff.store.total.box.conversion.tree</field>
+            <field name="model">spiff.store.total.box.conversion</field>
+            <field name="arch" type="xml">
+                <tree string="Store Conversion">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_store_total_box_conversion_form" model="ir.actions.act_window">
+            <field name="name">Store Total Box Conversion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.store.total.box.conversion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','spiff'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_store_total_box_conversion_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new APK Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_store_total_box_conversion_form" id="menu_action_spiff_store_total_box_conversion" 
+            parent="menu_spiff_formula" sequence="6"/>
+
+        <record id="action_spiff_store_total_box_conversion_form_comm" model="ir.actions.act_window">
+            <field name="name">Store Total Box Conversion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.store.total.box.conversion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">['|',('formula_type','=','comm'),('formula_type','=',False)]</field>
+            <field name="view_id" ref="view_spiff_store_total_box_conversion_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new APK Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_store_total_box_conversion_form_comm" id="menu_action_spiff_store_total_box_conversion_commission" 
+            parent="menu_commission_formula" sequence="6"/>
+
+        <record id="view_spiff_prepaid_conversion_form" model="ir.ui.view">
+            <field name="name">spiff.prepaid.conversion.form</field>
+            <field name="model">spiff.prepaid.conversion</field>
+            <field name="arch" type="xml">
+                <form string="Prepaid Conversion" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="prepaid_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_prepaid_conversion_tree" model="ir.ui.view">
+            <field name="name">spiff.prepaid.conversion.tree</field>
+            <field name="model">spiff.prepaid.conversion</field>
+            <field name="arch" type="xml">
+                <tree string="Prepaid Conversion">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_prepaid_conversion_form" model="ir.actions.act_window">
+            <field name="name">Prepaid Conversion</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.prepaid.conversion</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_prepaid_conversion_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Prepaid Conversion Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_prepaid_conversion_form" 
+            id="menu_action_spiff_prepaid_conversion_form" parent="menu_spiff_formula" sequence="6"/>
+
+        <record id="view_spiff_application_goal_form" model="ir.ui.view">
+            <field name="name">spiff.application.goal.form</field>
+            <field name="model">spiff.application.goal</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Application Gaol" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class" required="1"/>
+                                <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_cc_type" required="1"/>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="spiff_amount_above_200"/>
+                                    </group>
+                                    <group/>
+                                </group>
+                                <separator string="Application Goal"/>
+                                <newline/>
+                                <field name="spiff_app_goal_master">
+                                    <tree string="Application Goal" editable="bottom">
+                                        <field name="spiff_from_percent"/>
+                                        <field name="spiff_to_percent"/>
+                                        <field name="spiff_amount"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_application_goal_tree" model="ir.ui.view">
+            <field name="name">spiff.application.goal.tree</field>
+            <field name="model">spiff.application.goal</field>
+            <field name="arch" type="xml">
+                <tree string="Application Goal">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_application_goal_form" model="ir.actions.act_window">
+            <field name="name">Application Goal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.application.goal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_application_goal_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Application Goal.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_application_goal_form" id="menu_action_spiff_application_goal" 
+            parent="menu_spiff_formula" sequence="11"/>
+
+<!--         <record id="view_spiff_sqr_metric_form" model="ir.ui.view">
+            <field name="name">spiff.sqr.metric.form</field>
+            <field name="model">spiff.sqr.metric</field>
+            <field name="arch" type="xml">
+                <form string="Spiff SQR" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),('model','=','market.regions')]" required="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="spiff_payout"/>
+                        </group>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_sqr_metric_tree" model="ir.ui.view">
+            <field name="name">spiff.sqr.metric.tree</field>
+            <field name="model">spiff.sqr.metric</field>
+            <field name="arch" type="xml">
+                <tree string="SQR Metric">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_payout"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_sqr_metric_form" model="ir.actions.act_window">
+            <field name="name">SQR Metric Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.sqr.metric</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_sqr_metric_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new SQR Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_sqr_metric_form" id="menu_action_spiff_sqr_metric" 
+            parent="menu_spiff_formula" sequence="6"/> -->
+
+
+        <record id="view_spiff_box_goal_form" model="ir.ui.view">
+            <field name="name">spiff.box.goal.form</field>
+            <field name="model">spiff.box.goal</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Box Goal" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class" required="1"/>
+                                <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="spiff_percent_to_box"/>
+                                    </group>
+                                    <group>
+                                        <field name="spiff_amount"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_box_goal_tree" model="ir.ui.view">
+            <field name="name">spiff.box.goal.tree</field>
+            <field name="model">spiff.box.goal</field>
+            <field name="arch" type="xml">
+                <tree string="Box Goal">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_box_goal_form" model="ir.actions.act_window">
+            <field name="name">Box Goal Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.box.goal</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_box_goal_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Box Goal Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_box_goal_form" id="menu_action_spiff_box_goal" 
+            parent="menu_spiff_formula" sequence="6"/>
+
+        <record id="view_spiff_boxes_with_tablet_form" model="ir.ui.view">
+            <field name="name">spiff.boxes.with.tablet.form</field>
+            <field name="model">spiff.boxes.with.tablet</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Box Mobile Internet Goal" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class" required="1"/>
+                                <field name="spiff_business_rule" domain="[('comm_report_selection','=','commission')]"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                                <field name="formula_type"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="spiff_percent_to_box"/>
+                                    </group>
+                                    <group>
+                                        <field name="spiff_amount"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_boxes_with_tablet_tree" model="ir.ui.view">
+            <field name="name">spiff.boxes.with.tablet.tree</field>
+            <field name="model">spiff.boxes.with.tablet</field>
+            <field name="arch" type="xml">
+                <tree string="Box Mobile Internet Goal">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_boxes_with_tablet_form" model="ir.actions.act_window">
+            <field name="name">Mobile Internet Box Goal Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.boxes.with.tablet</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_boxes_with_tablet_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Box Goal Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_boxes_with_tablet_form" id="menu_action_spiff_boxes_with_tablet" 
+            parent="menu_spiff_formula" sequence="6"/>
+
+        <record id="view_spiff_profitability_form" model="ir.ui.view">
+            <field name="name">spiff.profitability.form</field>
+            <field name="model">spiff.profitability</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Profitability" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <group>
+                                    <group>
+                                        <field name="spiff_profit_percent"/>
+                                    </group>
+                                    <group>
+                                        <field name="spiff_payout"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_profitability_tree" model="ir.ui.view">
+            <field name="name">spiff.profitability.tree</field>
+            <field name="model">spiff.profitability</field>
+            <field name="arch" type="xml">
+                <tree string="Spiff Profitability">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_profitability_form" model="ir.actions.act_window">
+            <field name="name">Spiff Profitability Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.profitability</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_profitability_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Profitability Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_profitability_form" id="menu_action_spiff_profitability" 
+            parent="menu_spiff_formula" sequence="9"/>
+
+        <record id="view_spiff_score_form" model="ir.ui.view">
+            <field name="name">spiff.score.form</field>
+            <field name="model">spiff.score</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Score" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_score_tree" model="ir.ui.view">
+            <field name="name">spiff.score.tree</field>
+            <field name="model">spiff.score</field>
+            <field name="arch" type="xml">
+                <tree string="Spiff Score">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_score_form" model="ir.actions.act_window">
+            <field name="name">Spiff Score Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.score</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_score_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Score Attachment Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_score_form" id="menu_action_spiff_score" 
+            parent="menu_spiff_formula" sequence="10"/>
+
+        <record id="view_spiff_small_business_form" model="ir.ui.view">
+            <field name="name">spiff.small.business.form</field>
+            <field name="model">spiff.small.business</field>
+            <field name="arch" type="xml">
+                <form string="Spiff Small Business" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="spiff_name"/>
+                                <field name="spiff_start_date"/>
+                            </group>
+                            <group>
+                                <field name="spiff_designation"/>
+                                <field name="spiff_end_date"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="spiff_store_class"/>
+                                <field name="formula_type"/>
+                            </group>
+                            <group>
+                                <field name="spiff_model" domain="['|',('model','=','sap.store'),'|',('model','=','hr.employee'),'|',('model','=','market.place'),'|',('model','=','market.regions'),('model','=','res.company')]" required="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Formula">
+                                <field name="spiff_business_class">
+                                    <tree string="Business Rules" editable="bottom">
+                                        <field name="att_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="att_condition_percent"/>
+                                        <field name="to_condition_percent"/>
+                                        <field name="payout_business_rule" 
+                                            domain="[('comm_report_selection','=','commission')]"/>
+                                        <field name="pay_on_rev"/>
+                                        <field name="pay_per_att"/>
+                                        <field name="pay_flat_amnt"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Design">
+                                <group>
+                                    <field name="header_name" required="1"/>
+                                </group>
+                                <separator string="Mapping Fields"/>
+                                <newline/>
+                                <field name="fields_mapped">
+                                    <tree string="Mapping Fields" editable="bottom">
+                                        <field name="sequence" required="True"/>
+                                        <field name="field_id"/>
+                                        <field name="field_label"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                        <group>
+                            <field name="spiff_inactive"/>
+                        </group>
+                        <separator string="Notes"/>
+                        <newline/>
+                        <field name="comm_notes"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_spiff_small_business_tree" model="ir.ui.view">
+            <field name="name">spiff.small.business.tree</field>
+            <field name="model">spiff.small.business</field>
+            <field name="arch" type="xml">
+                <tree string="Spiff Small Business">
+                    <field name="spiff_name"/>
+                    <field name="spiff_designation"/>
+                    <field name="spiff_model"/>
+                    <field name="formula_type"/>
+                    <field name="spiff_start_date"/>
+                    <field name="spiff_end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_spiff_small_business_form" model="ir.actions.act_window">
+            <field name="name">Small Business Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">spiff.small.business</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_spiff_small_business_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Small Business Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_spiff_small_business_form" id="menu_action_spiff_small_business_form" 
+            parent="menu_spiff_formula" sequence="13"/>
+
+        <record id="view_reporting_header_form" model="ir.ui.view">
+            <field name="name">reporting.header.form</field>
+            <field name="model">reporting.header</field>
+            <field name="arch" type="xml">
+                <form string="Reporting Header" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="rule_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_reporting_header_tree" model="ir.ui.view">
+            <field name="name">reporting.header.tree</field>
+            <field name="model">reporting.header</field>
+            <field name="arch" type="xml">
+                <tree string="Reporting Header">
+                    <field name="name"/>
+                    <field name="rule_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_reporting_header_form" model="ir.actions.act_window">
+            <field name="name">Reporting Header</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">reporting.header</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_reporting_header_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Reporting Header.
+                </p>
+            </field>
+        </record>
+
+        <menuitem name="Business Rules" id="menu_business_rule" parent="menu_sales_commission" groups="base.group_no_one"/>
+        <menuitem action="action_reporting_header_form" id="menu_action_reporting_header" 
+            parent="menu_business_rule" sequence="2"/>
+
+        <record id="view_commission_header_form" model="ir.ui.view">
+            <field name="name">commission.header.form</field>
+            <field name="model">commission.header</field>
+            <field name="arch" type="xml">
+                <form string="Commission Header" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="name" required="True"/>
+                            <!-- <field name="sequence" required="True"/> -->
+                            <field name="header_type"/>
+                            <field name="color"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_commission_header_tree" model="ir.ui.view">
+            <field name="name">commission.header.tree</field>
+            <field name="model">commission.header</field>
+            <field name="arch" type="xml">
+                <tree string="Commission Header">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="header_type"/>
+                    <field name="color"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_commission_header_form" model="ir.actions.act_window">
+            <field name="name">Commission Header</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">commission.header</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_commission_header_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Commission Header.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_commission_header_form" id="menu_action_commission_header" 
+            parent="menu_business_rule" sequence="3"/>
+
+        <record id="view_dsr_exclude_business_rule_form" model="ir.ui.view">
+            <field name="name">dsr.exclude.business.rule.form</field>
+            <field name="model">dsr.exclude.business.rule</field>
+            <field name="arch" type="xml">
+                <form string="Master Business Rule" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="commission_br" required="1"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="dsr_emp_type"/>
+                                <field name="credit_class"/>
+                            </group>
+                            <group>
+                                <field name="dsr_prod_code"/>
+                                <field name="dsr_soc_code"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_dsr_exclude_business_rule_tree" model="ir.ui.view">
+            <field name="name">dsr.exclude.business.rule.tree</field>
+            <field name="model">dsr.exclude.business.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Master Business Rule">
+                    <field name="commission_br"/>
+                    <field name="dsr_emp_type"/>
+                    <field name="credit_class"/>
+                    <field name="dsr_prod_code"/>
+                    <field name="dsr_soc_code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_dsr_exclude_business_rule_form" model="ir.actions.act_window">
+            <field name="name">Master Business Rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dsr.exclude.business.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dsr_exclude_business_rule_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Master Business Rule.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_dsr_exclude_business_rule_form" id="menu_action_dsr_exclude_business_rule_form" 
+            parent="menu_business_rule" sequence="4"/>
+
+        <record id="view_business_rule_master_form" model="ir.ui.view">
+            <field name="name">business.rule.master.form</field>
+            <field name="model">business.rule.master</field>
+            <field name="arch" type="xml">
+                <form string="Business Rule" version="7.0">
+                    <sheet>
+                        <group colspan="6" col="3">
+                            <group>
+                                <field name="name"/>
+                                <field name="comm_report_selection"/>
+                            </group>
+                            <group attrs="{'invisible':[('comm_report_selection','!=','reporting'),('comm_report_selection','!=','commission')]}">
+                                <field name="is_postpaid"/>
+                                <field name="is_upgrade"/>
+                                <field name="is_acc"/>
+                            </group>
+                            <group attrs="{'invisible':[('comm_report_selection','!=','reporting'),('comm_report_selection','!=','commission')]}">
+                                <field name="is_feature"/>
+                                <field name="is_prepaid"/>
+                            </group>
+                        </group>
+                        <!-- <group>
+                            <field name="is_inclusion" attrs="{'invisible':[('comm_report_selection','!=','reporting')]}"/>
+                            <field name="active"/>
+                        </group> -->
+                        <!-- <group attrs="{'invisible':[('comm_report_selection','!=','commission')]}">
+                            <separator string="Product Code Type"/>
+                            <newline/>
+                            <field name="included_feature" nolabel="1" domain="[('parent_id','!=',False)]"/>
+                        </group>
+                        <group attrs="{'invisible':[('comm_report_selection','!=','reporting'),('comm_report_selection','!=','commission')]}">
+                            <separator string="Product Code Type"/>
+                            <newline/>
+                            <field name="categ_ids" nolabel="1" domain="[('parent_id','!=',False)]"/>
+                        </group>
+                        <group attrs="{'invisible':[('comm_report_selection','!=','reporting')]}">
+                            <separator string="TAC Code"/>
+                            <newline/>
+                            <field name="tac_code_rel" nolabel="1"/>
+                        </group> -->
+                        <group colspan="6" col="3">
+                            <group>
+                                <field name="is_box" attrs="{'invisible':[('comm_report_selection','!=','reporting'),('comm_report_selection','!=','commission')]}"/>
+                            </group>
+                            <group>
+                                <field name="is_revenue" attrs="{'invisible':[('comm_report_selection','!=','reporting'),('comm_report_selection','!=','commission')]}"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':[('comm_report_selection','!=','pl_report')]}">
+                            <separator string="Included Accounts"/>
+                            <newline/>
+                            <field name="account_config_ids" nolabel="1"/>
+                        </group>
+                        <group attrs="{'invisible':[('comm_report_selection','!=','pl_report')]}">
+                            <separator string="Included Accounts"/>
+                            <newline/>
+                            <field name="account_config_ids_2" nolabel="1"/>
+                        </group>
+                        <!--added by shashank 1/12-->
+            			<group>
+            			   <separator string="Sub Business Rules"/>
+            			   <newline/>
+            			   <field name="sub_rules" nolabel="1">
+                                <tree string="Sub Business Rules" editable="bottom">
+                                    <field name="product_code_type" required="1" domain="[('child_id','=',False)]"/>
+                                    <field name="tac_code_rel_sub_inc" widget="many2many_tags"/>
+                                    <field name="dsr_phone_purchase_type"/>
+                                    <field name="paid"/>
+                                    <field name="dsr_jod"/>
+                                    <!-- <field name="device_type"/> -->
+                                    <field name="class_type"/>
+                                    <!-- <field name="dsr_trade_inn"/> -->
+                                </tree>
+            			   </field>
+            			</group>
+            			<group attrs="{'invisible':['|',('is_box','=',True),('is_revenue','=',True)]}">
+            			   <separator string="Sub Business Rules_2"/>
+            			   <newline/>
+            			   <field name="sub_rules_2" nolabel="1">
+                                <tree string="Sub Business Rules_2" editable="bottom">
+                                    <field name="product_code_type_2" required="1" domain="[('child_id','=',False)]"/>
+                                    <field name="tac_code_rel_sub_inc_2" widget="many2many_tags"/>
+            				        <field name="dsr_phone_purchase_type_2"/>
+                                    <field name="paid_2"/>
+                                    <field name="dsr_jod_2"/>
+                                    <!-- <field name="device_type_2"/> -->
+                                    <field name="class_type_2"/>
+                                    <!-- <field name="dsr_trade_inn_2"/> -->
+                                </tree>
+            			   </field>
+            			</group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_business_rule_master_tree" model="ir.ui.view">
+            <field name="name">business.rule.master.tree</field>
+            <field name="model">business.rule.master</field>
+            <field name="arch" type="xml">
+                <tree string="Business Rule">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_business_rule_master_form" model="ir.actions.act_window">
+            <field name="name">Business Rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">business.rule.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_business_rule_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Business Rule.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_business_rule_master_form"
+            id="menu_business_rule_master"
+            parent="menu_business_rule" name="Business Rule" sequence="1"/>
+
+        <record id="view_pl_account_config_form" model="ir.ui.view">
+            <field name="name">account.config.master.form</field>
+            <field name="model">account.config.master</field>
+            <field name="arch" type="xml">
+                <form string="Account Config Master" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="p_l_account_id"/>
+                            </group>
+                            <group>
+                                <field name="operator"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pl_account_config_tree" model="ir.ui.view">
+            <field name="name">account.config.master.tree</field>
+            <field name="model">account.config.master</field>
+            <field name="arch" type="xml">
+                <tree string="Account Config Master">
+                    <field name="p_l_account_id"/>
+                    <field name="operator"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_pl_account_config_form" model="ir.actions.act_window">
+            <field name="name">P and L Account Config</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.config.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_pl_account_config_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new PL Account Config.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_pl_account_config_form" id="menu_action_pl_account_config_form"          parent="menu_business_rule" sequence="3"/>
+
+        <record id="view_arithmetic_operation_master_form" model="ir.ui.view">
+            <field name="name">arithmetic.operation.master.form</field>
+            <field name="model">arithmetic.operation.master</field>
+            <field name="arch" type="xml">
+                <form string="Arithmetic Operator" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_arithmetic_operation_master_tree" model="ir.ui.view">
+            <field name="name">arithmetic.operation.master.tree</field>
+            <field name="model">arithmetic.operation.master</field>
+            <field name="arch" type="xml">
+                <tree string="Arithmetic Operator">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_arithmetic_operation_master_form" model="ir.actions.act_window">
+            <field name="name">Arithematic Operator</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">arithmetic.operation.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_arithmetic_operation_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create new Arithematic Operator Record.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_arithmetic_operation_master_form" 
+            id="menu_action_arithmetic_operation_master_form" parent="menu_business_rule" sequence="4"/>
+
+        <record id="view_hr_job_form_2" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="wirelessvision_dsr.view_hr_job_form_1"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='parent_designation']" position="after">
+                     <field name="model_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_hr_dept_form_2" model="ir.ui.view">
+            <field name="name">hr.department.form</field>
+            <field name="model">hr.department</field>
+            <field name="inherit_id" ref="hr.view_department_form"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="after">
+                     <field name="wp_active"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</openerp>

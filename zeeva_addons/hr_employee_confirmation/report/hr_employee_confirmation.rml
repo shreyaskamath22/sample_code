@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<document filename="Employee Confirmation.pdf">
+  <template title="Sales Order" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+    <pageTemplate id="first">
+      <frame id="first" x1="15.0" y1="42.0" width="539" height="758"/>
+
+        <pageGraphics>
+            <image x="0.5cm" y="28.0cm" height="20.0">[[company.logo or removeParentNode('image')]]</image>
+            <image x="17.0cm" y="28.0cm" height="20.0">[[company.logo or removeParentNode('image')]]</image>
+            <!--<image x="0.50cm" y="3.0cm" height="20.0">[[company.logo or removeParentNode('image')]]</image> -->
+        </pageGraphics>
+
+        
+        
+        
+    </pageTemplate>
+  </template>
+  <stylesheet>
+    <blockTableStyle id="Standard_Outline">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table2">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="0,0" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="1,0" stop="1,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table4">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#000000" start="5,-1" stop="5,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table5">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table6">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#ffffff" start="0,2" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#ffffff" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,2" stop="1,2"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,2" stop="2,2"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table7">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <initialize>
+      <paraStyle name="all" alignment="justify"/>
+    </initialize>
+    <paraStyle name="terp_header" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_8" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_9" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_General_Centre" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_8" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_tblheader_Details" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Centre" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_tblheader_Details_Right" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
+    <paraStyle name="terp_default_Centre_9" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_1" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Right_9_Bold" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
+  </stylesheet>
+  <story>
+  <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
+  <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
+    
+   
+    
+    <para style="terp_header"><b>CONFIRMATION LETTER</b></para>
+    <para style="terp_header"><b></b></para>
+    <para style="terp_default_8">
+      <b>Date: [[get_my_date(o.date_of_confirmation)]]</b>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <b>Name: [[o.name.name]]</b>
+    </para>
+    
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <b>Dear [[o.salutation]] [[o.name.name]],</b>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      Consequent to the internal review of your performance during your probation period, we have the pleasure in informing you that, your services are being confirmed as <b>[[o.job_id.name]]</b> with effect from <b> [[formatLang(o.date_of_confirmation,date_time=True)]] [[get_my_date(o.date_of_confirmation)]]</b>.
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      All the other terms and conditions as detailed in your appointment letter remain unchanged.
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      We look forward to your valuable contributions and wish you all the very best for a rewarding career with the organization. 
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      Please acknowledge the same.
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      Warm Regards,
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+	  Human Resources Officer
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+       
+    
+    <para style="terp_default_Centre_9">
+      <b>* This is A System Generated Letter.</b>
+    </para>
+    
+  </story>
+</document>

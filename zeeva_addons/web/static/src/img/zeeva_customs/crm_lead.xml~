@@ -1,0 +1,357 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data noupdate="0">
+        
+    <!--=======================================================================================
+    CRM LEADS - VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA CRM Lead Tree View -->
+        <record id="zeeva_crm_lead_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.crm.lead.form.view</field>
+            <field name="model">crm.lead</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <tree string="Leads" fonts="bold:message_unread==True" colors="grey:state in ('cancel', 'done')">
+                    <field name="date_deadline" invisible="1"/>
+                    <field name="name" invisible="1"/>
+<!--                     <field name="country_id" invisible="context.get('invisible_country', True)"/> -->
+                    <field name="partner_name"/>
+                    <field name="country_id" />
+                    <field name="contact_name"/>
+                    <field name="email_from"/>
+                    <field name="phone"/>
+                    <field name="create_date" widget="date"/>
+                    <field name="stage_id"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="partner_id" invisible="1"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
+                    <field name="state" invisible="1"/>
+                    <field name="type_id" invisible="1"/>
+                    <field name="referred" invisible="1"/>
+                    <field name="channel_id" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Predef for button in form  -->
+        <record id="zeeva_action_offer_sheet_lead_create" model="ir.actions.act_window">
+            <field name="name">Create an Offer Sheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="domain">[('customer_id','=',False)]</field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can create an Offer Sheet.</field>
+        </record>
+        <record id="zeeva_action_offer_sheet_lead" model="ir.actions.act_window">
+            <field name="name">Offer Sheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('customer_id','=',False)]</field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can see all existing Offer Sheets.</field>
+        </record>    
+    
+    <!-- ZEEVA CRM Lead Form View -->
+        <record id="zeeva_crm_lead_form_view" model="ir.ui.view">
+            <field name="name">zeeva.crm.lead.form.view</field>
+            <field name="model">crm.lead</field>
+            <field name="arch" type="xml">
+                <form string="Leads Form" version="7.0">
+                    <header>
+                        <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
+                                states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
+                        <button name="case_reset" string="Reset" type="object"
+                                states="cancel"/>
+                        <button name="case_cancel" string="Cancel" type="object"
+                                states="draft,open,pending"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"
+                                on_change="onchange_stage_id(stage_id)"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            
+                            <button name="zeeva_customs.zeeva_action_offer_sheet_lead_create" string="Create an Offer Sheet" 
+                                type="action" icon="terp-stock_effects-object-colorize"
+                                attrs="" 
+                                context="{'default_lead_id': active_id, 'form_view_ref': 'zeeva_customs.sale_offer_leads_form_view'}"/>
+                                
+                            <button name="zeeva_customs.zeeva_action_offer_sheet_lead" string="See Existing Offer Sheets" 
+                                type="action" icon="terp-stock_symbol-selection"
+                                attrs=""
+                                context="{'search_default_lead_id': active_id}"/>
+                                
+                            <button type="action"
+                                name="%(crm.act_crm_opportunity_crm_phonecall_new)d"
+                                string="Phone Calls"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="Describe the lead..."/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_name" string="Company name" required="1"/>
+                                <field name="website" string="Company website"/>
+                                <!-- Preload all the partner's information -->
+                                <field name="partner_id" string="Customer" invisible="1"
+                                    on_change="on_change_partner(partner_id)"
+                                    options='{"create_name_field": "name"}'
+                                    context="{'default_name': contact_name, 'default_street': street, 'default_city': city, 'default_state_id': state_id, 'default_zip': zip, 'default_country_id': country_id, 'default_function': function, 'default_phone': phone, 'default_mobile': mobile, 'default_fax': fax, 'default_email': email_from, 'default_user_id': user_id, 'default_section_id': section_id}"/>
+                                <label for="street" string="Address"/>
+                                <div>
+                                    <field name="street" placeholder="Street..."/>
+                                    <field name="street2"/>
+                                    <div class="address_format">
+                                        <field name="city" placeholder="City" style="width: 40%%"/>
+                                        <field name="state_id" on_change="onchange_state(state_id)" options='{"no_open": True}' placeholder="State" style="width: 37%%"/>
+                                        <field name="zip" placeholder="ZIP" style="width: 20%%"/>
+                                    </div>
+                                    <field name="country_id" placeholder="Country" options='{"no_open": True}' required="1"/>
+                                </div>
+                                <field name="user_id" string="Account Manager"/>
+                            </group>
+                            <group>
+                                <field name="contact_name" string="Contact name"/>
+                                <field name="function" string="Job title"/>
+                                <field name="email_from" widget="email"/>
+                                <field name="phone"/>
+                                <field name="mobile"/>
+                                <field name="fax"/>
+                                <field name="priority" string="Lead priority"/>
+                                <!--
+                                This should be integrated in Open Chatter
+                                <button string="Mail"
+                                    name="%(mail.action_email_compose_message_wizard)d"
+                                    icon="terp-mail-message-new" type="action" colspan="1"/>
+                                -->
+                            </group>
+                            <group>
+<!--                                 <label for="section_id" invisible="1"/> -->
+                                <div>
+                                    <field name="section_id" invisible="1"/>
+<!--                                     <button name="case_escalate" string="Escalate" type="object" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/> -->
+                                </div>
+<!--                                 <field name="type" invisible="1"/> -->
+                            </group>
+                            <group>
+                                <!--<field name="categ_ids" invisible="1"
+                                    widget="many2many_tags"
+                                    domain="[('object_id.model','=','crm.lead')]"/>-->
+                            </group>
+                        </group>
+                        <separator colspan="4" string="Product categories of interest"/>
+                        <field name="prod_categ_ids" widget="many2many" colspan="4">
+                            <tree>
+                                <field name="complete_name"/>
+                            </tree>
+                        </field>
+                        
+                        <notebook colspan="4">
+                        <page string="VP Notes">
+                            <field name="description"/>
+                        </page>
+                        <page string="Extra Info">
+                            <group>
+                                <group string="Categorization" groups="base.group_multi_company,base.group_no_one" name="categorization">
+                                    <field name="company_id"
+                                        groups="base.group_multi_company"
+                                        widget="selection" colspan="2"/>
+                                    <field name="state" groups="base.group_no_one"/>
+                                </group>
+                                <group string="Mailings">
+                                    <field name="opt_out"/>
+                                </group>
+                                <group string="Misc">
+                                    <field name="active"/>
+                                    <field name="referred"/>
+                                </group>
+                            </group>
+                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    CRM OPPORTUNITIES - VIEWS
+    =======================================================================================-->
+    
+    <!-- ZEEVA CRM Opportunity Form View -->
+        <record id="zeeva_crm_opportunity_form_view" model="ir.ui.view">
+            <field name="name">zeeva.crm.opportunity.form.view</field>
+            <field name="model">crm.lead</field>
+<!--             <field name="inherit_id" ref="crm.crm_case_form_view_oppor" /> -->
+            <field name="priority" eval="15" />
+            <field name="arch" type="xml">
+                <form string="Opportunities" version="7.0">
+                    <header>
+                        <button name="case_mark_won" string="Mark Won" type="object"
+                                states="draft,open,pending" class="oe_highlight"/>
+                        <button name="case_mark_lost" string="Mark Lost" type="object"
+                                states="draft,open" class="oe_highlight"/>
+                        <button name="%(sale_crm.action_crm_make_sale)d" string="Create Quotation" type="action"
+                                states="done"/>
+                        <button name="%(sale_crm.action_crm_make_sale)d"  string="Convert to Quotation" type="action"
+                                states="draft,open,pending" class="oe_highlight"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_right oe_button_box">
+                            <button string="Schedule/Log Call"
+                                name="%(crm.opportunity2phonecall_act)d"
+                                type="action"/>
+                            <button string="Meeting"
+                                name="action_makeMeeting"
+                                type="object"
+                                context="{'search_default_attendee_id': active_id, 'default_attendee_id' : active_id}"/>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                            <label for="planned_revenue" class="oe_edit_only"/>
+                            <h2>
+                                <field name="company_currency" invisible="1"/>
+                                <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                <span class="oe_grey"> at </span>
+                                <field name="probability" class="oe_inline" widget="integer"/>%%
+                            </h2>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="partner_id"
+                                    on_change="onchange_partner_id(partner_id, email_from)"
+                                    string="Customer"
+                                    context="{'default_name': partner_name, 'default_email': email_from, 'default_phone': phone}"/>
+                                <field name="email_from" string="Email"/>
+                                <field name="phone"/>
+                                <field name="user_id"/>
+                            </group>
+
+                            <group>
+                                <label for="title_action"/>
+                                <div>
+                                    <field name="date_action" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('date_action', '=', False), ('title_action', '=', False)]}"/>
+                                    <field name="title_action" class="oe_inline" nolabel="1" placeholder="e.g. Call for proposal"/>
+                                </div>
+                                <field name="date_deadline"/>
+                                <field name="priority"/>
+                            </group>
+
+                            <group>
+<!--                                 <label for="section_id"/> -->
+                                <div>
+                                    <field name="section_id" widget="selection" invisible="1"/>
+<!--                                     <button name="case_escalate" string="Escalate" type="object" class="oe_link" attrs="{'invisible': ['|', ('section_id','=',False), ('state', 'not in', ['draft','open','pending'])]}"/> -->
+                                </div>
+                            </group>
+                            <group>
+                                <!--<field name="categ_ids"
+                                    string="Categories" widget="many2many_tags"
+                                    context = "{'object_name': 'crm.lead'}"
+                                    domain="[('object_id.model', '=', 'crm.lead')]"/>-->
+
+                            </group>
+                        </group>
+
+                        <notebook colspan="4">
+                        <page string="Internal Notes">
+                            <field name="description"/>
+                        </page>
+                        <page string="Lead">
+                            <group>
+                                <group>
+                                    <field name="partner_name"/>
+                                    <field name="website"/>
+                                    <label for="street" string="Address"/>
+                                    <div>
+                                        <field name="street" placeholder="Street..."/>
+                                        <field name="street2"/>
+                                        <div class="address_format">
+                                            <field name="city" placeholder="City" style="width: 40%%"/>
+                                            <field name="state_id" options='{"no_open": True}' on_change="onchange_state(state_id)" placeholder="State" style="width: 24%%"/>
+                                            <field name="zip" placeholder="ZIP" style="width: 34%%"/>
+                                        </div>
+                                        <field name="country_id" placeholder="Country" options='{"no_open": True}'/>
+                                    </div>
+                                </group>
+
+                                <group>
+                                    <label for="contact_name"/>
+                                    <div>
+                                        <field name="contact_name" class="oe_inline"/>
+                                        <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" options='{"no_open": True}' class="oe_inline"/>
+                                    </div>
+                                    <field name="function" string="Job title"/>
+                                    <field name="mobile"/>
+                                    <field name="fax"/>
+                                </group>
+                                <group string="Mailings" name="mailings">
+                                    <field name="opt_out"/>
+                                </group>
+                                <group string="Misc">
+                                    <field name="active"/>
+                                    <field name="day_open" groups="base.group_no_one"/>
+                                    <field name="day_close" groups="base.group_no_one"/>
+                                    <field name="referred"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="type" invisible="1"/>
+                                </group>
+                                <group string="References">
+                                    <field name="ref"/>
+                                    <field name="ref2"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Fund Raising" groups="crm.group_fund_raising">
+                            <group>
+                                <field name="payment_mode" widget="selection"/>
+                                <field name="planned_cost"/>
+                            </group>
+                        </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    
+    <!--=======================================================================================
+    CRM LEADS - ACTIONS
+    =======================================================================================-->
+        <record id="crm.action_crm_tag_tree_view_leads_all" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="zeeva_crm_lead_tree_view"/>
+            <field name="act_window_id" ref="crm.crm_case_category_act_leads_all"/>
+        </record>
+        <record id="crm.action_crm_tag_form_view_leads_all" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="zeeva_crm_lead_form_view"/>
+            <field name="act_window_id" ref="crm.crm_case_category_act_leads_all"/>
+        </record>
+        
+    <!--=======================================================================================
+    CRM OPPORTUNITIES - ACTIONS
+    =======================================================================================-->
+        <record id="crm.action_crm_tag_form_view_oppor11" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="zeeva_crm_opportunity_form_view"/>
+            <field name="act_window_id" ref="crm.crm_case_category_act_oppor11"/>
+        </record>
+    </data>
+</openerp>

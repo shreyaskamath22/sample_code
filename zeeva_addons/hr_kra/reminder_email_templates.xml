@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+    	
+    	<record id="self_rating_reminder_email_template" model="email.template">
+            <field name="name">Employee Self Rating Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Self Rating Pending in Performance Review Form</field>
+            <field name="email_to">${object.emp_name.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email}</field>
+            <field name="lang">Give Self Rating 2Days</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.emp_name.name},
+
+<p> Your Self Rating is pending in the Performance Review form.
+<p> Kindly complete the Self Rating Process before ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+  
+<p>From,
+ <b>
+</p>OpenERP Auto Reminder
+
+            ]]></field>
+        </record>
+
+
+        <record id="self_rating_reminder_email_template3" model="email.template">
+            <field name="name">Employee Self Rating Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Self Rating Pending in Performance Review Form</field>
+            <field name="email_to">${object.emp_name.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email}</field>
+            <field name="lang">Give Self Rating 7Days</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.emp_name.name},
+
+<p> Your Self Rating is pending in the Performance Review form.
+<p> Kindly complete the Self Rating Process before ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+ 
+<p>From,
+ <b>
+</p>OpenERP Auto Reminder
+
+            ]]></field>
+        </record>
+
+
+
+        <record id="app_rating_reminder_email_template" model="email.template">
+            <field name="name">Appraiser Rating Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Appraiser Rating Pending in Performance Review Form</field>
+            <field name="email_to">${object.manager_id.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email}</field>
+            <field name="lang">Appraiser Reminder</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.manager_id.name},
+
+<p> Appraiser Rating is due for ${object.emp_name.name}.
+<p> You are requested to give the Appraiser ratings before ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+
+ 
+<p>From,
+ <b>
+</p>OpenERP Auto Reminder
+
+            ]]></field>
+        </record>
+
+
+        <record id="app_rating_reminder_email_template3" model="email.template">
+            <field name="name">Appraiser Rating Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Appraiser Rating Pending in Performance Review Form</field>
+            <field name="email_to">${object.manager_id.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email}</field>
+            <field name="lang">Appraiser Reminder7</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.manager_id.name},
+
+<p> Appraiser Rating is due for ${object.emp_name.name}.
+<p> You are requested to give the Appraiser ratings before date ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+ 
+<p>From,
+ <b>
+</p>OpenERP Auto Reminder
+
+            ]]></field>
+        </record>
+
+
+        <record id="schedule_interview_reminder_email_template3" model="email.template">
+            <field name="name">Schedule Appraisal Meeting Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Scheduling of Appraisal Meeting Reminder</field>
+            <field name="email_to">${object.manager_id.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email}</field>
+            <field name="lang">Schedule Appraisal Meeting</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.manager_id.name},
+
+<p> Kindly schedule Appraisal Meeting for ${object.emp_name.name} before ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+
+ 
+<p>From,
+ <b>
+</p>OpenERP Auto Reminder
+
+            ]]></field>
+        </record>
+        
+        <record id="review_interview_reminder_email_template" model="email.template">
+            <field name="name">Review Interview Reminder</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Reminder for Appraisal Meeting</field>
+            <field name="email_to">${object.user_to_review_id.user_id.email}</field>
+            <field name="email_cc">${object.user_to_review_id.hro.email},${object.manager_id.user_id.email}</field>
+            <field name="lang">Interview Reminder</field>
+            <field name="model_id" ref="hr_kra.model_kra_interview"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.user_to_review_id.name},
+
+<p>This is a gentle reminder to inform you that Your appraisal meeting with your reporting manager has been schedule on ${object.date_time_field}.
+<p> Kindly make yourself available for the Meeting.
+<p><b><center>BEST OF LUCK!!!</center></b>
+<p>
+<p>
+<p>
+<p><center><b>*This is system generated mail. Please do not reply to this mail.</b></center>
+
+
+            ]]></field>
+        </record>	
+
+</data>
+
+<data>
+        <!-- EDI related Email Templates menu -->
+        <record model="ir.actions.act_window" id="action_email_templates">
+            <field name="name">Email Templates</field>
+            <field name="res_model">email.template</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_template.email_template_tree" />
+            <field name="search_view_id" ref="email_template.view_email_template_search"/>
+            <field name="context">{'search_default_model_id':'employee.balance.scorecard'}</field>
+            <field name="context" eval="{'search_default_model_id': ref('hr_kra.model_employee_balance_scorecard')}"/>
+        </record>
+       
+    </data>
+
+
+<data>
+
+        <record id="email_template_edi_kra" model="email.template">
+            <field name="name">Self Rating in Performance Review Form</field>
+            <field name="email_from">${object.current_user.email}</field>
+            <field name="subject">Self Rating for Appraisal Form</field>
+            <field name="email_to">${object.emp_name.user_id.email}</field>
+            <field name="email_cc">${object.emp_name.hro.email},${object.manager_id.user_id.email},52</field>
+            <field name="lang">Self Rating</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.emp_name.name},
+
+<p>Your Appraisal form has been uploaded on the ERP for Self-Rating.
+<p>Please login into the ERP and kindly rate yourself for each KRA point on a scale of 1 to 5 and complete the self-rating process before ${'-'.join(object.date_after_7Days.split('-')[::-1])}.
+<p>For any further queries, Please contact HR Department.
+<p>
+<p>
+<p>
+<p><center><b>*This is system generated mail. Please do not reply to this mail.</b></center>
+
+
+            ]]></field>
+        </record>
+    	
+            
+    </data>
+
+
+<data>
+
+        <record id="email_template" model="email.template">
+            <field name="name">KRA Data</field>
+            <field name="email_from">${object.current_user.email}</field>
+            <field name="subject">Your Appraisal data is Published</field>
+            <field name="email_to">${object.emp_name.user_id.email}</field>
+            <field name="lang">KRA Data</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi ${object.emp_name.name},
+
+<p>Your Appraisal Review for FY ${object.appraisal_year.name} has been completed.
+<p>Your Appraisal Review Ratings have been published in the ERP.
+<p>
+<p>
+<p>
+<p><center><b>*This is system generated mail. Please do not reply to this mail.</b></center> 
+
+
+            ]]></field>
+        </record>
+
+
+
+
+
+
+        <record id="email_template_1" model="email.template">
+            <field name="name">Self Rating mail to HR</field>
+            <field name="email_from">${object.current_user.email}</field>
+            <field name="subject">Appraisal Process for ${object.emp_name.name}</field>
+            <field name="email_to">${object.emp_name.hro.email}</field>
+            <field name="lang">KRA Self Rating to HR</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hi,
+
+<p>${object.emp_name.name} has submitted Appraisal form with self rating. 
+<p>Kindly schedule Appraisal Meeting for Appraiser Rating.
+<p>
+<p>
+<p>
+<p><center><b>*This is system generated mail. Please do not reply to this mail.</b></center>
+
+
+            ]]></field>
+        </record>
+
+
+
+        
+        <record id="email_template_employee_self_rating_success" model="email.template">
+            <field name="name">KRA Self Rating</field>
+            <field name="email_from">${object.company_id.email}</field>
+            <field name="subject">Self Rating Submitted</field>
+            <field name="email_to">${object.emp_name.user_id.email}</field>
+            <field name="lang">KRA Self Rating</field>
+            <field name="model_id" ref="hr_kra.model_employee_balance_scorecard"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html"><![CDATA[
+
+
+Hello ${object.emp_name.name},
+
+<p>Your Appraisal form with self ratings has been updated successfully in the ERP.
+<p>
+<p>
+<p>
+<p><center><b>*This is system generated mail. Please do not reply to this mail.</b></center>
+
+
+                ]]></field>
+        </record>
+
+            
+    </data>
+</openerp>

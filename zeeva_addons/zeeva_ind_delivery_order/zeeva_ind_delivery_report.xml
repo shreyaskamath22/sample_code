@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        
+        <report id="stock.report_picking_list_in" model="stock.picking.in" name="stock.picking.list.in" string="Receipt Slip" rml="zeeva_ind_delivery_order/report/picking.rml"/>
+        <report id="stock.report_picking_list_out" model="stock.picking.out" name="stock.picking.list.out" string="Delivery Slip" rml="zeeva_ind_delivery_order/report/picking.rml"/>
+        
+    </data>
+</openerp>

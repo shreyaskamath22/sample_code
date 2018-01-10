@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		
+		<record id="view_employee_script_1" model="ir.ui.view">
+	        <field name="name">Reset Covering Store</field>
+	        <field name="model">employee.script</field>
+	        <field name="inherit_id" ref="wirelessvision.view_employee_script"/>
+	        <field name="type">form</field>
+	        <field name="arch" type="xml">
+	        	<button name="employee_store" position="after">
+	        		<button name="employee_market_reset" string="Reset covering store in market" class="oe_highlight" type="object"/>
+	                <button name="employee_region_reset" string="Reset covering store in region" class="oe_highlight" type="object"/>
+	            </button>
+	        </field>
+	   	</record>
+
+	   	<menuitem id="wirelessvision.menu_action_employee_script" name="Reset Covering Store" action="wirelessvision.action_view_employee_script" parent="hr.menu_hr_configuration" sequence="50"/>
+
+	</data>
+</openerp>

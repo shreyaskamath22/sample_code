@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report header='False' auto="False" id="report_hr_employee_confirmation" model="hr.employee.confirmation" name="hr.employee.confirmation"
+                rml="hr_employee_confirmation/report/hr_employee_confirmation.rml" string="Employee Confirmation"
+                usage="default"/>
+
+    </data>
+</openerp>

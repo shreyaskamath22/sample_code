@@ -1,0 +1,210 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp import addons
+import logging
+from openerp.osv import fields, osv
+from openerp.tools.translate import _
+from openerp import tools
+import time
+from datetime import datetime
+import datetime
+class hr_employee(osv.osv):
+    _name = "hr.employee"
+    _description = "Employee"
+    _inherit = ["hr.employee","mail.thread"]
+    
+    _columns = {
+        'employee_number': fields.integer('Employee Number', size=32, help='Employee Unique Identification Number'),
+        'join_date': fields.date('Date of Joining', size=32),
+        
+    }
+
+hr_employee()
+
+class hr_holidays(osv.osv):
+    _name = "hr.holidays"
+    _description = "Holidays"
+    _inherit = "hr.holidays"
+
+   # def create(self, cr, uid, values, context=None):
+   #     """ Override to avoid automatic logging of creation """
+   #     if context is None:
+   #         context = {}
+
+   #     employee_id = values['employee_id']
+   #     date_from = values['date_from']
+   #     date_to = values['date_to']
+        #for x in self.browse (cr, uid, ids, context=context):
+        #    employee_id = x.employee_id
+    #    print employee_id, "ccccccccccccccccccccccccccccccccccccccccccccc"
+    #    search_emp_record = self.pool.get('hr.employee').search(cr,uid,[('id','=',employee_id)], context=context)
+    #    print search_emp_record,"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+    #    for m in self.pool.get('hr.employee').browse(cr,uid,search_emp_record):
+    #        joining_date = m.joining_date
+    #        print joining_date, "lllllllllllllllllllll JOINING DATE lllllllllllllllllllllllllllll"
+    #        print date_from, "lllllllllllllllllllll DATE FROM lllllllllllllllllllllllllllll"
+    #        print date_to, "lllllllllllllllllllll DATE TO lllllllllllllllllllllllllllll"
+        #context = dict(context, mail_create_nolog=True)
+    #    return super(hr_holidays, self).create(cr, uid, values, context=context)
+        
+    def holidays_confirm(self, cr, uid, ids, context=None):
+        print "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        self.check_holidays(cr, uid, ids, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
+
+            if record.date_from==False:
+               record.date_from = '2014-01-01 00:00:00'
+
+            if record.date_to==False:
+               record.date_to = '2014-01-01 00:00:00'
+
+
+            employee_id = record.employee_id.id
+            joining_date = record.employee_id.join_date
+            date_from = record.date_from[:10]
+            date_to = record.date_to[:10]
+            
+            joining_date_year = int(joining_date[:4])
+            joining_date_month = int(joining_date[5:7])
+            joining_date_date = int(joining_date[8:10])
+
+            print employee_id, type(date_from), "qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq"
+            print joining_date_date, joining_date_month, "gggggggggggggggggggggggggggggggggggggggggggggggg"
+
+            from dateutil.relativedelta import relativedelta
+
+            import datetime
+            from datetime import datetime
+            from datetime import timedelta
+            from time import strftime
+            from datetime import date
+
+            date_after_3months = date(joining_date_year,joining_date_month,joining_date_date) + relativedelta(months=+3)
+            date_after_6months = date(joining_date_year,joining_date_month,joining_date_date) + relativedelta(months=+6)
+            
+            print date_after_3months, "99999999999999999999999999999999999999999999999999"
+
+            if (date_from>=str(joining_date) and date_from<=str(date_after_3months)):
+                raise osv.except_osv(_('Warning!'),_('You cannot apply for a leave in your probationary period'))
+
+            emp_gender = record.employee_id.gender
+            emp_marital_status = record.employee_id.marital
+            leave_type = record.holiday_status_id.name
+
+            if (emp_gender== 'male' and leave_type == 'Maternity Leave (ML)'):
+                raise osv.except_osv(_('Error!'),_('You cannot apply for a Maternity Leave'))
+
+            if (emp_marital_status== 'single' and leave_type == 'Maternity Leave (ML)'):
+                raise osv.except_osv(_('Error!'),_('You cannot apply for a Maternity Leave'))
+
+            today_date = strftime("%Y-%m-%d")
+            print today_date, "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% TODAY DATE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+            print type(today_date), "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Type of TODAY DATE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+            
+            import datetime
+            DATETIME_FORMAT = "%Y-%m-%d"
+            today_date = datetime.datetime.strptime(today_date, DATETIME_FORMAT)
+            joining_date = datetime.datetime.strptime(joining_date, DATETIME_FORMAT)
+            timedelta = today_date - joining_date
+            diff_day = timedelta.days
+            
+            print today_date, "{{{{{{{{{{{{{{{{{ TODAY DATE }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+            print joining_date, "{{{{{{{{{{{{{{{{{ JOINING DATE }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}"
+            print diff_day, "@@@@@@@@@@@@@@@@@@@ NUMBER OF DAYS @@@@@@@@@@@@@@@@@@@@@@@@@@@@"
+
+            if (leave_type == 'Maternity Leave (ML)' and date_from<str(date_after_6months)):
+              raise osv.except_osv(_('Warning!'),_('You cannot apply for a Maternity leave since your tenure of service in the organization is less than 6 months'))  
+
+            date_from_year = int(date_from[:4])
+            date_from_month = int(date_from[5:7])
+            date_from_date = int(date_from[8:10])
+
+            date_after_3months_from_leave_application_date = date(date_from_year,date_from_month,date_from_date) + relativedelta(months=+3)
+            print date_to, "+++++++++++++++++++++++++++++ DATE TO +++++++++++++++++++++++++++++++++++++++++++++++++"
+            print date_from, "+++++++++++++++++++++++++++++ DATE FROM +++++++++++++++++++++++++++++++++++++++++++++++++"
+            print date_after_3months_from_leave_application_date, "+++++++++++++++++++++++++++++ DATE FROM +++++++++++++++++++++++++++++++++++++++++++++++++"
+
+            if (leave_type == 'Maternity Leave (ML)' and date_to>str(date_after_3months_from_leave_application_date)):
+                raise osv.except_osv(_('Warning!'),_('You can apply for a Maternity leave only for a period of 3 months')) 
+
+            #today_date = datetime.datetime.strptime(today_date, DATETIME_FORMAT)
+            from_dt = datetime.datetime.strptime(date_from, DATETIME_FORMAT)
+            timedelta_diff = from_dt - today_date 
+            difference_days = timedelta_diff.days
+
+            print today_date, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii TODAY DATE iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii"      
+            print from_dt, "gggggggggggggggggggggggggggggggggggg FROM DATE ggggggggggggggggggggggggggggggggggggggggggg"
+            print difference_days, "ooooooooooooooooooooooooooooooooooo DIFFERENCE IN DAYS BETWEEN TODAY'S DATE AND FROM DATE  ooooooooooooooooooooooooooooooooooooooooooooo"  
+            
+
+            is_optional_item_exists = False    # here i can check for wt ever condition and this variable will have the resul
+            so_obj = self.browse(cr, uid, ids, context)
+            #if so_obj:
+            #  for line in so_obj[0].order_line:
+            #    print line.name
+            #    if line.is_optional_item:
+            #         is_optional_item_exists = True
+            
+            if (leave_type == 'Privilege Leaves (PL)' and difference_days<14):
+               is_optional_item_exists = True
+                #raise osv.except_osv(_('Warning!'),_('You need to apply for a Privilege Leave 14 days in advance'))                      
+            
+            if(is_optional_item_exists):
+            
+               return {
+                'name': 'Leave Requests Wizard',
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'leave.request.wizard',
+                'type': 'ir.actions.act_window',
+                'nodestroy': True,
+                'target': 'new',
+                }
+               else:
+            
+                wf_service = netsvc.LocalService('workflow')
+                wf_service.trg_validate(uid, 'sale.order', ids[0], 'order_confirm', cr)
+
+            # redisplay the record as a sales order
+                view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+                view_id = view_ref and view_ref[1] or False,
+                
+                return {
+                    'type': 'ir.actions.act_window',
+                    'name': _('Leave Requests'),
+                    'res_model': 'hr.holidays',
+                    'res_id': ids[0],
+                    'view_type': 'form',
+                    'view_mode': 'form',
+                    'view_id': view_id,
+                    'target': 'current',
+                    'nodestroy': True,
+            }
+
+
+
+
+            if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
+                self.message_subscribe_users(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
+        return self.write(cr, uid, ids, {'state': 'confirm'})
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

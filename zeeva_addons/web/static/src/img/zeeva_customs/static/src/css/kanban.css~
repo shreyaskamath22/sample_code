@@ -1,0 +1,14 @@
+.openerp .oe_kanban_view .oe_kanban_avatar_smallbox2 {
+/*   height: 128px; */
+/*   width: 128px; */
+}
+
+.openerp .oe_kanban_view .oe_kanban_image_zeeva {
+    border-radius: 3px 3px 3px 3px;
+    display: inline-block;
+    max-height: 64px;
+    overflow: hidden;
+    text-align: center;
+    vertical-align: top;
+    max-width: 64px;
+}

@@ -1,0 +1,17 @@
+{
+    'name' : 'Wirelessvision DSR Process',
+    'version' : '1.0',
+    'depends' : ['wirelessvision','product'],
+    'author' : 'OpenERP SA',
+    'category': 'Sale',
+    'description': """
+This module describes DSR Process.
+    """,
+    'website': 'http://www.openerp.com',
+    'demo': [],
+    'data': [
+    'wirelessvision_dsr_view.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+}

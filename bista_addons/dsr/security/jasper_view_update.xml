@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<openerp>
+    <data noupdate="0">
+        
+        <record id="jasper_integration.group_wireless_role_user" model="res.groups">
+            <field name="jasper_check" eval="1"/>
+        </record>
+ 
+        <record id="jasper_integration.group_wireless_role_master" model="res.groups">
+            <field name="jasper_check" eval="1" />
+            <field name="group_tenantId" eval="str('organization_1')"/>
+        </record> 
+
+        <record id="jasper_integration.group_wireless_role_ops_dashboard" model="res.groups">
+            <field name="jasper_check" eval="1"/>
+            <field name="group_tenantId" eval="str('organization_1')"/>
+        </record>
+
+        <record id="jasper_integration.group_wireless_role_pl_dashboard" model="res.groups">
+            <field name="jasper_check" eval="1"/>
+            <field name="group_tenantId" eval="str('organization_1')"/>
+        </record>     
+
+        <record id="jasper_integration.group_wireless_role_slb" model="res.groups">
+            <field name="jasper_check" eval="1"/>
+            <field name="group_tenantId" eval="str('organization_1')"/>
+        </record>
+
+        <record id="jasper_integration.group_wireless_role_training" model="res.groups">
+            <field name="jasper_check" eval="1"/>
+            <field name="group_tenantId" eval="str('organization_1')"/>
+        </record>
+
+    </data>
+</openerp>

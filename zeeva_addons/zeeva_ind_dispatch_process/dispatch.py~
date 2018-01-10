@@ -1,0 +1,898 @@
+# -*- coding: utf-8 -*-
+
+from osv import fields,osv
+import tools
+import pooler
+from tools.translate import _
+from openerp import SUPERUSER_ID, netsvc
+#from datetime import datetime,date
+from openerp import netsvc
+from openerp.tools.amount_to_text_en import amount_to_text
+import math
+import openerp.addons.decimal_precision as dp
+from datetime import datetime
+from time import strftime
+from datetime import date
+from dateutil.relativedelta import relativedelta
+import string
+import locale
+
+
+class shipment_dispatch(osv.osv):
+    _name = 'shipment.dispatch'
+    _description = 'shipment dispatch'
+    _inherit = ['mail.thread']
+    
+    def _compute_total_transit_days(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for x in self.browse(cr, uid, ids, context=context):
+            delivered_date = x.delivered_date
+            dispatch_date = x.dispatch_date
+            if delivered_date and dispatch_date:
+                delivered_date_date = datetime.strptime(str(delivered_date), "%Y-%m-%d").date()
+                dispatch_date_date = datetime.strptime(str(dispatch_date), "%Y-%m-%d").date()
+                transit_day = relativedelta(delivered_date_date,dispatch_date_date)
+                if delivered_date < dispatch_date:
+                    # osv.except_osv(_('Warning!'),_("Dispatch Date cannot be greater than Delivered Date"))
+                    res[x.id] = ''
+                else:
+                    if transit_day.days == 0.0 or transit_day.days == 1.0:
+                        print transit_day.days,'transit days'
+                        res[x.id] = 1
+                    else:
+                        res[x.id] = transit_day.days - 1
+                print res
+                return res
+            else:
+                res[x.id] = 0
+                return res
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            
+            'waybill_no': self.pool.get('ir.sequence').get(cr, uid, 'dispatch.through'),      
+        })
+        return super(shipment_dispatch, self).copy(cr, uid, id, default, context=context)
+
+    def _mark_true(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        flag = False
+        today = datetime.today().date()
+        for x in self.browse(cr,uid,ids,context=context):
+            eta = x.eta
+            s_id = x.id
+            state = x.state
+            print eta, state
+            if state in ('ready to dispatch','in transit') and str(eta) < str(today):
+                flag = True
+                
+            else:
+                flag = False
+            res[x.id] = flag
+        return res
+
+    def _get_objectives(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        flag = False
+        today = datetime.today().date()
+        for x in self.browse(cr,uid,ids,context=context):
+            eta = x.eta
+            s_id = x.id
+            state = x.state
+            print eta, state
+            if state in ('ready to dispatch','in transit') and str(eta) < str(today):
+                flag = '1'
+                
+            else:
+                flag = '2'
+            res[x.id] = flag
+        return res
+     
+    def _get_shipping_person(self, cr, uid, context=None):
+        search_dept =  self.pool.get('hr.department').search(cr,uid,[('name','=','Shipping & Distribution')])
+        print search_dept, 'shipping department iddddd'
+        search_emp_in_shipping = self.pool.get('hr.employee').search(cr,uid,[('department_id','=',search_dept[0])])  
+        print search_emp_in_shipping, 'employee idddd'
+        for x in self.pool.get('hr.employee').browse(cr,uid,search_emp_in_shipping):
+            userID = x.user_id.id
+        return userID
+
+    SELECTION_LIST = [
+   ('1','1'),
+   ('2','2'),
+   ('3','3'),
+    ('4','4'),
+    ('5','5'),]
+
+    _columns = {
+        'shipping_person': fields.many2one('res.users','Shipping Person'),
+        'name': fields.char('Dispatch No'),
+        'invoice_no': fields.many2one('account.invoice', 'Invoice No'),
+        'customer': fields.many2one('res.partner','Customer',domain="[('customer','=',True)]"),
+        'invoice_date': fields.date('Invoice Date'),
+        'invoice_amt':fields.float('InVoice Amount'),
+        'do_no': fields.many2one('stock.picking','DO No.', domain="[('type','=','out')]"),
+        'so_no': fields.many2one('sale.order','SO No.'),
+        'shipping_street': fields.char('Shipping Street',size=128),
+        'shipping_street2': fields.char('Shipping Street2',size=128),
+        'shipping_city': fields.char(' Shipping City',size=128),
+        'shipping_city2': fields.many2one('res.city','Shipping Cities'),
+        'shipping_destination': fields.char('Shipping Destination',size=128),
+        'shipping_state_id': fields.many2one('res.country.state',' Shipping State'),
+        'shipping_zip': fields.char('Shipping Zip',size=24),
+        'shipping_country_id': fields.many2one('res.country','Shipping Country'),
+        'shipping_contact_person': fields.many2one('res.partner', 'Contact Person'),
+        'shipping_contact_mobile_no': fields.char('Mobile Number',size=68),
+        'shipping_contact_landline_no': fields.char('Landline Number',size=68),
+        'shipping_email_id': fields.char('Email ID',size=68),
+        'consignor': fields.many2one('res.company','Consignor'),
+        'dispatch_date': fields.date('Dispatch Date'),
+        'courier_name': fields.many2one('dispatch.through','Courier Name'),
+        'waybill_no': fields.char('Waybill No.'),
+        'box': fields.integer('No Of Boxes'),
+        'weight': fields.float('Weight'),
+        'eta': fields.date('ETA'),
+        'delivered_date': fields.date('Delivered Date'),
+        'attachment_of_pod': fields.binary('POD'),
+        # 'total_transit_days': fields.char('Total Transit Days'),
+        'total_transit_days': fields.function(_compute_total_transit_days,string='Total Transit Days',type='integer',store=True),
+        'grn_no': fields.char('GRN No.'),
+        'road_permit': fields.binary('Road Permit'),
+        'grn': fields.binary('GRN'),
+        'dispatch_order_lines': fields.one2many('dispatch.order.line', 'dispatch_order_id', 'Dispatch Lines'),
+        'remarks_dispatch': fields.one2many('remarks.dispatch','remarks_id','Remarks'),
+        'state': fields.selection([('ready to dispatch','Ready to Dispatch'),('in transit', 'In Transit'),('delivered', 'Delivered'),('cancelled', 'Cancelled')], 'Status'),    
+        'flag': fields.boolean('Flag'),
+        'flag1': fields.boolean('Flag'),
+        'date_today': fields.date('Today'),
+        'in_transit': fields.function(_mark_true, type='boolean', string='In transit'),
+        # 'st_id': fields.function(_get_objectives, type='selection',method=True,  selection=SELECTION_LIST, string="Stratergic Goals Parent"),
+        'xyz': fields.selection([('A','A'),('B', 'B'),('C', 'C'),('D', 'D')], 'xyz'),
+    }
+        
+    _defaults = {
+        'box':1,
+        'name': lambda self, cr, uid, context: '/',
+        'waybill_no': lambda self, cr, uid, context: '/',
+        'state': 'ready to dispatch',
+        'consignor': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'shipment.dispatch', context=c),
+        'date_today': fields.date.context_today,
+        'in_transit': False,
+        'shipping_person': _get_shipping_person,
+        'xyz':'B'
+    }
+
+    _order = 'xyz asc'
+
+
+    def do_dispatch_partial(self, cr, uid, ids, partial_datas, context=None):
+        """ Makes partial picking and moves done.
+        @param partial_datas : Dictionary containing details of partial picking
+                          like partner_id, partner_id, delivery_date,
+                          delivery moves with product_id, product_qty, uom
+        @return: Dictionary of values
+        """
+        print ids, partial_datas, 'values from the wizardddd'
+        if context is None:
+            context = {}
+        else:
+            context = dict(context)
+        res = {}
+        move_obj = self.pool.get('dispatch.order.line')
+        dispatch_obj = self.pool.get('shipment.dispatch')
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        uom_obj = self.pool.get('product.uom')
+        sequence_obj = self.pool.get('ir.sequence')
+        
+        for pick in self.browse(cr, uid, ids, context=context):
+            print pick, 'pickkkkkkk'
+            new_picking = None
+            complete, too_many, too_few = [], [], []
+            move_product_qty, prodlot_ids, product_avail, partial_qty, product_uoms = {}, {}, {}, {}, {}
+            print pick.dispatch_order_lines, 'pick order lines'
+            for move in pick.dispatch_order_lines:
+                print move.id,'mmmmmmmmmmmmmmmm'
+                print partial_datas, 'partial data dictionary'
+                partial_data = partial_datas.get('move%s'%(move.id), {})
+                print partial_data, 'partial_data'
+                product_qty = partial_data.get('product_qty',0.0)
+                move_product_qty[move.id] = product_qty
+                product_uom = partial_data.get('product_uom',False)
+                # product_price = partial_data.get('product_price',0.0)
+                product_currency = partial_data.get('product_currency',False)
+                prodlot_id = partial_data.get('prodlot_id')
+                prodlot_ids[move.id] = prodlot_id
+                product_uoms[move.id] = product_uom
+                partial_qty[move.id] = uom_obj._compute_qty(cr, uid, product_uoms[move.id], product_qty, move.product_uom.id)
+                if move.product_qty == partial_qty[move.id]:
+                    complete.append(move)
+                elif move.product_qty > partial_qty[move.id]:
+                    too_few.append(move)
+                else:
+                    too_many.append(move)
+                print too_few, too_many, complete, 'lists of partial picking'
+                
+            empty_picking = not any(q for q in move_product_qty.values() if q > 0)
+            print empty_picking, 'Emptyyyy Pickinggg'
+            for move in too_few:
+                product_qty = move_product_qty[move.id]
+                print product_qty, 'product_qty'
+                print new_picking, empty_picking, 'Pickingggg'
+                if not new_picking and not empty_picking:
+
+                    letters = list(string.ascii_uppercase)
+                    sequence_name = pick.name
+                    sequence_name_split = sequence_name.split('-')
+                    for sequence_letters in sequence_name_split:
+                        if sequence_letters in letters:
+                            sequence_letters_index = letters.index(sequence_letters)
+                            sequence_letters_index_add =sequence_letters_index+1
+                            delete_letters = letters[0:sequence_letters_index_add]
+                            for delete_letters_id in delete_letters:
+                                if delete_letters_id in letters:
+                                    pop_delete_letters = letters.remove(delete_letters_id)
+                            next_letter = letters[0]
+                            previous_letters = delete_letters[-1]
+                            sequence_name_split_second = sequence_name.split('-')
+                            remove_last_letter = sequence_name_split_second.remove(sequence_name_split_second[-1])
+                            join_letters= '-'.join(sequence_name_split_second)
+                            new_picking_name = join_letters+ '-'+ previous_letters
+                            same_sequence_name = join_letters+'-'+next_letter
+                        else:
+                            sequence_letters_index_zero = letters[0]
+                            sequence_letters_index_one = letters[1]
+                            new_picking_name = pick.name+ '-'+ sequence_letters_index_zero
+                            same_sequence_name = pick.name+'-'+sequence_letters_index_one
+                        print same_sequence_name, new_picking_name, 'Seeequenceeeeeeee'
+                    self.write(cr, uid, [pick.id], 
+                               {'name': same_sequence_name
+                               })
+                    pick.refresh()
+                    new_picking = self.copy(cr, uid, pick.id,
+                            {
+                                'name': new_picking_name,
+                                'dispatch_order_lines' : [],
+                                'state':'in transit',
+                            })
+                if product_qty != 0:
+                    defaults = {
+                            'product_qty' : product_qty,
+                            'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                            'dispatch_order_id' : new_picking,
+                            'state': 'in transit',
+                            'product_uom': product_uoms[move.id]
+                    }
+                    prodlot_id = prodlot_ids[move.id]
+                    if prodlot_id:
+                        defaults.update(prodlot_id=prodlot_id)
+                    move_obj.copy(cr, uid, move.id, defaults)
+                move_obj.write(cr, uid, [move.id],
+                        {
+                            'product_qty': move.product_qty - partial_qty[move.id],
+                            'product_uos_qty': move.product_qty - partial_qty[move.id], #TODO: put correct uos_qty
+                        })
+
+            if new_picking:
+                move_obj.write(cr, uid, [c.id for c in complete], {'dispatch_order_id': new_picking})
+            for move in complete:
+                defaults = {'product_uom': product_uoms[move.id], 'product_qty': move_product_qty[move.id]}
+                
+                move_obj.write(cr, uid, [move.id], defaults)
+            for move in too_many:
+                product_qty = move_product_qty[move.id]
+                defaults = {
+                    'product_qty' : product_qty,
+                    'product_uos_qty': product_qty, #TODO: put correct uos_qty
+                    'product_uom': product_uoms[move.id]
+                }
+                if new_picking:
+                    defaults.update(dispatch_order_id=new_picking)
+                move_obj.write(cr, uid, [move.id], defaults)
+
+            # At first we confirm the new picking (if necessary)
+            if new_picking:
+                # Then we finish the good picking
+                self.write(cr, uid, [pick.id], {'dispatch_order_id': new_picking})
+                delivered_pack_id = new_picking
+                back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
+                self.message_post(cr, uid, ids, body=_("Partial Dispatch <em>%s</em> has been <b>created</b>.") % (back_order_name), context=context)
+            else:
+                delivered_pack_id = pick.id
+            delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
+            res[pick.id] = {'delivered_picking': delivered_pack.id or False}
+
+        return res
+
+
+    def reminder_pending_dispatch_order(self,cr,uid,context=None):
+        today = datetime.today().date()
+        rec_search = self.search(cr, uid, [('id', '>', 0),('eta','=',today),('state','in',('ready to dispatch','in transit'))], context=None)
+        print rec_search
+        for x in self.browse(cr,uid,rec_search):
+            count = 0
+            eta = x.eta
+            s_id = x.id
+            state = x.state
+            customer = x.customer.name
+            print eta, state            
+            search_template_record = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','shipment.dispatch'),('lang','=','Dispatch Status')], context=context)
+            if search_template_record:
+                self.pool.get('email.template').send_mail(cr, uid, search_template_record[0], s_id, force_send=True, context=context)
+                print "Send Reminder"
+                count = count+1
+        return True
+
+    def check_pending_dispatch_order(self,cr,uid,context=None):
+        today = datetime.today().date()
+        rec_search = self.search(cr, uid, [('id', '>', 0),('eta','<',today),('state','in',('ready to dispatch','in transit'))], context=None)
+        print rec_search
+        for x in self.browse(cr,uid,rec_search):
+            count = 0
+            eta = x.eta
+            s_id = x.id
+            state = x.state
+            customer = x.customer.name
+            self.write(cr,uid,s_id,{'xyz':'A'})
+            print s_id, eta, state            
+            
+        return True
+
+    def onchange_shipping_contact_person(self,cr,uid,ids,shipping_contact_person):
+        v={}
+        res_partner_obj=self.pool.get('res.partner')
+        if shipping_contact_person:
+            res_partner_browse = res_partner_obj.browse(cr,uid,shipping_contact_person)
+            v['shipping_contact_mobile_no'] = res_partner_browse.mobile
+            v['shipping_contact_landline_no'] = res_partner_browse.phone
+            v['shipping_email_id'] = res_partner_browse.email
+        return {'value':v}
+
+   
+    def onchange_courier(self, cr, uid, ids, courier_name, context=None):
+        v={'waybill_no': False}
+        if courier_name:
+            v['waybill_no'] = ''
+        return {'value':v}
+
+
+    def onchange_dispatch(self, cr, uid, ids, dispatch_date, delivered_date, context=None):
+        
+        if dispatch_date and delivered_date:
+            if dispatch_date > delivered_date:
+                raise osv.except_osv(_('Warning!'),_("Dispatch Date cannot be greater than Delivered Date"))   
+        else:
+            return False
+        return False
+
+    def create(self, cr, uid, vals, context=None):
+        print vals, 'vallssss'
+        courier = vals['courier_name']  
+        c_name = ''
+        search_courier = self.pool.get('dispatch.through').search(cr,uid,[('id','=',courier)], context=context)
+        for g in self.pool.get('dispatch.through').browse(cr,uid,search_courier):
+            c_name = g.name    
+        # if vals['dispatch_date'] and vals['delivered_date']:
+        #      if vals['dispatch_date'] > vals['delivered_date']:
+        #          raise osv.except_osv(_('Warning!'),_("Dispatch Date cannot be greater than Delivered Date"))      
+        #      if vals['dispatch_date'] > vals['eta']:
+        #          raise osv.except_osv(_('Warning!'),_("ETA has to be greater than or equal to Dispatch Date"))
+        if vals.get('name','/')=='/':
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'shipment.dispatch') or '/'
+        if c_name == 'Hand Delivery By Office Boy':
+            vals['waybill_no'] = self.pool.get('ir.sequence').get(cr, uid, 'dispatch.through') or '/'
+        return super(shipment_dispatch, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        print vals, 'valsssssssss'
+        res = super(shipment_dispatch,self).write(cr, uid, ids, vals, context=context)
+        if isinstance(ids, list):
+            main_form_id = ids[0]
+        else:
+            main_form_id = [ids]
+        for c in self.browse(cr, uid, main_form_id, context):
+            waybill_no = c.waybill_no
+            print c.dispatch_date, 'dispatch date'
+            print c.delivered_date, 'delivered_date'
+            if c.dispatch_date and c.delivered_date:
+                if c.dispatch_date > c.delivered_date:
+                    raise osv.except_osv(_('Warning!'),_("Dispatch Date cannot be greater than Delivered Date"))
+            if c.eta < c.dispatch_date:
+                raise osv.except_osv(_('Warning!'),_("ETA has to be greater than or equal to Dispatch Date"))      
+        if vals.has_key('courier_name'):
+            courier = vals['courier_name']  
+            c_name = ''
+            search_courier = self.pool.get('dispatch.through').search(cr,uid,[('id','=',courier)], context=context)
+            for g in self.pool.get('dispatch.through').browse(cr,uid,search_courier):
+                c_name = g.name
+            if c_name == 'Hand Delivery By Office Boy':
+                vals['waybill_no'] = self.pool.get('ir.sequence').get(cr, uid, 'dispatch.through') or '/'
+        
+        return super(shipment_dispatch,self).write(cr, uid, ids, vals, context=context)
+
+
+    def action_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        """Open the partial picking wizard"""
+        context.update({
+            'active_model': self._name,
+            'active_ids': ids,
+            'active_id': len(ids) and ids[0] or False
+        })
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'dispatch.partial.picking',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': context,
+            'nodestroy': True,
+        }
+
+    def ready_to_dispatch(self, cr, uid, ids, context=None):
+        x = self.browse(cr, uid, ids[0], context)
+        delivered_dt =  x.delivered_date
+        dispatch_dt = x.dispatch_date
+        eta = x.eta
+        from datetime import date
+        from datetime import datetime
+        eta_new = datetime.strptime(eta, "%Y-%m-%d").strftime("%d-%m-%Y")
+        inv_no = x.invoice_no.id
+        inv_name = x.invoice_no.number
+        courier = x.courier_name.name
+        so_no = x.so_no.name
+        do_no = x.do_no.name
+        waybill_no = x.waybill_no
+        flag = x.flag
+        flag1 = x.flag1
+        box = x.box
+        if box == 0:
+            raise osv.except_osv(_('Warning'),_('Number of Boxes cannot be Zero.'))
+
+        search_dept =  self.pool.get('hr.department').search(cr,uid,[('name','=','Sales & Marketing Support')])
+        print search_dept, 'shipping department iddddd'
+        search_emp_in_shipping = self.pool.get('hr.employee').search(cr,uid,[('department_id','=',search_dept[0])])  
+        print search_emp_in_shipping, 'employee idddd'
+        user_list = []
+        for x in self.pool.get('hr.employee').browse(cr,uid,search_emp_in_shipping):
+            userID = x.user_id.id
+            user_list.append(userID)
+        if dispatch_dt and delivered_dt:
+            if dispatch_dt > delivered_dt:
+                raise osv.except_osv(_('Warning!'),_("Dispatch Date cannot be greater than Delivered Date"))   
+        if eta < dispatch_dt:
+            raise osv.except_osv(_('Warning!'),_("ETA cannot be less than Dispatch Date"))   
+        self.message_subscribe_users(cr, SUPERUSER_ID, ids, user_ids=user_list, context=context)
+        message = _("<b>Status: Ready to Dispatch --> In Transit</b><br/><br/>The Products in the Invoice %s Sale Order %s Delivery Order %s are in Transit and ETA is %s")%(inv_name,so_no,do_no,eta_new)
+        self.message_post(cr, uid, ids, body = message, type='comment', subtype='mt_comment', context = context)
+        return self.action_process(cr, uid, ids, context=context)
+
+
+    def in_transit(self, cr, uid, ids, context=None):
+        x = self.browse(cr, uid, ids[0], context)
+        from datetime import date
+        from datetime import datetime
+        inv_name = x.invoice_no.number
+        delivered_date = x.delivered_date
+        delivered_date = datetime.strptime(delivered_date, "%Y-%m-%d").strftime("%d-%m-%Y")
+
+        so_no = x.so_no.name
+        do_no = x.do_no.name
+        search_template_record = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','shipment.dispatch'),('lang','=','Delivered To Customer')], context=context)
+        if search_template_record:
+            print "ggggggggggggggggggggggggggggggggggggggggggggggg", search_template_record
+            print 'I am intoooo self rating reminder definition'
+            self.pool.get('email.template').send_mail(cr, uid, search_template_record[0], x.id, force_send=True, context=context)
+        message = _("<b>Status: In Transit --> Delivered</b><br/><br/>The Products in the Invoice %s Sale Order %s Delivery Order %s has been Delivered on %s")%(inv_name,so_no,do_no,delivered_date)
+        self.message_post(cr, uid, ids, body = message, type='comment', subtype='mt_comment', context = context)
+        self.write(cr, uid, ids, {'state': 'delivered'}, context=context)
+        
+
+    def cancelled(self, cr, uid, ids, context=None):
+        x = self.browse(cr, uid, ids[0], context)
+        inv_name = x.invoice_no.number
+        so_no = x.so_no.name
+        do_no = x.do_no.name
+        message = _("Hi All,<p>The Dispatch Order %s has been cancelled")%(x.name)
+        self.message_post(cr, uid, ids, body = message, type='comment', subtype='mt_comment', context = context)
+        return self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
+
+shipment_dispatch()
+
+
+class dispatch_order_line(osv.osv):
+    _name = 'dispatch.order.line'  
+
+    _columns = {
+        'name': fields.char('Description'),
+        'dispatch_order_id':fields.many2one('shipment.dispatch','Dispatch Lines'),
+        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True),('type','<>','service')], required=True, select=True),
+        'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True),
+        'product_qty': fields.float('Shipped Quantity', digits_compute=dp.get_precision('Quantity')),
+        'warehouse': fields.many2one('stock.warehouse','Stock Warehouse'),
+        'state': fields.selection([('ready to dispatch','Ready to Dispatch'),('in transit', 'In Transit'),('delivered', 'Delivered'),('cancelled', 'Cancelled')], 'Status'),    
+        }
+
+    _defaults = {
+
+    'product_qty': 1,
+
+    }
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        uom_id = False
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            uom_id = product.uom_id.id
+        return {'value': {'product_uom': uom_id}}
+
+
+    def do_dispatch_partial(self, cr, uid, ids, partial_datas, context=None):
+        """ Makes partial pickings and moves done.
+        @param partial_datas: Dictionary containing details of partial picking
+                          like partner_id, delivery_date, delivery
+                          moves with product_id, product_qty, uom
+        """
+        res = {}
+        dispatch_obj = self.pool.get('shipment.dispatch')
+        product_obj = self.pool.get('product.product')
+        currency_obj = self.pool.get('res.currency')
+        uom_obj = self.pool.get('product.uom')
+        
+        if context is None:
+            context = {}
+
+        complete, too_many, too_few = [], [], []
+        move_product_qty = {}
+        prodlot_ids = {}
+        for move in self.browse(cr, uid, ids, context=context):
+        #     if move.state in ('done', 'cancel'):
+        #         continue
+            partial_data = partial_datas.get('move%s'%(move.id), False)
+            assert partial_data, _('Missing partial picking data for move #%s.') % (move.id)
+            product_qty = partial_data.get('product_qty',0.0)
+            move_product_qty[move.id] = product_qty
+            product_uom = partial_data.get('product_uom',False)
+            product_price = partial_data.get('product_price',0.0)
+            product_currency = partial_data.get('product_currency',False)
+            prodlot_ids[move.id] = partial_data.get('prodlot_id')
+            if move.product_qty == product_qty:
+                complete.append(move)
+            elif move.product_qty > product_qty:
+                too_few.append(move)
+            else:
+                too_many.append(move)
+
+        
+        for move in too_few:
+            product_qty = move_product_qty[move.id]
+            if product_qty != 0:
+                defaults = {
+                            'product_qty' : product_qty,
+                            'product_uos_qty': product_qty,
+                            'picking_id' : move.picking_id.id,
+                            'state': 'in transit',
+                            
+                           
+                            }
+                prodlot_id = prodlot_ids[move.id]
+                if prodlot_id:
+                    defaults.update(prodlot_id=prodlot_id)
+                new_move = self.copy(cr, uid, move.id, defaults)
+                complete.append(self.browse(cr, uid, new_move))
+            self.write(cr, uid, [move.id],
+                    {
+                        'product_qty': move.product_qty - product_qty,
+                        'product_uos_qty': move.product_qty - product_qty,
+                        'prodlot_id': False,
+                        'tracking_id': False,
+                    })
+
+
+        for move in too_many:
+            self.write(cr, uid, [move.id],
+                    {
+                        'product_qty': move.product_qty,
+                        'product_uos_qty': move.product_qty,
+                    })
+            complete.append(move)
+
+        for move in complete:
+            if prodlot_ids.get(move.id):
+                self.write(cr, uid, [move.id],{'prodlot_id': prodlot_ids.get(move.id)})
+            if  move.dispatch_id.id :
+                # TOCHECK : Done picking if all moves are done
+                cr.execute("""
+                    SELECT move.id FROM shipment_dispatch pick
+                    RIGHT JOIN dispatch_order_line move ON move.dispatch_id = pick.id AND move.state = %s
+                    WHERE pick.id = %s""",
+                            ('in transit', move.dispatch_id.id))
+                res = cr.fetchall()
+        return [move.id for move in complete]
+
+
+
+class remarks_dispatch(osv.osv):
+    _name = 'remarks.dispatch'
+    _columns = {
+
+        'remarks_id':fields.many2one('shipment.dispatch','Remarks'),
+        'remarks_date': fields.date('Date'),
+        'remarks_reason': fields.char('Reason'),
+    }
+
+remarks_dispatch()
+
+
+class stock_picking_out(osv.osv):
+    _inherit = "stock.picking.out"
+
+    # _columns = {
+
+    #     'dispatch_ids': fields.many2many('shipment.dispatch', 'stock_picking_dispatch_rel', 'dispatch_order_id', 'invoice_id', 'Invoices', readonly=True, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
+
+    # }
+    
+    def _get_partner_to_invoice(self, cr, uid, picking, context=None):
+        """ Gets the partner that will be invoiced
+            Note that this function is inherited in the sale and purchase modules
+            @param picking: object of the picking for which we are selecting the partner to invoice
+            @return: object of the partner to invoice
+        """
+        return picking.partner_id and picking.partner_id.id
+
+    def _dispatch_line_hook(self, cr, uid, move_line, dispatch_line_id):
+        '''Call after the creation of the invoice line'''
+        return
+
+    def _dispatch_hook(self, cr, uid, picking, dispatch_id):
+        '''Call after the creation of the invoice'''
+        return
+       
+
+    def _prepare_dispatch_lines(self, cr, uid, picking, move_line, dispatch_order_id,
+        dispatch_vals, context=None):
+
+        return {
+            'dispatch_order_id': dispatch_order_id,
+            'product_id': move_line.product_id.id,
+            'product_qty': move_line.product_qty,
+            'product_uom':move_line.product_uom.id,
+        }
+
+    def _prepare_dispatch(self, cr, uid, picking, partner, context=None):
+        print picking, 'pickinggggggg'
+        if isinstance(partner, int):
+            partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
+        x = self.pool.get('stock.picking.out').browse(cr, uid, picking)
+        form_id = picking.id
+        
+        print form_id, 'form_id'
+        # cust_name = int(x.partner_id)
+        name_do = str(picking.name)
+        print name_do, 'name_do'
+        origin = picking.origin
+        print origin , 'originnnnnn'
+        shipping_street = picking.shipping_street
+        shipping_street2 = picking.shipping_street2
+        shipping_destination = picking.shipping_destination
+        shipping_city_id = picking.shipping_city.id
+        print shipping_street, shipping_city_id, 'shipping_city  jhkjhk'
+        # print form_id, cust_name, 'delivery order name'
+        inv_obj = self.pool.get('account.invoice')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        sale_obj = self.pool.get('sale.order')
+        stock_move_obj = self.pool.get('stock.move')
+        search_inv = inv_obj.search(cr,uid,[('suppliers_ref','=',origin),('delivery_note','=',name_do)])
+        search_sale = sale_obj.search(cr,uid,[('name','=',origin)])
+        saleid = False
+        inv_id = False
+        inv_date = False
+        for s in sale_obj.browse(cr,uid,search_sale):
+            saleid = int(s.id)
+        for i in inv_obj.browse(cr,uid,search_inv):
+            print inv_id, inv_date, 'ddddddddd'
+            inv_id = int(i.id)
+            inv_date = str(i.date_invoice)
+
+        dispatch_vals = {
+            'do_no': picking.id,
+            'so_no': saleid,
+            'customer': partner.id,   
+            'invoice_no': inv_id,
+            'invoice_date': inv_date, 
+            'shipping_street': shipping_street,
+            'shipping_street2': shipping_street2,
+            'shipping_destination': shipping_destination, 
+            'shipping_city2': shipping_city_id,
+            'shipping_state_id': picking.shipping_state_id.id,
+            'shipping_zip': picking.shipping_zip,
+            'shipping_country_id': picking.shipping_country_id.id,
+            'courier_name': picking.dispatch_source.id,
+            'shipping_contact_person': picking.shipping_contact_person.id,
+            'shipping_contact_mobile_no': picking.shipping_contact_mobile_no,
+            'shipping_contact_landline_no': picking.shipping_contact_landline_no,
+            'shipping_email_id': picking.shipping_email_id,
+        }
+        print dispatch_vals, 'dispatch vallllssss'
+        return dispatch_vals
+
+    
+
+    def delivery_order_to_dispatch1(self, cr, uid, ids, context=None):
+            
+        if context is None:
+            context = {}
+        invoice_obj = self.pool.get('shipment.dispatch')
+        invoice_line_obj = self.pool.get('dispatch.order.line')
+        partner_obj = self.pool.get('res.partner')
+        # invoices_group = {}
+        res = {}
+        for picking in self.browse(cr, uid, ids, context=context):
+            partner = self._get_partner_to_invoice(cr, uid, picking, context=context)
+            if isinstance(partner, int):
+                partner = partner_obj.browse(cr, uid, [partner], context=context)[0]
+            if not partner:
+                raise osv.except_osv(_('Error, no partner!'),
+                    _('Please put a partner on the picking list if you want to generate dispatch order.'))
+
+            invoice_vals = self._prepare_dispatch(cr, uid, picking, partner, context=context)
+            invoice_id = invoice_obj.create(cr, uid, invoice_vals, context=context)
+            res[picking.id] = invoice_id
+            for move_line in picking.move_lines:
+                if move_line.state == 'cancel':
+                    continue
+                if move_line.scrapped:
+                    # do no invoice scrapped products
+                    continue
+                vals = self._prepare_dispatch_lines(cr, uid, picking, move_line,
+                                invoice_id, invoice_vals, context=context)
+                if vals:
+                    invoice_line_id = invoice_line_obj.create(cr, uid, vals, context=context)
+                    self._dispatch_line_hook(cr, uid, move_line, invoice_line_id)
+                self._dispatch_hook(cr, uid, picking, invoice_id)
+            return self.open_dispatch( cr, uid, ids, invoice_id, context=context)
+
+
+    
+    def open_dispatch(self, cr, uid, ids, shipment_ids, context=None):
+        """ open a view on one of the given invoice_ids """
+        ir_model_data = self.pool.get('ir.model.data')
+        form_res = ir_model_data.get_object_reference(cr, uid, 'zeeva_ind_dispatch_process', 'dispatch_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = ir_model_data.get_object_reference(cr, uid, 'zeeva_ind_dispatch_process', 'dispatch_tree_view')
+        tree_id = tree_res and tree_res[1] or False
+
+        return {
+            'name': _('Dispatch'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'shipment.dispatch',
+            'res_id': shipment_ids,
+            'view_id': False,
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
+            # 'context': "{'type': 'out_invoice'}",
+            'type': 'ir.actions.act_window',
+        }
+
+stock_picking_out()
+
+class account_invoice(osv.osv):
+    _inherit = ['account.invoice','mail.thread']
+    _name = 'account.invoice'
+
+    def _get_shipping_person(self, cr, uid, context=None):
+        search_dept =  self.pool.get('hr.department').search(cr,uid,[('name','=','Shipping & Distribution')])
+        print search_dept, 'shipping department iddddd'
+        search_emp_in_shipping = self.pool.get('hr.employee').search(cr,uid,[('department_id','=',search_dept[0])])  
+        print search_emp_in_shipping, 'employee idddd'
+        for x in self.pool.get('hr.employee').browse(cr,uid,search_emp_in_shipping):
+            userID = x.user_id.id
+        return userID
+
+    def _get_user_name(self, cr, uid, *args):
+        user_obj = self.pool.get('res.users')
+        user_value = user_obj.browse(cr, uid, uid)
+        print user_value.id,'iddd'
+        return user_value.name or False
+
+
+    _columns = {
+        'do_id':fields.char('Do ID'),
+        'shipping_person': fields.many2one('res.users','Shipping Person'),
+        'current_user':fields.many2one('res.users','Current User',size=32),
+        'current_url':fields.char('URL'),
+    }
+
+    _defaults = {
+        'shipping_person': _get_shipping_person,
+        'current_user': lambda obj, cr, uid, ctx=None: uid,
+    }
+
+
+    def invoice_to_dispatch(self, cr, uid, ids, context=None):
+        '''
+        This function opens a window to compose an email, with the dispatch template message loaded by default
+        '''
+        print uid, 'UID'
+        self.write(cr,uid,ids,{'current_user': uid})
+        search_usr =  self.pool.get('res.users').search(cr,uid,[('id','=',uid)])
+        print search_usr, 'search user'
+        p = self.browse(cr,uid,ids[0])
+        sale_order = p.origin
+        l = []
+        if sale_order:
+            l = self.pool.get('stock.picking.out').search(cr,uid,[('origin','=',sale_order)])
+            l[0] = 2
+            print l[0]
+        for x in self.pool.get('res.users').browse(cr,uid,search_usr):
+            nm = x.name
+            print nm, 'name'
+        search_dept =  self.pool.get('hr.department').search(cr,uid,[('name','=','Shipping & Distribution')])
+        print search_dept, 'shipping department iddddd'
+        search_emp_in_shipping = self.pool.get('hr.employee').search(cr,uid,[('department_id','=',search_dept[0])])  
+        print search_emp_in_shipping, 'employee idddd'
+        for x in self.pool.get('hr.employee').browse(cr,uid,search_emp_in_shipping):
+            userID = x.user_id.id
+            user_email = x.user_id.email
+            print userID, user_email, 'user ID of shipping employee'
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        print base_url ,'baseee urlll'
+        query = {'db': cr.dbname}
+        templ_id = ir_model_data.get_object_reference(cr, uid, 'stock', 'action_picking_tree')[1]
+        print templ_id, 'menu iddd'
+        url=base_url+"?db=%s#id=%s&view_type=form&model=stock.picking.out&action=%s"%(cr.dbname,2,templ_id)
+        print url, 'main url'
+        self.write(cr,uid,ids,{'current_url': url,'do_id':2})
+
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'zeeva_ind_dispatch_process', 'dispatch_email_template')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
+        ctx = dict(context)
+        ctx.update({
+            'default_model': 'account.invoice',
+            'default_res_id': ids[0],
+            'default_use_template': bool(template_id),
+            'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_so_as_sent': True,
+            'default_partner_ids': int(userID),
+            'default_current_user': str(nm),
+            'default_current_url': str(url),
+        })
+        print ctx, 'context'
+        return {
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
+            'target': 'new',
+            'context': ctx,
+        }
+
+class reason_refusal(osv.osv):
+    _name = "reason.refusal"
+    _description = "Reason for Refusal"
+    
+
+    _columns = {
+
+        'name':fields.char('Description'),
+        'refusal_reason':fields.text('Reason for Refusal'),
+        
+        }
+
+reason_refusal()
+
+

@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_dispatch_through,dispatch.through,model_dispatch_through,zeeva_ind_products.group_product_manager,1,1,1,1
+
+
+access_dispatch_through_user,dispatch.through,model_dispatch_through,zeeva_ind_products.group_product_user,1,1,1,0
+
+
+
+

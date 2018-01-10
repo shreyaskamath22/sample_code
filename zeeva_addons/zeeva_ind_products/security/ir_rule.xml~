@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    <!--record id="property_rule_employee_records" model="ir.rule">
+        <field name="name">Employees Records</field>
+        <field model="ir.model" name="model_id" ref="model_hr_employee"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record-->
+    
+    <!--record id="property_rule_holidays_manager" model="ir.rule">
+        <field name="name">Holidays Manager</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record-->
+    
+    <record id="hr_holidays.property_rule_holidays_officer" model="ir.rule">
+        <field name="name">Holidays Manager</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
+    </record>
+    
+    <record id="employees_rule_holidays_officer" model="ir.rule">
+        <field name="name">Employees Officer</field>
+        <field model="ir.model" name="model_id" ref="model_hr_employee"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+    </record>
+    
+    <record id="property_rule_accounts_officer" model="ir.rule">
+        <field name="name">Accounts Manager</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="domain">[('business_trip','=',True)]</field>
+        <field name="groups" eval="[(4,ref('account.group_account_manager'))]"/>
+    </record>
+    
+    <record id="group_reporting_manager_new" model="res.groups">
+        <field name="name">Reporting Managers</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+        <!--field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/-->
+        
+    </record>
+    
+    <record id="employees_rule_reporting_manager" model="ir.rule">
+        <field name="name">Reporting Manager Rule</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+    
+    <!--record id="employees_rule_reporting_manager_for_expenses" model="ir.rule">
+        <field name="name">Reporting Manager Rule for Expenses</field>
+        <field model="ir.model" name="model_id" ref="hr_expenses_custom.model_hr_expense_expense"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record-->
+    
+    <record id="employees_rule_reporting_manager_for_confirmation" model="ir.rule">
+        <field name="name">Reporting Manager Rule for Confirmation</field>
+        <field model="ir.model" name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+        <field name="domain_force">[('name.parent_id.user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4,ref('zeeva_hr.group_reporting_manager_new'))]"/>
+    </record>
+    
+    <!--record id="employees_wedding_leave_request_wizard" model="ir.rule">
+        <field name="name">Employees Wedding Leaves</field>
+        <field model="ir.model" name="model_id" ref="model_wedding_leave_request_wizard"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record-->
+    
+    <record id="group_sales_executive_new" model="res.groups">
+        <field name="name">Sales Executive</field>
+    </record>
+    
+    <!--record id="property_rule_holidays_officer" model="ir.rule">
+        <field name="name">Holidays Officer</field>
+        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
+    </record-->
+    
+  </data>
+</openerp>

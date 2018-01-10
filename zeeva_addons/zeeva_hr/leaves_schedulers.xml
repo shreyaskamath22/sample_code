@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--Scheduler for Allocation of SLs and CLs annually-->
+        <record id="allocation_of_sick_leaves_scheduler" model="ir.cron">
+            <field name="name" >Allocation of SLs and CLs annually</field>
+            <field eval="False" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field eval="'hr.holidays'" name="model"></field>
+            <field eval="'allocate_sick_leaves_annually'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <!--Scheduler for Allocation of PLs after probation period completion-->
+        <record id="allocation_of_privilege_leaves_scheduler" model="ir.cron">
+            <field name="name" >Allocation of PLs after probation period completion</field>
+            <field eval="False" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="'hr.holidays'" name="model"></field>
+            <field eval="'allocate_privilege_leaves_after_probation_period_completion'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+        
+        <!--Scheduler for Carry-forwarding of Leaves-->
+        <record id="carry_forwarding_of_leaves_scheduler" model="ir.cron">
+            <field name="name" >Carry-forwarding of Leaves</field>
+            <field eval="False" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="'hr.holidays'" name="model"></field>
+            <field eval="'carry_forward_leaves'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+
+
+        <record model="hr.job" id="job_sen_acct">
+            <field name="name">Senior Accountant</field>
+        </record>
+
+	<record model="hr.job" id="job_acct_exec">
+            <field name="name">Accounts Executive</field>
+        </record>
+
+       <record model="hr.job" id="job_sales_exec">
+            <field name="name">Sales Executive</field>
+            
+        </record>
+
+        <record model="hr.job" id="job_import_and_distribution">
+            <field name="name">Import &amp; Distribution Coordinator
+</field>
+            
+        </record>
+
+       <record model="hr.job" id="job_graphics_designer">
+            <field name="name">Graphics Designer</field>
+            
+        </record>
+
+		<record model="hr.job" id="job_sales_admin">
+            <field name="name">Sales Administrator</field>
+            
+        </record>
+
+		<record model="hr.job" id="job_hro">
+            <field name="name">Human Resources Officer</field>
+            
+        </record>
+        
+        <record model="hr.job" id="job_financial_controller">
+            <field name="name">Financial Controller</field>
+            
+        </record>
+        
+        <record model="hr.job" id="job_brand_marketing_exe">
+            <field name="name">Brand Marketing Executive</field>
+            
+        </record>
+        
+        <record model="hr.job" id="job_sales_promoter">
+            <field name="name">Sales Promoter</field>
+            
+        </record>
+        
+        <record model="hr.job" id="job_python_developer">
+            <field name="name">Python Developer</field>
+            
+        </record>
+        
+        <record model="hr.job" id="job_sr_openerp_developer">
+            <field name="name">Senior OpenERP Developer</field>
+            
+        </record>
+        
+
+    </data>
+</openerp>

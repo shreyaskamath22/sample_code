@@ -1,0 +1,21 @@
+1. product_code_type_update from product form view master.
+2. product_code_type_update_log from product_code_type_update master.
+3. dealer code update script from employee and dsr config menu.
+4. dealer code update log.
+5. validation changes------------ going to move on connect 02/27/2015.
+6. accessory many2one to SKU Master.
+7. prepaid line design changes.
+8. Prepaid Line added 2 fields, need to fire query to update old records for is_act and prepaid_id.
+----------- added is_act field in prepaid and fired query on 02/27/2015.
+------------- to update is_act in all prepaid records ---------------- going to move on connect 02/27/2015.
+select count(*) from wireless_dsr_prepaid_line
+
+select count(*) from wireless_dsr_prepaid_line p, product_product pr where p.dsr_product_description = pr.id
+and (pr.is_intl = true or pr.is_tether = true or pr.is_php = true or pr.is_score = true)
+
+update wireless_dsr_prepaid_line p set is_act = false
+from product_product pr where p.dsr_product_description = pr.id
+and (pr.is_intl = true or pr.is_tether = true or pr.is_php = true or pr.is_score = true)
+
+update wireless_dsr_prepaid_line set is_act = true
+where is_act is null

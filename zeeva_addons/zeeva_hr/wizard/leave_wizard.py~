@@ -1,0 +1,318 @@
+# -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
+from openerp import addons
+import logging
+from openerp.osv import osv, fields
+from openerp.tools.translate import _
+from openerp import netsvc
+import time
+from datetime import datetime
+import datetime
+
+from openerp.osv import osv
+from openerp.osv import fields
+from openerp.tools.translate import _
+
+import base64
+import logging
+
+from openerp import netsvc
+from openerp.osv import osv, fields
+from openerp.osv import fields
+from openerp import tools
+from openerp.tools.translate import _
+from urllib import urlencode, quote as quote
+
+from openerp.osv import fields, osv
+
+class mail_compose_message(osv.TransientModel):
+    """ Generic message composition wizard. You may inherit from this wizard
+        at model and view levels to provide specific features.
+
+        The behavior of the wizard depends on the composition_mode field:
+        - 'reply': reply to a previous message. The wizard is pre-populated
+            via ``get_message_data``.
+        - 'comment': new post on a record. The wizard is pre-populated via
+            ``get_record_data``
+        - 'mass_mail': wizard in mass mailing mode where the mail details can
+            contain template placeholders that will be merged with actual data
+            before being sent to each recipient.
+    """
+    _name = 'mail.compose.message'
+    _inherit = ['mail.compose.message','mail.message','mail.mail']
+    _description = 'Email composition wizard'
+    #_log_access = True
+    
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific ir_email body. The main purpose of this method
+            is to be inherited by Portal, to add a link for signing in, in
+            each notification email a partner receives.
+
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
+        """
+        body = mail.body_html
+        # partner is a user, link to a related document (incentive to install portal)
+        if partner and partner.user_ids and mail.model and mail.res_id \
+                and self.check_access_rights(cr, partner.user_ids[0].id, 'read', raise_exception=False):
+            related_user = partner.user_ids[0]
+            try:
+                self.pool.get(mail.model).check_access_rule(cr, related_user.id, [mail.res_id], 'read', context=context)
+                base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+                # the parameters to encode for the query and fragment part of url
+                query = {'db': cr.dbname}
+                fragment = {
+                    'login': related_user.login,
+                    'model': mail.model,
+                    'id': mail.res_id,
+                }
+                url = urljoin(base_url, "?%s#%s" % (urlencode(query), urlencode(fragment)))
+                text = _("""<p>Hi, Access this document <a href="%s">directly in OpenERP</a></p>""") % url
+                body = tools.append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
+            except except_orm, e:
+                pass
+        return body
+
+
+class leave_request_wizard(osv.TransientModel):
+    _name = "leave.request.wizard"
+    _description = "Leave Request Wizard"
+    
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+    def default_get(self, cr, uid, fields, context=None):
+        """
+        This function gets default values
+        """
+        res = super(leave_request_wizard, self).default_get(cr, uid, fields, context=context)
+        if context is None:
+            context = {}
+        record_id = context and context.get('active_id', False) or False
+        if not record_id:
+            return res
+        task_pool = self.pool.get('hr.holidays')
+        task = task_pool.browse(cr, uid, record_id, context=context)
+        
+
+        if 'form_number' in fields:
+            res['form_number'] = task.id
+
+leave_request_wizard()
+
+class maternity_leave_request_wizard(osv.TransientModel):
+    _name = "maternity.leave.request.wizard"
+    _description = "Maternity Leave Request Wizard"
+    
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+maternity_leave_request_wizard()
+
+class wedding_leave_request_wizard(osv.TransientModel):
+    _name = "wedding.leave.request.wizard"
+    _description = "Wedding Leave Request Wizard"
+    
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+wedding_leave_request_wizard()
+
+class casual_leave_request_wizard(osv.TransientModel):
+    _name = "casual.leave.request.wizard"
+    _description = "Casual Leave Request Wizard"
+    
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+casual_leave_request_wizard()
+
+class compensatory_leave_request_wizard(osv.TransientModel):
+    _name = "compensatory.leave.request.wizard"
+    _description = "Compensatory-Off Leave Request Wizard"
+    
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+compensatory_leave_request_wizard()
+
+class paternity_leave_request_wizard(osv.TransientModel):
+    _name = "paternity.leave.request.wizard"
+    _description = "Paternity Leave Request Wizard"
+    
+
+    def action_confirm(self, cr, uid, ids, context=None):
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        wf_service = netsvc.LocalService('workflow')
+        wf_service.trg_validate(uid, 'hr.holidays', ids[0], 'order_confirm', cr)
+        
+        search_template = self.pool.get('email.template').search(cr,uid,[('model_id.model','=','leave.request.wizard')], context=context)
+        
+
+        if search_template:
+            
+            send_leave_request_mail = self.pool.get('email.template').send_mail(cr, uid, search_template[0], ids[0], force_send=True, context=context)
+
+        
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_holidays', 'edit_holiday_new')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Leave Requests'),
+            'res_model': 'hr.holidays',
+            'res_id': ids[0],
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
+paternity_leave_request_wizard()
+
+
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

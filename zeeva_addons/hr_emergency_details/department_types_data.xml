@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        
+
+	<record model="hr.department" id="dept_dr">
+            <field name="name">Directors</field>
+            <field name="code">DR</field>
+        </record>
+
+        <record model="hr.department" id="dept_hr">
+            <field name="name">Human Resources</field>
+            <field name="code">HR</field>
+        </record>
+
+       <record model="hr.department" id="dept_erp">
+            <field name="name">ERP Department</field>
+            <field name="code">ER</field>
+        </record>
+
+        <record model="hr.department" id="dept_sales">
+            <field name="name">Sales</field>
+            <field name="code">SA</field>
+        </record>
+		
+		<record model="hr.department" id="dept_marketing">
+            <field name="name">Marketing</field>
+            <field name="code">MA</field>
+        </record>
+
+       	<record model="hr.department" id="dept_shipping">
+            <field name="name">Shipping &amp; Distribution</field>
+            <field name="code">SH</field>
+        </record>
+
+		<record model="hr.department" id="dept_graphics">
+            <field name="name">Artwork &amp; Development</field>
+            <field name="code">AD</field>
+        </record>
+
+		<record model="hr.department" id="dept_sales_support">
+            <field name="name">Sales &amp; Marketing Support</field>
+            <field name="code">SS</field>
+        </record>
+        
+        <record model="hr.department" id="dept_accounts_finance">
+            <field name="name">Accounts &amp; Finance</field>
+            <field name="code">AF</field>
+        </record>
+        
+
+    </data>
+</openerp>

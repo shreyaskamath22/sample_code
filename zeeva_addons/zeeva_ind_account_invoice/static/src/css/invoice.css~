@@ -1,0 +1,29 @@
+
+.openerp .oe_form .oe_subtotal_footer1 {
+  width: 1% !important;
+}
+.openerp .oe_form .oe_subtotal_footer1 td.oe_form_group_cell {
+  text-align: right;
+  padding: 0 !important;
+}
+.openerp .oe_form .oe_subtotal_footer1 td.oe_form_group_cell_label {
+  border-right: none;
+}
+.openerp .oe_form .oe_subtotal_footer1 .oe_subtotal_footer_separator1 {
+  width: 108px;
+  border-top: 1px solid #cacaca;
+  margin-top: 4px;
+  padding-top: 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+.openerp .oe_form .oe_subtotal_footer1 label:after {
+  content: ":";
+}
+.openerp .oe_form .oe_subtotal_footer1 label.oe_subtotal_footer_separator1 {
+  font-weight: bold !important;
+  padding: 2px 11px 2px 0px !important;
+}
+.openerp .oe_form .oe_subtotal_footer1 label.oe_form_label_help {
+  font-weight: normal;
+}

@@ -1,0 +1,912 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    <!--=======================================================================================
+    HR - EMPLOYEE VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Employee Search View -->
+        <record id="hr.view_employee_filter" model="ir.ui.view">
+            <field name="name">Employees</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <search string="Employees">
+                    <field name="name" string="Employees"/>
+                    <field name="department_id" />
+                    <field name="category_ids" groups="base.group_hr_user"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Manager" name="manager" domain="[]" context="{'group_by':'parent_id'}"/>
+                        <filter string="Coach" name="coach" domain="[]" context="{'group_by':'coach_id'}"/>
+                        <filter string="Department" name="department" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Job" name="job" domain="[]" context="{'group_by':'job_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    </group>
+                </search>
+             </field>
+         </record>
+         
+    <!-- ZEEVA Employee Kanban View -->
+        <record id="hr.hr_kanban_view_employees" model="ir.ui.view" >
+            <field name="name">HR - Employees Kanban</field>
+            <field name="model">hr.employee</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="last_login"/>
+                    <field name="current_leave_id"/>
+                    <field name="current_leave_state"/>
+                    <field name="leave_date_from"/>
+                    <field name="leave_date_to"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_employee_vignette">
+                                <div class="oe_employee_image">
+                                    <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium_user', record.id.value)" class="oe_employee_picture"/></a>
+                                </div>
+                                <div class="oe_employee_details">
+                                    <h4>
+                                        <a type="open"><field name="name"/></a>
+                                    </h4>
+                                    <ul>
+                                        <li id="last_login">
+                                            <span t-if="record.last_login.raw_value &amp;&amp; record.last_login.raw_value.is().today()" class="oe_kanban_button" 
+                                                style="font-size: 100%%">
+                                                <t t-esc="record.last_login.raw_value.toString('HH:mm')"/>
+                                            </span>
+                                        </li>
+                                        <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
+                                        <li t-if="record.work_location.raw_value"><field name="work_location"/></li>
+                                        <li t-if="record.work_phone.raw_value">Work Tel: <field name="work_phone"/> <b>Ext: <field name="work_phone_ext"/></b></li>
+                                        <li t-if="record.mobile_phone.raw_value">Mobile HK: <field name="mobile_phone"/></li>
+                                        <li t-if="record.mobile_phone_cn.raw_value">Mobile China: <field name="mobile_phone_cn"/></li>
+                                        <li t-if="record.mobile_phone_in.raw_value">Mobile India: <field name="mobile_phone_in"/></li>
+                                        <li t-if="record.skype.raw_value">Skype ID: <field name="skype"/></li>
+                                        <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <script>
+                                $('.oe_employee_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
+                            </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Employee Tree View -->
+    <record id="hr.view_employee_tree" model="ir.ui.view">
+            <field name="name">hr.employee.tree</field>
+            <field name="model">hr.employee</field>
+            <field name="arch" type="xml">
+                <tree string="Employees">
+                    <field name="name"/>
+                    <field name="work_phone"/>
+                    <field name="work_phone_ext"/>
+                    <field name="work_email"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="department_id"/>
+                    <field name="job_id"/>
+                    <field name="parent_id"/>
+                    <field name="coach_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Employee Form View -->
+        <record id="zeeva_hr_employee_form_view" model="ir.ui.view">
+            <field name="name">zeeva.hr.employee.form.view</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr_holidays.view_employee_form_leave_inherit"/>
+            <field name="arch" type="xml">
+                <field name="coach_id" position="after">
+                    <field name="join_date" required="1"/>
+                </field>
+                <field name="image_medium" position="replace">
+                    <field name="image_medium_user" widget='image' class="oe_left oe_avatar" options='{"always_reload": 1, "preview_image": "image_medium_user"}'/>
+                </field>
+                <field name="work_phone" position="replace">
+                    <label for="work_phone"/>
+                    <div colspan="1">
+                        <field name="work_phone" class="oe_inline"/> Ext: 
+                        <field name="work_phone_ext" class="oe_inline"/>
+                    </div>
+                </field>
+                <field name="mobile_phone" position="after">
+                    <field name="mobile_phone_cn"/>
+                    <field name="mobile_phone_in"/>
+                    <field name="skype"/>
+                </field>
+                <xpath expr="//label[@for='remaining_leaves']" position="before">
+                    <field name="init_leaves"/>
+                </xpath>
+                
+                <field name="work_location" position="replace"/>
+                <field name="coach_id" position="replace"/>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Company Structure action -->
+        <record id="zeeva_company_structure_action" model="ir.actions.act_window">
+            <field name="name">Company's Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="context">{'search_default_department':1, 'search_default_job':1}</field>
+            <field name="domain">[]</field>
+            <field name="search_view_id" ref="hr.view_employee_filter"/>
+            <field name="help"></field>
+        </record>
+        <record id="zeeva_company_structure_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_company_structure_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="hr.view_employee_tree"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <menuitem id="menu_company_structure_view"
+            name="Company's Structure" 
+            parent="hr.menu_hr_main"
+            action="zeeva_company_structure_action"  
+            sequence="4" />
+        
+    <!--=======================================================================================
+    HR - LEAVES VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Sick Leaves Search View -->
+        <record id="zeeva_sick_leaves_search_view" model="ir.ui.view">
+            <field name="name">zeeva.sick.leaves.search.view</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <search string="Search Leave">
+                    <field name="name"/>
+                    <separator/>
+                    <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
+                    <filter icon="terp-camera_test" domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
+                    <separator/>
+                    <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
+                    <separator/>
+                    <filter string="My Leaves" icon="terp-personal" name="my_leaves" domain="[('employee_id.user_id','=', uid)]" help="My Leaves"/>
+                    <separator/>
+                    <filter string="Sick Leaves" icon="terp-personal" name="sick_leaves" domain="[('holiday_status_id.name','ilike', 'Sick')]" help="Sick Leaves"/>
+                    <filter string="Annual Leaves" icon="terp-personal" name="annual_leaves" domain="[('holiday_status_id.name','ilike', 'Annual')]" help="Annual Leaves"/>
+                    <separator/>
+                    <filter string="My Department Leaves" icon="terp-personal+" help="My Department Leaves" domain="[('department_id.manager_id','=',uid)]"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="holiday_status_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
+                        <filter name="group_date_from" string="Start Date" icon="terp-personal" domain="[]" context="{'group_by':'date_from'}"/>
+                        <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter name="group_category" string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id','set_visible':True}"/>
+                        <filter name="group_type" string=" Leave Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'holiday_status_id'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Leaves Tree View  for summany-->
+        <record id="hr_holidays.view_holiday_simple" model="ir.ui.view">
+            <field name="name">hr.holidays.report_tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'refuse';green:state == 'validate';blue:state == 'confirm'" string="Leaves Summary">
+                    <field name="employee_id"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="name"/>
+                    <field name="number_of_days" string="Number of Days"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="holiday_status_id" invisible="1"/>
+                    <field name="manager_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+    
+    <!-- ZEEVA Leaves Tree View  anywhere else-->
+        <record id="hr_holidays.view_holiday" model="ir.ui.view">
+            <field name="name">hr.holidays.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'refuse';green:state == 'validate';blue:state == 'confirm'" string="Leave Requests">
+                    <field name="employee_id"/>
+                    <field name="holiday_status_id"/>
+                    <field name="holiday_type" string="Mode" groups="base.group_hr_user" invisible="1"/>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                    <field name="state"/>
+                    <field name="category_id" invisible="1"/>
+                    <field name="department_id" invisible="not context.get('set_visible',False)"/>
+                    <field name="manager_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Leaves Form View -->
+        <record id="hr_holidays.edit_holiday_new" model="ir.ui.view">
+            <field name="name">Zeeva Leave Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <form string="Leave Request" version="7.0">
+                <header>
+                    <button string="Submit" name="confirm" states="draft" type="workflow" groups="" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Reject" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_manager"/>
+                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+                </header>
+                <sheet string="Leave Request">
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}" options='{"no_open": True}' widget=""
+                                on_change="onchange_leave_type(holiday_status_id)"/>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <label for="number_of_days_temp" string="Duration" help="The default duration interval between the start date and the end date is 8 hours.  Feel free to adapt it to your needs."/>
+                            <div>
+                                <group col="3">
+                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" class="oe_inline"
+                                        attrs="{'required':[('type','=','remove')], 'invisible':[('type','=','add')]}"/>
+                                    <label string="-" class="oe_inline"/>
+                                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" class="oe_inline"
+                                        attrs="{'required':[('type','=','remove')], 'invisible':[('type','=','add')]}"/>
+                                </group>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
+                            </div>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
+                        </group>
+                        <group>
+                            <div class="oe_edit_only">
+                                <b>Example:</b> Annual Leaves 20XX ( <b>Number 1 / Number 2</b> )<br/>
+                                <b>Number 1:</b> Number of AL taken and approved in the year 20XX<br/>
+                                <b>Number 2:</b> Total number of AL allocated for the year 20XX<br/>
+                            </div>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" invisible="1"/>
+                            <field name="type" invisible="1"/>
+                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" invisible="1" groups="base.group_hr_user"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Sick Leaves Form View -->
+        <record id="sick_leave_form_new" model="ir.ui.view">
+            <field name="name">Zeeva Sick Leave Request Form</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <form string="Leave Request" version="7.0">
+                <header>
+                    <button string="Submit" name="confirm" states="draft" type="workflow" groups="" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Reject" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_manager"/>
+                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+                </header>
+                <sheet string="Leave Request">
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}" options='{"no_open": True}' invisible="1"/>
+                            <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <label for="number_of_days_temp" string="Duration" help="The default duration interval between the start date and the end date is 8 hours.  Feel free to adapt it to your needs."/>
+                            <div>
+                                <group col="3">
+                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" class="oe_inline"
+                                        attrs="{'required':[('type','=','remove')], 'invisible':[('type','=','add')]}"/>
+                                    <label string="-" class="oe_inline"/>
+                                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" class="oe_inline"
+                                        attrs="{'required':[('type','=','remove')], 'invisible':[('type','=','add')]}"/>
+                                </group>
+                                <div>
+                                    <field name="number_of_days_temp" class="oe_inline"/> days
+                                </div>
+                            </div>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')], 'readonly':[('state','!=','draft'), ('state','!=','confirm')]}"/>
+                        </group>
+                        <group>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" invisible="1"/>
+                            <field name="type" invisible="1"/>
+                            <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" invisible="1" groups="base.group_hr_user"/>
+                        </group>
+                        <group colspan="4">
+                            <field name="notes"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+        
+    <!-- Holidays Allocation Request Tree View -->
+        <record id="hr_holidays.view_holiday_allocation_tree" model="ir.ui.view" >
+            <field name="name">hr.holidays.allocation.tree</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
+                    <field name="employee_id"/>
+<!--                     <field name="holiday_type"/> -->
+<!--                     <field name="category_id"/> -->
+                    <field name="department_id" invisible="1"/>
+                    <field name="holiday_status_id"/>
+                    <field name="name"/>
+                    <field name="number_of_days" string="Allocated Days" sum="Remaining Days"/>
+                    <field name="manager_id" invisible="1"/>
+                    <field name="user_id" invisible="1"/>
+                    <!--field name="type"/-->
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- Holidays Allocation Request Form View -->
+        <record id="hr_holidays.allocation_leave_new" model="ir.ui.view" >
+            <field name="name">Allocation Request</field>
+            <field name="model">hr.holidays</field>
+            <field name="arch" type="xml">
+                <form string="Allocation Request" version="7.0">
+                <header>
+                    <button string="Submit" name="confirm" states="draft" type="workflow" groups="" class="oe_highlight"/>
+                    <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
+                    <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"
+                                on_change="onchange_employee(employee_id, holiday_status_id)"/>
+                            <field name="holiday_status_id" context="{'employee_id':employee_id}" options='{"no_open": True}'
+                                on_change="onchange_employee(employee_id, holiday_status_id)"/>
+                            <field name="name" required="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            <label for="join_date"/>
+                            <div>
+                                <field name="join_date" class="oe_inline"/> and started in
+                                <field name="init_leaves" class="oe_inline"/>
+                            </div>
+                            <field name="year_nb" string="Year information" nolabel="1" colspan="2" placeholder="Year information..."
+                                attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
+                            
+                        </group>
+                        <group>
+                            <label for="number_of_days_temp"/>
+                            <div>
+                                <field name="number_of_days_temp" class="oe_inline"/> days
+                                <p>
+                                    <b>Year 1</b>:          prorata of 7 days<br/>
+                                    <b>Year 2, 3</b>:       8 days<br/>
+                                    <b>Year 4, 5</b>:       10 days<br/>
+                                    <b>Year 6</b>:          11 days<br/>
+                                    <b>Year 7</b>:          12 days<br/>
+                                    <b>Year 8</b>:          13 days<br/>
+                                    <b>Year 9+</b>:         14 days<br/>
+                                </p>
+                            </div>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" invisible="1"/>
+                            <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')]}"/>
+                            <field name="department_id" attrs="{'invisible':[('holiday_type','=','category')]}" invisible="1"/>
+                        </group>
+                    </group>
+                    <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+        
+        
+    <!--Holidays workflow amendment: activate the manual confirm functionality -->
+        <record model="workflow.transition" id="hr_holidays.holiday_draft2confirm"> <!-- 1. draft->submitted (no signal) -->
+            <field name="act_from" ref="hr_holidays.act_draft" />
+            <field name="act_to" ref="hr_holidays.act_confirm" />
+            <field name="signal">confirm</field>
+        </record>
+    <!--=======================================================================================
+    HR - LEAVES ACTIONS & MENUS
+    =======================================================================================-->
+                
+    <!-- Sick Leaves action -->
+        <record id="sick_leaves_action" model="ir.actions.act_window">
+            <field name="name">Report Sick</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_type':'remove', 'default_holiday_status_id':2,'default_name':'Sick Leave',
+                'search_default_my_leaves':1, 'search_default_sick_leaves':1}</field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="search_view_id" ref="zeeva_sick_leaves_search_view"/>
+            <field name="help">Here you can see all your sick leaves</field>
+        </record>
+        <record id="sick_leaves_action_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sick_leaves_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sick_leave_form_new"/>
+            <field name="view_mode">form</field>
+        </record>
+        <menuitem id="sick_leaves_menu"
+                name="Report a Sick Leave" 
+                parent="hr_holidays.menu_open_ask_holidays"  
+                action="sick_leaves_action" 
+                groups="base.group_user"
+                sequence="2"/>
+    
+    <!-- Plan a business trip -->
+        <record id="business_trip_action" model="ir.actions.act_window">
+            <field name="name">Plan a Business Trip</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="context">{'default_type':'remove', 'default_holiday_status_id':6,'default_name':'Out of office - business trip',
+                'search_default_my_leaves':1}</field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="search_view_id" ref=""/>
+            <field name="help">Here you can see all your out-of-office leaves</field>
+        </record>
+        <record id="business_trip_action_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="business_trip_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sick_leave_form_new"/>
+            <field name="view_mode">form</field>
+        </record>
+        <menuitem id="menu_business_trip"
+                name="Report a Business Trip" 
+                parent="hr_holidays.menu_open_ask_holidays"  
+                action="business_trip_action" 
+                groups="base.group_user"
+                sequence="3"/>
+                
+    <!-- Leaves Requests -->
+        <record id="hr_holidays.open_ask_holidays" model="ir.actions.act_window">
+            <field name="name">Leaves Requests</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="context">{'default_type': 'remove', 'search_default_my_leaves':1}</field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="search_view_id" ref="zeeva_sick_leaves_search_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new leave request.
+              </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal holidays, sickness) and the exact
+                number of open days related to your leave.
+              </p>
+            </field>
+        </record>
+        <record id="hr_holidays.action_open_ask_holidays_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_holidays.view_holiday"/>
+            <field name="act_window_id" ref="hr_holidays.open_ask_holidays"/>
+        </record>
+        <record id="hr_holidays.action_open_ask_holidays_calendar" model="ir.actions.act_window.view" >
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_holidays.view_holiday_new_calendar"/>
+            <field name="act_window_id" ref="hr_holidays.open_ask_holidays"/>
+        </record>
+        <record id="hr_holidays.action_open_ask_holidays_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="act_window_id" ref="hr_holidays.open_ask_holidays"/>
+        </record>
+        <menuitem id="hr_holidays.menu_open_ask_holidays_new"
+            parent="hr_holidays.menu_open_ask_holidays"  
+            action="hr_holidays.open_ask_holidays"
+            sequence="5"/>
+        
+    <!-- Leaves Calendar -->
+        <record id="leaves_calendar" model="ir.actions.act_window">
+            <field name="name">Leaves Calendar</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref=""/>
+            <field name="view_mode">calendar,tree</field>
+            <field name="context">{'default_type': 'remove', 'search_default_my_leaves':1}</field>
+            <field name="domain">[('type','=','remove')]</field>
+            <field name="search_view_id" ref="zeeva_sick_leaves_search_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new leave request.
+              </p><p>
+                Once you have recorded your leave request, it will be sent
+                to a manager for validation. Be sure to set the right leave
+                type (recuperation, legal holidays, sickness) and the exact
+                number of open days related to your leave.
+              </p>
+            </field>
+        </record>
+        <record id="leaves_calendar_tree" model="ir.actions.act_window.view">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="hr_holidays.view_holiday"/>
+            <field name="act_window_id" ref="leaves_calendar"/>
+        </record>
+        <record id="leaves_calendar_calendar" model="ir.actions.act_window.view" >
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="hr_holidays.view_holiday_new_calendar"/>
+            <field name="act_window_id" ref="leaves_calendar"/>
+        </record>
+        <!--<record id="leaves_calendar_form" model="ir.actions.act_window.view">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="hr_holidays.edit_holiday_new"/>
+            <field name="act_window_id" ref="leaves_calendar"/>
+        </record>-->
+        <menuitem id="menu_leaves_calendar"
+            parent="hr_holidays.menu_open_ask_holidays"  
+            action="leaves_calendar"
+            sequence="4"/>
+        
+
+        <menuitem id="menu_leaves_management"
+            name="Leaves Management" 
+            parent="hr.menu_hr_root"  
+            sequence="21"/>
+        <menuitem id="hr_holidays.menu_request_approve_holidays" 
+            name="Leave Requests to Approve" 
+            parent="menu_leaves_management"  
+            action="hr_holidays.request_approve_holidays" 
+            groups="base.group_hr_user"/>
+
+                
+                
+    <!-- Holidays Allocation: action -->
+        <record id="hr_holidays.open_allocation_holidays" model="ir.actions.act_window">
+            <field name="name">Allocation Requests</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_type':'add', 'search_default_group_type':1}</field>
+            <field name="domain">[('type','=','add')]</field>
+            <field name="view_id" ref="hr_holidays.allocation_leave_new"/>
+            <field name="search_view_id" ref="zeeva_sick_leaves_search_view"/>
+        </record>
+                
+    <!-- Holidays Allocation: users cann't do it by themselves -->
+        <menuitem id="hr_holidays.menu_open_allocation_holidays" 
+                parent="menu_leaves_management"
+                action="hr_holidays.open_allocation_holidays" 
+                groups="base.group_hr_manager"/>
+        
+        <menuitem id="hr_holidays.menu_request_approve_allocation"
+            parent="menu_leaves_management" 
+            action="hr_holidays.request_approve_allocation" 
+            groups="base.group_hr_manager"/>
+                
+    <!-- Leaves Summary -->
+        <record id="hr_holidays.open_company_allocation" model="ir.actions.act_window">
+            <field name="name">Annual Leaves Summary</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="hr_holidays.view_holiday_simple"/>
+            <field name="context">{'search_default_group_employee': 1,'search_default_group_type': 1,
+                'search_default_annual_leaves': 1, 'search_default_validated': 1}</field>
+            <field name="domain">[('holiday_type','=','employee')]</field>
+            <field name="search_view_id" ref="zeeva_sick_leaves_search_view"/>
+        </record>
+        <menuitem id="hr_holidays.menu_open_company_allocation"
+            name="Annual Leaves Summary" 
+            parent="hr_holidays.menu_open_ask_holidays"  
+            action="hr_holidays.open_company_allocation" 
+            sequence="40"/>
+        
+    <!--=======================================================================================
+    HR - EXPENSES VIEWS
+    =======================================================================================-->
+    <!-- ZEEVA Expense Search View -->
+        <record id="zeeva_hr_expense_search_view" model="ir.ui.view">
+            <field name="name">zeeva.hr.expense.search.view</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <search string="Expense">
+                    <field name="name" string="Expenses"/>
+                    <field name="date"/>
+                    <filter domain="[('state','not in',['check_received'])]" name="open_expenses" string="Open Expenses" help="Approved expenses with check received by employees"/>
+                    <separator/>
+                    <filter domain="[('state','=','draft')]" string="New Expenses" help="New expenses"/>
+                    <filter domain="[('state','=','confirm')]" string="Waiting Approval" help="Submited expenses"/>
+                    <filter domain="[('state','=','accepted')]" string="Approved Expenses" help="Approved expenses"/>
+                    <filter domain="[('state','=','check_given')]" string="Check Given" help="Approved expenses with check given to employees"/>
+                    <filter domain="[('state','=','check_received')]" string="Check Received" help="Approved expenses with check received by employees"/>
+                    <separator/>
+                    <filter domain="[('user_id', '=', uid)]" string="My Expenses"/>
+                    <field name="employee_id"/>
+                    <field name="department_id" string="Department" context="{'invisible_department': False}"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Expense Tree View -->
+        <record id="zeeva_hr_expense_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.hr.expense.tree.view</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref=""/>
+            <field name="priority" eval="15"/>
+            <field name="arch" type="xml">
+                <tree string="Expenses Sheet" colors="blue:state=='confirm'; green:state=='accepted'; red:state=='check_given'; grey:state=='check_received'">
+                    <field name="employee_id"/>
+                    <field name="department_id" invisible="1"/>
+                    <field name="date"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="amount" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+    <!-- ZEEVA Expense Form View -->
+        <record id="zeeva_hr_expense_form_view" model="ir.ui.view">
+            <field name="name">zeeva.hr.expense.form.view</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref=""/>
+            <field name="priority" eval="16"/>
+            <field name="arch" type="xml">
+                <form string="Expenses Sheet" version="7.0">
+                    <header>
+                        <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
+                        <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                        <button name="check_given" states="accepted" string="Check given" type="workflow" groups="base.group_hr_manager" class="oe_highlight"/>
+                        <button name="check_received" states="check_given" string="Check received" type="workflow" groups="" class="oe_highlight"/>
+                        <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_manager" />
+                        <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_manager" />
+                        <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice"/>
+                        <button name="action_view_receipt" states="done" string="Open Accounting Entries" type="object" groups="account.group_account_invoice"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,check_given,check_received"
+                            statusbar_colors='{"confirm":"blue","cancelled":"red","check_received":"green"}'/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" placeholder="Expense sheet name..."/></h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                                <field name="department_id"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="date" string="Date of Creation"/>
+                                <field name="user_valid" attrs="{'invisible': [('state','=','draft')]}" readonly="1"/>
+                                <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"
+                                    options="{'no_open':True}"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Description">
+                                <field name="line_ids" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account')}">
+                                    <form string="Expense Lines" version="7.0">
+                                        <group>
+                                            <group>
+                                                <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                                <field name="name"/>
+                                                <field name="ref"/>
+                                                <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                            </group>
+                                            <group>
+                                                <field name="unit_amount"/>
+                                                <label for="unit_quantity"/>
+                                                <div>
+                                                    <field name="unit_quantity" class="oe_inline"/> 
+                                                    <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
+                                                </div>
+                                                <field name="date_value" on_change="onchange_date(date_value)"/>
+                                            </group>
+                                        </group>
+                                    </form>
+                                    <tree string="Expense Lines" editable="bottom">
+                                        <field name="sequence" invisible="1"/>
+                                        <field name="date_value" string="Date" on_change="onchange_date(date_value)"/>
+                                        <field name="product_id" widget="selection" on_change="onchange_product_id(product_id, context)"
+                                            options="{'no_open': True}" required="1"/>
+                                        <field name="name" string="Description"/>
+<!--                                         <field name="ref"/> -->
+                                        <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        <field name="uom_id" invisible="1" string="UoM" on_change="onchange_uom(product_id, uom_id, context)" options="{'no_open':1}"/>
+                                        <field name="unit_amount"/>
+                                        <field name="unit_quantity" string="Qty"/>
+                                        <field name="total_amount" sum="Total"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <div>
+                                        <separator string="Notes"/>
+                                        <field name="note" placeholder="Free Notes"/>
+                                    </div>
+                                    <group class="oe_subtotal_footer oe_right">
+                                        <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Check status">
+                                <group>
+                                    <group>
+                                        <label for="user_given"/>
+                                        <div>
+                                            <field name="user_given" class="oe_inline" readonly="1"/> On 
+                                            <field name="date_given" class="oe_inline" readonly="1"/>
+                                        </div>
+                                        <label for="user_received"/>
+                                        <div>
+                                            <field name="user_received" class="oe_inline" readonly="1"/> On 
+                                            <field name="date_received" class="oe_inline" readonly="1"/>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Accounting" groups="account.group_account_user">
+                                <group>
+                                    <group string="Accounting Data">
+                                        <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
+                                        <field name="account_move_id"/>
+                                        <field name="voucher_id" invisible="1" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+    
+    <!--=======================================================================================
+    HR - EXPENSES WORKFLOW
+    =======================================================================================-->
+        <record id="act_check_given" model="workflow.activity">
+            <field name="wkf_id" ref="hr_expense.wkf_expenses"/>
+            <field name="name">check.given</field>
+            <field name="kind">function</field>
+            <field name="action">expense_check_given()</field>
+        </record>
+        
+        <record id="act_check_received" model="workflow.activity">
+            <field name="wkf_id" ref="hr_expense.wkf_expenses"/>
+            <field name="name">check.received</field>
+            <field name="kind">function</field>
+            <field name="action">expense_check_received()</field>
+        </record>
+        
+        <record id="t11" model="workflow.transition">
+            <field name="act_from" ref="hr_expense.act_accepted"/>
+            <field name="act_to" ref="act_check_given"/>
+            <field name="signal">check_given</field>
+            <field name="group_id" ref="base.group_hr_user"/>
+        </record>
+        
+        <record id="t12" model="workflow.transition">
+            <field name="act_from" ref="act_check_given"/>
+            <field name="act_to" ref="act_check_received"/>
+            <field name="signal">check_received</field>
+            <field name="group_id" ref="base.group_user"/>
+        </record>
+    <!--=======================================================================================
+    HR - EXPENSES ACTIONS
+    =======================================================================================-->
+    
+        <record id="hr_expense.expense_all" model="ir.actions.act_window">
+            <field name="name">Expenses</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="search_view_id" ref="zeeva_hr_expense_search_view"/>
+            <field name="view_id" ref=""/>
+            <field name="context">{'search_default_open_expenses':1}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register new expenses. 
+              </p><p>
+                OpenERP will ensure the whole process is followed; the expense
+                sheet is validated by manager(s), the employee is reimbursed
+                from his expenses, some expenses must be re-invoiced to the
+                customers.
+              </p>
+            </field>
+        </record>
+        <record id="zeeva_action_hr_expense_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr_expense.expense_all"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_hr_expense_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_hr_expense_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr_expense.expense_all"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_hr_expense_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+<!--    Expense Categories  -->
+        <record id="hr_expense.hr_expense_product" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{ "default_product_tmpl_id": 1,
+                                    "default_hr_expense_ok": 1,
+                                    "default_sale_ok": 0,
+                                    "default_purchase_ok": 0}</field>
+            <field name="domain">[('hr_expense_ok','=',True),('product_tmpl_id.type','=','service')]</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new expense category. 
+             </p>
+            </field>
+        </record>
+        <record id="zeeva_action_product_finished_service_kanban_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr_expense.hr_expense_product"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="product.product_kanban_view"/>
+            <field name="view_mode">kanban</field>
+        </record>
+        <record id="zeeva_action_product_finished_service_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr_expense.hr_expense_product"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="product.product_product_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_product_finished_service_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="hr_expense.hr_expense_product"/>
+            <field name="sequence" eval="3" />
+            <field name="view_id" ref="zeeva_product_finished_service_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    </data>
+</openerp>

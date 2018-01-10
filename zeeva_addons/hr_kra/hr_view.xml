@@ -1,0 +1,1494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<openerp>
+    <data>
+
+        
+        
+        <record id="view_balance_scorecard_form" model="ir.ui.view">
+        	<field name="name">Performance Management</field>
+      		<field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <form string="Performance Management" version="7.0">
+                <header>
+	            	<!-- <button name="submit_for_self_rate" string="Submit" groups="base.group_hr_user" attrs="{'invisible':[('state','in',('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Reviewed By Manager','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" states="" type="object" class="oe_highlight"/> -->
+	            	<button name="submit" string="Submit Self Rating" states="Waiting for Self Rate" type="object" class="oe_highlight" groups="base.group_user"/>
+	            	<button name="submit_kra" string="Submit To Manager" states="Self Rating Given" type="object" class="oe_highlight" groups="base.group_user"/>
+	            	<button name="submit_mgmt" states="Waiting Manager Approval" string="Submit To Mgmt" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+	            	<button name="approve_kra_mgmt" states="Submitted To Mgmt" string="Approve" type="object" groups="base.group_hr_manager,base.group_erp_manager" class="oe_highlight"/>
+                    <button name="take_appraisal_meeting" string="Schedule Appraisal Meeting" type="object" states="Submitted To Manager" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+                    <button name="give_app_rating" string="Give Appraiser Ratings" states="Appraisal Meeting" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+	            	<button name="publish_kra" states="Reviewed By Mgmt" string="Publish" type="object" groups="base.group_hr_manager,base.group_erp_manager" class="oe_highlight"/>
+	            	<button name="refuse_request" states="Waiting Manager Approval,Submitted To Mgmt,Reviewed By Mgmt,Publish,Appraisal Meeting" string="Refuse" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+	            	<button string="Set To Draft" name="set_draft" type="object" states="Refused,Waiting for Self Rate,Self Rating Given,Waiting Manager Approval,Submitted To Mgmt,Reviewed By Mgmt,Publish,Appraisal Meeting" groups="base.group_hr_manager,base.group_erp_manager" class="oe_left"/>
+	            	<button string="Print/Export To Excel" name="export_excel" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="export_oe"/>
+	            	<field name="state" widget="statusbar" statusbar_visible="'New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new,base.group_user"/>
+	            </header>
+                <sheet class="oe_form_sheet_width_wider">
+                <group>
+                	<group>
+                		<field name="name" placeholder="Add Description"/>
+	                	<field name="emp_name" on_change="onchange_employee(emp_name)"/>
+	                	<field name="job" />
+	                	<field name="join_date"/>
+	                	<field name="appraisal_year" widget="selection"/>
+                	</group>
+                	<group>
+                		<field name="emp_code" />      	
+	                	<field name="department" />
+	                	<field name="manager_id" />
+	                	<field name="location" />
+                        <field name="date_kra"/>
+	                	<field name="to_be_promoted" attrs="{'invisible':[('state','in',('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Appraisal Meeting','Refused'))]}"/>
+                        <field name="specify_reason_for_refusal" attrs="{'invisible':[('state','in',('New','Waiting for Self Rate','Self Rating Given'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="meeting_ok" invisible="1"/>
+                	</group>
+                    <group>                  
+                    <group colspan="1" col="1"  >                    
+                        <group>                           
+                            <field name="reason_for_refusal" attrs="{'invisible':[('specify_reason_for_refusal','!=',True)],'readonly':[('state','in',('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Refused','Publish'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        </group>
+                    </group>                        
+                    </group>
+                	<group>
+                		<field name="export_file" filename="file_name" attrs="{'invisible':[('state','in',('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Refused'))]}"/>
+                    	<field name="file_url" widget="url" invisible="1"/>
+                    	<field name="file_name" invisible="1"/>
+                	</group>
+                </group>
+        		<group string="A. Financial" colspan="1" col="1">
+            	</group>
+                	<field name="financial_kra_id" >
+            		<tree string="KRA-Finance" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1" sum="Total"/>
+                		<field name="self_rating"  attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_self_rating(self_rating)" sum="Total" required="1"/>
+                		<field name="app_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_app_rating(app_rating)" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                		<field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total"/>
+                		<field name="weighted_scoref" sum="Total" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/>		                		
+                     </tree>                        
+                    </field>
+        		<group string="B. Customer" colspan="1" col="1">
+            	</group>
+                	<field name="customer_kra_id" >
+            		<tree string="KRA-Customer" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                              
+                		<field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_self_rating(self_rating)" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                		<field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total"/>
+                		<field name="weighted_scorec" sum="Total" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/> 		                		
+                     </tree>                        
+                    </field>
+                  	<group string="C. Internal Process" colspan="1" col="1">
+            		</group>
+                	<field name="internal_kra_id" >
+            		<tree string="KRA-Internal Process" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                		<field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total"/>
+                		<field name="weighted_scorei" sum="Total" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/> 		                		
+                     </tree>                        
+                    </field>
+                    <group string="D. Learning &amp; Growth" colspan="1" col="1">
+            		</group>
+                	<field name="learning_kra_id" >
+            		<tree string="KRA-Learning &amp; Growth" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                		<field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total"/>
+                		<field name="weighted_scorel" sum="Total" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/> 		                		
+                     </tree>                        
+                    </field>		  
+                  	<group>
+                  	<group class="oe_subtotal_footer oe_right">
+                        <field name="total_weightage" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                        <field name="total_score" widget="monetary" class="oe_subtotal_footer_separator" attrs="{'invisible':[('state','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Waiting Manager Approval','Refused'))]}"/>        	
+                                </group>	</group>
+                </sheet>
+                <xpath expr="//form[@string='Performance Management']/sheet" position="after" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new">
+						<div class="oe_chatter" >
+	                    		<field name="message_follower_ids" widget="mail_followers" />
+	                    		<field name="message_ids" widget="mail_thread" />
+	                	</div>
+				</xpath> 
+                         
+                </form>
+                
+            </field>
+        </record>
+        
+        <record id="view_performance_review_form" model="ir.ui.view">
+        	<field name="name">Performance Review</field>
+      		<field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <form string="Performance Review" version="7.0">
+                <header>
+	            	<!-- <button name="submit_for_self_rate" string="Submit" groups="base.group_hr_user,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" attrs="{'invisible':[('state','in',('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Reviewed By Manager','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" states="" type="object" class="oe_highlight"/> -->
+	            	<button name="submit" string="Submit Self Rating" states="Waiting for Self Rate" type="object" class="oe_highlight" groups="base.group_user"/>
+	            	<button name="submit_kra" string="Submit To Manager" states="Self Rating Given" type="object" class="oe_highlight" groups="base.group_user"/>
+	            	<button name="submit_mgmt" states="Waiting Manager Approval" string="Submit To Mgmt" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+	            	
+	            	<button name="refuse_request" states="Submitted To Manager,Waiting Manager Approval,Submitted To Mgmt,Reviewed By Mgmt,Publish" string="Refuse" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+	            	<button string="Set To Draft" name="set_draft" type="object" states="Refused,Waiting for Self Rate,Self Rating Given,Waiting Manager Approval,Submitted To Mgmt,Submitted To Manager,Reviewed By Mgmt,Publish" groups="base.group_hr_manager,base.group_erp_manager" class="oe_left"/>
+	            	<field name="state" widget="statusbar" statusbar_visible="'New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'"/>	
+	            </header>
+                <sheet>
+                <group>
+                	<group>
+                		<field name="name" placeholder="Add Description"/>
+                		<field name="date_kra"/>
+	                	<field name="emp_name" on_change="onchange_employee(emp_name)"/>
+	                	<field name="job" />
+	                	<field name="join_date"/>
+                	</group>
+                	<group>
+                		<field name="company_id" invisible="1"/>
+                		<field name="emp_code" />      	
+	                	<field name="department" />
+	                	<field name="manager_id" />
+	                	<field name="location" />
+	                	<field name="appraisal_year" widget="selection"/>
+                        <field name="specify_reason_for_refusal" attrs="{'invisible':[('state','in',('New','Waiting for Self Rate','Self Rating Given'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                	</group>
+                </group>
+                <group>                  
+                    <group colspan="1" col="1"  >                    
+                        <group>                           
+                            <field name="reason_for_refusal" attrs="{'invisible':[('specify_reason_for_refusal','!=',True)],'readonly':[('state','in',('New','Waiting for Self Rate','Self Rating Given','Refused','Publish'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        </group>
+                    </group>                        
+                </group>
+        		<group string="A. Financial" colspan="1" col="1">
+            	</group>
+                	<field name="financial_kra_id" >
+            		<tree string="KRA-Finance" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                             
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1" />
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>	                
+                        <field name="statef" invisible="1"/>		
+                     </tree>                        
+                    </field>
+                  
+        		<group string="B. Customer" colspan="1" col="1">
+            	</group>
+                	<field name="customer_kra_id" >
+            		<tree string="KRA-Customer" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/> 		                  	
+                     </tree>                        
+                    </field>
+                  	<group string="C. Internal Process" colspan="1" col="1">
+            		</group>
+                	<field name="internal_kra_id" >
+            		<tree string="KRA-Internal Process" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                            
+                		<field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <field name="statef" invisible="1"/> 	                		
+                     </tree>                        
+                    </field>
+                    <group string="D. Learning &amp; Growth" colspan="1" col="1">
+            		</group>
+                	<field name="learning_kra_id" >
+            		<tree string="KRA-Learning &amp; Growth" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                              
+                		<field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                		<field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" sum="Total" required="1"/>
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" />
+                        <field name="statef" invisible="1"/>                 		
+                     </tree>                        
+                    </field>	
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_self_rating" string="Total Self Rating" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                        <field name="total_app_rating" string="Total Appraiser Rating" widget="monetary" class="oe_subtotal_footer_separator" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>          
+                                </group>    </group>	  
+                </sheet>
+                <xpath expr="//form[@string='Performance Management']/sheet" position="after" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new">
+						<div class="oe_chatter">
+	                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    		<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+				</xpath>
+
+                </form>
+                
+            </field>
+        </record>
+        
+        <record id="view_kra_form" model="ir.ui.view">
+        	<field name="name">KRA</field>
+      		<field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <form string="KRA" version="7.0">
+		        <header>
+	            	<button name="submit_for_self_rate" string="Submit"  attrs="{'invisible':[('state','in',('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Manager','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" states="" type="object" groups="base.group_hr_manager" class="oe_highlight"/>
+                    <!-- <button name="reminder_give_self_rating" type="object" string="Reminder"/>
+                    <button name="reminder_give_appraiser_rating" type="object" string="Reminder"/> -->
+	            	<field name="state" widget="statusbar" statusbar_visible="'New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'"/>
+	            	
+	            </header>
+                <sheet>
+                <group>
+                	<group>
+                		<field name="name" placeholder="Add Description" required="1"/>
+	                	<field name="emp_name" on_change="onchange_employee(emp_name)"/>
+	                	<field name="job" />
+	                	<field name="join_date"/>
+	                	<field name="appraisal_year" widget="selection"/>
+                        <field name="current_user" invisible="1"/>
+                	</group>
+                	<group>
+                		<field name="emp_code" />      	
+	                	<field name="department" />
+	                	<field name="manager_id" />
+	                	<field name="location" />
+                        <field name="date_kra"/>
+                        <!-- <field name="date_after_7Days"/> -->
+                	</group>
+                </group>
+        		<group string="A. Financial" colspan="1" col="1">
+            	</group>
+                	<field name="financial_kra_id" >
+            		<tree string="KRA-Finance" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="type" invisible="1"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                    
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>	
+                        <field name="statef" invisible="1"/> 
+                     </tree>                        
+                    </field>
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                                    <field name="weightage_financial" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                </group>    </group>
+        		<group string="B. Customer" colspan="1" col="1">
+            	</group>
+                	<field name="customer_kra_id" >
+            		<tree string="KRA-Customer" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="type" invisible="1"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>	
+                        <field name="statef" invisible="1"/> 
+                     </tree>                        
+                    </field>
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                                    <field name="weightage_customer" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                </group>    </group>
+                  	<group string="C. Internal Process" colspan="1" col="1">
+            		</group>
+                	<field name="internal_kra_id" >
+            		<tree string="KRA-Internal Process" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="type" invisible="1"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="statef" invisible="1"/> 
+                     </tree>                        
+                    </field>
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                                    <field name="weightage_internal" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                </group>    </group>
+                    <group string="D. Learning &amp; Growth" colspan="1" col="1">
+            		</group>
+                	<field name="learning_kra_id" >
+            		<tree string="KRA-Learning &amp; Growth" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="type" invisible="1"/>
+                		<field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                             
+                		<field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                		<field name="statef" invisible="1"/> 
+                     </tree>                        
+                    </field>	
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                                    <field name="weightage_learning" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                    <br></br>
+                                    <br></br>
+                                    <field name="total_weightage" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                </group>    </group>	  
+                </sheet>
+                <xpath expr="//form[@string='KRA Request']/sheet" position="after" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new">
+						<div class="oe_chatter">
+	                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    		<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+				</xpath>
+                </form>
+                
+            </field>
+        </record>
+        
+
+        <record id="view_published_balance_scorecard_form" model="ir.ui.view">
+            <field name="name">Published KRA Records</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <form string="Performance Management" version="7.0">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="'New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+			<button name="submit_mgmt" states="Waiting Manager Approval" string="Submit To Mgmt" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+                    <button name="approve_kra_mgmt" states="Submitted To Mgmt" string="Approve" type="object" groups="base.group_hr_manager,base.group_erp_manager" class="oe_highlight"/>
+                    <button name="take_appraisal_meeting" string="Schedule Appraisal Meeting" type="object" states="Submitted To Manager" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+                    <button name="give_app_rating" string="Give Appraiser Ratings" states="Appraisal Meeting" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+                    <button name="publish_kra" states="Reviewed By Mgmt" string="Publish" type="object" groups="base.group_hr_manager,base.group_erp_manager" class="oe_highlight"/>
+                    <button name="refuse_request" states="Waiting Manager Approval,Submitted To Mgmt,Reviewed By Mgmt,Publish,Appraisal Meeting" string="Refuse" type="object" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" class="oe_highlight"/>
+                    <button string="Print/Export To Excel" name="export_excel" type="object" groups="base.group_user" class="export_oe"/>
+                </header>
+                <sheet class="oe_form_sheet_width_wider">
+                <group>
+                    <group>
+                        <field name="name" placeholder="Add Description"/>
+                        <field name="emp_name" on_change="onchange_employee(emp_name)"/>
+                        <field name="job" />
+                        <field name="join_date"/>
+                        <field name="appraisal_year" widget="selection"/>
+                    </group>
+                    <group>
+                        <field name="emp_code" />       
+                        <field name="department" />
+                        <field name="manager_id" />
+                        <field name="location" />
+                        <field name="to_be_promoted" attrs="{'invisible':[('state','in',('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Refused'))]}"/>
+                        <!-- <field name="specify_reason_for_refusal" attrs="{'invisible':[('state','in',('New','Waiting for Self Rate','Self Rating Given'))]}" groups="base.group_hr_user,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/> -->
+                    </group>
+                    <group>
+                        <field name="export_file" filename="file_name" attrs="{'invisible':[('state','in',('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Refused'))]}"/>
+                        <field name="file_url" widget="url" invisible="1"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <!-- <group>                  
+                    <group colspan="1" col="1"  >                    
+                        <group>                           
+                            <field name="reason_for_refusal" attrs="{'invisible':[('specify_reason_for_refusal','!=',True)],'readonly':[('state','in',('New','Waiting for Self Rate','Self Rating Given','Refused','Publish'))]}" groups="base.group_hr_user,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        </group>
+                    </group>                        
+                    </group> -->
+                    
+                </group>
+                <group string="A. Financial" colspan="1" col="1">
+                </group>
+                    <field name="financial_kra_id" >
+                    <tree string="KRA-Finance" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1" sum="Total"/>
+                        <field name="self_rating"  attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_self_rating(self_rating)" sum="Total" required="1"/>
+                        <field name="app_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_app_rating(app_rating)"  sum="Total" required="1"/>
+                        <field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)"  sum="Total"/>
+                        <field name="weighted_scoref" sum="Total"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="statef" invisible="1"/>                                
+                     </tree>                        
+                    </field>
+                <group string="B. Customer" colspan="1" col="1">
+                </group>
+                    <field name="customer_kra_id" >
+                    <tree string="KRA-Customer" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>                              
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="self_rating" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_self_rating(self_rating)" sum="Total" required="1"/>
+                        <field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"  sum="Total" required="1"/>
+                        <field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)" sum="Total"/>
+                        <field name="weighted_scorec" sum="Total"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="statef" invisible="1"/>                                
+                     </tree>                        
+                    </field>
+                    <group string="C. Internal Process" colspan="1" col="1">
+                    </group>
+                    <field name="internal_kra_id" >
+                    <tree string="KRA-Internal Process" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"  sum="Total" required="1"/>
+                        <field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Reviewed By Mgmt','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)"  sum="Total"/>
+                        <field name="weighted_scorei" sum="Total"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="statef" invisible="1"/>                                
+                     </tree>                        
+                    </field>
+                    <group string="D. Learning &amp; Growth" colspan="1" col="1">
+                    </group>
+                    <field name="learning_kra_id" >
+                    <tree string="KRA-Learning &amp; Growth" editable="bottom" >
+                        <field name="sr_no" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}"/>
+                        <field name="KRA" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="performance_measure" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" required="1"/>
+                        <field name="weightage" attrs="{'readonly':[('statef','in', ('Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="self_rating" on_change="onchange_self_rating(self_rating)" attrs="{'readonly':[('statef','in', ('New','Self Rating Given','Waiting Manager Approval','Submitted To Mgmt','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="app_rating" on_change="onchange_app_rating(app_rating)" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Publish','Refused'))]}" sum="Total" required="1"/>
+                        <field name="mgmt_rating" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'))]}" on_change="onchange_mgmt_rating(mgmt_rating)"  sum="Total"/>
+                        <field name="weighted_scorel" sum="Total"/>
+                        <field name="action_plan" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="comments" attrs="{'readonly':[('statef','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Reviewed By Mgmt','Publish','Refused'))]}" />
+                        <field name="statef" invisible="1"/>                                
+                     </tree>                        
+                    </field>          
+                    <group>
+                    <group class="oe_subtotal_footer oe_right">
+                        <field name="total_weightage" widget="monetary" class="oe_subtotal_footer_separator"/>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                                    <br></br>
+                        <field name="total_score" widget="monetary" class="oe_subtotal_footer_separator" attrs="{'invisible':[('state','in', ('New','Waiting for Self Rate','Submitted To Manager','Appraisal Meeting','Self Rating Given','Waiting Manager Approval','Refused'))]}"/>          
+                                </group>    </group>
+                </sheet>                        
+                </form>
+                
+            </field>
+        </record>
+
+
+        <record id="view_add_kra" model="ir.ui.view">
+        	<field name="name">KRA Request Form</field>
+      		<field name="model">request.new.kra</field>
+            <field name="arch" type="xml">
+                <form string="KRA Request" version="7.0">
+	                <header>
+	                	<button name="submit_request" states="New,Escalated" string="Submit" type="object" class="oe_highlight"/>
+                        <button name="escalate" string="Escalate" type="object" class="oe_highlight" attrs="{'invisible':[('partial_approval','=',False)]}" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+	                	<button name="approve_request" states="Submitted to Mgmt" attrs="{'invisible':['|',('partial_approval','=',True)]}"  string="Approve" type="object" class="oe_highlight" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <button name="refuse_all" states="Submitted to Mgmt" attrs="{'invisible':['|',('partial_approval','=',True)]}"  string="Refuse All" type="object" class="oe_highlight" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+	                	<button name="refuse_request" states="Submitted to Mgmt,Approved" string="Refuse" type="object" class="oe_highlight" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+	                	<button string="Set To Draft" name="set_draft" type="object" states="Refused" class="oe_left" groups="base.group_erp_manager,base.group_hr_manager"/>
+	                	<field name="state" widget="statusbar" statusbar_visible="'New','Submitted to Mgmt','Approved','Refused'"/>
+	                </header>
+                <sheet class="oe_form_sheet_width_wider">
+                <group>
+                	<group>
+                		<field name="name" invisible="1"/>
+	                	<field name="emp_name" on_change="onchange_employee(emp_name)"/>
+	                	<field name="emp_code" />
+	                	<field name="manager_id" />
+	                	<field name="join_date"/>
+                        <field name="partial_approval" />
+                	</group>
+                	<group>                	
+	                	<field name="job" />
+	                	<field name="department" />
+	                	<field name="appraisal_year" widget="selection" create="false"/>
+	                	<field name="appraisal_cycle" />
+                        <field name="is_escalated" invisible="1"/>
+                	</group>
+                </group>
+                <group string="Change Existing KRA Point" colspan="1" col="1">
+            	</group>
+                	<field name="change_kra_points_id" >
+            		<tree string="Change Existing KRA" editable="bottom" >
+                        <field name="sr_no" string="Point No"/>
+                        <field name="type_of_kra" />
+                		<field name="KRA_financial" on_change="onchange_kra_financial(KRA_financial)" attrs="{'invisible':[('type_of_kra','in',('Customer','Learning and Growth','Internal Process'))]}" options="{'limit': 10, 'create': False, 'create_edit': False ,'no_open': True }" />
+                		<field name="KRA_customer" on_change="onchange_kra_customer(KRA_customer)" attrs="{'invisible':[('type_of_kra','in',('Financial','Learning and Growth','Internal Process'))]}"/>     
+                		<field name="KRA_internal"  on_change="onchange_kra_internal(KRA_internal)" attrs="{'invisible':[('type_of_kra','in',('Customer','Learning and Growth','Financial'))]}"/> 
+                		<field name="KRA_learning" on_change="onchange_kra_learning(KRA_learning)" attrs="{'invisible':[('type_of_kra','in',('Customer','Financial','Internal Process'))]}"/>                                 
+                		<field name="performance_measure"/>
+                		<field name="weightage"/>    
+                		<field name="action"/>
+                		<field name="changed_weightage" attrs="{'invisible':[('action','=','Replace')]}" />  
+                        <field name="state" invisible="1"/>
+                          		
+                     </tree>                        
+                    </field>
+                <group string="Add New KRA Point" colspan="1" col="1">
+            	</group>
+                	<field name="kra_points_id" on_change="onchange_kra_points_id(kra_points_id)">
+            		<tree string="Add KRA" editable="bottom" >
+                        <field name="type_of_kra" attrs="{'readonly':['|',('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused']),('yes_no','=','Refused')]}"/>
+                        <field name="points_id" invisible="1"/>
+                		<field name="KRA" attrs="{'readonly':['|',('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused']),('yes_no','=','Refused')]}"/>
+                        <field name="performance_measure" attrs="{'readonly':['|',('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused']),('yes_no','=','Refused')]}"/>
+                		<field name="weightage" attrs="{'readonly':['|',('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused']),('yes_no','=','Refused')]}"/>
+                        <field name="sr_no" attrs="{'readonly':['|',('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused']),('yes_no','=','Refused')]}"/>
+                        <field name="state" invisible="1"/>
+                        <field name="character" invisible="1"/>
+                        <field name="yes_no" attrs="{'readonly':['|',('state','in', ('New','Approved','Refused'))]}"/>   
+
+                     </tree>                        
+                    </field>
+                
+                </sheet>
+                <xpath expr="//form[@string='KRA Request']/sheet" position="after">
+						<div class="oe_chatter">
+	                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    		<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+				</xpath>
+                </form>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_kra_interview_form">
+            <field name="name">KRA Interview Requests</field>
+            <field name="model">kra.interview</field>
+            <field name="arch" type="xml">
+                <form string="Interview Appraisal" version="7.0">
+                    <header>
+                        <button string="Cancel" name="survey_req_cancel" type="object" states="submitted to reporting manager,waiting_answer,done" class="oe_left" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <button string="Set To Draft" name="survey_req_draft" type="object" states="cancel" class="oe_left" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new" />
+                        <button string="Submit" name="survey_req_waiting_answer" type="object" states="draft" class="oe_highlight" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <!--button string="Send Reminder" name="reminder_review_interview" type="object" class="oe_left"/-->
+                        <button string="Approve" name="survey_req_done" type="object" states="submitted to reporting manager" groups="base.group_erp_manager,base.group_hr_manager,zeeva_hr.group_reporting_manager_new"/>
+                        <button string="Accept Request" name="survey_req_accepted" type="object" states="waiting_answer" groups="base.group_user" />
+                        <field name="state" widget="statusbar" statusbar_visible="draft,waiting_answer,done,submitted to reporting manager"/>
+                        <!-- <button string="Reminder" name="reminder_review_interview" type="object"/> -->
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                            	<field name="name"/>
+                                <field name="date_review" invisible="1"/>
+                            	<field name="company_id" invisible="1"/>
+                                <field name="date_time_field" invisible="1"/>
+                                <field name="user_to_review_id" on_change="onchange_employee(user_to_review_id)"/>
+                            </group>
+                            <group>
+                            	<field name="manager_id"/>
+                            	<field name="date_interview"/>
+                                <field name="appraisal_year" widget="selection"/>                           
+                            </group>
+                        </group>
+                        <group colspan="2" cols="2">
+	                <group>
+	                <div>
+	                    <separator string="Remarks/Comments"/>
+	                    <field name="note" placeholder="Please Add Comments"/>
+	                </div>               
+	        		</group>
+                 </group>
+                    </sheet>
+                    <xpath expr="//form[@string='KRA Request']/sheet" position="after">
+						<div class="oe_chatter">
+	                    		<field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+	                    		<field name="message_ids" widget="mail_thread"/>
+	                	</div>
+				</xpath>
+                </form>
+            </field>
+        </record>
+        
+    
+    <record id="view_hr_kra_filter" model="ir.ui.view">
+            <field name="name">kra.filter</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <search string="Search KRA">
+                    <separator/>
+                    <filter string="My Department KRA" icon="terp-personal+" help="My Department KRA" domain="[('department.manager_id','=',uid)]"/>
+                    <field name="emp_name"/>
+                    <field name="department"/>
+                    <group expand="0" string="Group By...">
+                        <!-- <filter name="group_name" string="Description" domain="[]" context="{'group_by':'name'}"/>
+                        <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'manager_id'}"/> -->
+                        <filter name="group_employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'emp_name'}"/>
+                        
+                        <filter name="group_department" string="Department" icon="terp-personal" domain="[]" context="{'group_by':'department'}"/>
+                        <!-- <filter string="Department" icon="terp-personal+" name="department" domain="[]" context="{'group_by':'department'}"/> -->
+                        <!-- <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/> -->
+                    </group>
+                </search>
+            </field>
+        </record>
+
+    <record id="view_kra_interview_form_readonly_emp" model="ir.ui.view">
+            <field name="name">kra.interview.form.readonly</field>
+            <field name="model">kra.interview</field>
+            <field name="inherit_id" ref="view_kra_interview_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('new_group_employee_view')])]"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>
+                <field name="user_to_review_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>
+                <field name="manager_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>
+                <field name="date_interview" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>
+                <field name="appraisal_year" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>
+                 <field name="note" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+                </field>  
+            </field>
+    </record>
+
+    <record id="view_kra_interview_form_readonly" model="ir.ui.view">
+    		<field name="name">kra.interview.form.readonly</field>
+    		<field name="model">kra.interview</field>
+    		<field name="inherit_id" ref="view_kra_interview_form"/>
+    		<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])],[(6, 0, [ref('base.group_hr_manager')])],[(6, 0, [ref('zeeva_hr.group_reporting_manager_new')])]"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+    		<field name="arch" type="xml">
+        		<field name="name" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+        		</field>
+        		<field name="user_to_review_id" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+        		</field>
+        		<field name="manager_id" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['waiting_answer','done','cancel','submitted to reporting manager'])]}</attribute>
+        		</field>
+        		  		
+    		</field>
+	</record>
+
+	<record id="view_request_new_kra_form_readonly" model="ir.ui.view">
+    		<field name="name">request.new.kra.form.readonly</field>
+    		<field name="model">request.new.kra</field>
+    		<field name="inherit_id" ref="view_add_kra"/>
+    		<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])],[(6, 0, [ref('base.group_hr_manager')])],[(6, 0, [ref('zeeva_hr.group_reporting_manager_new')])]"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+    		<field name="arch" type="xml">
+        		
+        		<field name="change_kra_points_id" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Escalated','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="kra_points_id" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Approved','Refused'])]}</attribute>
+        		</field>
+        		<field name="emp_name" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="emp_code" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="manager_id" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>  	
+        		<field name="join_date" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="job" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="department" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="appraisal_year" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        		<field name="appraisal_cycle" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Submitted to Mgmt','Approved','To be Refused','Refused'])]}</attribute>
+        		</field>
+        			
+    		</field>
+	</record>
+	
+    
+
+    <record id="view_kra_form_readonly" model="ir.ui.view">
+            <field name="name">kra.form.readonly</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="inherit_id" ref="view_kra_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])],[(6, 0, [ref('base.group_hr_manager')])],[(6, 0, [ref('zeeva_hr.group_reporting_manager_new')])]"/> 
+            <field name="arch" type="xml">
+                <field name="financial_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="customer_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="internal_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="learning_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field> 
+                <field name="name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Waiting Manager Approval','Submitted To Manager','Appraisal Meeting','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_code" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="manager_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>    
+                <field name="join_date" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="job" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="location" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="department" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="appraisal_year" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="date_kra" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+            </field>
+    </record>
+
+    <record id="view_balance_scorecard_form_readonly" model="ir.ui.view">
+            <field name="name">bsc.form.readonly</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="inherit_id" ref="view_balance_scorecard_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])],[(6, 0, [ref('base.group_hr_manager')])],[(6, 0, [ref('zeeva_hr.group_reporting_manager_new')])]"/> 
+            <field name="arch" type="xml">
+                <field name="financial_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="customer_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="internal_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="learning_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field> 
+                <field name="name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_code" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="manager_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>    
+                <field name="join_date" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="job" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="location" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="department" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="appraisal_year" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>                
+                </field>
+                <field name="date_kra" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+            </field>
+    </record>
+
+    <record id="view_published_bsc_readonly" model="ir.ui.view">
+            <field name="name">bsc.form.readonly</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="inherit_id" ref="view_published_balance_scorecard_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/> 
+            <field name="arch" type="xml">
+            
+                <field name="name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_code" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="manager_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>    
+                <field name="join_date" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="job" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="location" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="department" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="appraisal_year" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>   
+                </field>
+                <field name="to_be_promoted" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','=','Publish')]}</attribute>
+                </field>
+            </field>
+    </record>
+
+    <record id="view_performance_review_readonly" model="ir.ui.view">
+            <field name="name">performance.review.form.readonly</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="inherit_id" ref="view_performance_review_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])],[(6, 0, [ref('base.group_hr_manager')])],[(6, 0, [ref('zeeva_hr.group_reporting_manager_new')])]"/> 
+            <field name="arch" type="xml">
+                <field name="financial_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="customer_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="internal_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="learning_kra_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Submitted To Manager','Appraisal Meeting','Reviewed By Mgmt','Submitted To Manager','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field> 
+                <field name="name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="date_kra" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_name" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="emp_code" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="manager_id" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>    
+                <field name="join_date" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="job" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="location" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="department" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="appraisal_year" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+                <field name="date_kra" position="attributes">
+                        <attribute name="attrs">{'readonly':[('state','in',['Waiting for Self Rate','Self Rating Given','Submitted To Manager','Appraisal Meeting','Waiting Manager Approval','Submitted To Mgmt','Reviewed By Mgmt','Appraisal Meeting','Publish','Refused'])]}</attribute>
+                </field>
+            </field>
+    </record>
+
+
+	<!-- Export TAble Path Config -->
+        <record id="view_export_table_config_form" model="ir.ui.view">
+            <field name="name">export.table.config.form</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <form string="Export File Path" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="path"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_export_table_config_tree" model="ir.ui.view">
+            <field name="name">export.table.config.tree</field>
+            <field name="model">export.table.config</field>
+            <field name="arch" type="xml">
+                <tree string="Export File Path">
+                    <field name="path"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_export_table_config_data" model="ir.actions.act_window">
+            <field name="name">Export File Path</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">export.table.config</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_export_table_config_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Create Button to create Export File Path.
+                </p>
+            </field>
+        </record>
+
+    
+
+	<record id="kra_analysis_tree_view" model="ir.ui.view">
+            <field name="name">KRA Analysis Tree</field>
+            <field name="model">kra.report</field>
+            <field name="arch" type="xml">
+                <tree string="KRA Analysis Tree">
+                    <field name="total_score"/>
+                    <field name="count" />
+                    <field name="sections" />
+                    <field name="appraisalyr"/>
+                    
+              </tree>
+            </field>
+        </record>
+
+        <record id="kra_analysis_form_view" model="ir.ui.view">
+            <field name="name">KRA Analysis Form</field>
+            <field name="model">kra.report</field>
+            <field name="arch" type="xml">
+                <form string="Analysis" create="false" delete="false">
+                <group>
+                    <field name="total_score"/>
+                    <field name="count" />
+                    <field name="sections" />
+                    <field name="appraisalyr"/>
+                    
+                </group>
+                </form>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="view_kra_analysis_graph">
+            <field name="name">kra.reports.graph</field>
+            <field name="model">kra.report</field>
+            <field name="arch" type="xml">
+                <graph string="KRA Graph" type="bar">
+                    <field name="sections" type="row"/>
+                    <field name="total_score" type="col"/>
+                    <field name='count' type="measure" />                  
+                </graph>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_kra_analysis_yearwise_graph">
+            <field name="name">kra.reports.year.graph</field>
+            <field name="model">kra.report</field>
+            <field name="arch" type="xml">
+                <graph string="KRA Graph" type="bar">
+                    <field name="appraisalyr" type="row"/>
+                    <field name="total_score" type="col"/>               
+                </graph>
+            </field>
+        </record>
+
+        
+        <record id="kra_dashboard_search_view" model="ir.ui.view">
+            <field name="name">KRA Analysis Search</field>
+            <field name="model">kra.report</field>
+            <field name="arch" type="xml">
+                <search string="KRA Dashboard">
+                    <filter string="sections" name="sections" context="{'group_by':'sections'}"/>
+                </search>
+            </field>
+        </record>
+
+
+        <record id="action_kra_analysis_report" model="ir.actions.act_window">
+            <field name="name">KRA Analysis</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kra.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,graph,form</field>
+            <field name="view_id" ref="kra_analysis_form_view"/>
+            <field name="search_view_id" ref="kra_dashboard_search_view"/>
+        </record>
+
+
+        <record id="kra_fetch_dashboard_tree_view" model="ir.ui.view">
+            <field name="name">KRA Fetch Dashboard Tree</field>
+            <field name="model">kra.fetch.dashboard</field>
+            <field name="arch" type="xml">
+                <tree string="KRA Dashboard Tree" editable="top" create="false" delete="false">
+                    <field name="employee_id" string="Employee"/>
+                </tree>
+            </field>
+        </record>
+
+
+		
+        <record id="kra_fetch_dashboard_form_view" model="ir.ui.view">
+            <field name="name">KRA Analysis Form</field>
+            <field name="model">kra.fetch.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Analysis" create="false" delete="false" version="7.0">
+                    <sheet>
+                    <group>
+                    <group>
+                            <field name="name" invisible="1"/> 
+                            <field name="employee_id"/>  
+                            <field name="appraisal_year" widget="selection" required="1"/>
+                    </group> 
+                    <group>
+                            <button name="fetch_graph" string="View Graph" class="oe_highlight" type="object"/>
+                    </group>
+                    </group>
+                    </sheet>
+              </form>
+            </field>
+        </record>
+
+
+        <record id="kra_fetch_dashboard_yearwise_form_view" model="ir.ui.view">
+            <field name="name">KRA Analysis Form</field>
+            <field name="model">kra.fetch.dashboard</field>
+            <field name="arch" type="xml">
+                <form string="Analysis" create="false" delete="false" version="7.0">
+                    <sheet>
+                    <group>
+                    <group>
+                            <field name="name" invisible="1"/> 
+                            <field name="employee_id"/>  
+                            <!-- <field name="appraisal_year"/> -->
+                    </group> 
+                    <group>
+                            <button name="fetch_graph_yearwise" string="View Graph" class="oe_highlight" type="object"/>
+                    </group>
+                    </group>
+                </sheet>
+              </form>
+            </field>
+        </record>
+
+        
+
+		
+        <record id="action_kra_fetch_report" model="ir.actions.act_window">
+            <field name="name">KRA Analysis Sectionwise</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kra.fetch.dashboard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="kra_fetch_dashboard_form_view"/>
+        </record>
+
+        <record id="action_kra_fetch_report_yearwise" model="ir.actions.act_window">
+            <field name="name">KRA Analysis Yearwise</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">kra.fetch.dashboard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="kra_fetch_dashboard_yearwise_form_view"/>
+        </record>
+
+        
+
+        <record id="balance_scorecard_tree" model="ir.ui.view">
+            <field name="name">Performance Review Tree</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <tree string="Employee KRA Report">
+                    <field name="emp_name"/>
+                    <field name="department"/>
+                    <field name="appraisal_year"/>
+                    <field name="total_self_rating"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="balance_scorecard_performance_mgmt_tree" model="ir.ui.view">
+            <field name="name">Performance Management Tree</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <tree string="Employee KRA Report">
+                    <field name="emp_name"/>
+                    <field name="department"/>
+                    <field name="appraisal_year"/>
+                    <field name="total_self_rating"/>
+                    <field name="total_app_rating"/>
+                    <field name="total_mgmt_rating"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="balance_scorecard_kra_tree" model="ir.ui.view">
+            <field name="name">KRA Tree</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <tree string="Employee KRA Report">
+                    <field name="emp_name"/>
+                    <field name="job"/>
+                    <field name="department"/>
+                    <field name="appraisal_year"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- KRA Report employee wise -->
+        <!-- <record id="bsc_report_employee_form" model="ir.ui.view">
+            <field name="name">Employee KRA Report</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <form string="Employee KRA Report" version="7.0">
+                <sheet>
+                <group>
+                    <field name="emp_name"/>
+                    <field name="department"/>
+                    <field name="appraisal_year"/>
+                    <field name="total_self_rating"/>
+                    <field name="total_app_rating"/>
+                    <field name="total_mgmt_rating"/>
+                    <field name="total_score"/>                    
+                </group>
+                </sheet>
+                </form>
+            </field>
+        </record> -->
+
+        <record id="bsc_report_employee_tree" model="ir.ui.view">
+            <field name="name">KRA Report</field>
+            <field name="model">employee.balance.scorecard</field>
+            
+            <field name="arch" type="xml">
+                <tree string="Employee KRA Report">
+                    <field name="emp_name"/>
+                    <field name="department"/>
+                    <field name="appraisal_year"/>
+                    <field name="total_self_rating"/>
+                    <field name="total_app_rating"/>
+                    <field name="total_mgmt_rating"/>
+                    <field name="total_score"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="bsc_report_employee" model="ir.actions.act_window">
+            <field name="name">KRA Report</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="view_id" eval="bsc_report_employee_tree"/>
+            <!-- <field name="view_id" ref="bsc_report_employee_form"/>  -->           
+        </record>
+
+        <!-- <record model="ir.actions.act_window.view" id="action_open_kra_report_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="bsc_report_employee_tree"/>
+            <field name="act_window_id" ref="bsc_report_employee"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_open_kra_report_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="bsc_report_employee_form"/>
+            <field name="act_window_id" ref="bsc_report_employee"/>
+        </record>
+         -->
+
+        <record model="ir.ui.view" id="view_kra_departmentwise">
+            <field name="name">KRA Department wise</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree string="Department-wise KRA Report">
+                    <field name="department"/>
+                    <field name="emp_name"/>
+                    <field name="appraisal_year"/>
+                    <field name="total_self_rating"/>
+                    <field name="total_app_rating"/>
+                    <field name="total_mgmt_rating"/>
+                    <field name="total_score"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="open_kra_department_wise">
+            <field name="name">KRA Department wise</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" eval="view_kra_departmentwise"/>
+            <field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="context">{'search_default_group_department': 1}</field>
+            <field name="search_view_id" ref="view_hr_kra_filter"/>
+        </record>
+        
+        <record model="ir.ui.view" id="view_kra_graph">
+            <field name="name">KRA Graph</field>
+            <field name="model">employee.balance.scorecard</field>
+            <field name="arch" type="xml">
+                <graph string="KRA Graph" type="bar">
+                    <field name="emp_name"/>
+                    <field name="total_score" operator="+"/>
+                </graph>
+            </field>
+        </record>
+        
+        <record id="add_kra_tree" model="ir.ui.view">
+            <field name="name">Request New KRA</field>
+            <field name="model">request.new.kra</field>
+            <field name="arch" type="xml">
+                <tree string="">
+                	<field name="emp_name"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="add_kra_interview_tree" model="ir.ui.view">
+            <field name="name">Interview Requests</field>
+            <field name="model">kra.interview</field>
+            <field name="arch" type="xml">
+                <tree string="Interview Requests">
+                	<field name="user_to_review_id"/>
+                	<field name="date_interview"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record id="view_kra_interview_calendar" model="ir.ui.view">
+            <field name="name">Interview Requests</field>
+            <field name="model">kra.interview</field>
+            <field name="arch" type="xml">
+                <calendar string="Interview Request" color="user_to_review_id" date_start="date_interview">
+                    <field name="user_to_review_id"/>
+                    <field name="name"/>
+                    
+                </calendar>
+            </field>
+        </record>
+
+		
+		
+		
+		<record id="balance_scorecard_form" model="ir.actions.act_window">
+            <field name="name">Performance Management</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="view_id" ref="balance_scorecard_performance_mgmt_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_performance_management_record_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_balance_scorecard_form"/>
+            <field name="act_window_id" ref="balance_scorecard_form"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_performance_management_record_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="balance_scorecard_performance_mgmt_tree"/>
+            <field name="act_window_id" ref="balance_scorecard_form"/>
+        </record>
+        
+        <record id="performance_review_record" model="ir.actions.act_window">
+            <field name="name">Performance Review</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="view_id" ref="balance_scorecard_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_performance_review_record_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_performance_review_form"/>
+            <field name="act_window_id" ref="performance_review_record"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_performance_review_record_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="balance_scorecard_tree"/>
+            <field name="act_window_id" ref="performance_review_record"/>
+        </record>
+
+        
+        
+        
+        <record id="kra_record" model="ir.actions.act_window">
+            <field name="name">KRA</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="view_id" ref="balance_scorecard_kra_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_kra_record_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="balance_scorecard_kra_tree"/>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="act_window_id" ref="kra_record"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_kra_record_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_kra_form"/>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="act_window_id" ref="kra_record"/>
+        </record>
+
+        <record id="kra_record_graph_mode" model="ir.actions.act_window">
+            <field name="name">KRA</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_mode">graph</field>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="view_id" ref="view_kra_graph"/>
+        </record>
+        
+        <record id="add_kra" model="ir.actions.act_window">
+            <field name="name">Request New KRA</field>
+            <field name="res_model">request.new.kra</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="view_add_kra"/>
+        </record>
+        
+        <record id="interview_req" model="ir.actions.act_window">
+            <field name="name">Appraisal Meeting</field>
+            <field name="res_model">kra.interview</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="domain">[('user_to_review_id.active','=',True)]</field>
+            <field name="view_id" ref="add_kra_interview_tree"/>
+        </record>
+        
+        <record id="act_balance_scorecard_tree" model="ir.actions.act_window">
+            <field name="name">KRA</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="src_model">hr.employee</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+			<field name="domain">[('emp_name.active','=',True)]</field>
+            <field name="context">{'search_default_emp_name': [active_id], 'default_emp_name': active_id}</field>
+            <field name="view_id" eval="balance_scorecard_tree"/>
+        </record>
+
+        <record id="view_employee_form_kra_inherit" model="ir.ui.view">
+            <field name="name">hr.employee.kra.form.inherit</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_form"/>
+            <field name="arch" type="xml">
+                
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_balance_scorecard_tree)d" string="KRA" type="action" groups="base.group_hr_manager"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="open_view_published_tree" model="ir.actions.act_window">
+            <field name="name">Published KRA Records</field>
+            <field name="res_model">employee.balance.scorecard</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','Publish')('emp_name.active','=',True)]</field>
+            <field name="view_id" ref="view_published_balance_scorecard_form"/>
+        </record>
+    
+
+    <record model="ir.actions.act_window.view" id="action_open_view_published_tree1">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="balance_scorecard_tree"/>
+            <field name="act_window_id" ref="open_view_published_tree"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="open_view_published_tree_form1">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_published_balance_scorecard_form"/>
+            <field name="act_window_id" ref="open_view_published_tree"/>
+        </record>
+        
+     <menuitem id="hr_kra_main" parent="hr.menu_hr_root" name="KRA" groups="base.group_user"/>
+     <menuitem id="performance_management_main" name = "Performance Management" parent="hr_kra_main" sequence="1"/>
+     <!-- <menuitem id="add_kra_main" name="New KRA Request" action="add_kra" parent="hr_kra_main" sequence="2"/> -->
+     
+     <menuitem id="balance_scorecard" name="Performance Management" action="balance_scorecard_form" parent="performance_management_main" sequence="3" groups="base.group_hr_manager,base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+    
+     <menuitem id="performance_review_main" name="Performance Review" action="performance_review_record" parent="performance_management_main" sequence="2"/>
+
+     <menuitem id="kra_main" name="KRA" action="kra_record" parent="performance_management_main" sequence="1"/>  
+
+     <menuitem name="Appraisal Meeting" parent="hr_kra_main" id="kra_interview_requests" action="interview_req" sequence="3"/>
+     
+     <menuitem id="reports_kra" name="Reports" parent="hr_kra_main" sequence="6" groups="base.group_hr_user"/>
+     <menuitem id="reports_kra_employee" name="Employee-wise KRA Report" action="bsc_report_employee" parent="reports_kra" sequence="7" groups="base.group_hr_user"/>
+     <menuitem id="reports_kra_deaprtment" name="Department-wise KRA Report" action="open_kra_department_wise" parent="reports_kra" sequence="8" groups="base.group_hr_manager"/>
+
+     <menuitem id="graphs" name="Graphs" parent="hr_kra_main" sequence="9" groups="base.group_hr_user"/>
+     <menuitem name="Section-wise Performance Analysis" parent="graphs" id="fetch_charts_analysis" action="action_kra_fetch_report" sequence="10" groups="base.group_hr_user"/>
+     <menuitem name="Year-wise Performance Analysis" parent="graphs" id="fetch_charts_yearwiseanalysis" action="action_kra_fetch_report_yearwise" sequence="11" groups="base.group_hr_user"/>
+     <menuitem name="Total Employee Performance Analysis" parent="graphs" id="kra_graphs_total" action="kra_record_graph_mode" sequence="12" groups="base.group_hr_manager"/>
+     <menuitem name="Published KRA Records" parent="performance_management_main" id="published_record" action="open_view_published_tree" sequence="13" groups="hr_kra.new_group_employee_view"/>
+    <menuitem action="action_export_table_config_data" id="menu_export_table_config_data" name="Export File Path" parent="hr_kra_main" sequence="5" groups="base.group_hr_manager"/>
+    </data>
+</openerp>

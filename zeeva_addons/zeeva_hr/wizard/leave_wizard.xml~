@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+	<record model="ir.ui.view" id="refusal_form_view">
+            <field name="name">reason.refusal.form</field>
+            <field name="model">reason.refusal</field>
+            <field name="arch" type="xml">
+                <form string="Reason for Refusal" version="7.0">
+                    
+                    <group>
+                      <field name="name"/>
+                      <field name="refusal_reason"/>
+                      
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="wizard_reason_refusal" model="ir.actions.act_window">
+            <field name="name">Reason for Refusal</field>
+            <field name="res_model">reason.refusal</field>
+            <field name="src_model">reason.refusal</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="auto_refresh" eval="1" />
+            <field name="target">new</field>
+            <field name="context">{'template_id':active_id}</field>
+        </record>
+
+	<record id="view_leave_request_wizard" model="ir.ui.view">
+            <field name="name">Privilege Leave Requests Wizard</field>
+            <field name="model">leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Leave Requests Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Privilege Leave 14 days in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+	<record id="view_maternity_leave_request_wizard_new" model="ir.ui.view">
+            <field name="name">Maternity Leave Requests Wizard</field>
+            <field name="model">maternity.leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Maternity Leave Request Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Maternity Leave 3 months in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+	<record id="view_wedding_leave_request_wizard_new" model="ir.ui.view">
+            <field name="name">Wedding Leave Requests Wizard</field>
+            <field name="model">wedding.leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Wedding Leave Request Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Wedding Leave 1 month in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+	<record id="view_casual_leave_request_wizard_new" model="ir.ui.view">
+            <field name="name">Casual Leave Requests Wizard</field>
+            <field name="model">casual.leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Casual Leave Request Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Casual Leave 7 days in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+	<record id="view_compensatory_leave_request_wizard_new" model="ir.ui.view">
+            <field name="name">Compensatory Leave Requests Wizard</field>
+            <field name="model">compensatory.leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Compensatory-Off Leave Request Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Compensatory-Off Leave 2 days in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+	<record id="view_paternity_leave_request_wizard_new" model="ir.ui.view">
+            <field name="name">Paternity Leave Requests Wizard</field>
+            <field name="model">paternity.leave.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Paternity Leave Request Wizard" version="7.0">
+		    
+                    <group>
+                        <label string="You need to apply for a Paternity Leave 2 months in advance. Do you want to request for leave on an urgent basis?"/>
+			
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Yes" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
+		    
+                </form>
+            </field>
+        </record>
+
+
+	<record id="action_view_leave_request_wizard" model="ir.actions.act_window">
+             <field name="name">Leave Requests Wizard</field>
+             <field name="res_model">leave.request.wizard</field>
+	     <field name="src_model">leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_leave_request_wizard"/>
+             <field name="target">new</field>
+       </record>
+
+       <record id="action_maternity_leave_request_wizard_new" model="ir.actions.act_window">
+             <field name="name">Maternity Leave Requests Wizard</field>
+             <field name="res_model">maternity.leave.request.wizard</field>
+	     <field name="src_model">maternity.leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_maternity_leave_request_wizard_new"/>
+             <field name="target">new</field>
+       </record>
+
+       <record id="action_wedding_leave_request_wizard_new" model="ir.actions.act_window">
+             <field name="name">Wedding Leave Requests Wizard</field>
+             <field name="res_model">wedding.leave.request.wizard</field>
+	     <field name="src_model">wedding.leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_wedding_leave_request_wizard_new"/>
+             <field name="target">new</field>
+       </record>
+
+       <record id="action_casual_leave_request_wizard_new" model="ir.actions.act_window">
+             <field name="name">Casual Leave Requests Wizard</field>
+             <field name="res_model">casual.leave.request.wizard</field>
+	     <field name="src_model">casual.leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_casual_leave_request_wizard_new"/>
+             <field name="target">new</field>
+       </record>
+
+	<record id="action_compensatory_leave_request_wizard_new" model="ir.actions.act_window">
+             <field name="name">Compensatory Leave Requests Wizard</field>
+             <field name="res_model">compensatory.leave.request.wizard</field>
+	     <field name="src_model">compensatory.leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_compensatory_leave_request_wizard_new"/>
+             <field name="target">new</field>
+       </record>
+
+       <record id="action_paternity_leave_request_wizard_new" model="ir.actions.act_window">
+             <field name="name">Paternity Leave Requests Wizard</field>
+             <field name="res_model">paternity.leave.request.wizard</field>
+	     <field name="src_model">paternity.leave.request.wizard</field>
+             <field name="type">ir.actions.act_window</field>
+             <field name="view_type">form</field>
+             <field name="view_mode">form</field>
+             <field name="view_id" ref="view_paternity_leave_request_wizard_new"/>
+             <field name="target">new</field>
+       </record>
+
+        
+    </data>
+</openerp>

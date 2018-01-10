@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_hr_expenses,hr.expense.planned,hr_expenses_custom.model_hr_expense_planned,base.group_user,1,1,1,1
+access_hr_job_employee,hr.job,hr.model_hr_job,base.group_user,1,0,0,0
+
+access_hr_expense_daily_employee,hr.expense.daily,hr.model_hr_expense_daily,base.group_user,1,1,1,1
+
+access_hr_officer_compensatory_leaves,compensatory.leaves,zeeva_hr.model_compensatory_leaves,base.group_hr_user,1,1,1,1
+
+
+

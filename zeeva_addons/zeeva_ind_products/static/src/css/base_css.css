@@ -1,0 +1,22 @@
+.openerp .zeeva_ind_products {
+	font-size: 13px;
+	color: #4c4c4c;
+	background-color: #d0e4fe;
+   	width: 120px;
+    height: 20px;
+    border: 1px solid blue;
+}
+
+.openerp .zeeva_ind_products_page {
+	font-size: 13px;
+	background-color: #E0E0E0;
+}
+
+.openerp .zeeva_ind_products_product_customer_tree {
+	width: 1000px;
+}
+
+.openerp .zeeva_ind_products_field_center {
+     /*text-align: right;*/
+     float: right;
+}

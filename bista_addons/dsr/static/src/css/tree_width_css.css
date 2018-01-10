@@ -1,0 +1,14 @@
+.openerp .wireless_postpaid_class th[data-id="dsr_imei_no"] div{width: 105px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_product_type"] div{width: 60px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_product_code"] div{width: 80px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_sim_no"] div{width: 105px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_phone_no"] div{width: 75px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_temp_no"] div{width: 75px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_eip_no"] div{width: 75px;}
+.openerp .wireless_postpaid_class th[data-id="dsr_cust_ban_no"] div{width: 75px;}
+.openerp .wireless_postpaid_class th[data-id="jump_soc"] div{width: 80px;}
+.openerp .wireless_postpaid_class th[data-id="data_soc"] div{width: 80px;}
+.openerp .wireless_postpaid_class th[data-id="other_soc"] div{width: 80px;}
+.openerp .my_dsr_sheet {max-width:1750px;}
+.openerp .wireless_separator {font-size: 14px;}
+.openerp .my_dsr_sheet table{font-size: 10px;}

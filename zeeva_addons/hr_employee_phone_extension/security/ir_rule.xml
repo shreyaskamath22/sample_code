@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+    
+    <record id="new_group_employee_view" model="res.groups">
+        <field name="name">KRA employee new rule</field>
+    </record>
+    
+      <record id="new_group_reporting_manager_view" model="res.groups">
+        <field name="name">RM new rule</field>
+    </record>
+
+  </data>
+</openerp>

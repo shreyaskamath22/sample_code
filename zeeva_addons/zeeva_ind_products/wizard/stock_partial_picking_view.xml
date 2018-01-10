@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- this view of stock.partial.picking wizard is dedicated to internal picking. The fields_view_get is ovveridden in order to change the label of the process button and the separator. -->
+<!--         <record id="stock_partial_picking_form_inherit" model="ir.ui.view">
+            <field name="name">stock.partial.picking.form</field>
+            <field name="model">stock.partial.picking</field>
+            <field name="inherit_id" ref="stock.stock_partial_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/field/tree/field[@name='quantity']" position="after">
+                    <field name="invisible_products"/>
+                </xpath>
+            </field>
+        </record> -->
+
+    
+    </data>
+</openerp>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        
+        <record id="view_package_comm_script" model="ir.ui.view">
+            <field name="name">package.comm.script.form</field>
+            <field name="model">package.comm.script</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Run Packaged Commission" version="7.0">
+                    <div>
+                        <h2>Run Packaged Commission for all Active Employees</h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="run_script" string="Run Packaged Commission" class="oe_highlight" type="object"/>
+                        <button name="run_script_pre" string="Run Pre Packaged Commission" class="oe_highlight" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_package_comm_script" model="ir.actions.act_window">
+            <field name="name">Run Packaged Commission</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">package.comm.script</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_package_comm_script"/>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_package_comm_script" id="menu_action_package_comm_script" parent="wirelessvision_crash.menu_crashing_process_dsr" sequence="12" groups="base.group_no_one"/>
+
+        <record id="view_repackaged_commission_form" model="ir.ui.view">
+            <field name="name">repackaged.commission.form</field>
+            <field name="model">repackaged.commission</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Re-Packaged Commission" version="7.0">
+                    <div>
+                        <h2>Re-Run Packaged Commission for all Active Employees</h2>
+                    </div>
+                    <group>
+                        <field name="emp_id" required="1"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="start_date" required="1"/>
+                        </group>
+                        <group>
+                            <field name="end_date" required="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="rerun_packaged_commission" string="Re-Run Packaged Commission" class="oe_highlight" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        
+        <record id="action_repackaged_commission_form" model="ir.actions.act_window">
+            <field name="name">Re-Run Packaged Commission</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">repackaged.commission</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_repackaged_commission_form"/>
+            <field name="target">new</field>
+        </record>
+        
+        <menuitem action="action_repackaged_commission_form" id="menu_action_repackaged_commission" 
+            parent="menu_commission_tracker" sequence="12" groups="wirelessvision_dsr.group_wireless_comm_analyst"/>
+    
+    </data>
+</openerp>

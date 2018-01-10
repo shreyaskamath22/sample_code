@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--Scheduler for Employee Probation Period or One Year Completion-->
+        <record id="Scheduler_for_probation_one_year_completion" model="ir.cron">
+            <field name="name" >Completion Of Probation Or One Year</field>
+            <field eval="True" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field eval="'hr.employee.confirmation'" name="model"></field>
+            <field eval="'send_notification_of_tenure_completion'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+    </data>
+</openerp>

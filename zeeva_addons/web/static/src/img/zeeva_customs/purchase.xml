@@ -1,0 +1,254 @@
+<?xml version="1.0" ?>
+<openerp>
+    
+    <!--=======================================================================================
+    PURCHASE ORDER - SEQUENCE RECORD
+    =======================================================================================-->
+    <data noupdate="1">    
+        <record id="purchase.seq_purchase_order" model="ir.sequence">
+            <field name="name">Purchase Order</field>
+            <field name="code">purchase.order</field>
+            <field name="prefix">PO</field>
+            <field name="padding">6</field>
+        </record>
+    </data>
+    
+    
+    <!--=======================================================================================
+    PURCHASE ORDER - PO VIEWS
+    =======================================================================================-->
+    <data>
+        
+    <!-- ZEEVA Purchase Order Tree View -->
+        <record id="zeeva_purchase_order_tree_view" model="ir.ui.view">
+            <field name="name">zeeva.purchase.order.tree.view</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <tree fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="PO Number"/>
+                    <field name="partner_id"/>
+                    <field name="date_order" string="Date of Creation"/>
+<!--                     <field name="ready_date" string=""/> -->
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                    <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
+                    <field name="origin"/>
+<!--                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/> -->
+                    <field name="amount_total" sum="Total amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- ZEEVA Purchase Order Form View -->
+        <record id="zeeva_purchase_order_form_view" model="ir.ui.view">
+            <field name="name">zeeva.purchase.order.form.view</field>
+            <field name="model">purchase.order</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order" version="7.0">
+                <header>
+<!--                     <button name="wkf_send_rfq" states="draft" string="Send by Email" type="object" context="{'send_rfq':True}" class="oe_highlight"/> -->
+<!--                     <button name="wkf_send_rfq" states="sent" string="Send by Email" type="object" context="{'send_rfq':True}"/> -->
+                    <button name="print_quotation" string="Print PO" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
+                    <button name="print_quotation" string="Print PO" type="object" states="sent" groups="base.group_user"/>
+                    <button name="print_specification" string="Print Spec" type="object" groups="base.group_user"/>
+                    <button name="purchase_confirm" states="draft" string="Confirm Order"/>
+                    <button name="purchase_confirm" states="sent" string="Confirm Order" class="oe_highlight"/>
+                    <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
+                    <button name="action_cancel" states="approved,except_picking,except_invoice" string="Cancel Order" type="object" />
+                    <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
+                    <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
+                    <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
+                    <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
+                    <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
+                    <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel Order"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button type="object"
+                            name="view_picking"
+                            string="Incoming Shipments" states="approved"/>
+                        <button type="object"  name="invoice_open"
+                            string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <label string="Draft PO: " attrs="{'invisible': [('state','not in',('draft','sent'))]}"/>
+                            <label string="Confirmed PO: " attrs="{'invisible': [('state','in',('draft','sent'))]}"/>
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" string="Supplier" on_change="onchange_partner_id(partner_id)" 
+                                context="{'search_default_supplier':1,'search_default_type_company':1,
+                                        'default_supplier':1,'default_customer':0,'default_is_company':1,
+                                        'show_address': 0}"
+                                domain="[('supplier','=',True),('is_company','=',True)]"
+                                options='{"always_reload": True}'/>
+                            <field name="sup_code" readonly="True"/>
+                            <field name="dest_address_id" string="Contact Address" on_change="onchange_dest_address_id(dest_address_id)"
+                                groups="" required="True"
+                                domain="['|',('parent_id','=',partner_id),('id','=',partner_id)]"
+                                context="{'default_type':'contact', 'show_address': 1}"
+                                options='{"always_reload": True, "no_open": True}'/>
+<!--                             <field name="partner_ref"/> -->
+                        </group>
+                        <group>
+                            <field name="date_order" string="Date of Creation"/>
+                            <field name="origin" attr="{'invisible': [('origin','=',False)]}"/>
+                            <field name="pricelist_id" domain="[('type','=','purchase')]" string="Pricelist (currency)" options='{"no_open": True}'
+                                on_change="onchange_pricelist(pricelist_id, context)"/>
+                            <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="currency_id" invisible='1'/>
+                            <field name="journal_id" invisible='1'/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Order Lines">
+                            <field name="order_line">
+                                <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="product_id" required=""
+                                        on_change="onchange_product_id(parent.pricelist_id,product_id,0,product_uom,parent.partner_id, 
+                                            parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                    <field name="name" required="False"/>
+                                    <field name="date_planned" invisible="True"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('type','not in',('view','template'))]"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                    <field name="product_uom" groups="product.group_uom" string="UoM"
+                                        on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                    <field name="price_unit"/>
+<!--                                     <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/> -->
+                                    <field name="price_subtotal"/>
+                                </tree>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="amount_total"/>
+                                    <button name="button_dummy"
+                                        states="draft" string="(update)" type="object" class="oe_edit_only oe_link"/>
+                                </div>
+                                <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <div class="oe_clear"/>
+                        </page>
+                        <page string="Order Information" groups="base.group_user">
+                            <group>
+                                <group name="shipping" string="Shipping">
+                                    <field name="port_of_loading"/>
+                                    <field name="port_of_discharge"/>
+                                    <field name="shipment_mode"/>
+                                    <field name="ready_date"/>
+                                    <field name="fct_inspection_date"/>
+                                    <field name="pac_inspection_date"/>
+                                    
+                                    <field name="minimum_planned_date" groups="base.group_no_one"/>
+                                    <field name="location_id" groups="stock.group_locations"/>
+                                    <field name="shipped" groups="base.group_no_one"/>
+                                </group>
+                                <group name="terms" string="Sales Terms">
+                                    <field name="incoterm" widget="selection"/>
+                                    <field name="payment_term_id" widget="selection"/>
+                                    <field name="invoice_method"/>
+                                    <field name="invoiced"/>
+                                    <field name="fiscal_position" attrs="{'readonly': [('invoiced','=', True)]}" invisible="True"/>
+                                    <!-- We do not need these fields anymore, the information is in open chatter -->
+                                    <field name="validator" groups="base.group_no_one"/>
+                                    <field name="date_approve" groups="base.group_no_one"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Packing &amp; Volume Information" groups="base.group_user">
+                            
+                        </page>
+                        <page string="Remarks" groups="base.group_user">
+                            <field name="notes" nolabel="1" colspan="2" placeholder="Additional Remarks..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+                </form>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    PURCHASE ORDER - PO ACTIONS
+    =======================================================================================-->
+        
+        
+        <record id="purchase.purchase_rfq" model="ir.actions.act_window">
+            <field name="name">Draft PO</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="context">{}</field>
+            <field name="domain">[('state','in',('draft','sent','confirmed'))]</field>
+            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a request for quotation.
+              </p><p>
+                The quotation contains the history of the discussion/negociation
+                you had with your supplier. Once confirmed, a request for
+                quotation is converted into a purchase order.
+              </p><p>
+                Most propositions of purchase orders are created automatically
+                by OpenERP based on inventory needs.
+              </p>
+            </field>
+        </record>
+        <record id="zeeva_action_rfq_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="purchase.purchase_rfq"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_purchase_order_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_rfq_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="purchase.purchase_rfq"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_purchase_order_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+        <record id="purchase.purchase_form_action" model="ir.actions.act_window">
+            <field name="name">Confirmed PO</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,form,graph,calendar</field>
+            <field name="context">{}</field>
+            <field name="domain">[('state','not in',('draft','sent','confirmed'))]</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order. 
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, supplier, products, etc. For each purchase order,
+                you can track the related discussion with the supplier, control
+                the products received and control the supplier invoices.
+              </p>
+            </field>
+        </record>
+        <record id="zeeva_action_po_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="purchase.purchase_form_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="zeeva_purchase_order_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_po_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="purchase.purchase_form_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="zeeva_purchase_order_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+    </data>
+</openerp>

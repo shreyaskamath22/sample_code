@@ -1,0 +1,382 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        
+    <!--=======================================================================================
+    SALES OFFER SHEET FOR LEADS - OS VIEWS
+    =======================================================================================-->
+    
+    <!-- Sales Offer Sheet for Leads - Search View  -->
+        <record id="sale_offer_leads_search_view" model="ir.ui.view">
+            <field name="name">sale.offer.lead.search.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <search string=" Raw Product">
+                    <filter string='Draft Offer Sheets' domain="[('state','=', 'draft')]" context="" />
+                    <filter string='Sent Offer Sheets' domain="[('state','=', 'sent')]" context="" />
+                    <separator/>
+                    <filter string="My Offer Sheets" name="my_sheets" domain="[('user_id','=', uid)]" help=""/>
+                    <separator orientation="vertical"/>
+                    <field name="name" string="OS number"/>
+                    <field name="lead_id" string="Lead"/>
+                    <field name="state" string="OS status"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Leads' domain="[]" context="{'group_by' : 'lead_id'}" />
+                        <filter string='Status' domain="[]" context="{'group_by' : 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <!-- Sales Offer Sheet for Leads - Tree View  -->
+        <record id="sale_offer_leads_tree_view" model="ir.ui.view">
+            <field name="name">sale.offer.lead.tree.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string=" Raw Product" colors="green:state == 'sent'; 
+                                                    blue:state == 'draft'; 
+                                                    grey:state == 'cancel'">
+                    <field name="name" string="OS Number"/>
+                    <field name="creation_date"/>
+                    <field name="lead_id" string="Lead"/>
+<!--                     <field name="customer_id" invisible="1"/> -->
+                    <field name="user_id" string="Account Manager"/>
+                    <field name="state" string="Status"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- Sales Offer Sheet for Leads - Form View  -->
+        <record id="sale_offer_leads_form_view" model="ir.ui.view">
+            <field name="name">sale.offer.lead.form.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <form string=" Raw Product" version="7.0">
+                    <header>
+                        <button name="print_offersheet" string="Print Offer" type="object" class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="print_specification" string="Print Spec" type="object" class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="action_cancel" string="Cancel Offer" type="object" class="" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="action_reset" string="Reset to draft" type="object" class="" groups="base.group_user"
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                            
+                        <field name="state" string="Status" widget="statusbar" clickable="True" statusbar_visible="draft,sent"/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Offer Sheet Number: " />
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="lead_id" string="Lead" required="1"
+                                    context="{'show_address': 1}"
+                                    options="{'always_reload': True}"
+                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+<!--                                 <field name="customer_id" invisible="1"/> -->
+                            </group>
+                            <group>
+                                <field name="creation_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="shipment_mode" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="incoterm_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="port_of_loading_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="port_of_discharge_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            
+                            <field name="line_ids" nolabel="1" colspan="4">
+                                <tree string="Sales Order Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" invisible="1"/>
+                                    
+<!--                                     <field name="product_id" domain="[('raw_approval_flag','=',True)]"/> -->
+                                    <field name="product_id" domain="[('type','in',['product','consu'])]"/>
+
+                                    <field name="desc" />
+                                    <field name="moq" required="True"/>
+                                    <field name="price" required="True"/>
+                                </tree>
+                            </field>
+                            <field name="remarks" nolabel="1" colspan="4" placeholder="Additional remarks here..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+    
+    <!--=======================================================================================
+    SALES OFFER SHEET FOR LEADS - OS ACTIONS
+    =======================================================================================-->
+    
+    <!-- Sales Offer Sheet for Leads - Action -->
+        <record id="sale_offer_leads_action" model="ir.actions.act_window">
+            <field name="name">Offer Sheets to leads</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('customer_id','=',False)]</field>
+            <field name="context">{'search_default_my_sheets':1}</field>
+            <field name="search_view_id" ref="sale_offer_leads_search_view"/>
+            <field name="help">Here you can see all offer sheets made for leads.</field>
+        </record>
+        <record id="sale_offer_leads_action_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale_offer_leads_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_leads_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="sale_offer_leads_action_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale_offer_leads_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sale_offer_leads_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!-- Add views to actions defined in CRM Lead Form view -->
+        <record id="zeeva_customs.zeeva_action_offer_sheet_lead" model="ir.actions.act_window">
+            <field name="name">Offer Sheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('customer_id','=',False)]</field>
+            <field name="search_view_id" ref="sale_offer_leads_search_view"/>
+            <field name="help">Here you can see all existing Offer Sheets.</field>
+        </record>   
+        <record id="zeeva_action_offer_sheet_lead_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_lead"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_leads_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_offer_sheet_lead_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_lead"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sale_offer_leads_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!-- Add views to actions defined in CRM Lead Create OS Form view -->
+        <record id="zeeva_action_offer_sheet_lead_create_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_lead_create"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_leads_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!--=======================================================================================
+    SALES OFFER SHEET FOR CUSTOMERS - OS VIEWS
+    =======================================================================================-->
+    
+    <!-- Sales Offer Sheet for Customers - Search View  -->
+        <record id="sale_offer_customers_search_view" model="ir.ui.view">
+            <field name="name">sale.offer.customer.search.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <search string=" Raw Product">
+                    <filter string='Draft Offer Sheets' domain="[('state','=', 'draft')]" context="" />
+                    <filter string='Sent Offer Sheets' domain="[('state','=', 'sent')]" context="" />
+                    <separator/>
+                    <filter string="My Offer Sheets" name="my_sheets" domain="[('user_id','=', uid)]" help=""/>
+                    <separator orientation="vertical"/>
+                    <field name="name" string="OS number"/>
+                    <field name="customer_id" string="Customer"/>
+                    <field name="state" string="OS status"/>
+                    <group  expand='0' string='Group by...'>
+                        <filter string='Customers' domain="[]" context="{'group_by' : 'customer_id'}" />
+                        <filter string='Status' domain="[]" context="{'group_by' : 'state'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+    <!-- Sales Offer Sheet for Customers - Tree View  -->
+        <record id="sale_offer_customers_tree_view" model="ir.ui.view">
+            <field name="name">sale.offer.customer.tree.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string=" Raw Product" colors="green:state == 'sent'; 
+                                                    blue:state == 'draft'; 
+                                                    grey:state == 'cancel'">
+                    <field name="name" string="OS Number"/>
+                    <field name="creation_date"/>
+                    <field name="customer_id" string="Customer"/>
+                    <field name="user_id" string="Account Manager"/>
+                    <field name="state" string="Status"/>
+                </tree>
+            </field>
+        </record>
+        
+    <!-- Sales Offer Sheet for Customers - Form View  -->
+        <record id="sale_offer_customers_form_view" model="ir.ui.view">
+            <field name="name">sale.offer.customer.form.view</field>
+            <field name="model">sale.offer</field>
+            <field eval="16" name="priority"/>
+            <field name="arch" type="xml">
+                <form string=" Raw Product" version="7.0">
+                    <header>
+                        <button name="print_offersheet" string="Print Offer" type="object" class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="print_specification" string="Print Spec" type="object" class="oe_highlight" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="action_cancel" string="Cancel Offer" type="object" class="" groups="base.group_user"
+                            attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                        <button name="action_reset" string="Reset to draft" type="object" class="" groups="base.group_user"
+                            attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+                            
+                        <field name="state" string="Status" widget="statusbar" clickable="True" statusbar_visible="draft,sent"/>
+                    </header>
+                    <sheet>
+                        <h1>
+                            <label string="Offer Sheet Number: " />
+                            <field name="name" class="oe_inline" readonly="1"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="customer_id" string="Customer" required="1" on_change="onchange_customer_id(customer_id, context)"
+                                    domain="[('customer','=',True),('is_company','=',True)]"
+                                    context="{'search_default_type_company':1, 'search_default_customer':1,
+                                            'default_supplier':0,'default_customer':1,'default_is_company':1,
+                                            'show_address': 0}"
+                                    options="{'always_reload': True}"
+                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    
+                                <field name="customer_contact_id" string="Contact" required="1" 
+                                    domain="['|',('parent_id','=',customer_id),('id','=',customer_id)]"
+                                    context="{'show_address': 1}"
+                                    options='{"always_reload": True, "no_open": True}'
+                                    attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="creation_date" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="currency_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="shipment_mode" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="incoterm_id" widget="selection" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            <group>
+                                <field name="port_of_loading_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="port_of_discharge_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                            
+                            <field name="line_ids" nolabel="1" colspan="4">
+                                <tree string="Sales Order Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name" invisible="1"/>
+                                    
+<!--                                    <field name="product_id" domain="[('raw_approval_flag','=',True)]"/>-->
+                                    <field name="product_id" domain="[('type','in',['product','consu'])]"/>
+
+                                    <field name="desc" />
+                                    <field name="moq" required="True"/>
+                                    <field name="price" required="True"/>
+                                </tree>
+                            </field>
+                            <field name="remarks" nolabel="1" colspan="4" placeholder="Additional remarks here..."/>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        
+    <!--=======================================================================================
+    SALES OFFER SHEET FOR CUSTOMERS - OS ACTIONS
+    =======================================================================================-->
+    
+    <!-- Sales Offer Sheet for Customers - Action -->
+        <record id="sale_offer_customers_action" model="ir.actions.act_window">
+            <field name="name">Offer Sheets to Customers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('lead_id','=',False)]</field>
+            <field name="context">{'search_default_my_sheets':1}</field>
+            <field name="search_view_id" ref="sale_offer_customers_search_view"/>
+            <field name="help">Here you can see all offer sheets made for customers.</field>
+        </record>
+        <record id="sale_offer_customers_action_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale_offer_customers_action"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_customers_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="sale_offer_customers_action_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="sale_offer_customers_action"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sale_offer_customers_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+    
+    <!-- Add views to actions defined in RES Customer Form view -->
+        <record id="zeeva_customs.zeeva_action_offer_sheet_customer" model="ir.actions.act_window">
+            <field name="name">Offer Sheets</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('lead_id','=',False)]</field>
+            <field name="search_view_id" ref="sale_offer_customers_search_view"/>
+            <field name="help">Here you can see all existing Offer Sheets.</field>
+        </record> 
+        <record id="zeeva_action_offer_sheet_customer_tree_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_customer"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_customers_tree_view"/>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="zeeva_action_offer_sheet_customer_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_customer"/>
+            <field name="sequence" eval="2" />
+            <field name="view_id" ref="sale_offer_customers_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!-- Add views to actions defined in RES Customer Create OS Form view -->
+        <record id="zeeva_action_offer_sheet_customer_create_form_view" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="zeeva_customs.zeeva_action_offer_sheet_customer_create"/>
+            <field name="sequence" eval="1" />
+            <field name="view_id" ref="sale_offer_customers_form_view"/>
+            <field name="view_mode">form</field>
+        </record>
+        
+    <!--=======================================================================================
+    SALES OFFER SHEET - OS MENUS
+    =======================================================================================-->
+    
+    <menuitem name="Offer Sheets" id="sale_offer_menu" 
+            parent="base.menu_base_partner" sequence="1" />
+        <menuitem name="For Leads" id="sale_offer_leads" 
+            action="sale_offer_leads_action" 
+            parent="sale_offer_menu" sequence="1"
+            groups=""/>
+        <menuitem name="For Customers" id="sale_offer_customers" 
+            action="sale_offer_customers_action" 
+            parent="sale_offer_menu" sequence="2" 
+            groups=""/>
+    
+    </data>
+</openerp>

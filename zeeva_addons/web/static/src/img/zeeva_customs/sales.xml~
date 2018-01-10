@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+    <!--=======================================================================================
+    HIDDING FIELDS
+    =======================================================================================-->
+        <record id="crm.menu_crm_case_phone" model="ir.ui.menu">
+            <field name="groups_id" eval="[(6,0,[ref('base.group_no_one')])]"/>
+        </record>
+        
+    </data>
+</openerp>

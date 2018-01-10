@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!--Scheduler for Self Rating-->
+        <record id="self_rating_scheduler" model="ir.cron">
+            <field name="name">Self Rating Reminder for Employee</field>
+            <field eval="True" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="'employee.balance.scorecard'" name="model"></field>
+            <field eval="'reminder_give_self_rating'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <!--Scheduler for Appraiser Rating-->
+        <record id="appraiser_rating_scheduler" model="ir.cron">
+            <field name="name">Appraiser Rating Reminder for Reporting Manager</field>
+            <field eval="True" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="'employee.balance.scorecard'" name="model"></field>
+            <field eval="'reminder_give_appraiser_rating'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        
+        <!--Scheduler for Review Interview Schedule-->
+        <record id="review_interview_schedule_scheduler" model="ir.cron">
+            <field name="name">Reminder for Review Interview</field>
+            <field eval="True" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="'employee.balance.scorecard'" name="model"></field>
+            <field eval="'reminder_to_schedule_appraisal_meeting'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+        <!--Scheduler for Review Interview-->
+        <record id="review_interview_scheduler" model="ir.cron">
+            <field name="name">Reminder for Review Interview</field>
+            <field eval="True" name="active"/>
+            <field eval="False" name="doall"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="'kra.interview'" name="model"></field>
+            <field eval="'reminder_review_interview'" name="function"/>
+            <field eval="'()'" name="args"/>
+        </record>
+
+    </data>
+</openerp>

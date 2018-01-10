@@ -1,0 +1,547 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+
+	<record id="view_expenses_form_inherit" model="ir.ui.view">
+	            <field name="name">hr.expense.form</field>
+	            <field name="model">hr.expense.expense</field>
+	            <field name="inherit_id" ref="hr_expense.view_expenses_form"/>
+      			<field name="arch" type="xml">
+      			
+      			<xpath expr="/form[@string='Expenses Sheet']/header" position="replace">
+      			<header>
+      				<button name="submit_expenses" states="draft" string="Submit" type="object" class="oe_highlight"/>
+      				<button name="validate_manager" states="Waiting Manager Approval" string="Approve" type="object" class="oe_highlight" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                    <button name="submit_to_accounts" states="Approved By Manager" string="Submit To Accounts" type="object" class="oe_highlight" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+                    <button name="validate_accounts" states="Waiting Accounts Approval" string="Approve" type="object" class="oe_highlight" groups="account.group_account_manager,base.group_erp_manager"/>
+                	<button name="confirm_mgmt" states="Approved By Accounts" string="Submit To Mgmt" type="object" groups="account.group_account_manager,base.group_erp_manager" class="oe_highlight"/>                    
+                	<button name="validate_mgmt" states="Waiting Mgmt Approval" string="Approve" type="object" groups="base.group_erp_manager" class="oe_highlight"/>       
+                    <button name="expense_canceled" states="Waiting Manager Approval,Approved By Manager,Waiting Mgmt Approval,Approved By Mgmt" string="Refuse" type="object" groups="zeeva_hr.group_reporting_manager_new,base.group_erp_manager" />
+                    <button name="expense_canceled_accounts" states="Waiting Accounts Approval,Approved By Accounts" string="Refuse" type="object" groups="account.group_account_invoice" />
+                    <button name="draft" states="confirm,cancelled,Waiting Manager Approval,Approved By Manager,Waiting Accounts Approval,Approved By Accounts,Waiting Mgmt Approval,Approved By Mgmt" string="Set to Draft" type="object" groups="zeeva_hr.group_reporting_manager_new,base.group_erp_manager,account.group_account_invoice" />
+                    <button name="action_payment_given" states="Approved By Mgmt" string="Payment Given" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                    <button name="action_payment_received" states="done" string="Payment Recieved" type="object"/> 
+                	<field name="state" widget="statusbar" statusbar_visible="draft,Waiting Manager Approval,Approved By Manager,Waiting Accounts Approval,Approved By Accounts,Waiting Mgmt Approval,Approved By Mgmt,done,paid" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                </header>
+				</xpath>
+				
+				<field name="user_valid" position="replace">
+				<field name="user_valid" invisible="1"/>
+				</field>
+      			
+      			<field name="name" position="after">
+      				<field name="expenses" attrs="{'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+      				<field name="code1" invisible="1" />
+      				<field name="code2" invisible="1" />
+      				<label for="trip_no" attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}"/>
+      				
+      				<div attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}">
+      				
+      				<field name="trip_no" class="oe_inline" widget="selection"  on_change="onchange_trip_no(trip_no)"  attrs="{'invisible':[('expenses','=','Employee Reimbursement')], 'required':[('expenses','=','Travel Expenses')], 'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"  groups="base.group_user"/>
+      				
+      				<button name="act_employee_business_trip" string="View Related Trip" type="object" />
+      				
+      				
+      				</div>		
+                	<!--div class="oe_right oe_button_box" name="button_box">
+                        </div-->
+      				<field name="specify_reason_for_refusal_of_expense" attrs="{'invisible':[('state','in',('draft','paid'))]}" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new,account.group_account_invoice"/>
+      				<field name="change_in_trip_schedule" attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}"/>
+      				<field name="allow_to_claim_expense" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+      				<field name="allow_excess_amount" attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}" groups="base.group_erp_manager,zeeva_hr.group_reporting_manager_new"/>
+      			</field>
+      			<field name="date" position="replace">
+      				<field name="date" string="Date Of Creation"/>
+      			</field>
+      			<field name="department_id" position="after">
+      				<field name="job_id" attrs="{'invisible':[('expenses','=','Employee Reimbursement')],'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+      				<field name="employee_grade" attrs="{'invisible':[('expenses','=','Employee Reimbursement')],'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+      				<field name="exp_no" readonly="1" attrs="{'invisible':[('expenses','=','Employee Reimbursement')],'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+      				<field name="exp_no1" readonly="1" attrs="{'invisible':[('expenses','=','Travel Expenses')],'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+      			</field>
+      			<field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+      			
+	           
+      			<group>
+      				<!--group colspan="2" col="2" string="Expense Type" attrs="{'invisible':[('expenses','=','Travel Expenses')]}">
+      				
+	                    <group>
+	                        <field name="vendor_payment" on_change="onchange_vendor_payment(vendor_payment)"/>
+	                        <field name="employee_reimb" on_change="onchange_employee_reimb(employee_reimb)"/>
+	                    </group>
+	                    <group>
+	                    	<field name="operational_exp" on_change="onchange_operational_exp(operational_exp)"/>
+	                        <field name="capital_expe" on_change="onchange_capital_expe(capital_expe)"/>
+	                    </group>
+                    </group>
+                    <group colspan="2" col="2">
+	                    <group>
+		                    <field name="vendor_name" attrs="{'invisible':[('expenses','=','Travel Expenses')]}"/>
+		                    <field name="po_no" attrs="{'invisible':[('expenses','=','Travel Expenses')]}"/>
+	                    </group>
+	                    <group>
+                    		<field name="po_value" attrs="{'invisible':[('expenses','=','Travel Expenses')]}"/>
+                    		<field name="po_date" attrs="{'invisible':[('expenses','=','Travel Expenses')]}"/>
+                    	</group>
+                    	<group>
+                    		<field name="mode_of_payment"/>
+                    	</group>
+                    </group-->
+                    
+                    
+                    <group colspan="3" col="3" string="Period Of Expense" >
+      				
+	                    <group>
+	                        <field name="exp_fdate" placeholder="From Date" attrs="{'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid','cancelled'))]}"/>
+	                        <field name="exp_tdate" on_change="onchange_exp_tdate(exp_fdate, exp_tdate, date, expenses)" placeholder="To Date" attrs="{'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Approved By Accounts','Approved By Mgmt','done','paid','cancelled'))]}"/>
+	                        <field name="reason_for_refusal" attrs="{'invisible':[('specify_reason_for_refusal_of_expense','!=',True)]}"/>
+	                    </group>
+                    </group>
+                    	
+                </group>
+                	
+                	<xpath expr="//sheet" position="attributes">
+					    <attribute name="class">oe_form_sheet_width_wider</attribute>
+					</xpath>
+                	
+					
+                	<xpath expr='//form/sheet/notebook/page[@string="Description"]' position="before">
+                    	<page string="Planned Expenses" attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}">
+                    		<group>
+                    		<button string="Fetch Planned Expenses" name="display_expenses" type="object" />
+                    		</group>
+                   			<field name="planned_ids" readonly="1" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account', '')}">
+                                <form string="Planned Expense Lines" version="7.0">
+                                	 
+                                    <group>
+                                        <group>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <field name="unit_amount"/>
+                                            <label for="unit_quantity"/>
+                                            <div>
+                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
+                                            </div>
+                                            <field name="date_value" />
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Planned Expense Lines" editable="bottom" >
+                                    <field name="sequence" string="Sr. No."/>
+			                		<field name="type_of_stay" />                                    
+			                		<field name="source" />
+			                		<field name="destination" />
+			                		<field name="mode_of_travel" />
+			                		<field name="city" />
+                                    <field name="date_value" string="Expense From Date"/>
+                                    <field name="expense_to" />
+                                    <field name="name" string="Description Of Expense" />
+                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field name="no_of_days" />
+                                    <field name="unit_amount" string="Amount"/>
+                                    <field name="total_amount" />
+                                </tree>
+                            </field>
+                            <group>
+                                <div>
+                                    <separator string="Remarks/Comments"/>
+                                    <field name="note"/>
+                                    <separator string="Note: Please fill the Claim sheet correctly with Date and Invoice and amount Bifurcation. Claim sheet with incomplete Data/Wrong Information will not be processed" />
+                                   	
+                                </div>
+                               
+	                    		
+                                <group class="oe_subtotal_footer1 oe_right">
+                                    <field name="planned_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                </group>
+                            </group>
+                            
+                        </page>
+                        
+                        
+                        <page string="Expenses" attrs="{'invisible':[('expenses','=','Travel Expenses')]}">
+                   			<field name="daily_ids" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account', '')}" attrs="{'readonly':[('state','in',['Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid'])]}">
+                                <form string="Daily Expense Lines" version="7.0">
+                                    <group>
+                                        <group>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <field name="unit_amount"/>
+                                            <label for="unit_quantity"/>
+                                            <div>
+                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
+                                            </div>
+                                            <field name="date_value" />
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Daily Expense Lines" editable="bottom" >
+                                     
+                                    <field name="date_value" string="Date"/>
+                                    <!--field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/-->
+									<field name="product_id" on_change="onchange_product_id(product_id, context)" required="1" widget="selection"/>
+                                    <field name="name" string="Description" />
+                                    <field name="receipt_available" />
+                                    <field name="supporting_date" attrs="{'required':[('receipt_available','=','Yes')]}"/>
+                                    <field name="unit_amount" string="Gross Amount" sum="Total"/>
+                                    <field name="disallowed_amount" sum="Total"/>
+                                    <field name="unit_quantity" invisible="1"/>
+                                    <field name="total_amount" string="Net Amount" sum="total"/>
+                                </tree>
+                            </field>
+							<group colspan="2" col="2">
+                            <field name="report_summary_id" invisible="1" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account', '')}" attrs="{'readonly':[('state','in',['Waiting Manager Approval','Approved By Manager','Approved By Accounts','Approved By Mgmt','done','paid'])]}">
+                            <tree string="Report Summary" editable="bottom" >
+                                    <field name="serial_no"/> 
+                                    <field name="product_name"/>
+                                    <!--field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/-->
+                                    <field name="total_amount" />
+                                    
+                                    
+                                </tree>
+                            </field>
+                           </group>
+                            <group>
+                                <div>
+                                    <separator string="Remarks/Comments"/>
+                                    <field name="note"/>
+                                    <separator string="Note: Please fill the Claim sheet correctly with Date and Invoice and amount Bifurcation. Claim sheet with incomplete Data/Wrong Information will not be processed" />
+                                   	
+                                </div>
+                               
+	                    		
+                                <group class="oe_subtotal_footer1 oe_right">
+                                    <field name="daily_total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                	<field name="daily_disallowed_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1" attrs="{'readonly':[('state','in',('Waiting Manager Approval','Approved By Manager','Approved By Accounts','Approved By Mgmt','done','paid'))]}"/>
+                                	<field name="advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                	<field name="net_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                </group>
+                            </group>
+                            
+                        </page>
+					</xpath>
+	            
+                	
+                	<xpath expr='//form/sheet/notebook/page[@string="Description"]' position="replace">
+                    	<page string="Actual Expenses" attrs="{'invisible':[('expenses','=','Employee Reimbursement')]}">
+                    		<button name="compute_expenses" string="Compute" type="object" class="oe_highlight" attrs="{'invisible':[('computed','=',True)]}"/>
+                    		<field name="computed"/>
+                   			<field name="line_ids" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account', '')}">
+                                <form string="Expense Lines" version="7.0">
+                                    <group>
+                                        <group>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <field name="unit_amount"/>
+                                            <label for="unit_quantity"/>
+                                            <div>
+                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
+                                            </div>
+                                            <field name="date_value" />
+                                        </group>
+                                    </group>
+                                </form>
+                                <tree string="Expense Lines" editable="bottom" >
+                                    <field name="sequence" string="Sr. No."/>
+                                    <field name="employee_id" invisible="1"/>
+                                    <field name="employee_grade" invisible="1"/>                                    
+			                		<field name="type_of_stay" on_change="onchange_city(employee_grade, type_of_stay, city, limit_amount, unit_amount, date_value, expense_to)" />
+			                		<field name="source" attrs="{'readonly':[('type_of_stay','=','Lodging')]}"/>
+			                		<field name="destination" attrs="{'readonly':[('type_of_stay','=','Lodging')]}"/>
+			                		<field name="city" on_change="onchange_city(employee_grade, type_of_stay, city, limit_amount, unit_amount, date_value, expense_to)"/>
+			                		<field name="mode_of_travel" attrs="{'readonly':[('type_of_stay','=','Lodging')]}"/>
+                                    <field name="date_value" string="Expense From Date" on_change="onchange_expense_from(expense_to, date_value, type_of_stay)"/>                              
+                                    <field name="expense_to" on_change="onchange_expense_to(expense_to, date_value, type_of_stay)" />
+                                    <!--field name="invoice_date" />
+			                		<field name="invoice_no" /-->
+                                    <field name="name" string="Description Of Expense" />
+                                    <field name="no_of_days" />
+                                    <field name="limit_amount" on_change="onchange_city(employee_grade, type_of_stay, city, limit_amount, unit_amount, date_value, expense_to)" sum="Limit" />
+                                    <field name="total_budget" sum="Total Budget" />
+                                    <field name="unit_amount" string="Unit Amount"  on_change="onchange_city(employee_grade, type_of_stay, city, limit_amount, unit_amount, date_value, expense_to)"/>
+                                    <field domain="[('type','in',['normal','contract'])]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field name="total_amount" string="Amt" sum="Total Amount"/>      
+                                    <field name="actual_total" string="Total Exp."/>                        
+                                    <field name="diff_in_amount" on_change="onchange_city(employee_grade, type_of_stay, city, limit_amount, unit_amount, date_value,  expense_to)" sum="Excess"/>
+                                    <field name="total_excess_amount" sum="Total Excess"/>
+                                    <field name="allow_air_travel" attrs="{'invisible':[('mode_of_travel','in',('Auto','Bus','Car','Train','Private Vehicle','Taxi')),('type_of_stay','in',('Lodging','Boarding'))]}"/>
+                                    <field name="attachment_file" /> 
+                                </tree>
+                            </field>
+                            <group>
+                                <div>
+                                    <separator string="Remarks/Comments"/>
+                                    <field name="note"/>
+                                    <group>
+                                    <separator string="Note: Please fill the Claim sheet correctly with Date and Invoice and amount Bifurcation. Claim sheet with incomplete Data/Wrong Information will not be processed" />
+                                   	</group>
+                                </div>
+                                <group class="oe_subtotal_footer1 oe_right">
+									<field name="budget_amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                    <field name="excess_total_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                    <field name="total_disallowed_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1" attrs="{'readonly':[('state','in',('draft','Waiting Manager Approval','Approved By Manager','Waiting Mgmt Approval','Approved By Mgmt','done','paid'))]}"/>
+                                    <field name="total_advance_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1" attrs="{'readonly':[('state','in',('draft','Waiting Manager Approval','Approved By Manager','Waiting Mgmt Approval','Approved By Mgmt','done','paid'))]}"/>
+                                	<field name="payable_amount" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator1"/>
+                                </group>
+                            </group>
+                            
+                        </page>
+                        
+      
+                        
+					</xpath>
+                	
+                	<xpath expr='//form/sheet/notebook/page[@string="Accounting"]' position="before">
+                    	<page string="Payment Status">
+                    		
+                    		<group>
+                                    <group>
+                                    	
+                                        <label for="user_given"/>
+                                        <div>
+                                            <field name="user_given" class="oe_inline" readonly="1"/> On 
+                                            <field name="date_given" class="oe_inline" readonly="1"/>
+                                        </div>
+                                        <label for="user_received"/>
+                                        <div>
+                                            <field name="user_received" class="oe_inline" readonly="1"/> On 
+                                            <field name="date_received" class="oe_inline" readonly="1"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                    	<field name="is_advance_paid"/>
+                                    	<field name="advance_paid" on_change="onchange_advance_paid(advance_paid,daily_total_amount)" attrs="{'invisible':[('is_advance_paid','=',False)]}"/>
+                                    	<field name="balance_payment" invisible="1" attrs="{'invisible':[('is_advance_paid','=',False)]}"/>
+                                    	<field name="mode_of_payment"/>
+                                    	<field name="bank" attrs="{'invisible':[('mode_of_payment','!=','Check')]}"/>	
+                                    	<field name="check_no" attrs="{'invisible':[('mode_of_payment','!=','Check')]}"/>	
+                                    	<field name="amount_paid"/>                                        
+                                    </group>
+                                </group>
+                            
+                        </page>
+                        
+      
+                        
+					</xpath>
+                	
+      			</field>
+    </record>
+    
+    <!--record id="view_expenses_form_inherited_readonly" model="ir.ui.view">
+    		<field name="name">hr.expenses.form.readonly.cust</field>
+    		<field name="model">hr.expense.expense</field>
+    		<field name="inherit_id" ref="hr_expenses_custom.view_expenses_form_inherit"/>
+    		<field name="groups_id" eval="[(6, 0, [ref('base.group_hr_user')])]"/> 
+    		<field name="arch" type="xml">
+        		<field name="line_ids" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['draft','Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid'])]}</attribute>
+        		</field>
+        		
+        		
+    		</field>
+	</record-->
+    
+    <record id="view_expenses_form_inherited_readonly_for_sales_executive" model="ir.ui.view">
+    		<field name="name">hr.expenses.form.readonly.cust.for.sales.executive</field>
+    		<field name="model">hr.expense.expense</field>
+    		<field name="inherit_id" ref="hr_expenses_custom.view_expenses_form_inherit"/>
+    		<field name="groups_id" eval="[(6, 0, [ref('zeeva_hr.group_sales_executive_new')])]"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+    		<field name="arch" type="xml">
+        		<field name="line_ids" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid'])]}</attribute>
+        		</field>
+        		
+        		
+    		</field>
+	</record>
+	
+	<record id="view_reimburse_expenses_form_inherited_readonly_for_sales_executive" model="ir.ui.view">
+    		<field name="name">hr.expenses.form.readonly.cust.for.sales.executive</field>
+    		<field name="model">hr.expense.expense</field>
+    		<field name="inherit_id" ref="hr_expenses_custom.view_expenses_form_inherit"/>
+    		<field name="groups_id"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+    		<field name="arch" type="xml">
+        		<field name="daily_ids" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid'])]}</attribute>
+        		</field>
+        		
+        		
+    		</field>
+	</record>
+    
+    <record id="view_reimburse_expenses_form_inherited_readonly_for_sales_executive" model="ir.ui.view">
+    		<field name="name">hr.expenses.form.readonly.cust.for.sales.executive</field>
+    		<field name="model">hr.expense.expense</field>
+    		<field name="inherit_id" ref="hr_expenses_custom.view_expenses_form_inherit"/>
+    		<field name="groups_id" eval="[ (6, 0, [ref('base.group_user')])]"/> <!-- ,(6, 0, [ref('base.group_hr_user')]) -->
+    		<field name="arch" type="xml">
+        		<field name="amount_paid" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="mode_of_payment" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="is_advance_paid" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="advance_paid" position="attributes">
+            			<attribute name="attrs">{'invisible':[('is_advance_paid','=',False)],'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="balance_payment" position="attributes">
+            			<attribute name="attrs">{'invisible':[('is_advance_paid','=',False)],'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="bank" position="attributes">
+            			<attribute name="attrs">{'invisible':[('mode_of_payment','!=','Check')],'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="check_no" position="attributes">
+            			<attribute name="attrs">{'invisible':[('mode_of_payment','!=','Check')],'readonly':[('state','in',['done','paid'])]}</attribute>
+        		</field>
+        		<field name="daily_disallowed_amount" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','in',['draft','Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','done','paid','cancelled'])]}</attribute>
+        		</field>
+        		
+    		</field>
+	</record>
+    
+    
+    <!--record id="view_expenses_form_inherited_readonly_for_management" model="ir.ui.view">
+    		<field name="name">hr.expenses.form.readonly.cust.for.management</field>
+    		<field name="model">hr.expense.expense</field>
+    		<field name="inherit_id" ref="hr_expenses_custom.view_expenses_form_inherit"/>
+    		<field name="groups_id" eval="[(6, 0, [ref('base.group_erp_manager')])]"/>
+    		<field name="arch" type="xml">
+        		<field name="line_ids" position="attributes">
+            			<attribute name="attrs">{'readonly':[('state','not in',['draft','Waiting Manager Approval','Approved By Manager','Waiting Accounts Approval','Approved By Accounts','Waiting Mgmt Approval','Approved By Mgmt','done','paid'])]}</attribute>
+        		</field>
+        		
+        		
+    		</field>
+	</record-->
+    
+    <record id="view_expenses_tree_inehrit_new" model="ir.ui.view">
+            <field name="name">hr.expense.expense.tree</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                
+                    <field name="employee_id" position="before">
+                    	<field name="exp_no"/>
+                    </field>
+               
+            </field>
+        </record>
+        
+     <record id="view_expense_search_inherit_new" model="ir.ui.view">
+            <field name="name">Expense Search Customized</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_hr_expense_filter"/>
+            <field name="arch" type="xml">
+            
+            <xpath expr="/search[@string='Expense']" position="inside">
+            	<filter string="Active Expenses" icon="terp-personal" name="active_expenses" domain="[('state','!=', 'paid')]"/>
+            </xpath>
+            
+            </field>
+     </record>
+    
+    <record id="expense_all_reimburse" model="ir.ui.view">
+            <field name="name">hr.expense.expense.tree</field>
+            <field name="model">hr.expense.expense</field>
+            <field name="arch" type="xml">
+                <tree string="Expenses" colors="blue:state=='draft'">
+                	<field name="exp_no1"/>
+                    <field name="employee_id"/>
+                    <field name="date"/>
+                    <field name="user_id" invisible="1"/>
+                    <field name="name"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
+                    <field name="net_amount" sum="Total Amount"/>
+                    <field name="advance_paid" sum="Total Amount"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        
+        
+    <record id="expense_all_inherited" model="ir.actions.act_window">
+            <field name="name">Expenses (Trips Expenses)</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_expense.view_hr_expense_filter"/>
+            <field name="view_id" ref="view_expenses_tree_inehrit_new"/>
+            <field name="context">{'default_expenses': 'Travel Expenses','search_default_active_expenses': 1}</field>
+            <field name="domain">[('expenses','=','Travel Expenses')]</field>
+        </record>
+       
+      <record id="expense_all_reimburse_inherited" model="ir.actions.act_window">
+            <field name="name">Expenses (Employee Reimbursement)</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="hr_expense.view_hr_expense_filter"/>
+            <field name="view_id" ref="expense_all_reimburse"/>
+            <field name="context">{'default_expenses': 'Employee Reimbursement','search_default_active_expenses': 1}</field>
+            <field name="domain">[('expenses','=','Employee Reimbursement')]</field>
+        </record>
+        
+
+      <record id="hr_expense.hr_expense_product" model="ir.actions.act_window">
+            <field name="name">Expenses Categories</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{ "default_type": 'service',
+                                    "default_hr_expense_ok": 1,
+                                    "default_sale_ok": 0,
+                                    "default_purchase_ok": 0}</field>
+            <field name="domain">[('hr_expense_ok','=',True),('type','=','service')]</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new expense category. 
+             </p>
+            </field>
+        </record>
+        
+         
+       
+   
+     
+     
+   	<menuitem id="menu_expense_al" name="Expenses" parent="hr_expense.next_id_49"/>
+       
+      <menuitem name="Expenses (Trips Expenses)" id="menu_expenses_trips" 
+            action="expense_all_inherited" 
+            parent="menu_expense_al" sequence="1"/>
+            
+        <menuitem name="Expenses (Employee Reimbursment)" id="menu_expenses_employee_reimbursement" 
+            action="expense_all_reimburse_inherited" 
+            parent="menu_expense_al" sequence="2"/>
+            
+        <menuitem name="Expenses Categories" id="menu_expenses_categories" 
+            action="hr_expense.hr_expense_product" 
+            parent="menu_expense_al" sequence="3" groups="account.group_account_invoice"/>
+   
+  </data>		            
+</openerp>
+            
+	             

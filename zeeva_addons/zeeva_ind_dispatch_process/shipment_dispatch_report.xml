@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <report auto="False" id="shipment_dispatches" model="shipment.dispatch" name="shipment.dispatch"
+                rml="zeeva_ind_dispatch_process/report/dispatch.rml" string="Dispatch Report"
+                usage="default"/>
+
+    </data>
+</openerp>

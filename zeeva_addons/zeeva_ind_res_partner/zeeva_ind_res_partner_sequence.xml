@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- Sequences for res.partner --> 
+        <record id="seq_type_modern_channels" model="ir.sequence.type">
+            <field name="name">Modern Trade</field>
+            <field name="code">modern.trade</field>
+        </record>
+
+        <record id="seq_type_general_channels" model="ir.sequence.type">
+            <field name="name">General Trade</field>
+            <field name="code">general.trade</field>
+        </record>
+
+        <record id="seq_modern_trade" model="ir.sequence">
+            <field name="name">Modern Trade</field>
+            <field name="code">modern.trade</field>
+            <field name="prefix">MT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_general_trade" model="ir.sequence">
+            <field name="name">General Trade</field>
+            <field name="code">general.trade</field>
+            <field name="prefix">GT</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+       </record>
+
+    </data>
+</openerp>

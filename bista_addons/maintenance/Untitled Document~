@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+	<record id="view_market_place_form_1" model="ir.ui.view">
+            <field name="name">market.place.form</field>
+            <field name="model">market.place</field>
+             <field name="inherit_id" ref="wirelessvision.view_market_place_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                       <field name="market_manager"/>
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</openerp>
+

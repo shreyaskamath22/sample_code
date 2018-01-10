@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <menuitem name="Sales"
+            id="base.menu_base_partner"
+            groups="base.group_system"/>
+
+        <record id="base.menu_base_partner" model="ir.ui.menu">
+            <field name="groups_id" 
+                eval="[(3, ref('base.group_user'))]"/>
+        </record>
+
+		<menuitem name="Marketing" id="base.marketing_menu" sequence="85"
+            groups="base.group_system"/>
+
+        <record id="base.marketing_menu" model="ir.ui.menu">
+    		<field name="groups_id" eval="[(3, ref('base.group_user'))]"/>
+		</record>
+
+    </data>
+</openerp>

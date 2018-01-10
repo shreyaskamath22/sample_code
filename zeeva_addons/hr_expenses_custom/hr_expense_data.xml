@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        
+        <!-- Resource: product.uom.categ -->
+        <record id="cat_expense" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Expenses</field>
+        </record>
+
+        <!-- Expense-related subtypes for messaging / Chatter -->
+        <record id="mt_payment_received" model="mail.message.subtype">
+            <field name="name">Received</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Payment Received</field>
+        </record>
+        
+        <record id="mt_expense_confirmed_by_manager" model="mail.message.subtype">
+            <field name="name">Approved By Manager</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Approved By Manager, Waiting Accounts Approval</field>
+        </record>
+        
+        <record id="mt_expense_submitted" model="mail.message.subtype">
+            <field name="name">Approved By Manager</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Submitted, Waiting Manager Approval</field>
+        </record>
+        
+        <record id="mt_expense_confirmed_by_accounts" model="mail.message.subtype">
+            <field name="name">Approved By Manager</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Approved By Accounts, Waiting Mgmt Approval</field>
+        </record>
+        
+        <record id="mt_expense_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense Refused</field>
+        </record>
+        <record id="mt_expense_confirmed_by_mgmt" model="mail.message.subtype">
+            <field name="name">Approved</field>
+            <field name="res_model">hr.expense.expense</field>
+            <field name="description">Expense confirmed, Approved By Mgmt. Please, Proceed with the Payments</field>
+        </record>
+
+    </data>
+</openerp>

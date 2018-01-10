@@ -1,0 +1,2711 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+<!-- added By Pratik-->
+
+        <menuitem id="menu_action_tracker" name="Tracker" 
+            parent="hr.menu_hr_root" sequence="60" groups="base.group_system"/>
+
+        <!-- <record id="view_market_place_form" model="ir.ui.view">
+            <field name="name">market.place.form</field>
+            <field name="model">market.place</field>
+            <field name="inherit_id" ref="wirelessvision.view_market_place_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="region_market_id"/>
+                </field>
+            </field>
+        </record>
+        
+        <record id="view_market_region_form" model="ir.ui.view">
+            <field name="name">market.region.form</field>
+            <field name="model">market.regions</field>
+            <field name="arch" type="xml">
+                <form string="Regions Form" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="market_place_ids">
+                            <tree string="Market Places">
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_market_region_tree" model="ir.ui.view">
+            <field name="name">market.region.tree</field>
+            <field name="model">market.regions</field>
+            <field name="arch" type="xml">
+                <tree string="Regions">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_market_region_form" model="ir.actions.act_window">
+            <field name="name">Regions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">market.regions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_market_region_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to on Creat Button to create new Region.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_market_region_form" id="menu_action_market_region" parent="wirelessvision.menu_config_process" sequence="0"/> -->
+
+        <!-- DSR Process View -->
+
+        <!-- DSR BASE MENU -->
+
+        <menuitem id="wireless_dsr_menu" name="Sales Entry"/>
+        
+        <menuitem id="wireless_dsr_sub_menu" parent="wireless_dsr_menu" name="Sales Process" groups="wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,wirelessvision_dsr.group_wireless_dsr_rsm,base.group_no_one" sequence="1"/>
+        
+        <menuitem id="wireless_dsr_config_menu" parent="wireless_dsr_menu" name="Configuration" groups="base.group_no_one"/>
+
+        <record id="view_discount_master_form" model="ir.ui.view">
+            <field name="name">discount.master.form</field>
+            <field name="model">discount.master</field>
+            <field name="arch" type="xml">
+                <form string="Discount Form" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="disc_percent"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_discount_master_tree" model="ir.ui.view">
+            <field name="name">discount.master.tree</field>
+            <field name="model">discount.master</field>
+            <field name="arch" type="xml">
+                <tree string="Regions">
+                    <field name="name"/>
+                    <field name="disc_percent"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_discount_master_form" model="ir.actions.act_window">
+            <field name="name">DSR Discount</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">discount.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_discount_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Discount.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_discount_master_form" id="menu_action_discount_master" parent="wireless_dsr_config_menu" sequence="10"/>
+		
+        <record id="view_discount_type_master_form" model="ir.ui.view">
+            <field name="name">discount.type.master.form</field>
+            <field name="model">discount.type.master</field>
+            <field name="arch" type="xml">
+                <form string="Marketing Offers" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+						<field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_discount_type_master_tree" model="ir.ui.view">
+            <field name="name">discount.type.master.tree</field>
+            <field name="model">discount.type.master</field>
+            <field name="arch" type="xml">
+                <tree string="Marketing Offers">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_discount_type_master_form" model="ir.actions.act_window">
+            <field name="name">Marketing Offers Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">discount.type.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_discount_type_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Marketing Offer.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_marketing_offers_parent" parent="wireless_dsr_config_menu" sequence="3"
+            name="Marketing Offers"/>
+        <menuitem action="action_discount_type_master_form" id="menu_action_discount_type_master" parent="menu_marketing_offers_parent" sequence="1"/>
+
+        <record id="view_offer_coupon_code_form" model="ir.ui.view">
+            <field name="name">offer.coupon.code.form</field>
+            <field name="model">offer.coupon.code</field>
+            <field name="arch" type="xml">
+                <form string="Marketing Offer Coupon" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="coupon_code"/>
+                                <field name="start_date"/>
+                                <field name="dsr_disc_type" widget="many2many_tags"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="amount"/>
+                                <field name="end_date"/>
+                                <field name="offset_day"/>
+                                <field name="qty_limit"/>
+                            </group>
+                        </group>
+                        <separator string="Applicable TAC Code"/>
+                        <group>
+                            <field name="include_tac_ids" nolabel="1"/>
+                        </group>
+                        <separator string="Offer Level (no level = global)"/>
+                        <newline/>
+                        <p style="color: red;">If multiple levels selected here, they will be working in "OR" conditions</p>
+                        <newline/>
+                        <group>
+                            <group>
+                                <field name="store_type" widget="many2many_tags"/>
+                                <field name="market_id" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="store_id" widget="many2many_tags"/>
+                                <field name="region_id" widget="many2many_tags"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_offer_coupon_code_tree" model="ir.ui.view">
+            <field name="name">offer.coupon.code.tree</field>
+            <field name="model">offer.coupon.code</field>
+            <field name="arch" type="xml">
+                <tree string="Marketing Offer Coupons">
+                    <field name="coupon_code"/>
+                    <field name="amount"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="offset_day"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_offer_coupon_code_form" model="ir.actions.act_window">
+            <field name="name">Marketing Offer Coupons</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">offer.coupon.code</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_offer_coupon_code_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Marketing Offer Coupon.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_offer_coupon_code_form" id="menu_action_offer_coupon_code_form" parent="menu_marketing_offers_parent" sequence="2"/>
+
+        <record id="view_revenue_generate_master_form" model="ir.ui.view">
+            <field name="name">revenue.generate.master.form</field>
+            <field name="model">revenue.generate.master</field>
+            <field name="arch" type="xml">
+                <form string="Formula Master Form" version="7.0">
+                    <sheet>
+                    <group colspan="6" col="3">
+                        <group>
+                            <field name="name"/>
+                            <field name="dsr_prod_type" domain="[('parent_id','=',False)]"/>
+                            <field name="dsr_prod_code_type" domain="[('parent_id','=',dsr_prod_type),('parent_id','!=',False)]"/>
+                            <field name="dsr_rev_product" domain="[('categ_id','=',dsr_prod_type)]"/>
+                        </group>
+                        <group>
+                            <field name="dsr_revenue_calc" class="oe_inline"/>
+                            <field name="dsr_phone_spiff" class="oe_inline"/>
+                            <field name="dsr_added_rev" class="oe_inline"/>
+                            <field name="exclude_scnc" attrs="{'invisible':[('dsr_activation_type','!=','at_act')]}"/>
+                        </group>
+                        <group>                            
+                            <field name="bonus_line_spiff" class="oe_inline"/>
+                            <field name="bonus_handset_spiff" class="oe_inline"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="dsr_credit_class_type"/>
+                            <field name="dsr_start_date"/>
+                        </group>
+                        <group>
+                            <field name="dsr_activation_type"/>                        
+                            <field name="dsr_end_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Additional Filters">
+                            <group>
+                                <field name="dsr_jod"/>
+                            </group>
+                        </page>
+                        <page string="TAC Code">
+                            <group>
+                                <field name="is_exclude"/>
+                            </group>
+                            <separator string="Tac Code"/>
+                            <group>
+                                <field name="exclude_tac_code" nolabel="1" attrs="{'required':[('is_exclude','=',True)]}"/>
+                            </group>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="inactive"/>
+                    </group>
+                    <group>
+                        <field name="notes"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_revenue_generate_master_tree" model="ir.ui.view">
+            <field name="name">revenue.generate.master.tree</field>
+            <field name="model">revenue.generate.master</field>
+            <field name="arch" type="xml">
+                <tree string="Formula Master">
+                    <field name="name"/>
+                    <field name="dsr_prod_type"/>
+                    <field name="dsr_rev_product"/>
+                    <field name="dsr_credit_class_type"/>
+                    <field name="dsr_activation_type"/>
+                    <field name="dsr_revenue_calc"/>
+                    <field name="dsr_phone_spiff"/>
+                    <field name="dsr_added_rev"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_revenue_generate_master_form" model="ir.actions.act_window">
+            <field name="name">Revenue Formula</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">revenue.generate.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_revenue_generate_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Revenue Formula.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_revenue_generate_master_form" id="menu_action_generate_master_menu" parent="wireless_dsr_config_menu" sequence="15"/>
+
+        <record id="view_port_company_form" model="ir.ui.view">
+            <field name="name">port.company.form</field>
+            <field name="model">port.company</field>
+            <field name="arch" type="xml">
+                <form string="Porting Company Form" version="7.0">
+                    <group>
+                        <field name="sequence"/>
+                        <field name="name"/>
+                        <field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_port_company_tree" model="ir.ui.view">
+            <field name="name">port.company.tree</field>
+            <field name="model">port.company</field>
+            <field name="arch" type="xml">
+                <tree string="Port Companies">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_port_company_form" model="ir.actions.act_window">
+            <field name="name">Port Company</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">port.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_port_company_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Port Type.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_port_company_form" id="menu_action_port_company" parent="wireless_dsr_config_menu" sequence="12"/>
+
+        <record id="view_hear_about_us_form" model="ir.ui.view">
+            <field name="name">hear.about.us.form</field>
+            <field name="model">dsr.hear.about.us</field>
+            <field name="arch" type="xml">
+                <form string="Hear About Us Form" version="7.0">
+                    <sheet>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hear_about_us_tree" model="ir.ui.view">
+            <field name="name">hear.about.us.tree</field>
+            <field name="model">dsr.hear.about.us</field>
+            <field name="arch" type="xml">
+                <tree string="Hear About Us">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hear_about_us_form" model="ir.actions.act_window">
+            <field name="name">Hear About Us</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dsr.hear.about.us</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hear_about_us_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Hear about us data.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_hear_about_us_form" id="menu_action_hear_about_us_form" parent="wireless_dsr_config_menu" sequence="13"/>
+
+        <!-- PRODUCT TYPE MENU -->
+
+        <record id="view_product_category_wireless_form" model="ir.ui.view">
+            <field name="name">wireless.product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <form string="Product Type" version="7.0">
+                    <sheet>
+                        <group string="Product Type">
+                            <h1>
+                                <field name="name" string="Product Type"/>
+                            </h1>
+                        </group>
+                        <group name="Parent Product Type" col="4">
+                            <field name="parent_id" string="Parent Product Type"/>
+                        </group>
+                        <group name="Transaction Type" col="4">
+                            <field name="prod_type" string="Transaction Type"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="inactive"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_category_wireless_tree" model="ir.ui.view">
+            <field name="name">wireless.product.category.tree</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Product Type">
+                    <field name="name" string="Product Type"/>
+                    <field name="prod_type" string="Transaction Type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_category_wireless_form" model="ir.actions.act_window">
+            <field name="name">Product Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_id" ref="view_product_category_wireless_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Product Type.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_wireless_product_type_tree1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_product_category_wireless_tree"/>
+            <field name="act_window_id" ref="action_product_category_wireless_form"/>
+        </record>
+
+        <record id="action_wireless_product_type_form1" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_category_wireless_form"/>
+            <field name="act_window_id" ref="action_product_category_wireless_form"/>
+        </record>
+        
+        <menuitem id="menu_product_wireless_main"
+            parent="wireless_dsr_config_menu" sequence="0" name="Product Config"/>
+
+        <menuitem action="action_product_category_wireless_form"
+            id="menu_product_type_wireless"
+            parent="menu_product_wireless_main" sequence="1" name="Product Type"/>
+
+        <!-- <menuitem
+            action="product.product_category_action"
+            id="product.menu_products_category"
+            parent="wireless_dsr_config_menu"
+            name="Product Type"
+            sequence="0" groups="base.group_no_one"/> -->
+
+        <!-- <record id="view_product_subcategory_wireless_form" model="ir.ui.view">
+            <field name="name">wireless.product.subcategory.form</field>
+            <field name="model">product.subcategory</field>
+            <field name="arch" type="xml">
+                <form string="Product Code Type" version="7.0">
+                    <sheet>
+                        <group string="Product Code Type">
+                            <h1>
+                                <field name="name" string="Product Code Type" required="1"/>
+                            </h1>
+                        </group>
+                        <group name="Product Type" col="4">
+                            <field name="prod_type" string="Product Type" required="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_subcategory_wireless_tree" model="ir.ui.view">
+            <field name="name">wireless.product.subcategory.tree</field>
+            <field name="model">product.subcategory</field>
+            <field name="arch" type="xml">
+                <tree string="Product Code Type">
+                    <field name="name" string="Product Code Type"/>
+                    <field name="prod_type" string="Product Type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_subcategory_wireless_form" model="ir.actions.act_window">
+            <field name="name">Product Code Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.subcategory</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_subcategory_wireless_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Product Code Type.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_product_subcategory_wireless_form"
+            id="menu_product_code_type_wireless"
+            parent="menu_product_wireless_main" sequence="2" name="Product Code Type"/> -->
+
+<!--  Parent child subcategorization-->
+        <record id="view_product_subcategory_wireless_form_parent_child" model="ir.ui.view">
+            <field name="name">wireless.product.subcategory.form.parent.child</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <form string="Product Code Type" version="7.0">
+                    <sheet>
+                        <group string="Product Code Type">
+                            <h1>
+                                <field name="name" string="Product Code Type" required="1"/>
+                            </h1>
+                        </group>
+                        <group name="Product Type/Product Code Type" col="4">
+                            <field name="parent_id" string="Product Type/Product Code Type" required="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+	
+        <record id="view_product_subcategory_wireless_tree_parent_child" model="ir.ui.view">
+            <field name="name">wireless.product.subcategory.tree.parent.child</field>
+            <field name="model">product.category</field>
+            <field name="arch" type="xml">
+                <tree string="Product Code Type">
+                    <field name="name" string="Product Code Type"/>
+                    <field name="parent_id" string="Product Type"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="action_product_subcategory_wireless_form_parent_child" model="ir.actions.act_window">
+            <field name="name">Product Code Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('parent_id','!=',False)]</field>
+            <field name="view_id" ref="view_product_subcategory_wireless_tree_parent_child"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Product Code Type.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_product_subcategory_wireless_form_parent_child"
+            id="menu_product_code_type_wireless_subcategory_parent_child"
+            parent="menu_product_wireless_main" sequence="2" name="Product Code Type"/>
+
+
+        <record id="product_category_structure_tree_view" model="ir.ui.view">
+            <field name="name">product.category.tree</field>
+            <field name="model">product.category</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_category_structure_action" model="ir.actions.act_window">
+            <field name="name">Products Category Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product_category_structure_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="product_category_structure_action"
+            id="menu_products_category_structure"
+            parent="menu_product_wireless_main"
+            sequence="3" name="Product Category Structure"/>
+
+
+<!-- Parent child subcategorization-->
+
+        <record id="view_lock_down_master_form" model="ir.ui.view">
+            <field name="name">lock.down.master.form</field>
+            <field name="model">lock.down.master</field>
+            <field name="arch" type="xml">
+                <form string="Lock Down Date" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="date"/>
+                                <field name="unlock_start_date"/>
+                            </group>
+                            <group>
+                                <field name="group_lock_rel" widget="many2many_tags"/>
+                                <field name="unlock_end_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_lock_down_master_tree" model="ir.ui.view">
+            <field name="name">lock.down.master.tree</field>
+            <field name="model">lock.down.master</field>
+            <field name="arch" type="xml">
+                <tree string="Lock Down Date">
+                    <field name="date"/>
+                    <field name="group_lock_rel"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_lock_down_master_form" model="ir.actions.act_window">
+            <field name="name">Lock Down Date</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">lock.down.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_lock_down_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Lock Down Date.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_lock_down_master_form"
+            id="menu_lock_down_master_wireless"
+            parent="wireless_dsr_config_menu" sequence="7" name="Lock Down Date"/>
+
+        <record id="view_product_code_type_update_log_form" model="ir.ui.view">
+            <field name="name">product.code.type.update.log.form</field>
+            <field name="model">product.code.type.update.log</field>
+            <field name="arch" type="xml">
+                <form string="Code Type Update Log" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="prod_id"/>
+                            <field name="prod_code_type"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_code_type_update_log_tree" model="ir.ui.view">
+            <field name="name">product.code.type.update.log.tree</field>
+            <field name="model">product.code.type.update.log</field>
+            <field name="arch" type="xml">
+                <tree string="Code Type Update Log">
+                    <field name="user_id"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="prod_id"/>
+                    <field name="prod_code_type"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_code_type_update_log" model="ir.actions.act_window">
+            <field name="name">Code Type Update Log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.code.type.update.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_code_type_update_log_tree"/>
+        </record>        
+        
+        <menuitem id="menu_wireless_logs" name="Logs" parent="base.menu_administration" sequence="10"/>
+
+        <menuitem action="action_product_code_type_update_log"
+            id="menu_action_product_code_type_update_log"
+            parent="menu_wireless_logs" sequence="10" name="Code Type Update Log"/>        
+
+        <record id="view_product_code_type_update_form" model="ir.ui.view">
+            <field name="name">product.code.type.update.form</field>
+            <field name="model">product.code.type.update</field>
+            <field name="sequence">2</field>
+            <field name="arch" type="xml">
+                <form string="Code Type Update in Sales Entry" version="7.0">
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                        </group>
+                        <group>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="update_dsr_code_type" string="Update Sales Entry" class="oe_highlight" type="object"/>
+                        or
+                        <button string="Cancel" class="oe_highlight" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_product_code_type_update_form" model="ir.actions.act_window">
+            <field name="name">Update Code Type in Sales Entry</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.code.type.update</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_product_code_type_update_form"/>
+        </record>
+
+        <!-- PRODUCT MENU -->
+
+        <record id="view_product_product_wireless_form" model="ir.ui.view">
+            <field name="name">wireless.product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="sequence">2</field>
+            <field name="arch" type="xml">
+                <form string="Product" version="7.0">
+                    <sheet>
+                        <group>
+                            <group string="Product Description">
+                                <h2><field name="name"/></h2>
+                            </group>
+                            <group string="Transaction Type">
+                                <h2><field name="dsr_categ_id"/></h2>   
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Product Code">
+                                <h2><field name="default_code"/></h2>
+                            </group>
+                            <group string="Product Type">
+                                <h2><field name="categ_id" domain="[('prod_type','=',dsr_categ_id),('parent_id','=',False)]" on_change="onchange_prod_type(categ_id)"/></h2>
+                            </group>
+                        </group>
+                        <separator string="Information"/>
+                        <button string="Update Code Type in DSR Entry" 
+                            name="%(action_view_product_code_type_update_form)d" type="action" 
+                            class="oe_link"/>
+                        <group>
+                            <group>
+                            <field name="dsr_prod_code_type" 
+                                domain="['|',('parent_id','=',categ_id),'|',('parent_id.parent_id','=',categ_id),('parent_id.parent_id.parent_id','=',categ_id),('child_id','=',False)]"/>
+                            <field name="dsr_second_categ" domain="[('prod_type','=','upgrade')]"/>
+                            <field name="dsr_sku"/>
+                            <field name="dsr_prod_type" invisible="1"/>
+                            </group>
+                            <group>
+                            <field name="monthly_access"/>
+                            <field name="contract_term"/>
+                            <field name="non_comm"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="sequence"/>
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                        </group>
+                        <separator string="Feature Config"/>
+                        <group>
+                            <group>
+                                <field name="is_intl"/>
+                                <field name="is_tether"/>
+                                <field name="is_php"/>
+                                <field name="is_mob_internet"/>
+				                <field name="is_simple_starter"/>
+                                <field name="is_score"/>
+                            </group>
+                            <group>
+                                <field name="is_data"/>
+                                <field name="is_msg"/>
+                                <field name="is_jump"/>
+                                <field name="is_other"/>
+                                <field name="is_scnc"/>
+                                <field name="is_voice_barred"/>
+                            </group>
+                        </group>
+                        <separator string="Transaction Line Association"/>
+                        <newline/>
+                        <field name="transaction_line_rel" nolabel="1">
+                            <tree string="Transaction Line Association" editable="bottom">
+                                <field name="line_no"/>
+                                <field name="eligible_commission"/>
+                                <field name="eligible_spiff"/>
+                                <field name="eligible_added"/>
+                                <field name="eligible_bonus_comm"/>
+                                <field name="eligible_bonus_spiff"/>
+                                <field name="sub_soc_code"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_product_wireless_tree" model="ir.ui.view">
+            <field name="name">wireless.product.product.tree</field>
+            <field name="model">product.product</field>
+            <field name="sequence">2</field>
+            <field name="arch" type="xml">
+                <tree string="Product">
+                    <field name="default_code" string="Product Code"/>
+                    <field name="name"/>
+                    <field name="dsr_categ_id" string="Transaction Type"/>
+                    <field name="categ_id" string="Product Type"/>
+                    <field name="monthly_access" string="Monthly Access"/>
+                    <field name="contract_term" string="Contract Term"/>
+                    <field name="dsr_sku"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="wireless_product_search_form_view" model="ir.ui.view">
+            <field name="name">product.search.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter string="Services" position="after">
+                    <filter string="Priority Products" icon="terp-accessories-archiver" domain="[('sequence','&lt;=',60)]"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="action_product_product_wireless_form" model="ir.actions.act_window">
+            <field name="name">Product</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_product_wireless_tree"/>
+            <field name="search_view_id" ref="wireless_product_search_form_view"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Product.
+                </p>
+            </field>
+        </record>
+
+        <record id="action_wireless_product_product_tree1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_product_product_wireless_tree"/>
+            <field name="act_window_id" ref="action_product_product_wireless_form"/>
+        </record>
+
+        <record id="action_wireless_product_product_form1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_product_product_wireless_form"/>
+            <field name="act_window_id" ref="action_product_product_wireless_form"/>
+        </record>
+
+        <menuitem action="action_product_product_wireless_form" id="menu_product_product_wireless" parent="menu_product_wireless_main" sequence="0" name="Product"/>
+
+        <record id="product_category_structure_tree_view" model="ir.ui.view">
+            <field name="name">product.category.tree</field>
+            <field name="model">product.category</field>
+            <field name="field_parent">child_id</field>
+            <field name="arch" type="xml">
+                <tree toolbar="True" string="Product Categories">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_category_structure_action" model="ir.actions.act_window">
+            <field name="name">Products Category Structure</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.category</field>
+            <field name="domain">[('parent_id','=',False)]</field>
+            <field name="view_type">tree</field>
+            <field name="view_id" ref="product_category_structure_tree_view"/>
+            <field name="help" type="html">
+              <p>
+                Here is a list of all your products classified by category. You
+                can click a category to get the list of all products linked to
+                this category or to a child of this category.
+              </p>
+            </field>
+        </record>
+
+        <menuitem
+            action="product_category_structure_action"
+            id="menu_products_category_structure"
+            parent="menu_product_wireless_main"
+            sequence="3" name="Product Category Structure"/>
+
+        <!-- TAC CODE Master -->
+
+        <record id="view_tac_code_master_form" model="ir.ui.view">
+            <field name="name">tac.code.master.form</field>
+            <field name="model">tac.code.master</field>
+            <field name="arch" type="xml">
+                <form string="TAC Code Form" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="phone_model"/>
+                            </group>
+                            <group>
+                                <field name="phone_type"/>
+				            <field name="device_type"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="tac_code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_tac_code_master_tree" model="ir.ui.view">
+            <field name="name">tac.code.master.tree</field>
+            <field name="model">tac.code.master</field>
+            <field name="arch" type="xml">
+                <tree string="TAC Code List">
+                    <field name="phone_model"/>
+                    <field name="phone_type"/>
+                    <field name="tac_code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tac_code_master_form" model="ir.actions.act_window">
+            <field name="name">TAC Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">tac.code.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_tac_code_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new TAC Code.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem id="menu_tac_code_master_main"
+            parent="wireless_dsr_config_menu" sequence="50" name="TAC Code Master"/>
+
+        <menuitem action="action_tac_code_master_form"
+            id="menu_tac_code_master"
+            parent="menu_tac_code_master_main" sequence="0" name="TAC Code"/>
+
+        <record id="view_phone_model_master_form" model="ir.ui.view">
+            <field name="name">phone.model.master.form</field>
+            <field name="model">phone.model.master</field>
+            <field name="arch" type="xml">
+                <form string="Phone Model" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_phone_model_master_tree" model="ir.ui.view">
+            <field name="name">phone.model.master.tree</field>
+            <field name="model">phone.model.master</field>
+            <field name="arch" type="xml">
+                <tree string="Phone Model List">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_phone_model_master_form" model="ir.actions.act_window">
+            <field name="name">Phone Model</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">phone.model.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_phone_model_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Phone Model.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_phone_model_master_form"
+            id="menu_phone_model_master"
+            parent="menu_tac_code_master_main" sequence="1" name="Phone Model"/>
+
+        <record id="view_phone_type_master_form" model="ir.ui.view">
+            <field name="name">phone.type.master.form</field>
+            <field name="model">phone.type.master</field>
+            <field name="arch" type="xml">
+                <form string="Phone Type" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+			    <!--<field name="parent_id"/>-->   <!--comment shashank 27/11 coz of error-->
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_phone_type_master_tree" model="ir.ui.view">
+            <field name="name">phone.type.master.tree</field>
+            <field name="model">phone.type.master</field>
+            <field name="arch" type="xml">
+                <tree string="Phone Type List">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_phone_type_master_form" model="ir.actions.act_window">
+            <field name="name">Phone Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">phone.type.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_phone_type_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Phone Type.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_phone_type_master_form"
+            id="menu_phone_type_master"
+            parent="menu_tac_code_master_main" sequence="2" name="Phone Type"/>
+
+
+
+	<!-- device type view definition -->
+
+        <record id="view_device_type_master_form" model="ir.ui.view">
+            <field name="name">device.type.master.form</field>
+            <field name="model">device.type.master</field>
+            <field name="arch" type="xml">
+                <form string="Device Type" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_device_type_master_tree" model="ir.ui.view">
+            <field name="model">device.type.master</field>
+            <field name="arch" type="xml">
+                <tree string="Device Type List">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_device_type_master_form" model="ir.actions.act_window">
+            <field name="name">Device Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">device.type.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_device_type_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Device Type.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_device_type_master_form"
+            id="menu_device_type_master"
+            parent="menu_tac_code_master_main" sequence="2" name="Device Type"/>
+
+<!-- accessory sku master form tree,form level -->
+
+        <record id="view_acc_sku_master_form" model="ir.ui.view">
+            <field name="name">view.acc.sku.master.form</field>
+            <field name="model">wireless.acc.sku.master</field>
+            <field name="arch" type="xml">
+                <form string="Wireless Acc SKU" version="7.0">
+                    <group>
+                        <field name="categ"/>
+                        <field name="acc_sku"/>
+                        <field name="acc_description"/>
+                        <field name="acc_commission"/>
+                        <field name="acc_qty"/>
+                        <field name="non_comm"/>
+                        <field name="active"/>
+                        <field name="start_date" required="1"/>
+                        <field name="end_date" required="1"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_acc_sku_master_tree" model="ir.ui.view">
+            <field name="name">view.acc.sku.master.tree</field>
+            <field name="model">wireless.acc.sku.master</field>
+            <field name="arch" type="xml">
+                <tree string="Accessory Master">
+                    <field name="categ"/>
+                    <field name="acc_sku"/>
+                    <field name="acc_description"/>
+                    <field name="acc_commission"/>
+                    <field name="acc_qty"/>
+                    <field name="non_comm"/>
+                    <field name="active"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_acc_sku_master_tree" model="ir.actions.act_window">
+            <field name="name">Accessory master</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.acc.sku.master</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_acc_sku_master_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Accessory SKU Master creation
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_acc_sku_master_tree" name="Accessory SKU Master" id="menu_acc_sku" parent="menu_product_wireless_main" sequence="4"/>
+        
+        <record id="view_product_business_rule_form" model="ir.ui.view">
+            <field name="name">view.product.business.rule.form</field>
+            <field name="model">product.business.rule</field>
+            <field name="arch" type="xml">
+                <form string="Product Business Rule" version="7.0">
+                    <group>
+                        <field name="main_soc_id"/>
+                        <field name="data_soc_id"/>
+                        <field name="active"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_product_business_rule_tree" model="ir.ui.view">
+            <field name="name">view.product.business.rule.tree</field>
+            <field name="model">product.business.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Product Business Rule">
+                    <field name="main_soc_id"/>
+                    <field name="data_soc_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_product_business_rule_tree" model="ir.actions.act_window">
+            <field name="name">Product Business Rule</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.business.rule</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_product_business_rule_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create new Product Business Rule.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_product_business_rule_tree" name="Product Business Rule" id="menu_product_business_rule" parent="menu_product_wireless_main" sequence="5"/>
+
+        <record id="view_dsr_employee_type_form" model="ir.ui.view">
+            <field name="name">view.dsr.employee.type.form</field>
+            <field name="model">dsr.employee.type</field>
+            <field name="arch" type="xml">
+                <form string="DSR Employee Type" version="7.0">
+                    <group>
+                        <field name="name"/>
+                        <field name="is_emp_upg"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_dsr_employee_type_tree" model="ir.ui.view">
+            <field name="name">view.dsr.employee.type.tree</field>
+            <field name="model">dsr.employee.type</field>
+            <field name="arch" type="xml">
+                <tree string="DSR Employee Type">
+                    <field name="name"/>
+                    <field name="is_emp_upg"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_dsr_employee_type_tree" model="ir.actions.act_window">
+            <field name="name">DSR Employee Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dsr.employee.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dsr_employee_type_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Create new DSR Employee Type.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_dsr_employee_type_tree" id="menu_action_dsr_employee_type_tree" parent="wireless_dsr_config_menu" sequence="8"/>
+
+
+        <!-- DSR FORM VIEW -->
+
+        <record id="view_wireless_dsr_form" model="ir.ui.view">
+            <field name="name">wireless.dsr.form</field>
+            <field name="model">wireless.dsr</field>
+            <field name="arch" type="xml">
+                <form string="DSR Process" version="7.0">
+                    <header>
+                        <button name="dsr_pending" string="Pending" type="object" states="draft" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one" class="oe_highlight"/>
+                        <!-- <button name="dsr_submit" string="Submit" type="object" states="pending" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one" class="oe_highlight"/> -->
+                        <button name="dsr_submit" string="Submit" type="object" states="pending" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one" class="oe_highlight"/>
+                        <button name="dsr_cancel" string="Set to Draft" type="object" states="draft,pending,submit,done" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one"/>
+                        <!-- <button name="dsr_draft" string="Set To Draft" type="object" states="cancel" groups="wirelessvision_dsr.group_wireless_dsr_rsa,wirelessvision_dsr.group_wireless_dsr_stl,wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one" class="oe_highlight"/> -->
+                        <button name="dsr_void" string="VOID" type="object" states="draft,pending,submit,done" groups="wirelessvision_dsr.group_wireless_dsr_mid,wirelessvision_dsr.group_wireless_dsr_rsm,wirelessvision_dsr.group_wireless_dsr_mm,wirelessvision_dsr.group_wireless_dsr_dos,base.group_no_one" class="oe_highlight"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,pending,done" statusbar_colors='{"void":"red","done":"blue"}'/>
+                    </header>
+                    <sheet class="my_dsr_sheet">
+                        <group colspan="6" col="3">
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="gross_rev"/>
+                            </group>
+                            <group>
+                                <!-- <field name="gross_comm_per_line"/> -->
+                                <field name="gross_disc"/>
+                            </group>
+                        </group>
+                        <group string="Employee Details" class="wireless_separator" colspan="6" col="3">
+                            <group>
+                                <field name="dsr_dealer_code" readonly="1" required="1"/>
+                                <field name="dsr_store_id" readonly="1"/>
+                                <field name="dsr_store_type" invisible="1"/>
+                            </group>                                
+                            <group>
+                                <field name="dsr_sales_employee_id" on_change="onchange_emp(dsr_sales_employee_id,dsr_date)" required='1' attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                                <field name="dsr_market_id" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="dsr_designation_id" readonly="1"/>
+                                <field name="dsr_region_id" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Transaction Entry" class="wireless_separator">
+                                <field name="dsr_date" required="1" on_change="onchange_date(dsr_date,dsr_sales_employee_id)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                                <field name="dsr_date_order" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}" invisible="1"/>
+                                <field name="dsr_transaction_id"
+                                    attrs="{'readonly':[('state','in',('done','cancel','submit','void'))],
+                                    'required':['|',('is_prepaid','=',True),'|',('is_postpaid','=',True),('is_upgrade','=',True)]}"/>
+                            </group>
+                            <group string="Customer Details" class="wireless_separator">
+                                <field name="dsr_cust_name" required="1" 
+                                    attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                                <!-- <field name="dsr_acct_mobile_no" required="1" 
+                                    attrs="{'readonly':[('state','in',('done','cancel'))]}"/> -->
+                                <field name="dsr_cust_email_id" on_change="onchange_email(dsr_cust_email_id)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                                <!-- <field name="created_feature" invisible="1"/> -->
+                                <field name="dsr_how_he_hear" widget="selection" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                            </group>
+                        </group>
+                        <newline/>
+                        <group class="wireless_separator">
+                            <field name="is_offer" string="Marketing Offers" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_offer','!=',True)]}" colspan="4">
+                        <separator string="Marketing Offers" class="wireless_separator"/>
+                        <newline/>
+                        <field name="dsr_offer_ids" string="Marketing Offers" nolabel="1"
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}">
+                            <tree string="Marketing Offers" editable="bottom" class="wireless_postpaid_class">
+                                <field name="dsr_imei_no" on_change="onchange_imei(dsr_imei_no)"/>
+                                <field name="dsr_coupon_code" domain="[
+                                    '|','|','|','|',
+                                        '&amp;',
+                                            ('store_type','in',[parent.dsr_store_type]),
+                                        '&amp;',
+                                            ('start_date','&lt;=',parent.dsr_date),
+                                            ('max_end_date','&gt;=',parent.dsr_date),
+
+                                        '&amp;',
+                                            ('store_id','in',[parent.dsr_store_id]),
+                                        '&amp;',
+                                            ('start_date','&lt;=',parent.dsr_date),
+                                            ('max_end_date','&gt;=',parent.dsr_date),
+
+                                        '&amp;',
+                                            ('market_id','in',[parent.dsr_market_id]),
+                                        '&amp;',
+                                            ('start_date','&lt;=',parent.dsr_date),
+                                            ('max_end_date','&gt;=',parent.dsr_date),
+
+                                        '&amp;',
+                                            ('region_id','in',[parent.dsr_region_id]),
+                                        '&amp;',
+                                            ('start_date','&lt;=',parent.dsr_date),
+                                            ('max_end_date','&gt;=',parent.dsr_date),
+
+                                        '&amp;',
+                                            ('store_type','=',False),
+                                        '&amp;',
+                                            ('store_id','=',False),
+                                        '&amp;',
+                                            ('market_id','=',False),
+                                        '&amp;',
+                                            ('region_id','=',False),
+                                        '&amp;',
+                                            ('start_date','&lt;=',parent.dsr_date),
+                                            ('max_end_date','&gt;=',parent.dsr_date)]"
+                                            on_change="onchange_coupon(dsr_coupon_code)"/>
+                                <field name="dsr_disc_type"/>
+                                <field name="dsr_discount" readonly="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <separator string="Transaction Type" class="wireless_separator"/>
+                        <newline/>
+                        <group class="wireless_separator">
+                            <field name="is_postpaid" string="Postpaid" on_change="onchange_is_pos(is_postpaid)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_postpaid','!=',True)]}" colspan="4">
+                        <separator string="Postpaid Line" class="wireless_separator"/>
+                        <newline/>
+                        <p style="color: red;">Please select "Product Type" first before adding the SOC Code</p>
+                        <newline/>
+                        <field name="postpaid_product_line" string="Product Line" nolabel="1" 
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}">
+                            <tree string="Product Line" editable="bottom" class="wireless_postpaid_class">
+                                <field name="state" invisible="1"/>
+                                <field name="product_id" invisible="1"/>
+                                <field name="dsr_product_type" domain="[('prod_type','=','postpaid'),('parent_id','=',False),('inactive','=',False)]" required="1" on_change="onchange_product_type(dsr_product_type)"/>
+                                <field name="dsr_credit_class" required="1" 
+                                    on_change="onchange_credit_class(dsr_credit_class, dsr_product_type)"/>
+                                <field name="is_emp_upg" invisible="1"/>
+                                <field name="dsr_emp_type" invisible="1"/>
+                                <field name="dsr_p_number" attrs="{'readonly':[('is_emp_upg','!=',True)],'required':[('is_emp_upg','=',True)]}"/>
+                                <field name="dsr_product_code" string="SOC Code" domain="[('categ_id','=',dsr_product_type)]" required="1" on_change="onchange_soc(dsr_product_code,dsr_credit_class)"/>
+                                <field name="is_voice" invisible="1"/>
+                                <field name="is_mobile" invisible="1"/>
+                                <field name="dsr_monthly_access" invisible="1"/>
+                                <field name="dsr_contract_term" invisible="1"/>
+                                <field name="dsr_product_code_type" invisible="1"/>
+                                <field name="dsr_mob_port" on_change="onchange_mob_port(dsr_mob_port)"/>
+                                <field name="dsr_port_comp" attrs="{'readonly':[('dsr_mob_port','!=',True)],'required':[('dsr_mob_port','=',True)]}"/>
+                                <field name="dsr_phone_no" on_change="onchange_phone(dsr_phone_no)" string="Mobile Phone" required="1"/>
+                                <field name="dsr_temp_no" on_change="onchange_temp(dsr_temp_no)" attrs="{'readonly':[('dsr_mob_port','!=',True)],'required':[('dsr_mob_port','=',True)]}"/>
+                                <field name="dsr_cust_ban_no" required="1"/>
+                                <field name="dsr_ship_to"/>
+                                <field name="dsr_sim_no" on_change="onchange_sim(dsr_sim_no)" required="1"/>
+                                <field name="dsr_imei_no" 
+                                    on_change="onchange_imei(dsr_imei_no,dsr_phone_purchase_type)"/>
+                                <field name="dsr_phone_purchase_type" required="1" on_change="onchange_phone_purchase(dsr_phone_purchase_type, dsr_jod)"/>
+                                <field name="dsr_eip_no" attrs="{'readonly':[('dsr_phone_purchase_type','!=','new_device')]}"/>
+                                <field name="dsr_trade_inn" attrs="{'readonly':[('dsr_phone_purchase_type','!=','new_device')]}"/>
+                                <field name="data" on_change="onchange_data(data)"/>
+                                <field name="data_soc" on_change="onchange_data_soc(data_soc,dsr_product_code)" attrs="{'readonly':[('data','!=',True)], 'required':[('data','=',True)]}" domain="[('is_data','=',True),('dsr_categ_id','=','feature')]"/>
+                                <field name="dsr_jod" attrs="{'readonly':[('dsr_phone_purchase_type','!=','new_device')]}"
+                                    on_change="onchange_phone_purchase(dsr_phone_purchase_type, dsr_jod)"/>
+                                <field name="jump" on_change="onchange_jump(jump)" attrs="{'readonly':[('dsr_phone_purchase_type','=','sim_only')]}"/>
+                                <field name="jump_soc" attrs="{'readonly':[('jump','!=',True)],'required':[('jump','=',True)]}" domain="['|',('is_php','=',True),('is_jump','=',True),('dsr_categ_id','=','feature')]"
+                                    on_change="onchange_jump_soc(jump_soc)"/>
+                                <field name="is_jump" invisible="1"/>
+                                <field name="intl_feature" on_change="onchange_intl_feature(intl_feature)"/>
+                                <field name="intl_feature_soc" 
+                                    domain="[('is_intl','=',True),('dsr_categ_id','=','feature')]" 
+                                    attrs="{'readonly':[('intl_feature','!=',True)], 'required':[('intl_feature','=',True)]}"/>
+                                <field name="other" on_change="onchange_other(other)"/>
+                                <field name="other_soc" 
+                                domain="['|',('is_other','=',True),('is_msg','=',True),('dsr_categ_id','=','feature')]" 
+                                attrs="{'readonly':[('other','!=',True)], 'required':[('other','=',True)]}"/>
+                                <field name="dsr_tot_rev_gen" string="Total Rev Gen."/>
+                                <!-- <field name="dsr_tot_comm_per_line" string="Total Commission"/> -->
+                                <field name="customer_name" invisible="1"/>
+                                <field name="dealer_code" invisible="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <group class="wireless_separator">
+                            <field name="is_prepaid" string="Prepaid" on_change="onchange_is_pre(is_prepaid)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_prepaid','!=',True)]}" colspan="4">
+                        <separator string="Prepaid Line" class="wireless_separator"/>
+                        <newline/>
+                        <p style="color: red;">Please select "Product Type" first before adding the SOC Code</p>
+                        <newline/>
+                        <field name="prepaid_product_line" string="Product Line" nolabel="1" 
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}" doamin="[('created_feature','=',False)]">
+                            <tree string="Product Line" editable="bottom" class="wireless_postpaid_class">
+                                <field name="dsr_product_type" domain="[('prod_type','=','prepaid'),('parent_id','=',False),('inactive','=',False)]" required="1" on_change="onchange_product_type(dsr_product_type)"/>
+                                <field name="dsr_product_description" on_change="onchange_product(dsr_product_description)" domain="[('categ_id','=',dsr_product_type)]" required="1"/>
+                                <field name="is_act" invisible="1"/>
+                                <field name="pre_is_intl" invisible="1"/>
+                                <field name="pre_is_tether" invisible="1"/>
+                                <field name="pre_is_php" invisible="1"/>
+                                <field name="pre_is_score" invisible="1"/>
+                                <field name="dsr_monthly_access" invisible="1"/>
+                                <field name="dsr_contract_term" invisible="1"/>
+                                <field name="dsr_product_code_type" invisible="1"/>
+                                <field name="dsr_product_code" string="SOC Code" required="1"/>
+                                <field name="dsr_phone_no" on_change="onchange_phone(dsr_phone_no)" string="Mobile Phone" required="1"/>
+                                <field name="dsr_sim_no" on_change="onchange_sim(dsr_sim_no)" required="1"/>
+                                <field name="dsr_imei_no" 
+                                    on_change="onchange_imei(dsr_imei_no,dsr_phone_purchase_type)" 
+                                    attrs="{'required':[('dsr_phone_purchase_type','=','device_outright')]}"/>
+                                <field name="dsr_phone_purchase_type" required="1"/>
+                                <field name="dsr_talk_n_text" on_change="onchange_talk(dsr_talk_n_text)"
+                                    attrs="{'invisible':[('pre_is_intl','=',True)]}"/>
+                                <field name="dsr_talk_soc" domain="[('is_intl','=',True),('dsr_categ_id','=','prepaid')]" attrs="{'readonly':[('dsr_talk_n_text','!=',True)], 'required':[('dsr_talk_n_text','=',True)],'invisible':[('pre_is_intl','=',True)]}"/>
+                                <field name="dsr_tether" on_change="onchange_tether(dsr_tether)"
+                                    attrs="{'invisible':[('pre_is_tether','=',True)]}"/>
+                                <field name="dsr_tether_soc" domain="[('is_tether','=',True),('dsr_categ_id','=','prepaid')]" attrs="{'readonly':[('dsr_tether','!=',True)], 'required':[('dsr_tether','=',True)],'invisible':[('pre_is_tether','=',True)]}"/>
+                                <field name="dsr_php" on_change="onchange_php(dsr_php)"
+                                    attrs="{'invisible':[('pre_is_php','=',True)]}"/>
+                                <field name="dsr_php_soc" domain="[('is_php','=',True),('dsr_categ_id','=','prepaid')]" attrs="{'readonly':[('dsr_php','!=',True)], 'required':[('dsr_php','=',True)],'invisible':[('pre_is_php','=',True)]}"/>
+                                <field name="dsr_score" on_change="onchange_score(dsr_score)"
+                                    attrs="{'invisible':[('pre_is_score','=',True)]}"/>
+                                <field name="dsr_score_soc" domain="[('is_score','=',True),('dsr_categ_id','=','prepaid')]" attrs="{'readonly':[('dsr_score','!=',True)], 'required':[('dsr_score','=',True)],'invisible':[('pre_is_score','=',True)]}"/>
+                                <field name="dsr_tot_rev_gen" string="Total Rev Gen."/>
+                                <!-- <field name="dsr_tot_comm_per_line" string="Total Commission"/> -->
+                                <field name="customer_name" invisible="1"/>
+                                <field name="dealer_code" invisible="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <newline/>
+                        <group>
+                            <field name="is_upgrade" string="Upgrade" on_change="onchange_is_upg(is_upgrade)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_upgrade','!=',True)]}" colspan="4">
+                        <separator string="Upgrade Line" class="wireless_separator"/>
+                        <newline/>
+                        <p style="color: red;">Please select "Product Type" first before adding the SOC Code</p>
+                        <newline/>
+                        <field name="upgrade_product_line" string="Product Line" nolabel="1" 
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}">
+                            <tree string="Product Line" editable="bottom" class="wireless_postpaid_class">
+                                <field name="state" invisible="1"/>
+                                <field name="dsr_product_type" domain="[('prod_type','=','upgrade'),('parent_id','=',False),('inactive','=',False)]" required="1" on_change="onchange_product_type(dsr_product_type)"/>
+                                <field name="dsr_emp_type" on_change="onchange_emp_type(dsr_emp_type)"/>
+                                <field name="is_emp_upg" invisible="1"/>
+                                <field name="jump_upgrade" on_change="onchange_jump_upgrade(jump_upgrade)"
+                                    attrs="{'readonly':[('is_emp_upg','!=',False)],
+                                    'required':[('is_emp_upg','=',False)]}"/> 
+                                <field name="cihu_no" on_change="onchange_cihu(cihu_no)" 
+                                    attrs="{'readonly':[('jump_upgrade','!=','cihu')],
+                                    'required':[('jump_upgrade','=','cihu')]}"/>
+                                <field name="jump_no"  
+                                    attrs="{'readonly':[('jump_upgrade','!=','jump'),('jump_upgrade','!=','jod')],
+                                    'required':['|',('jump_upgrade','=','jump'),('jump_upgrade','=','jod')]}"/>
+                                <field name="reliance_no"  
+                                    attrs="{'readonly':[('jump_upgrade','!=','sys_issue')],
+                                    'required':[('jump_upgrade','=','sys_issue')]}"/>
+                                <field name="dsr_p_number" attrs="{'readonly':[('is_emp_upg','!=',True)],'required':[('is_emp_upg','=',True)]}"/>
+                                <field name="dsr_product_code" string="SOC Code" domain="[('dsr_second_categ','=',dsr_product_type)]" required="1" on_change="onchange_product(dsr_product_code)"/>
+                                <field name="is_voice" invisible="1"/>
+                                <field name="is_mobile" invisible="1"/>
+                                <field name="dsr_monthly_access" invisible="1"/>
+                                <field name="dsr_contract_term" invisible="1"/>
+                                <field name="dsr_product_code_type" invisible="1"/>
+                                <field name="dsr_cust_ban_no" required="1"/>
+                                <!-- <field name="dsr_credit_class" required="1"/> -->
+                                <field name="dsr_phone_no" string="Mobile Phone" on_change="onchange_phone(dsr_phone_no)" required="1"/>
+                                <field name="dsr_phone_purchase_type" required="1" on_change="onchange_phone_purchase(dsr_phone_purchase_type, dsr_jod, jump_upgrade)"/>
+                                <field name="dsr_eip_no" attrs="{'readonly':[('dsr_phone_purchase_type','!=','new_device')],
+                                    'required':[('dsr_phone_purchase_type','=','new_device')]}"/>
+                                <field name="dsr_ship_to"/>
+                                <field name="dsr_sim_no" on_change="onchange_sim(dsr_sim_no)" required="1"/>
+                                <field name="dsr_imei_no" on_change="onchange_imei(dsr_imei_no)" 
+                                    attrs="{'required':['|',('dsr_ship_to','!=',True),('state','=','pending')]}"/>
+                                <field name="dsr_trade_inn" attrs="{'readonly':[('dsr_phone_purchase_type','!=','new_device')]}"/>
+                                <field name="dsr_php_already" on_change="onchange_php_already(dsr_php_already)"/>
+                                <field name="dsr_jump_already" on_change="onchange_jump_already(dsr_jump_already)" 
+                                    attrs="{'readonly':[('jump_upgrade','=','jod')]}"/>
+                                <field name="data" on_change="onchange_data(data)"/>
+                                <field name="data_soc" on_change="onchange_data_soc(data_soc,dsr_product_code)" attrs="{'readonly':[('data','!=',True)], 'required':[('data','=',True)]}" domain="[('is_data','=',True),('dsr_categ_id','=','feature')]"/>
+                                <field name="dsr_jod" attrs="{'readonly':['|',('dsr_phone_purchase_type','!=','new_device'),'|',('dsr_jump_already','!=',False),('dsr_php_already','!=',False)],'required':[('jump_upgrade','=','jod')]}"
+                                    on_change="onchange_phone_purchase(dsr_phone_purchase_type, dsr_jod, jump_upgrade)"/>
+                                <field name="jump" on_change="onchange_jump(jump)" attrs="{'readonly':['|',('dsr_jump_already','!=',False),('dsr_php_already','!=',False)]}"/>
+                                <field name="jump_soc" domain="['|',('is_php','=',True),('is_jump','=',True),('dsr_categ_id','=','feature')]" attrs="{'readonly':[('jump','!=',True)], 'required':[('jump','=',True)]}" on_change="onchange_jump_soc(jump_soc)"/>
+                                <field name="is_jump" invisible="1"/>
+                                <field name="intl_feature" on_change="onchange_intl_feature(intl_feature)"/>
+                                <field name="intl_feature_soc" 
+                                    domain="[('is_intl','=',True),('dsr_categ_id','=','feature')]" 
+                                    attrs="{'readonly':[('intl_feature','!=',True)], 'required':[('intl_feature','=',True)]}"/>
+                                <field name="other" on_change="onchange_other(other)"/>
+                                <field name="other_soc" 
+                                domain="['|',('is_other','=',True),('is_msg','=',True),('dsr_categ_id','=','feature')]" 
+                                attrs="{'readonly':[('other','!=',True)], 'required':[('other','=',True)]}"/>
+                                <field name="dsr_tot_rev_gen" string="Total Rev Gen."/>
+                                <!-- <field name="dsr_tot_comm_per_line" string="Total Commission"/> -->
+                                <field name="customer_name" invisible="1"/>
+                                <field name="dealer_code" invisible="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <newline/>
+                        <group class="wireless_separator">
+                            <field name="is_feature" string="Data Feature" on_change="onchange_is_fea(is_feature)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_feature','!=',True)]}" colspan="4">
+                        <separator string="Data Feature Line" class="wireless_separator"/>
+                        <newline/>
+                        <p style="color: red;">Please select "Product Type" first before adding the SOC Code</p>
+                        <newline/>
+                        <field name="feature_product_line" string="Product Line" nolabel="1" 
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}">
+                            <tree string="Product Line" editable="bottom" class="wireless_postpaid_class">
+                                <field name="dsr_product_type" domain="[('prod_type','=','feature'),('parent_id','=',False),('inactive','=',False)]" required="1" on_change="onchange_product_type(dsr_product_type)"/>
+                                <field name="dsr_product_code" on_change="onchange_soc(dsr_product_code)" string="SOC Code" domain="[('categ_id','=',dsr_product_type)]" required="1"/>
+                                <field name="dsr_emp_type" on_change="onchange_emp_type(dsr_emp_type)"/>
+                                <field name="is_emp_upg" invisible="1"/>
+                                <field name="dsr_p_number" attrs="{'readonly':[('is_emp_upg','!=',True)],'required':[('is_emp_upg','=',True)]}"/>
+                                <field name="dsr_monthly_access" invisible="1"/>
+                                <field name="dsr_contract_term" invisible="1"/>
+                                <field name="dsr_product_code_type" invisible="1"/>
+                                <field name="dsr_phone_no" on_change="onchange_phone(dsr_phone_no)" string="Mobile Phone" required="1"/>
+                                <field name="dsr_cust_ban_no"/>
+                                <field name="dsr_sim_no" on_change="onchange_sim(dsr_sim_no)" required="1"/>
+                                <field name="dsr_imei_no"/>
+                                <field name="is_jump" invisible="1"/>
+                                <field name="dsr_eip_no" attrs="{'required':[('dsr_product_code_type','=',1109)]}"/>
+                                <field name="dsr_warranty"/>
+                                <field name="dsr_rev_gen" string="Total Rev Gen."/>
+                                <!-- <field name="dsr_comm_per_line" string="Total Commission"/> -->
+                                <field name="customer_name" invisible="1"/>
+                                <field name="dealer_code" invisible="1"/>
+                                <field name="dsr_mob_port" invisible="1"/>
+                                <field name="dsr_port_comp" invisible="1"/>
+                                <field name="dsr_ship_to" invisible="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <newline/>
+                        <group class="wireless_separator">
+                            <field name="is_accessory" string="Accessory" on_change="onchange_is_acc(is_accessory)" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        </group>
+                        <newline/>
+                        <group attrs="{'invisible':[('is_accessory','!=',True)]}" colspan="4">
+                        <separator string="Accessory Line" class="wireless_separator"/>
+                        <newline/>
+                        <field name="acc_product_line" string="Product Line" nolabel="1" 
+                            attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}">
+                            <tree string="Product Line" editable="bottom">
+                                <field name="dsr_phone_no" on_change="onchange_phone(dsr_phone_no)"/>
+                                <field name="dsr_emp_type" on_change="onchange_emp_type(dsr_emp_type)"/>
+                                <field name="is_emp_upg" invisible="1"/>
+                                <field name="dsr_p_number" attrs="{'readonly':[('is_emp_upg','!=',True)],'required':[('is_emp_upg','=',True)]}"/>
+                                <field name="dsr_sku_select" string="Accessories SKU" on_change="onchange_sku_select(dsr_sku_select)" required="1" domain="[('start_date','&lt;=',parent.dsr_date),('end_date','&gt;=',parent.dsr_date)]"/>
+                                <field name="dsr_acc_comm" invisible="1"/>
+                                <field name="sku_description" readonly="1"/>
+                                <field name="dsr_list_price" string="MRP" required="1"/>
+                                <field name="dsr_quantity" required="1"/>
+                                <field name="dsr_disc_percent"/>
+                                <field name="dsr_rev_gen" string="Revenue Gen."/>
+                                <field name="dsr_acc_mrc" string="Sale Amount"/>
+                                <!-- <field name="dsr_comm_per_line" string="Total Commission"/> -->
+                                <field name="customer_name" invisible="1"/>
+                                <field name="dealer_code" invisible="1"/>
+                            </tree>
+                        </field>
+                        </group>
+                        <newline/>
+                        <separator string="DSR Notes" class="wireless_separator"/>
+                        <field name="dsr_notes" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                        <newline/>
+                        <separator string="System Notes" class="wireless_separator"/>
+                        <field name="notes" attrs="{'readonly':[('state','in',('done','cancel','submit','void'))]}"/>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- DSR TREE VIEW -->
+
+        <record id="view_wireless_dsr_tree" model="ir.ui.view">
+            <field name="name">wireless.dsr.tree</field>
+            <field name="model">wireless.dsr</field>
+            <field name="arch" type="xml">
+                <tree string="DSR Process">
+                    <field name="name"/>
+                    <field name="dsr_dealer_code"/>
+                    <field name="dsr_store_id" string="SAP#"/>
+                    <field name="dsr_date"/>
+                    <field name="dsr_date_order"/>
+                    <field name="dsr_cust_name"/>
+                    <field name="dsr_transaction_id"/>
+                    <!-- <field name="dsr_acct_mobile_no"/> -->
+                    <field name="state" string="Status"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_wireless_dsr_filter" model="ir.ui.view">
+            <field name="name">wireless.dsr.select</field>
+            <field name="model">wireless.dsr</field>
+            <field name="arch" type="xml">
+                <search string="Search DSR">
+                    <!--<field name="prepaid_product_line" filter_domain="[('created_feature','=',False)]"/>-->
+                    <field name="name" filter_domain="[('name','=',self)]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_wireless_dsr_form" model="ir.actions.act_window">
+            <field name="name">Sales Process</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wireless.dsr</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wireless_dsr_tree"/>
+            <field name="search_view_id" ref="view_wireless_dsr_filter"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new DSR Process.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_wireless_dsr_form" id="menu_dsr_process_form" parent="wireless_dsr_sub_menu" sequence="1"/>
+
+        <record id="view_credit_class_form" model="ir.ui.view">
+            <field name="name">credit.class.form</field>
+            <field name="model">credit.class</field>
+            <field name="arch" type="xml">
+                <form string="Credit Class" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                            <group>
+                                <field name="prod_type" domain="[('parent_id','=',False),('inactive','=',False)]"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>                                
+                                <field name="category_type"/>
+                                <field name="rrp_plan"/>
+                                <field name="line_limit"/>
+                                <field name="approved_line"/>
+                            </group>
+                            <group>
+                                <field name="is_scnc"/>
+                                <field name="is_emp_upg"/>
+                                <field name="rpo_plan"/>
+                            </group>
+                        </group>
+                        <group attrs="{'invisible':[('category_type','!=','subprime')]}">    
+                            <separator string="Rate Plan lines"/>
+                            <newline/>
+                            <field name="rate_lines" string="Rate Plan lines" nolabel="1">
+                                <tree string="Rate Plan lines" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="deposit_amt"/>
+                                </tree>
+                            </field>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="addon_lines_available"/>
+                                <field name="addon_deposit_rrp"/>
+                            </group>
+                            <group>
+                                <field name="addon_deposit_rpo"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="comments"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_credit_class_tree" model="ir.ui.view">
+            <field name="name">credit.class.tree</field>
+            <field name="model">credit.class</field>
+            <field name="arch" type="xml">
+                <tree string="Credit Class">
+                    <field name="name"/>
+                    <field name="prod_type"/>
+                    <field name="line_limit"/>
+                    <field name="approved_line"/>
+                    <field name="rrp_plan"/>
+                    <field name="rpo_plan"/>
+                    <field name="addon_lines_available"/>
+                    <field name="addon_deposit_rrp"/>
+                    <field name="addon_deposit_rpo"/>
+                    <field name="comments"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_credit_class_form" model="ir.actions.act_window">
+            <field name="name">Credit Class</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">credit.class</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_credit_class_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Credit Class.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_credit_class" name="Credit Class"
+            parent="wireless_dsr_config_menu" sequence="1"/>
+        <menuitem action="action_credit_class_form" id="menu_action_credit_class" 
+            parent="menu_credit_class" sequence="0"/>
+
+        <record id="view_credit_class_type_form" model="ir.ui.view">
+            <field name="name">credit.class.type.form</field>
+            <field name="model">credit.class.type</field>
+            <field name="arch" type="xml">
+                <form string="Credit Class Type" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_credit_class_type_tree" model="ir.ui.view">
+            <field name="name">credit.class.type.tree</field>
+            <field name="model">credit.class.type</field>
+            <field name="arch" type="xml">
+                <tree string="Credit Class Type">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_credit_class_type_form" model="ir.actions.act_window">
+            <field name="name">Credit Class Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">credit.class.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_credit_class_type_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Credit Class Type.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_credit_class_type_form"
+            id="menu_credit_class_type"
+            parent="menu_credit_class" sequence="1" name="Credit Class Type"/>
+
+        <record id="view_credit_line_limit_form" model="ir.ui.view">
+            <field name="name">credit.line.limit.form</field>
+            <field name="model">credit.line.limit</field>
+            <field name="arch" type="xml">
+                <form string="Transaction Line Number" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="name"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_credit_line_limit_tree" model="ir.ui.view">
+            <field name="name">credit.line.limit.tree</field>
+            <field name="model">credit.line.limit</field>
+            <field name="arch" type="xml">
+                <tree string="Transaction Line Master">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_credit_line_limit_form" model="ir.actions.act_window">
+            <field name="name">Transaction Line Master</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">credit.line.limit</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_credit_line_limit_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Line Limit #.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_credit_line_limit_form" id="menu_action_credit_line_limit" 
+            parent="wireless_dsr_config_menu" sequence="9"/>
+
+        <record id="view_dealer_class_form" model="ir.ui.view">
+            <field name="name">dealer.class.form</field>
+            <field name="model">dealer.class</field>
+            <field name="arch" type="xml">
+                <form string="Dealer Code Tracker" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="emp_type"/>
+                                <field name="dealer_id"/>
+                                <field name="start_date" required="1"/>
+                            </group>
+                            <group>
+                                <field name="store_name" required="1"/>
+                                <!-- <field name="assign_date"/> -->
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_dealer_class_tree" model="ir.ui.view">
+            <field name="name">dealer.class.tree</field>
+            <field name="model">dealer.class</field>
+            <field name="arch" type="xml">
+                <tree string="Dealer Code Tracker">
+                    <field name="dealer_id"/>
+                    <field name="name"/>
+                    <field name="store_name"/>
+                    <field name="emp_type"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_dealer_class_form" model="ir.actions.act_window">
+            <field name="name">Dealer Code Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">dealer.class</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_dealer_class_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Dealer Code Tracker.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_dealer_class_form" id="menu_action_dealer_class" 
+            parent="hr.menu_hr_configuration" sequence="10"/>
+
+        <record id="view_designation_tracker_form" model="ir.ui.view">
+            <field name="name">designation.tracker.form</field>
+            <field name="model">designation.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Designation Tracker" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="designation_id"/>
+                                <field name="heirarchy_level"/>
+                                <field name ="covering_str_check"/>
+                                <field name="store_name"/>
+                                <field name="covering_market_check"/>
+                                <field name="market_id" />
+                                <field name="covering_region_check"/>
+                                <field name="region_id" />
+                                <field name="t_store_id" />
+                                <field name="t_market_id" />
+                                <field name="t_region_id" />
+                                <field name="start_date"/>
+                                <field name="dealer_id" required="1"/>
+                                <field name="end_date"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_designation_tracker_tree" model="ir.ui.view">
+            <field name="name">designation.tracker.tree</field>
+            <field name="model">designation.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="Designation Tracker">
+                    <field name="heirarchy_level"/>
+                    <field name ="covering_str_check"/>
+                    <field name="store_name"/>
+                    <field name ="covering_market_check"/>
+                    <field name="market_id" />
+                    <field name ="covering_region_check"/>
+                    <field name="region_id" />
+                    <field name="t_store_id" />
+                    <field name="t_market_id" />
+                    <field name="t_region_id" />
+                    <field name="start_date"/>
+                    <field name="dealer_id" required="1"/>
+                    <field name="end_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_designation_tracker_form" model="ir.actions.act_window">
+            <field name="name">Designation Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">designation.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_designation_tracker_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Designation Tracker.
+                </p>
+            </field>
+        </record>
+<!-- Commented by Pratik -->
+
+<!--        <menuitem action="action_designation_tracker_form" id="menu_action_designation_tracker" 
+            parent="hr.menu_hr_configuration" sequence="10"/> -->
+
+<!-- Added by Pratik -->
+        <menuitem action="action_designation_tracker_form" id="menu_action_designation_tracker" 
+            parent="menu_action_tracker" sequence="10" groups="base.group_system"/>
+
+       <record id="view_employee_form_1" model="ir.ui.view">
+            <field name="name">hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="wirelessvision.view_employee_form"/>
+            <field name="arch" type="xml">
+                <label for="store_ids" position="replace"/>
+                <field name="store_ids" position="replace"/>
+                <field name="base_loc" position="replace"/>
+                <field name="hire_date" position="replace"/>
+                <field name="birthday" position="replace">
+                    <field name="birthday_text" string="Date of Birth" readonly="1"/>
+                </field>
+                <field name="work_location" position="after">
+                    <field name="base_loc" invisible="1"/>
+                    <field name="base_store_id" invisible="1"/>
+                </field>
+                <group string="Contact Information" position="replace">
+                    <group string="Contact Information" readonly="1">
+                        <field name="address_id" readonly="1"/>
+                        <field name="mobile_phone" readonly="1"/>
+                        <field name="work_location" readonly="1"/>
+                    </group>
+                </group>
+                <group string="Position" position="replace">
+                    <group string="Position" readonly='1'>
+                        <field name="department_id" readonly="1" on_change="onchange_department_id(department_id)"/>
+                        <field name="job_id" readonly="1"/>
+                        <field name="store_id" readonly="1"/>
+                        <field name="employment_type" readonly="1"/>
+                    </group>
+                </group>
+                <xpath expr="/form/sheet/notebook/page[@string='Public Information']/group/group[3]" position="after">
+                    <group>
+                        <field name="hire_date"/>
+                        <field name="terminate_date"/>
+                    </group>
+                </xpath>
+                <xpath expr="/form/sheet/notebook/page[@string='HR Settings']" position="after">
+                    <page string="Covering Stores">
+                        <field name="store_ids" nolabel="1">
+                            <tree string="Covering Store" delete="false" create="false">
+                                <field name="sap_number"/>
+                                <field name="name"/>
+                                <field name="store_mgr_id"/>
+                                <field name="t_mobile_name"/>
+                                <field name="type_of_store"/>
+                                <field name="store_classification"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Covering Market">
+                        <field name="covering_market_ids" nolabel="1">
+                            <tree string="Covering Market" delete="false" create="false">
+                                <field name="region_market_id"/>
+                                <field name="name"/>
+                                <field name="market_manager"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Covering Region">
+                        <field name="covering_region_ids" nolabel="1">
+                            <tree string="Covering Region" delete="false" create="false">
+                                <field name="name"/>
+                                <field name="sales_director"/>  
+                            </tree>
+                        </field>
+                    </page> 
+                    <page string="Employee Dealer Code">
+                        <group>
+                            <field name="employee_dealerclass" nolabel="1">
+                                <tree string="Dealer History" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="store_name" required="1"/>
+                                    <field name="emp_type"/>
+<!--                                    <field name="move_type" required="1"/>  -->
+                                    <field name="start_date" required="1"/>
+                                    <!-- <field name="assign_date" invisible="1"/> -->
+                                    <field name="end_date" required="1"/>
+                                    <button name="open_entry_update_wizard" string="Update Entry" 
+                                        icon="gtk-go-forward" type="object" class="oe_link"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </page>
+                    <page string="Designation Tracker">
+                        <separator string="Following feature is currently added for Retail Store Manager only"/>
+                        <field name="desig_tracker">
+                            <tree string="Designation History" editable="bottom">
+                                <field name="designation_id" on_change="onchange_designation_id(designation_id)"/>
+                                <field name="heirarchy_level" readonly = "1" invisible="0"/>
+                                <!-- <field name="tracker_str_type" required="1"/> -->
+                                <field name = "covering_str_check" attrs="{'readonly':[('heirarchy_level','!=','rsm')]}"/>
+                                <field name="store_name" attrs="{'readonly':[('heirarchy_level','!=','rsm')], 'required':[('heirarchy_level','==','rsm')]}"/>
+                                <field name="covering_market_check" attrs="{'readonly':[('heirarchy_level','!=','mm')]}"/>
+                                <field name="market_id" attrs="{'readonly':[('heirarchy_level','!=','mm')], 'required':[('heirarchy_level','==','mm')]}"/>
+                                <field name="covering_region_check" attrs="{'readonly':[('heirarchy_level','!=','dos')]}"/>
+                                <field name="region_id" attrs="{'readonly':[('heirarchy_level','!=','dos')], 'required':[('heirarchy_level','==','dos')]}"/>
+<!--
+                                <field name="t_store_id" widget="many2many_tags" attrs="{'readonly':[('heirarchy_level','!=','other')]}"/>
+                                <field name="t_market_id" widget="many2many_tags" attrs="{'readonly':[('heirarchy_level','!=','other')]}"/>
+                                <field name="t_region_id" widget="many2many_tags" attrs="{'readonly':[('heirarchy_level','!=','other')]}"/>-->
+                                
+                                <field name="t_store_id" widget="many2many_tags" attrs="{'readonly':['|',('heirarchy_level','!=','other'),'|',('t_market_id','!=',[(6, False, [])]),('t_region_id','!=',[(6, False, [])])]}"/>
+                                <field name="t_market_id" widget="many2many_tags" attrs="{'readonly':['|',('heirarchy_level','!=','other'),'|',('t_store_id','!=',[(6, False, [])]),('t_region_id','!=',[(6, False, [])])]}"/>
+                                <field name="t_region_id" widget="many2many_tags" attrs="{'readonly':['|',('heirarchy_level','!=','other'),'|',('t_store_id','!=',[(6, False, [])]),('t_market_id','!=',[(6, False, [])])]}"/>
+                                <field name="start_date"/>
+                                <field name="end_date"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_employee_tree_dsr" model="ir.ui.view">
+            <field name="name">hr.employee.tree.dsr</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="last_name"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_hr_job_form_1" model="ir.ui.view">
+            <field name="name">hr.job.form</field>
+            <field name="model">hr.job</field>
+            <field name="inherit_id" ref="hr.view_hr_job_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='department_id']" position="after">
+                    <field name="parent_designation"/>
+<!--                     <field name="access_groups" invisible="1"/> -->
+                    <field name="desig_level"/>
+                    <field name="groups_job_rel"/>
+                </xpath>
+            </field>
+        </record>
+
+       <!--  <record id="view_hr_employee_type_form" model="ir.ui.view">
+            <field name="name">hr.employee.type.form</field>
+            <field name="model">hr.employee.type</field>
+            <field name="arch" type="xml">
+                <form string="Employee Type" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="hour_per_week"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_hr_employee_type_tree" model="ir.ui.view">
+            <field name="name">hr.employee.type.tree</field>
+            <field name="model">hr.employee.type</field>
+            <field name="arch" type="xml">
+                <tree string="Employee Type List">
+                    <field name="name"/>
+                    <field name="hour_per_week"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_hr_employee_type_form" model="ir.actions.act_window">
+            <field name="name">Employee Type</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">hr.employee.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_hr_employee_type_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Employee Type.
+                </p>
+            </field>
+        </record>
+        
+        <menuitem action="action_hr_employee_type_form"
+            id="menu_hr_employee_type"
+            parent="wireless_dsr_config_menu" name="Employee Type"/> -->
+
+        <record id="view_user_form_mkt_reg" model="ir.ui.view">
+            <field name="name">res.users.form.mkt</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="wirelessvision.view_users_form_wirelessvision"/>
+            <field name="arch" type="xml">
+        		<label for="sap_id" position="replace">
+                    <label for="sap_id" class="oe_edit_only"/>
+                </label>
+                <label for="sap_id" position="before">
+        			<label for="email" class="oe_edit_only"/> 
+                    <h2><field name="email"/></h2>
+        		</label>
+                <field name="sap_id" position="attributes">
+                    <attribute name="on_change">onchange_sap(sap_id)</attribute>
+                </field>
+                <field name="active" position="replace">
+                </field>
+                <xpath expr="//field[@name='partner_id']" position="after">
+                     <field name="market_id"/>
+                     <field name="region_id"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_sap_store_tracker_wireless" model="ir.ui.view">
+            <field name="name">sap.store.tracker</field>
+            <field name="model">sap.store</field>
+            <field name="inherit_id" ref="wirelessvision_extra.view_sap_store_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="wv_store"/>
+                </field>
+                <field name="name" position="attributes">
+                    <attribute name="string">Paycore Store Name</attribute>
+                </field>
+                <field name="sub_dealer_id" position="after">
+                    <field name="active"/>
+                </field>
+                <field name="store_classification" position="attributes">
+                     <attribute name="required">1</attribute>
+                </field>
+                <group position="after">
+                    <notebook>
+                        <page string="Public Information">
+                            <group>
+                                <group>
+                                    <label for="street" string="Address"/>
+                                    <div>
+                                        <field name="street" placeholder="Street..."/>
+                                        <div class="address_format">
+                                            <field name="city" placeholder="City" style="width: 40%"/>
+                                            <field name="state" placeholder="State" style="width: 37%"/>
+                                            <field name="zip" placeholder="ZIP" style="width: 20%"/>
+                                        </div>
+                                    </div>
+                                    <field name="website" widget="url" placeholder="e.g. www.wirelessvision.com"/>
+                                </group>
+                                <group>
+                                    <field name="open_date"/>
+                                    <field name="phone" placeholder="e.g. (123) 456-7890"/>
+                                    <field name="fax" placeholder="e.g. (123) 456-7890"/>
+                                    <field name="email" widget="email"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                        <page string="Hours of Operation">
+                            <field name="hours_operation">
+                                <tree string="Hours of Operation" editable="bottom">
+                                    <field name="from_day"/>
+                                    <field name="upto_day"/>
+                                    <field name="start_time"/>
+                                    <field name="end_time"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="SAP Tracker">
+                            <field name="sap_tracker" readonly = "0" groups="base.group_no_one">
+                                <tree string="SAP Tracker" editable="bottom">
+                                    <field name="start_date"  attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                                    <field name="end_date"  attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                                    <field name="market_id"  attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                                    <field name="store_mgr_id"  attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                                    <field name='desig_id' readonly="1"/>
+                                    <!-- <field name="desig_id" readonly = '1' attrs="{'readonly':[('desig_id','!=',False)]}"/> -->
+                                    <field name="designation_id" domain="[('model_id','=','rsm'),('desig_level','=','rsm')]" 
+                                        attrs="{'readonly':[('store_mgr_id','=',False)],'required':[('store_mgr_id','!=',False)]}"/>
+                                    <field name="store_inactive"/>
+                                    <field name="store_comments"/>  
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </group>
+            </field>
+        </record>
+<!-- Code by Pratik --><!-- 
+ -->
+
+<!--         <record id="view_sap_store_tracker_wireless_inherit" model="ir.ui.view">
+            <field name="name">sap.store.tracker</field>
+            <field name="model">sap.store</field>
+            <field name="inherit_id" ref="wirelessvision_dsr.view_sap_store_tracker_wireless"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree[@string='SAP Tracker']" position="inside">
+                        <field name="market_id" required="1"/>
+                        <field name="store_mgr_id" required="1"/>  
+                </xpath>
+            </field>
+        </record> -->
+
+        <record id="view_market_place_form_inherit" model="ir.ui.view">
+             <field name="name">market.place.form</field>
+            <field name="model">market.place</field>
+            <field name="inherit_id" ref="wirelessvision.view_market_place_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='store_id']" position="after">
+                    <field name="market_tracker" readonly="0" groups="base.group_no_one,group_wireless_comm_analyst">
+                        <tree string="Market Tracker" editable="bottom">
+                            <field name="start_date" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                            <field name="end_date" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>  
+                            <field name="region_market_id" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                            <field name="market_manager" required="0" attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                            <field name="designation_id" domain="[('model_id','=','mm'),('desig_level','=','mm')]" 
+                                attrs="{'readonly':[('market_manager','=',False)],'required':[('market_manager','!=',False)]}"/>
+                            <!-- <field name='desig_id' attrs="{'readonly':[('desig_id','!=',False)]}"/> -->
+                            <field name='desig_id' readonly="1"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>      
+
+        <record id="view_market_region_form_inherit" model="ir.ui.view">
+            <field name="name">market.region.form</field>
+            <field name="model">market.regions</field>
+            <field name="inherit_id" ref="wirelessvision.view_market_region_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='market_place_ids']" position="after">
+                    <field name="region_tracker" readonly="0" groups="base.group_no_one,group_wireless_comm_analyst">
+                        <tree string="Region Tracker" editable="bottom">
+                            <field name="start_date" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>
+                            <field name="end_date" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>  
+                            <field name="company_id" required="1" attrs="{'readonly':[('desig_id','!=',False)]}"/>    
+                            <field name="sales_director" required="0" attrs="{'readonly':[('desig_id','!=',False)]}"/>
+			                <!-- <field name='desig_id' attrs="{'readonly':[('desig_id','!=',False)]}"/> -->
+                            <field name='desig_id' readonly="1"/>
+                            <field name="designation_id" domain="[('model_id','=','dos'),('desig_level','=','dos')]" 
+                              attrs="{'readonly':[('sales_director','=',False)],'required':[('sales_director','!=',False)]}"/>        
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>    
+
+<!-- START SAP Tracker View -->
+
+        <record id="view_sap_tracker_form" model="ir.ui.view">
+            <field name="name">sap.tracker.form</field>
+            <field name="model">sap.tracker</field>
+            <field name="arch" type="xml">
+                <form string="SAP Tracker" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="store_mgr_id"/>        
+                                <field name="start_date"/>
+                            </group>
+                            <group>
+                                <field name="market_id"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group>
+                                <field name="sap_id"/>
+                                <field name="desig_id"/>
+                            </group>
+                            <group>
+                                <field name="store_inactive"/>
+                                <field name="store_comments"/>  
+                                
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_sap_tracker_tree" model="ir.ui.view">
+            <field name="name">sap.tracker.tree</field>
+            <field name="model">sap.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="SAP Tracker">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="market_id"/>
+                    <field name="store_mgr_id"/>        
+                    <field name="desig_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_sap_tracker_form" model="ir.actions.act_window">
+            <field name="name">SAP Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sap.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_sap_tracker_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new SAP Tracker.
+                </p>
+            </field>
+        </record>
+
+<!--        <menuitem id="menu_action_tracker" name="Tracker" 
+            parent="hr.menu_hr_root" sequence="60"/>
+-->
+        <menuitem action="action_sap_tracker_form" id="menu_action_sap_tracker" 
+            parent="menu_action_tracker" sequence="10" groups="base.group_system"/>
+<!-- END SAP Tracker view -->
+
+
+<!-- START Market Tracker View -->
+
+        <record id="view_market_tracker_form" model="ir.ui.view">
+            <field name="name">market.tracker.form</field>
+            <field name="model">market.tracker</field>
+            <field name="arch" type="xml">
+                <form string="market Tracker" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="region_market_id"/>        
+                                <field name="start_date"/>
+                            </group>
+                            <group>
+                                <field name="market_manager"/>
+                                <field name="end_date"/>
+                            </group>
+                            <group>
+                                <field name="desig_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_market_tracker_tree" model="ir.ui.view">
+            <field name="name">market.tracker.tree</field>
+            <field name="model">market.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="Market Tracker">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="region_market_id"/>
+                    <field name="market_manager"/>        
+                    <field name="desig_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_market_tracker_form" model="ir.actions.act_window">
+            <field name="name">Market Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">market.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_market_tracker_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new market Tracker.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_market_tracker_form" id="menu_action_market_tracker" 
+            parent="menu_action_tracker" sequence="10" groups="base.group_system"/>
+
+<!-- END Market Tracker view -->
+
+
+<!-- START Region Tracker View -->
+
+        <record id="view_region_tracker_form" model="ir.ui.view">
+            <field name="name">region.tracker.form</field>
+            <field name="model">region.tracker</field>
+            <field name="arch" type="xml">
+                <form string="Region Tracker" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="sales_director"/>
+                                <field name="start_date"/>
+                            </group>
+                            <group>                    
+                                <field name="company_id"/>     
+                                <field name="end_date"/>
+                            </group>
+                            <group>
+                                <field name="region_id"/> 
+                                <field name="desig_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_region_tracker_tree" model="ir.ui.view">
+            <field name="name">region.tracker.tree</field>
+            <field name="model">region.tracker</field>
+            <field name="arch" type="xml">
+                <tree string="Region Tracker">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="sales_director"/>
+                    <field name="company_id"/>
+                    <field name="region_id"/>        
+                    <field name="desig_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_region_tracker_form" model="ir.actions.act_window">
+            <field name="name">Region Tracker</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">region.tracker</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_region_tracker_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Region Tracker.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_region_tracker_form" id="menu_action_region_tracker" 
+            parent="menu_action_tracker" sequence="10" groups="base.group_system"/>
+
+<!-- END Region Tracker view -->
+
+
+ <!-- End Code by Pratik -->       
+        <record id="view_sap_store_tree_dsr" model="ir.ui.view">
+            <field name="name">sap.store.tree</field>
+            <field name="model">sap.store</field>
+            <field name="inherit_id" ref="wirelessvision_extra.view_sap_store_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="replace">
+                    <field name="wv_store"/>
+                </field>
+                <field name="market_id" position="after">
+                    <field name="name" string="Paycore Store Name"/>
+                    <field name="t_mobile_name"/>
+                    <field name="type_of_store"/>
+                    <field name="store_classification"/>
+                    <field name="sub_dealer_id"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_employee_tree_dsr" model="ir.ui.view">
+            <field name="name">hr.employee.tree.dsr</field>
+            <field name="model">hr.employee</field>
+            <field name="inherit_id" ref="hr.view_employee_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="last_name"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_market_region_form_dsr" model="ir.ui.view">
+            <field name="name">market.regions.form.dsr</field>
+            <field name="model">market.regions</field>
+            <field name="inherit_id" ref="wirelessvision.view_market_region_form"/>
+            <field name="arch" type="xml">
+                <tree string="Market Places" position="attributes">
+                    <attribute name="delete">false</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_market_place_form_dsr" model="ir.ui.view">
+            <field name="name">market.place.form.dsr</field>
+            <field name="model">market.place</field>
+            <field name="inherit_id" ref="wirelessvision.view_market_place_form"/>
+            <field name="arch" type="xml">
+                <tree string="SAP Store" position="attributes">
+                    <attribute name="delete">false</attribute>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_stores_classification_dsr_wireless" model="ir.ui.view">
+            <field name="name">stores.classification.form</field>
+            <field name="model">stores.classification</field>
+            <field name="inherit_id" ref="wirelessvision_extra.view_stores_classification_form"/>
+            <field name="arch" type="xml">
+                <field name="traffic_reduction" position="after">
+                    <field name="cal_level" domain="['|',('model','=','sap.store'),('model','=','res.company')]" required="1"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stores_classification_dsr_wireless_tree" model="ir.ui.view">
+            <field name="name">stores.classification.tree</field>
+            <field name="model">stores.classification</field>
+            <field name="inherit_id" ref="wirelessvision_extra.view_stores_classification_tree"/>
+            <field name="arch" type="xml">
+                <field name="traffic_reduction" position="after">
+                    <field name="cal_level"/>
+                </field>
+            </field>
+        </record>
+
+        <menuitem action="base.action_res_users" id="base.menu_action_res_users" parent="hr.menu_hr_main"/>
+
+        <act_window id="base.change_password_wizard_action"
+            name="Change Password"
+            src_model="res.users"
+            res_model="change.password.wizard"
+            view_type="form" view_mode="form"
+            key2="client_action_multi" target="new"
+            groups="base.group_erp_manager,group_wireless_comm_analyst"/>
+        <!-- extend res.groups form view for jasper group's identification -->
+        <record id="jasper_group_form_view" model="ir.ui.view">
+            <field name="name">Jasper Group</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="jasper_check"/>
+                    <field name="group_tenantId"/>
+                </field>
+            </field>
+        </record>
+
+        <!--XML for Sale Entry Record Update and there child records-->
+        <record id="view_update_saleentry_records_form" model="ir.ui.view">
+           <field name="name">update.saleentry.records.form</field>
+            <field name="model">update.saleentry.records</field>
+            <field name="arch" type="xml">
+                <form string="Update Sale Entry Record" version="7.0">
+                    <header>
+                        <button name="update_records" states="draft" class="oe_highlight" type="object" string="Update Sale Entry Records"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,done" statusbar_colors='{"draft":"blue","done":"blue"}'/>
+                    </header>
+                    <sheet>
+                        <table>
+                                <tr>
+                                    <font color="red">
+                                        <field name="update_message" attrs="{'invisible': [('state','!=','draft')]}" nolabel="1" readonly="1" colspan="4"/>
+                                    </font>
+                                </tr>
+                            </table>
+                        <group string="Sales Entry Update Conditions">
+                            <group>
+                                <field name="start_date" attrs="{'readonly': [('state','not in',('draft'))]}" required="1"/>
+                                <field name="employee_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="dsr_write_date" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            </group>
+                            <group>
+                                <field name="end_date" attrs="{'readonly': [('state','not in',('draft'))]}" required="1"/>
+                                <field name="product_id" widget="many2many_tags" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="product_type" widget="many2many_tags" attrs="{'readonly': [('state','not in',('draft'))]}" domain="[('parent_id','=',False)]"/>
+                            </group>
+                        </group>
+                        <group string="Update Records According the Conditions">
+                            <group>
+                                <field name="store_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="region_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                            </group>
+                            <group>
+                                <field name="market_id" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                                <field name="records_count" readonly="1"/>
+                            </group>
+                        </group>
+                        <separator string="Reason For Update"/>
+                        <newline/>
+                        <field name="notes" nolabel="1" required="1" attrs="{'readonly': [('state','not in',('draft'))]}"/>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_update_saleentry_records_tree" model="ir.ui.view">
+            <field name="name">update.saleentry.records.tree</field>
+            <field name="model">update.saleentry.records</field>
+            <field name="arch" type="xml">
+                <tree string="Update sales entry records">
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="dsr_write_date"/>
+                    <field name="product_id"/>
+                    <field name="records_count"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_update_saleentry_records_form" model="ir.actions.act_window">
+            <field name="name">Update SaleEntry Records</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">update.saleentry.records</field>
+          <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_update_saleentry_records_tree"/>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click on Create Button to create new Update Sales Entry.
+                </p>
+            </field>
+        </record>
+
+        <menuitem action="action_update_saleentry_records_form" id="menu_action_salesentry_records" parent="wireless_dsr_config_menu" sequence="101" groups="base.group_system"/>
+
+    </data>
+</openerp>

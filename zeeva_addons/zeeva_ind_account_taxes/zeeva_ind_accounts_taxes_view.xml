@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+       <record id="product_category_form_view_taxes_inherit" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <field name="parent_id" position="replace">
+                    <field name="parent_id" on_change="onchange_parent_id(parent_id)"/>
+                </field>
+                <xpath expr="/form/sheet/group/group/field[@name='type']" position="after">
+                    <group name="taxes_property" string="Taxes Properties" colspan="2">
+                        <field name="sale_without_cform"/>
+                        <field name="sale_with_cform"/>
+                    </group>
+                    <newline/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_tax_form_inherit" model="ir.ui.view">
+            <field name="name">account.tax.form</field>
+            <field name="model">account.tax</field>
+            <field name="inherit_id" ref="account.view_tax_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="/form/group/group/field[@name='name']" position="after">
+                    <field name="tax_rate"/>
+                </xpath>
+                <field name="description" position="replace">
+                </field>
+                <xpath expr="/form/notebook/page[@string='Tax Definition']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+                <xpath expr="/form/notebook/page[@string='Special Computation']" position="attributes">
+                        <attribute name="invisible">True</attribute>
+                </xpath>
+            </field>
+        </record>
+
+
+        <!-- Partner -->
+        <record id="tax_master_tree_inherit" model="ir.ui.view">
+            <field name="name">product.product.tax.tree</field>
+            <field name="model">product.product</field>
+            <field eval="8" name="priority"/>
+            <field name="arch" type="xml">
+                <tree string="Products Tax Master">
+                    <field name="product_name"/>
+                    <field name="product_code"/>
+                    <field name="product_category"/>
+                    <field name="local_tax_rate"/>
+                    <field name="interstate_tax_rate"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="tax_master_form_view" model="ir.ui.view">
+            <field name="name">product.product.tax.form</field>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+               <form string="Product Tax" version="7.0">
+                    <sheet>
+                    <group>
+                    <group>
+                            <field name="product_name"/> 
+                            <field name="product_code"/>  
+                    </group> 
+                    <group>
+                        <field name="product_category"/> 
+                        <field name="local_tax_rate"/>
+                        <field name="interstate_tax_rate"/>
+                    </group>
+                    </group>
+                </sheet>
+            </form>
+            </field>
+        </record>
+
+
+        <record id="action_tax_master_reference" model="ir.actions.act_window">
+            <field name="name">Products Taxes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('expense_category','=',False)]</field>
+            <field name="view_id" ref="tax_master_tree_inherit"/>
+        </record>
+
+         <record id="action_tax_master_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="tax_master_tree_inherit"/>
+            <field name="act_window_id" ref="action_tax_master_reference"/>
+        </record>
+
+
+        <record id="action_tax_master_form_view" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="tax_master_form_view"/>
+            <field name="act_window_id" ref="action_tax_master_reference"/>
+        </record>
+
+       
+        <menuitem action="action_tax_master_reference" id="menu_tax_master_reference" name="Products Taxes" sequence="3" parent="product.prod_config_main"/>
+        
+
+
+    <record id="view_order_form_inherit_sale" model="ir.ui.view">
+            <field name="name">sale.view.form2</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_uom_qty']" position="replace">
+                            <field name="product_uom_qty" context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}" on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)" widget="integer" sum="Total"/>
+                    </xpath>
+                    <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='tax_id']" position="attributes">
+                            <attribute name="invisible">True</attribute>
+                    </xpath>
+                    <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='product_id']" position="after">
+                            <field name="product_category_id" invisible="1"/>
+                    </xpath>
+                <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='name']" position="before">
+                    <field name="product_code"/>
+                </xpath>
+                    <xpath expr="/form/sheet/notebook/page/field/tree/field[@name='price_subtotal']" position="before">
+                        <field name="tax_applied_id"/>
+                    </xpath>
+                    <xpath expr="/form/sheet/notebook/page/group[@name='sale_total']" position="before">
+                        <group colspan="2" col="2">
+                            <field name="tax_lines" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="tax_id" invisible="1"/>
+                                <field name="tx_name"/>
+                                <field name="tax_rate"/>
+                                <field name="total_amount"/>        
+                            </tree>
+                            </field>
+                        </group>
+                        <button name="save" string="Save" type="object" icon="gtk-apply"/>
+                    </xpath>
+                    <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}" position="after">
+                    <field name="apply_discount" on_change="onchange_apply_discount(apply_discount)" attrs="{'readonly': [('state','=','progress')]}"/>
+                    <field name="discount_value" attrs="{'invisible': [('apply_discount','=',False)],'readonly': [('state','=','progress')]}"/>
+                    <field name="discounted_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'invisible': [('apply_discount','=',False)]}"/>
+                    <field name="grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    <field name="roundoff_grand_total" widget='monetary' options="{'currency_field': 'currency_id'}"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+
+
+
+
+        
+    </data>
+</openerp>

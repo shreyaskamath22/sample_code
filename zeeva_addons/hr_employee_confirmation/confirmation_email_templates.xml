@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<openerp>
+    <data>
+    	
+<record id="employee_probation_period_completion_email_template" model="email.template">
+    <field name="name">Employee Probation Period Completion</field>
+    <field name="email_from">${object.company_id.email}</field>
+    <field name="subject">Probation Period Completion of ${object.name}</field>
+    <field name="email_to">${object.parent_id.work_email}</field>
+    <field name="email_cc">${object.hro.email}</field>
+    <field name="lang">Probation period completion</field>
+    <field name="model_id" ref="hr.model_hr_employee"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Dear ${object.parent_id.name_related},
+
+<p>This is to inform you that ${object.name} has completed the probationary period.
+<p>Hence, you are kindly requested to process the confirmation in the ERP.
+<p>Please click on the below link to go to the Confirmation Module in the ERP.
+<ul>
+    <li><a href="http://zeevaerp.com/?db=Zeeva_IND#view_type=form&model=hr.employee.confirmation&menu_id=306&action=375">Click Here</a></li>
+</ul>
+<p> From,
+<p> OpenERP Reminder
+
+            ]]></field>
+</record>	
+    	
+<record id="employee_one_year_completion_email_template" model="email.template">
+    <field name="name">Employee One Year Completion</field>
+    <field name="email_from">${object.company_id.email}</field>
+    <field name="subject">One Year Completion of an Employee</field>
+    <field name="email_to">${object.parent_id.user_id.email},${object.hro.email}</field>
+    <field name="email_cc">${object.name.user_id.email}</field>
+    <field name="lang">one year completion</field>
+    <field name="model_id" ref="hr.model_hr_employee"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi,
+
+<p>${object.name} has completed one year of tenure.
+<p> From,
+<p> OpenERP Reminder
+
+            ]]></field>
+</record>
+       
+<record id="confirmation_approval_from_manager_email_template" model="email.template">
+    <field name="name">Confirmation Approval From Manager</field>
+    <field name="email_from">${object.current_user.user_email}</field>
+    <field name="subject">Employee Confirmation Approval</field>
+    <field name="email_to">${object.manager_id.user_id.email}</field>
+    <field name="lang">confirmation approval</field>
+    <field name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.manager_id.name_related},
+<p>
+<p>Please Approve/Reject the Confirmation for Employee ${object.name.name_related} <a href="${object.signup_url}">here</a>.</p>
+<p>
+<p> Regards,
+<p> ${object.current_user.login}
+
+            ]]></field>
+ </record> 
+
+
+<record id="confirmation_mail_to_hr_email_template" model="email.template">
+    <field name="name">Employee Confirmed By Mgmt</field>
+    <field name="email_from">${object.current_user.user_email}</field>
+    <field name="subject">Regarding Confirmation of Employee</field>
+    <field name="email_to">${object.name.hro.email}</field>
+    <field name="lang">confirmation from mgmt</field>
+    <field name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.name.hro.name},
+<p>
+<p>I have confirmed the Employee: ${object.name.name_related}.
+<p>Validate confirmation in ERP system.
+<p>Regards,
+<p>
+<p>${object.current_user.login}
+            ]]></field>
+ </record>        
+      
+        
+<record id="confirmation_mail_to_employee_email_template" model="email.template">
+    <field name="name">Employee Confirmed In Company</field>
+    <field name="email_from">${object.name.hro.email}</field>
+    <field name="subject">Confirmation Mail</field>
+    <field name="email_to">${object.name.user_id.email}</field>
+    <field name="email_cc">${object.name.hro.email},${object.manager_id.user_id.email}</field>
+    <field name="lang">Employment Confirmed</field>
+    <field name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+<center><b><u>CONFIRMATION LETTER</u></b></center>
+<p><b>Date: ${'.'.join(object.date_of_confirmation.split('-')[::-1])} </b>
+<p><b>${object.salutation}. ${object.name.name_related}</b>
+<p>Dear ${object.salutation}. ${(object.name.name_related.split(' ')[0])},
+<p>Consequent to the internal review of your performance during your probation period, we have the pleasure in informing you that, your services are being confirmed as <b>${object.name.job_id.name}</b> with effect from <b>${'.'.join(object.date_of_confirmation.split('-')[::-1])}.</b>
+<p>All the other terms and conditions as detailed in your appointment letter remain unchanged.
+<p>We look forward to your valuable contributions and wish you all the very best for a rewarding career with the organization.
+<p>Please acknowledge the same.
+
+<p>Warm Regards,
+<p>${object.name.hro.name},
+<br>${object.name.hro.signature}
+            ]]></field>
+ </record>
+        
+<record id="confirmation_rejected_email_template" model="email.template">
+    <field name="name">Employee Confirmation Rejected</field>
+    <field name="email_from">${object.current_user.user_email}</field>
+    <field name="subject">Confirmation Rejected</field>
+    <field name="email_to">${object.name.user_id.email}</field>
+    <field name="email_cc">${object.name.hro.email}</field>
+    <field name="lang">confirmation rejected</field>
+    <field name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.name.name_related},
+<p>
+<p>Your Employment confirmation has been kept on hold till  ${'-'.join(object.on_hold_till_date.split('-')[::-1])} date.
+<p>
+<p> Regards,
+<p> ${object.current_user.login}
+
+            ]]></field>
+ </record>        
+        
+        
+ <record id="confirmation_alert_email_template" model="email.template">
+    <field name="name">Alert Of On Hold Till Date for Employee is reached</field>
+    <field name="email_from">${object.company_id.email}</field>
+    <field name="subject">Confirmation Pending</field>
+    <field name="email_to">${object.name.hro.email}</field>
+    <field name="lang">pending confirmation</field>
+    <field name="model_id" ref="hr_employee_confirmation.model_hr_employee_confirmation"/>
+    <field name="auto_delete" eval="True"/>
+    <field name="body_html"><![CDATA[
+
+Hi ${object.name.hro.name},
+<p>
+<p>Employment confirmation for employee ${object.name.name_related} is pending. Since confirmation held on date has been reached. 
+<p>
+<p>Form,
+<p>OpenERP Reminder
+
+            ]]></field>
+ </record>
+    </data>
+</openerp>
